@@ -1,0 +1,4 @@
+supercollider
+=============
+
+supercollider magie tady
