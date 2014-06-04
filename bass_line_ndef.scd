@@ -14,7 +14,7 @@ Tdef(\tt,{
 	var i = 0;
 	loop{
 		Ndef(\a).set(\freq,[60,63,65,67,69].wrapAt(i).midicps/4.0);
-		Ndef(\a).set(\voice,[10,15,20,70,5,12,10,10,10].wrapAt(i));
+		Ndef(\a).set(\voice,[10,15,20,30,5,12,10,10,10].wrapAt(i));
 		i = i + 3;
 		2.2.wait();
 	}
