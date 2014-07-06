@@ -12,7 +12,7 @@ Ndef(\z,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
 		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.001!16)).range(0.1,0.2))
-			,delaytime:(1/~tempo),decaytime: 5.0)
+			,delaytime:(4/~tempo),decaytime: ~tempo*4)
 	)
 }).play;
 
@@ -38,7 +38,7 @@ Ndef(\d,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
 		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.01!16)).range(0.1,0.2))
-			,delaytime:(1/~tempo),decaytime: 2.5)
+			,delaytime:(2/~tempo),decaytime: ~tempo*2)
 	)
 }).play;
 
@@ -64,7 +64,7 @@ Ndef(\y,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
 		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.1!16)).range(0.1,0.2))
-			,delaytime:(1/~tempo),decaytime: 1.25)
+			,delaytime:(1/~tempo),decaytime: ~tempo)
 	)
 }).play;
 
