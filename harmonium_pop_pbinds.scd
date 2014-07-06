@@ -2,7 +2,7 @@
 s.boot;
 
 (
-~tempo = 120/60;
+~tempo = 100/60;
 
 Ndef(\z).quant = 2 / ~tempo;
 Ndef(\z).fadeTime = 1;
@@ -17,7 +17,7 @@ Ndef(\z,{|freq = 440|
 }).play;
 
 Ndef(\z)[1] = \set -> Pbind(
-	\dur, 1 / 4 / ~tempo,
+	\dur, 1 / 2 / ~tempo,
 	\freq, Pxrand([
 		Pxrand((20+[0,3,7,10]).midicps,4),
 		Pxrand((30+[0,3,7,10]).midicps,4),
