@@ -11,7 +11,7 @@ Ndef(\z).fadeTime = 1;
 Ndef(\z,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
-		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.01!16)).range(0.1,0.2))
+		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.001!16)).range(0.1,0.2))
 			,delaytime:(1/~tempo),decaytime: 5.0)
 	)
 }).play;
@@ -37,7 +37,7 @@ Ndef(\d).fadeTime = 1;
 Ndef(\d,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
-		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.1!16)).range(0.1,0.2))
+		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.01!16)).range(0.1,0.2))
 			,delaytime:(1/~tempo),decaytime: 2.5)
 	)
 }).play;
@@ -63,7 +63,7 @@ Ndef(\y).fadeTime = 1;
 Ndef(\y,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
-		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*1!16)).range(0.1,0.2))
+		SinOsc.ar(freq.lag(0.02)*[1,1/2,1/4,1/8],mul:SinOsc.kr((_*0.1!16)).range(0.1,0.2))
 			,delaytime:(1/~tempo),decaytime: 1.25)
 	)
 }).play;
