@@ -17,13 +17,13 @@ Ndef(\z,{|freq = 440|
 }).play;
 
 Ndef(\z)[1] = \set -> Pbind(
-	\dur, 1 / 8 / ~tempo,
+	\dur, 1 / 16 / ~tempo,
 	\freq, Pxrand([
-		Pxrand((20+[0,1,3,5,7,8,10]).midicps,4),
-		Pxrand((30+[0,2,3,5,7,9,10]).midicps,4),
-		Pxrand((40+[0,2,4,5,7,9,11]).midicps,4),
-		Pxrand((50+[1,2,4,6,7,9,11]).midicps,4),
-		Pxrand((60+[1,3,4,6,8,9,11]).midicps,4),
+		Pxrand((20+[0,3,7,10]).midicps,4),
+		Pxrand((30+[0,3,7,10]).midicps,4),
+		Pxrand((40+[0,4,7,11]).midicps,4),
+		Pxrand((50+[1,4,7,11]).midicps,4),
+		Pxrand((60+[1,4,8,11]).midicps,4),
 	]*4,inf),
 	\amp, Pwhite(0.5,1.0),
 );
@@ -45,11 +45,11 @@ Ndef(\d,{|freq = 440|
 Ndef(\d)[1] = \set -> Pbind(
 	\dur, 1 / 2 / ~tempo,
 	\freq, Pxrand([
-		Pxrand((20+[0,1,3,5,7,8,10]).midicps,2),
-		Pxrand((30+[0,2,3,5,7,9,10]).midicps,2),
-		Pxrand((40+[0,2,4,5,7,9,11]).midicps,2),
-		Pxrand((50+[1,2,4,6,7,9,11]).midicps,2),
-		Pxrand((60+[1,3,4,6,8,9,11]).midicps,2),
+		Pxrand((20+[0,3,7,10]).midicps,2),
+		Pxrand((30+[0,3,7,10]).midicps,2),
+		Pxrand((40+[0,4,7,11]).midicps,2),
+		Pxrand((50+[1,4,7,11]).midicps,2),
+		Pxrand((60+[1,4,8,11]).midicps,2),
 	]*2,inf),
 	\amp, Pwhite(0.5,1.0),
 );
@@ -71,11 +71,11 @@ Ndef(\y,{|freq = 440|
 Ndef(\y)[1] = \set -> Pbind(
 	\dur, 1 / ~tempo,
 	\freq, Pxrand([
-		Pxrand((20+[0,1,3,5,7,8,10]).midicps,1),
-		Pxrand((30+[0,2,3,5,7,9,10]).midicps,1),
-		Pxrand((40+[0,2,4,5,7,9,11]).midicps,1),
-		Pxrand((50+[1,2,4,6,7,9,11]).midicps,1),
-		Pxrand((60+[1,3,4,6,8,9,11]).midicps,1),
+		Pxrand((20+[1,5,8]).midicps,1),
+		Pxrand((30+[2,5,9]).midicps,1),
+		Pxrand((40+[2,5,9]).midicps,1),
+		Pxrand((50+[2,6,9]).midicps,1),
+		Pxrand((60+[3,6,9]).midicps,1),
 	],inf),
 	\amp, Pwhite(0.5,1.0),
 );
