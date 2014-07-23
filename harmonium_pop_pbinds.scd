@@ -11,13 +11,13 @@ Ndef(\z).fadeTime = 1;
 Ndef(\z,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
-			LFTri.ar(freq.lag(0.01)*[1,0.5],{ExpRand()}!16,mul:SinOsc.kr((_*0.1!16)).range(0.1,0.2))
+			LFTri.ar(freq.lag(0.01)*[1,0.5],{ExpRand()}!16,mul:SinOsc.kr((_*0.1!16)).range(0.01,0.1))
 			,delaytime:(4/~tempo),decaytime: ~tempo*4)
 	)
 }).play;
 
 Ndef(\z)[1] = \set -> Pbind(
-	\dur, 1 / 2 / ~tempo,
+	\dur, 1 / 4 / ~tempo,
 	\freq, Pxrand([
 		Pxrand((20+[0,3,7,10]).midicps,4),
 		Pxrand((30+[0,3,7,10]).midicps,4),
@@ -37,7 +37,7 @@ Ndef(\d).fadeTime = 1;
 Ndef(\d,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
-		LFCub.ar(freq*[1,1],{ExpRand()}!16,mul:SinOsc.kr((_*0.01!16)).range(0.1,0.2))
+		LFCub.ar(freq*[1,1],{ExpRand()}!16,mul:SinOsc.kr((_*0.01!16)).range(0.01,0.1))
 			,delaytime:(2/~tempo),decaytime: ~tempo*2)
 	)
 }).play;
@@ -63,7 +63,7 @@ Ndef(\y).fadeTime = 1;
 Ndef(\y,{|freq = 440|
 	Splay.ar(
 		CombN.ar(
-		LFCub.ar(freq*[1,1],{ExpRand()}!16,mul:SinOsc.kr((_*0.001!16)).range(0.1,0.2))
+		LFCub.ar(freq*[1,1],{ExpRand()}!16,mul:SinOsc.kr((_*0.001!16)).range(0.01,0.1))
 			,delaytime:(1/~tempo),decaytime: ~tempo)
 	)
 }).play;
