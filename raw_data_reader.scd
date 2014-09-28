@@ -1,3 +1,6 @@
+//reading bytebeat files tested unix only
+
+
 s.boot;
 
 (
