@@ -21,8 +21,8 @@ Ndef(\a,{Splay.ar(
 
 	FreeVerb.ar(
 		BPF.ar(
-			PlayBuf.ar(1, b,loop:-1,rate:~s) + SinOsc.ar([66,77]) * Decay.ar(Impulse.ar(8/[1,1,2,3,5,11,21]),0.125)
+			PlayBuf.ar(1, b,loop:-1,rate:~s).softclip * Decay.ar(Impulse.ar(8/[1,1,2,3,5,11,21]),0.25)
 			,SinOsc.kr((_*0.1!4)+0.1).range(44,16000))
-		,0.05133,0.1)
+		,0.05133,0.1) + ((SinOsc.ar([66,77,88,99],mul:0.5) * Decay.ar(Impulse.ar(4/[1,1,2,3,5,11,21]),0.5)))
 )}).play;
 )
