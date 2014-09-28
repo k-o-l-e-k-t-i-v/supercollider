@@ -1,7 +1,10 @@
 s.boot;
 
 (
-f = File("/tmp/last.dat", "rb") ;
+
+~path = "/tmp/last.dat";
+
+f = File(~path, "rb") ;
 t = [] ; a = f.getInt8 ; while {a.notNil}{t = t.add(a); a = f.getInt8} ;
 b = Buffer.loadCollection(s, t, 1, {f.close }) ;
 
