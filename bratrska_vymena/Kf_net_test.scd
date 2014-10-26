@@ -1,6 +1,7 @@
 // client
 (
 s = Server.remote(\remote , NetAddr("94.112.205.204",  57110 ) );
+s.options.maxLogins = 10;
 s.initTree;
 f = {Group.new(s.defaultGroup)};
 ServerTree.add(f);
