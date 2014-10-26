@@ -40,8 +40,15 @@ Ndef(\tik,{
 Ndef(\tik).stop;
 
 // 3. release
-s.freeAll;
-
+Ndef(\tik).stop(1);
 
 // 4. (optional) monitor / mix Ndefs
 NdefMixer(s);
+
+
+/* 5. if you have any problems (uncontrollable sounds etc.)
+s.freeAll;
+kills all synths (so use /w care)
+
+also it is good to keep volume up to 0.5 if there are more people playing
+*/
