@@ -1,0 +1,4 @@
+#EXTM3U
+#EXTINF:0,Kof's TAZ radio
+#EXTVLCOPT:network-caching=100
+http://giss.tv:8000/kof.mp3
