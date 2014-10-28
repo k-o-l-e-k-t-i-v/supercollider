@@ -24,7 +24,6 @@ Server.internal = s;
 s.sendBundle(0.1,[\sync,1]);
 s.sendBundle(0.2,[\notify,1]);
 
-
 s.makeWindow;
 )
 
@@ -44,8 +43,8 @@ Ndef(\tik,{
 	~dust = Dust.ar([1,1]/4);
 	~decay = Decay.ar(~dust);
 	Splay.ar(
-	Ringz.ar(
-		~dust,220+LFNoise0.kr(1/8).range(0,2000).round(880),2,mul:0.5)
+		Ringz.ar(
+			~dust,220+LFNoise0.kr(1/8).range(0,2000).round(880),2,mul:0.5)
 )}).play;
 )
 Ndef(\tik).stop;
