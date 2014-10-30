@@ -17,19 +17,24 @@ SynthDef(\DrumA, { |freq = 50, amp = 0.3, dt = 0.3, room = 2|
 	Out.ar(0, Splay.ar(tone));
 }).add;
 
-SynthDef(\SawA, { |chnl = 0, freq = 150, dt = 1, vol = 0.2, shift = 0|
-	var env, tone;
-	env = Line.kr(0,1,dt,vol,doneAction:2);
-	Out.ar(chnl,LFSaw.ar([freq,freq+2],shift,env));
+SynthDef(\SawA, { |out, freq = 150, dt = 1, amp = 0.2, shift = 0|
+	var env, tone, num;
+	num = 10;
+	env = EnvGen.ar(Env([0,amp,0],[0.9*dt, 0.1*dt]),doneAction:2);
+	tone = Mix.fill(num, { |i| LFSaw.ar([freq,freq+2],shift*i,env/num)});
+	tone = LPF.ar(tone, Rand(600, 1000));
+	Out.ar(out,tone);
 }).add;
 
-SynthDef(\SawB, { |out, freq = 150, dt = 1, amp = 0.2, minLPF = 200, maxLPF = 400|
+SynthDef(\SawB, { |out, freq = 150, ffreq = 4, amp = 0.2, lpf = 400, shift = 0.001|
 	var tone, env, num, vol;
-	num = 1;
-	vol = LFSaw.kr(4,0,amp,0);
-	tone = Mix.fill(num, { |i| VarSaw.ar(Rand(freq-20,freq+20), 0, vol/num)});
-	tone = LPF.ar(tone, Rand(minLPF, maxLPF));
-	Out.ar(0, Pan2.ar(tone));
+	num = 4;
+	vol = LFSaw.kr(ffreq,0,0.65,0.3);
+	tone = Mix.fill(num, { |i|
+		VarSaw.ar(Rand(freq-20,freq+20), shift*i ,1, vol/num*amp,0)
+	});
+	tone = LPF.ar(tone, lpf);
+	Out.ar(0, Pan2.ar(tone,SinOsc.kr(1,0,0.7)));
 }).add;
 
 SynthDef(\SinB, { |out, freq = 150, dt = 1, amp = 0.2|
@@ -44,11 +49,13 @@ SynthDef(\SinB, { |out, freq = 150, dt = 1, amp = 0.2|
 	Out.ar(0, Pan2.ar(tone,SinOsc.kr(1)));
 }).add;
 
-SynthDef(\SinC, { |out, freq = 150, dt = 1, amp = 0.2|
-	var tone, env, num;
-	num = 40;
-	tone = Mix.fill(num, { |i|		SinOsc.ar(freq+Rand(-5.0,5.0),SinOsc.kr(i+0.1*0.001),amp*LFSaw.kr(freq/2,i*0.002,0.2))
-	}).range(-1.0,1.0);
+SynthDef(\SinC, { |out, freq = 150, amp = 0.2|
+	var tone, num, vol;
+	num = 6;
+	vol = LFSaw.kr(freq/2,0,0.2,0.8);
+	tone = Mix.fill(num, { |i|
+		SinOsc.ar(freq+Rand(-15.0,15.0),SinOsc.kr(i*0.001),vol/num*amp)
+	});
 	Out.ar(0, Pan2.ar(tone));
 }).add;
 

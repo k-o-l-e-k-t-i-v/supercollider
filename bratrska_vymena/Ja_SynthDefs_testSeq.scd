@@ -66,10 +66,10 @@ Pdef(\seqSinB).stop;
 (
 Pdef(\seqSinC, {
 	Pmono(\SinC,
-		\amp, Pseq([Pseq([0.2,0.1],6),0.1,0.05,0.17],inf),
+		\amp, Pseq([Pseq([0.6,0.45],6),0.35,0.25,0.40],inf),
 		\dur, Pseq([Pn(5,3),2.5],inf),
 		\midinote,Pseq([57,Prand([55,59]),54,Prand([60,58,56])], inf)
-	);
+	).trace;
 }).play(quant:5);
 )
 Pdef(\seqSinC).stop;
@@ -77,29 +77,31 @@ Pdef(\seqSinC).stop;
 (
 Pdef(\seqSawA ,{
 	var seq, eff;
-	seq = Pbind(\instrument, \Saw1, \chnl, 35, \dur, 0.25, \dt, 0.125,
+	seq = Pbind(\instrument, \SawA, \out, 35, \dur, 0.25, \dt, 0.125,
 		\freq, Pseq([180, 100, Prand([310,380,410,330,220,460]), 100],inf),
-		\vol , Pseq([Pseries(0.002,0.005,20),Pseries(0.15,-0.005,20)],inf),
-		\shift, Pseq([Pseries(0,0.1,20)],inf)
+		\amp , Pseq([Pseries(0.1,0.005,20),Pseries(0.2,-0.005,20)],inf),
+		\shift, Pseq([Pseries(0,0.001,20)],inf)
 	);
-	eff = Pfx(seq, \echo, \chnl, 35, \maxdeltime, 6, \deltime, 0.75, \dectime, 6)
+	eff = Pfx(seq, \echo, \chnl, 35, \maxdeltime, 2, \deltime, 0.25, \dectime, 8);
 }).play(quant:1);
 )
 Pdef(\seqSawA).stop;
 
-//
-// (
-// Pdef(\seqSawB, {
-// 	var seq, eff;
-// 	seq = Pmono(\SawB, \dt, 1, \amp,0.01,
-// 		\dur, Pseq([0.5],inf),
-// 		// \amp, Pseq([0.03,Pn(0.001,9)],inf),
-// 		\freq, Pseq([120,100], inf)
-// 	);
-// 	//eff = Pfx(seq, \echo, \chnl, 30, \maxdeltime, 6, \deltime, 0.75, \dectime, 6)
-// }).play(quant:1);
-// )
-// Pdef(\seqSawA).stop;
+
+(
+Pdef(\seqSawB, {
+	var seq, eff;
+	seq = Pmono(\SawB, \out, 50, \freq, 32, \ffreq, 2,
+		\dur, Pseq([Pn(1,3),3],inf),
+		\amp, Pseq([Pseries(0.35,0.005,20),Pseries(0.45,-0.005,20)],inf),
+		\lpf, Prand([2500,1500,1000,500],inf),
+		\shift, Pseq([Pn(0,10),Pseries(0.001,0.0001,10)],inf),
+
+		).trace;
+	eff = Pfx(seq, \echo, \chnl, 50, \maxdeltime, 6, \deltime, 0.2, \dectime, 30)
+}).play(quant:1);
+)
+Pdef(\seqSawB).stop;
 
 (
 Pdef(\seqSig, {
@@ -109,7 +111,7 @@ Pdef(\seqSig, {
 		\dur, Pseq([1,1,2,3,4,1,5, 10, 10, 2, 10, 1, 5, 5, 1, 1, Rest(20)],inf),
 		// \freq, Pstutter(2, Pxrand([4000, 4200, 4100, 3950],inf))
 		// \freq, Pstutter(3, Pxrand([300, 320, 310, 395],inf))
-				\freq, Pstutter(3, Pxrand([300, 320, 310, 395],inf))
+		\freq, Pstutter(3, Pxrand([300, 320, 310, 395],inf))
 	);
 	eff = Pfx(seq, \echo, \chnl, 30, \maxdeltime, 6, \deltime, 0.75, \dectime, 6)
 }).play(quant:5);
