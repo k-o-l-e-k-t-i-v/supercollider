@@ -5,7 +5,7 @@
 (
 s = Server.new(\remote , NetAddr("94.112.205.204",  57110 ) );
 s.options.protocol = \udp;
-s.options.maxLogins = 10;
+s.options.maxLogins = 10; // coment out this line if causing error
 s.options.initialNodeID = 1000;
 s.options.zeroConf = false;
 s.queryAllNodes;
@@ -50,10 +50,16 @@ Ndef(\tik,{
 Ndef(\tik).stop;
 
 ////////////////////////////////////////////////
-// 4. release                                 //
+// 4.a release gently                          //
 ////////////////////////////////////////////////
 
 Ndef(\tik).stop(1);
+
+////////////////////////////////////////////////
+// 4.b kill it                                //
+////////////////////////////////////////////////
+
+Ndef(\tik).clear;
 
 ////////////////////////////////////////////////
 // 5. (optional) monitor / mix Ndefs          //
@@ -67,5 +73,8 @@ s.freeAll;
 kills all synths (so use /w care)
 
 also it is good to keep volume up to 0.5 if there are more people playing
+
+live communication: https://webchat.freenode.net/
+		    channel: #kolektiv
 */
 
