@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////
 
 (
-s = Server.new(\remote , NetAddr("94.112.205.204",  57110 ) );
+s = Server.new(\remote , NetAddr("192.168.221.140",  57110 ) );
 s.options.protocol = \udp;
-s.options.maxLogins = 10; // coment out this line if causing error
+// s.options.maxLogins = 10; // coment out this line if causing error
 s.options.initialNodeID = 1000;
 s.options.zeroConf = false;
 s.queryAllNodes;
