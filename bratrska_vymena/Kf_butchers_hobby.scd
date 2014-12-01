@@ -12,3 +12,6 @@ Ndef(\dude_say,{
 			,2,3,0.5,0.5,SinOsc.kr(0.11).range(10,30),SinOsc.kr(0.0011).range(0.01,0.9),SinOsc.kr(0.011).range(0.01,0.9),SinOsc.kr(0.01).range(0.01,0.9))
 )}).play;
 )
+
+
+//hawt! love the name *_*

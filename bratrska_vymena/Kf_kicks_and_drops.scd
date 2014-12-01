@@ -23,6 +23,6 @@ Ndef(\b).quant = 2.0;
 Ndef(\b,{
 	~s = Select.kr(Stepper.kr(Impulse.kr(1/8),max:5),[1,1.5,1,1.25,1,1.125]);
 	Splay.ar(
-	LFSaw.ar([432,432.01] / ([1,2,0.5,4] * ~s * pi) + LFSaw.ar(1/[1,2,3,4]).range(4,-4)).lag(SinOsc.ar(2/[1,2,3,4]).range(0.00001,0.01)) * LFPulse.ar(4/[1,2,3,4])
+	LFSaw.ar([432,432.01] / ([1,2,0.5,4] * ~s * pi) + LFSaw.ar(1/[1,2,3,4]).range(4,-4),mul:0.33).lag(SinOsc.ar(2/[1,2,3,4]).range(0.00001,0.01)) * LFPulse.ar(4/[1,2,3,4])
 )}).play;
 )
