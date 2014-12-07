@@ -280,6 +280,7 @@ Ndef(\grain, {
 
 s.scope(2);
 
+//Formant
 
 //Harmonics
 

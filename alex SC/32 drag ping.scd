@@ -15,7 +15,9 @@ Ndef(\drag, {
 
 	~sig=BPF.ar(WhiteNoise.ar(VarSaw.kr(20).range(0.4,0.7)),~freq,~rq)*Phasor.kr(Impulse.kr(4/3),0.001);
 
-	~sig=Pan2.ar(~sig,SinOsc.kr(0.25));
+
+
+	~sig=Pan2.ar(~sig*8,SinOsc.kr(0.25));
 
 	~sig2=SinOsc.ar(Sweep.kr(Impulse.kr(4/3*2),1).range(12000,500))*Decay2.kr(Impulse.kr(4/3*3),0.01,0.1,0.021);
 
