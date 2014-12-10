@@ -102,6 +102,18 @@ SynthDef(\SawA, { |out = 0, gate = 1, amp = 1, freq = 90, sustain = 0.5|
 	Out.ar(out, tone);
 }).store;
 
+//test////////////////////////
+SynthDef(\SawB, { |out = 0, gate = 1, sustain = 1, freq = 150, amp = 0.2|
+	var osc, tone, num, fEnv, aEnv;
+	num = 2;
+	aEnv = EnvGen.kr(Env.asr(0.35*sustain, amp, 0.65*sustain,4),gate, doneAction:2);
+	fEnv = LFSaw.kr([Rand(freq*2-0.8,freq*2+0.2),Rand(freq*2-0.2,freq*2+0.8)],0,0.8,0.2);
+	osc = Mix.fill(num, { |i| LFSaw.ar(fEnv,0.1*i, SinOsc.kr(freq,0,SinOsc.kr(freq/2,0,0.8/num),0.2/num))*LFPulse.ar(freq*1.5,0.01*i,0.8,0.7/num,0.3/num)});
+	tone = osc * aEnv;
+	tone = LPF.ar(tone, fEnv+1800);
+	Out.ar(out, Pan2.ar(tone,SinOsc.kr(2,0,0.7)));
+}).add;
+
 //////// SINS synths ///////////////////////////////////////////////////
 
 SynthDef(\SinA, { |out = 0, gate = 1, freq = 130, amp = 1, sustain = 1|
