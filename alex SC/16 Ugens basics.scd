@@ -280,6 +280,8 @@ Ndef(\grain, {
 
 s.scope(2);
 
+//XFade2
+
 //Formant
 
 //Harmonics
