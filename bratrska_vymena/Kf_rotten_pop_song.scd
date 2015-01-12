@@ -1,3 +1,10 @@
+
+Quarks.gui
+// >> install batlib >> recompile library classes
+
+// batlib quark, secure output
+StageLimiter.activate;
+
 (
 Ndef(\qqq,{
 

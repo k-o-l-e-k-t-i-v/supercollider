@@ -6,8 +6,8 @@ Ndef(\2).fadeTime = 4.02;
 
 Ndef(\2,{
 
-	~mod = Select.kr(Stepper.kr(Impulse.kr(1/16/[1,2,4,8]),max:4),[1,2,1,1.5,0.5,4,8].scramble);
-	~n = Select.kr(Stepper.kr(Impulse.kr(1/4/[1,2,4,8]),max:4),[1,12,1,2,4].scramble).lag(0.02);
+	~mod = Select.kr(Stepper.kr(Impulse.kr(1/8/[1,2,4,8]),max:6),[1,2,1,1.5,0.5,4,8*1.5].scramble);
+	~n = Select.kr(Stepper.kr(Impulse.kr(1/4/[1,2,4,8]),max:4),[1,12,1,2,5].scramble);
 	~f = (~n).midicps * (32pi * [1,1.5] / 256 * 16 / 2 * ~mod) ;
 
 
