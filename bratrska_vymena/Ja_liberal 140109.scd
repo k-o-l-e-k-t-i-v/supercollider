@@ -1,43 +1,32 @@
 s.scope(2);
+s.plotTree();
+
 (
 SynthDef(\SawA, { |out, gate = 1, amp, freq, sustain, lpf|
 	var aEnv, num, osc, tone;
 	aEnv = EnvGen.ar(Env([0, 0.65, 0.25, 1, 0.85, 0.8, 0.3, 0.6, 0.1, 0.3, 0],
 		[0.25*sustain, 0.05*sustain, 0.10*sustain, 0.15*sustain, 0.025*sustain, 0.1*sustain, 0.025*sustain, 0.1*sustain, 0.2*sustain],
 		\welch), gate);
-	num = 2;
+	num = 8;
 	osc = Mix.fill(num, {|i| LFSaw.ar([freq, freq*110],0.15*i, 1/num * LFSaw.ar([4,5],0,0.7,0.3)); });
 	tone = osc * aEnv * amp;
 	tone = FreeVerb.ar(tone, 0.8, 1.5, 0.8, 1, tone);
 	DetectSilence.ar(tone,  doneAction:2);
 	Out.ar(out, tone);
 }).add;
-/*
+
 SynthDef(\DrumA5, { |out, gate = 1, freq, pan, amp, sustain, lpf|
-	var fMod = 0.0025;
-	var aEnv = EnvGen.kr(Env([0.0,1.0,0.4,0.0],[0.05*sustain,0.3*sustain,0.65*sustain]), gate);
-	var fEnv = EnvGen.kr(Env([Rand(1700,2100),freq,freq*0.5],[0.01*sustain,0.23*sustain],\exp));
-	var osc = SinOsc.ar([fEnv,fEnv+10],0,SinOsc.kr(55,0,0.85,0.15));
-	var tone = osc * aEnv * amp;
-	tone = LPF.ar(tone,fEnv + lpf);
-	tone = FreeVerb.ar(tone, 0.9, 2.8, 0.1, 1, tone);
+	var fMod, aEnv, fEnv, osc, tone;
+	fMod = 0.025*sustain;
+	aEnv = EnvGen.kr(Env([0.0,1.0,0.4,0.0],[0.05*sustain,0.3*sustain,0.65*sustain]), gate);
+	fEnv = EnvGen.kr(Env([Rand(1700,2100),freq,freq*0.5],[0.12*sustain,0.88*sustain]*fMod,\exp));
+	osc = SinOsc.ar([fEnv,fEnv+10],0,SinOsc.kr(55,0,0.85,0.15));
+	tone = osc * aEnv * amp;
+	tone = LPF.ar(tone, fEnv + lpf);
+	tone = FreeVerb.ar(tone, 0.9, 1.8, 0.1, 1, tone);
 	DetectSilence.ar(tone, doneAction:2);
 	Out.ar(out,Pan2.ar(tone,pan));
 }).add;
-*/
-
-SynthDef(\DrumA5, { |out, t_trig, freq, pan, amp, sustain, lpf|
-	var fMod = 0.0025;
-	var aEnv = EnvGen.kr(Env([0.0,1.0,0.4,0.0],[0.05*sustain,0.3*sustain,0.65*sustain]));
-	var fEnv = EnvGen.kr(Env([Rand(1700,2100),freq,freq*0.5],[0.01*sustain,0.23*sustain],\exp));
-	var osc = SinOsc.ar([fEnv,fEnv+10],0,SinOsc.kr(55,0,0.85,0.15));
-	var tone = osc * aEnv * amp;
-	tone = LPF.ar(tone,fEnv + lpf);
-	tone = FreeVerb.ar(tone, 0.9, 0.8, 0.1, 1, tone);
-	DetectSilence.ar(tone, doneAction:2);
-	Out.ar(out,Pan2.ar(tone,pan));
-}).add;
-
 
 SynthDef(\DrumA4, { |out, t_trig, freq, pan, amp, sustain, lpf|
 	var fMod = 0.005;
@@ -134,7 +123,8 @@ Pdef(\DrumSeq1,
 		\legato, Pseq([0.6,0.6,0.3,0.3,0.7,0.5,0.1], inf),
 		\octave, Pseq([Pn(3,6),Pn(4,2)], inf),
 		\degree, Pseq([3,4,5,7,6b], inf),
-		\lpf, Pseq([250,50,8000,200,800], inf)
+		\lpf, Pseq([250,50,8000,200,800], inf),
+		\pan, Pwhite(-1,1,inf)
 )).play(quant:1);
 )
 Pdef(\DrumSeq1).stop;
@@ -184,8 +174,6 @@ Pdef(\testSaw4,                                                  //this one, day
 	);
 ).play(quant:1);
 )
-
-Pdef(\seqSaw1).stop;
 Pdef(\testSaw4).stop;
 
 (
