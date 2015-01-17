@@ -33,3 +33,4 @@ Ndef(\magick,{
 
 
 ///what is mold and why is all this magic crashing on me?
+///// ^^ mold = num of channels per ndef, it depends on server settings...

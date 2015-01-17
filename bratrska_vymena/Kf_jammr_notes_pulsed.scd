@@ -1,6 +1,7 @@
 // Ja_WOW
 
 // I can't play this - the server keeps crashing :(
+// ^^ pitty it desn't sond bad (uploading flac named notes_pulsed)
 
 (
 Tdef(\automata,{
