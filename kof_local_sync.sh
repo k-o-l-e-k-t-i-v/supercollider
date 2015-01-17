@@ -18,4 +18,8 @@ git add .
 git commit -am "sync /w ownCloud @ `date`"
 git annex sync
 
+echo "//////////// syncing annex folder ////////////////////////////////////"
+cd ~/annex
+git annex sync
+
 
