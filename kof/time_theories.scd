@@ -1,3 +1,9 @@
+// adding 8
+(
+    x = { {|i| SinOsc.ar(i)}!8 };
+    x.plot(1);
+)
+
 // harmonic 8
 (
     x = { {|i| SinOsc.ar(2*i)}!8 };
