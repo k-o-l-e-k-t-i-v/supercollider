@@ -28,3 +28,10 @@
 
 
 //...
+// Weierstrass function (kills cpu, recursion)
+(
+    x = { {|i| SinOsc.ar(200 * 2**i*cos(3**i*pi*x) )}!2 };
+    x.plot(1e-2);
+    {Splay.ar(x,1,0.2)}.play;
+)
+
