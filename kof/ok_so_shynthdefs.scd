@@ -42,3 +42,8 @@ s.boot;
 
 
 )
+
+
+//u so wild kof. ugh
+
+//in order to use env with dur u need to use "sustain" in defining the env

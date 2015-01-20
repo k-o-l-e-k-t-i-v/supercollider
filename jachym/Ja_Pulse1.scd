@@ -45,3 +45,6 @@ Pdef(\testPulse,
 )
 
 Pdef(\testPulse).stop;
+
+
+//this one sounds like u have a little Jiri inside you ^^
