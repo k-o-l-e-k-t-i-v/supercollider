@@ -7,16 +7,16 @@ s.boot;
 
     Ndef(\iner,{
 
-        ~mod = SinOsc.ar(11/(1.001**(1..8))).range(432,432*1.5);
+        ~mod = SinOsc.ar(11/(1.001**(1..8))).range(432,43.2);
         ~sig = SinOsc.ar(~mod,mul:0.3) +
         ((LFSaw.ar(1/4/[1,2,4,8]).squared * LFSaw.ar(~mod/2,mul:0.7) + WhiteNoise.ar(0.2!4)) *
          Pulse.ar(4/fib(12)) ).softclip;
 
-        ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(11/(1.01**(1..12)).at(i)).range(432,4320) ) }!8; 
-        ~sig = ~sig + (SinOsc.ar(432/(1.501**(1..8)),mul:0.2) * LFSaw.ar(1/4/[1,2,4,8]).squared);
-        ~sig = CombN.ar(~sig,0.25*(1..8),4,8);
+        ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(11/(1.01**(1..12)).at(i)).range(4320,43.20).round(43.2) ) }!8; 
+        ~sig = ~sig + (SinOsc.ar(43.2+ (43.20/1.5pi*(2.001**(1..8))),mul:0.2) * LFSaw.ar(1/4/[1,2,4,8]).squared);
+        ~sig = CombN.ar(~sig,0.25**(1..8),4,8);
         ~sig = CompanderD.ar(~sig,0.5,1,0.25);
-        ~sig = FreeVerb.ar(~sig,0.5,100);
+        ~sig = FreeVerb.ar(~sig,0.15,100);
 
 
         Splay.ar(
@@ -43,3 +43,5 @@ s.boot;
             ,0.2,1)}).play;
 
 )
+
+s.freeAll;
