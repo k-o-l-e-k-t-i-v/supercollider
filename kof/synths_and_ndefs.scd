@@ -6,7 +6,7 @@ s.freeAll;
 
 (
     Ndef(\mod).quant = 2.0;
-    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/8/(1..8))),[0.5,0.75,0.25,1/2,1/4,1,2,1.5,1,1].scramble * pi) )});
+    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/8/(1..8))),1+[0.5,0.75,0.25,1/2,1/4,-0.25,-0.5,1,1].scramble * pi) )});
 
 
     SynthDef(\kick,{|amp = 0.2,freq = 8000|
@@ -72,28 +72,31 @@ s.freeAll;
             Pbind(
                 \instrument, \tone2,
                 \dur, Pseq([1,1,1/2]*1/8,inf),
-                \freq, Pseq(([60-12,60,60+12]).midicps,inf),
+                \freq, Pseq(([60,72,67]-12).midicps,inf),
                 \amp, Pwhite(0.001,0.055,inf)
             ),
             Pbind(
                 \instrument, \tone,
                 \dur, Pseq([1,1,1/2,1/4,2,4,8],inf),
-                \freq, Pseq(([60,60-24,60-36]).midicps,inf),
+                \freq, Pseq(([60,65,69]-24).midicps,inf),
                 \amp, Pwhite(0.001,0.2,inf)
             ),
             Pbind(
                 \instrument, \tone,
                 \dur, 16,
+                \freq, Pseq(([60,65,69]-12).midicps,inf),
                 \modd, Pxrand([1,2,4,1/2,1/4],inf)
             ),
             Pbind(
                 \instrument, \tone2,
                 \dur, 8,
+                \freq, Pxrand(([60,65,69]-24).midicps,inf),
                 \modd, Pxrand([1,2,4,1/2,1/4],inf)
             ),
             Pbind(
                 \instrument, \tone,
                 \dur, 32,
+                \freq, Pxrand(([60,65,69]-36).midicps,inf),
                 \modd, Pxrand([1,2,4,1/2,1/4],inf)
 
             )])
