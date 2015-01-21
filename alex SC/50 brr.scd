@@ -29,7 +29,7 @@ Ndef(\1, {
 
 
 
-	Mix.new([sig1*0.1]);
+	Mix.new([sig1*0.5, sig2]);
 
 
 }).play;
@@ -38,3 +38,43 @@ Ndef(\1, {
 s.scope(2);
 
 1.333/8
+
+(
+{
+	Mix.fill(10,
+		{CombN.ar(Pulse.ar(1),0.5,1/45,10)})}.play;
+)
+
+(
+{
+	Limiter.ar(Mix.fill(10,{arg i; SinOsc.ar([(1450..1450.8)],[(0..i)])}),0.8)*
+	Decay2.kr(Impulse.kr([0.25,0.5]),0.1,0.1)}.play;
+)
+
+(
+Ndef(\2).fadeTime=2;
+Ndef(\2).quant=2;
+Ndef(\2,{
+
+	var x,y,z,ex, ey, ez, b, freq;
+
+	b=4/3;  //0.666, 1.333, 2.666 etc
+
+	freq=Duty.kr( Dseq([b*4,b*2,b,b*2],inf),0, Dseq([45,60,Drand([50,85],1), 75],inf));
+
+
+	ex=Decay2.kr(Impulse.kr([b/4,b/2]),0.1,0.5);
+	ey=Decay2.kr(Impulse.kr([b*2,b*8]),0.1,0.2);
+	ez=Decay2.kr(Impulse.kr([b*4,b]),0.01,0.1);
+
+	x=Limiter.ar(Mix.fill(10,{arg i; SinOsc.ar([freq,freq+0.8],[(0..i)])}),0.2);
+	y=Limiter.ar(Mix.fill(10,{arg i; SinOsc.ar([freq-15,freq-14],[(0..i)])}),0.2);
+	z=Limiter.ar(Mix.fill(10,{arg i; SinOsc.ar([freq*1200,freq*1200+1],[(0..i)])*GrayNoise.ar(0.2)}),0.02);
+
+
+	Mix.new([x*ex,y*ey,GVerb.ar(z*ez*0.5,10)]);
+
+
+
+}).play;
+)
