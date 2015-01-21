@@ -6,14 +6,14 @@ s.freeAll;
 
 (
     Ndef(\mod).quant = 2.0;
-    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/4/(1..8))),1+[0.5,0.75,0.25,1/2,1/4,-0.25,-0.5,1,1].scramble) )});
+    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/4/(1..8))),1+[0.5,0.75,0.25,1/2,1/4,-0.25,-0.5,1,1].scramble * 0.25pi) )});
 
 
     SynthDef(\kick,{|amp = 0.2,freq = 8000|
                     var sig,env1,env2;
                     env1 = EnvGen.ar(Env.new([0,1,0],[{ExpRand(0.01,0.12)}!2,{ExpRand()}!2],[-3,3]),doneAction:2);
                     env2 = EnvGen.ar(Env.new([freq,432/8pi,432/2pi],[0.015,0.02],[-3,3]));
-                    sig = Vibrato.ar(SinOsc.ar(env2+([0.01,0]) + LFSaw.ar(env2*1.5)) * env1,[4,5,6,7],0.2);
+                    sig = Vibrato.ar(SinOsc.ar(env2+([0.01,0]) + LFSaw.ar(env2*1.5)) * env1,[4,5,6,7],0.02);
 
                     Out.ar(0,Splay.ar(sig,1,amp));
 
@@ -23,7 +23,7 @@ s.freeAll;
     SynthDef(\hiss,{|amp = 0.2,freq = 800|
                     var sig,env1,env2;
                     env1 = EnvGen.ar(Env.new([0,1,0],[0.02,{ExpRand(0.2,0.4)}!2],[-3,3]),doneAction:2);
-                    sig = Vibrato.ar(HPF.ar(WhiteNoise.ar(amp!2),freq) * env1,[4,5,6,7],0.2);
+                    sig = Vibrato.ar(HPF.ar(WhiteNoise.ar(amp!2),freq) * env1,[4,5,6,7]+1,0.02);
 
                     Out.ar(0,Splay.ar(sig,1,amp));
 
