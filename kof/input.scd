@@ -14,13 +14,13 @@ s.boot;
 
         ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(11/(1.01**(1..12)).at(i)).range(4320,43.20).round(43.2) ) }!8; 
         ~sig = ~sig + (SinOsc.ar(43.2+ (43.20/1.5pi*(2.001**(1..8))),mul:0.2) * LFSaw.ar(1/4/[1,2,4,8]).squared);
-        ~sig = CombN.ar(~sig,0.25**(1..8),4,8);
+        ~sig = CombN.ar(~sig,0.0025**(1..8),4,8);
         ~sig = CompanderD.ar(~sig,0.5,1,0.25);
-        ~sig = FreeVerb.ar(~sig,0.15,100);
+        ~sig = FreeVerb.ar(~sig,0.15,10);
 
 
         Splay.ar(
-            ~sig
+            ~sig.distort.softclip
             ,0.2,0.65)}).play;
 
 )
