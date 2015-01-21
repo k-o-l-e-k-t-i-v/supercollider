@@ -2,17 +2,17 @@
 s.boot;
 
 (
-    Ndef(\inter).fadeTime = 2.0;
+    Ndef(\inter).fadeTime = 4.0;
     Ndef(\inter).quant = 2.0;
 
     Ndef(\iner,{
 
-        ~mod = SinOsc.ar(1/8/(1.001**(1..8))).range(432,43.2);
+        ~mod = SinOsc.ar(1/111/(1.501**(1..8))).range(4320,43.2).round(43.2);
         ~sig = SinOsc.ar(~mod,mul:0.3) +
         ((LFSaw.ar(1/4/[1,2,4,8]).squared * LFSaw.ar(~mod/2,mul:0.7) + WhiteNoise.ar(0.2!4)) *
          Pulse.ar(4/fib(12)) ).softclip;
 
-        ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(11/(1.01**(1..12)).at(i)).range(4320,43.20).round(43.2) ) }!8; 
+        ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(11/(1.01**(1..12)).at(i)).range(10000,43.20).round(43.2) ) }!8; 
         ~sig = ~sig + (SinOsc.ar(43.2+ (43.20/1.5pi*(2.001**(1..8))),mul:0.2) * LFSaw.ar(1/4/[1,2,4,8]).squared);
         ~sig = CombN.ar(~sig,0.0025**(1..8),4,8);
         ~sig = CompanderD.ar(~sig,0.5,1,0.25);
