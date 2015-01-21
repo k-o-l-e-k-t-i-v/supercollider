@@ -1,0 +1,45 @@
+
+s.boot;
+
+(
+    Ndef(\inter).fadeTime = 2.0;
+    Ndef(\inter).quant = 2.0;
+
+    Ndef(\iner,{
+
+        ~mod = SinOsc.ar(11/(1.001**(1..8))).range(432,432*1.5);
+        ~sig = SinOsc.ar(~mod,mul:0.3) +
+        ((LFSaw.ar(1/4/[1,2,4,8]).squared * LFSaw.ar(~mod/2,mul:0.7) + WhiteNoise.ar(0.2!4)) *
+         Pulse.ar(4/fib(12)) ).softclip;
+
+        ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(11/(1.01**(1..12)).at(i)).range(432,4320) ) }!8; 
+        ~sig = ~sig + (SinOsc.ar(432/(1.501**(1..8)),mul:0.2) * LFSaw.ar(1/4/[1,2,4,8]).squared);
+        ~sig = CombN.ar(~sig,0.25*(1..8),4,8);
+        ~sig = CompanderD.ar(~sig,0.5,1,0.25);
+        ~sig = FreeVerb.ar(~sig,0.5,100);
+
+
+        Splay.ar(
+            ~sig
+            ,0.2,0.65)}).play;
+
+)
+
+(
+    Ndef(\mic).fadeTime = 8.0;
+    Ndef(\mic).quant = 2.0;
+
+    Ndef(\mic,{
+
+        ~sig = AudioIn.ar([1,1],2).softclip + (WhiteNoise.ar(0.2!4) * Decay.ar(Dust.ar(1/4!4)));
+        ~sig = CompanderD.ar(~sig,0.5,1,0.5);
+
+        ~sig = {|i| BBandPass.ar(~sig, SinOsc.ar(~sig.range(11,1/4).lag(0.02)/(2.001**(1..12)).at(i)).range(22,1600) ) }!8;
+
+        ~sig = FreeVerb.ar(~sig,0.5,100);
+
+        Splay.ar(
+            ~sig 
+            ,0.2,1)}).play;
+
+)
