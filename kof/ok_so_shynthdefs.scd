@@ -12,7 +12,7 @@ s.boot;
                      ~sig = FreeVerb.ar(~sig,0.3,10);
 
                      Out.ar(0,Splay.ar(~sig*~env));
-                    }).store;
+                    }).store; //use add insted if store. "add" save it to memory, store save it on disk
     );
 )
 /////////////////////////////////////////////////////////////////////////////////////////
