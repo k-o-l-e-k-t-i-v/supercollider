@@ -90,7 +90,7 @@ s.freeAll;
             Pbind(
                 \instrument, \tone2,
                 \dur, 8,
-                \freq, Pxrand(([60,65,69]-24).midicps,inf),
+                \freq, Pxrand(([60,65,69]+24).midicps,inf),
                 \modd, Pxrand([1,2,4,1/2,1/4],inf)
             ),
             Pbind(
