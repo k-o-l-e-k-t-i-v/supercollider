@@ -6,7 +6,7 @@ s.freeAll;
 
 (
     Ndef(\mod).quant = 2.0;
-    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/4/[1,2,4,8])),1+[-0.5,-0.75,0,1/2,1/4,1,2,3,1,1].scramble * 0.25pi).lag((1..4)/32) + SinOsc.ar([2,4,5,6]*10).range(-0.01,0.01) )});
+    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/4/[1,2,4,8])),[0.5,0.75,1.5,1/2,1/4,1,2,1.25,1,1].scramble).lag((1..4)/32) + SinOsc.ar([2,4,5,6]*10).range(-0.01,0.01) )});
 
 
     SynthDef(\kick,{|amp = 0.2,freq = 8000|
