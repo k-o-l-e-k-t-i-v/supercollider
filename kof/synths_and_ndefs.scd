@@ -6,13 +6,13 @@ s.freeAll;
 
 (
     Ndef(\mod).quant = 2.0;
-    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/8/(1..8))),1+[-0.5,-0.75,-0.25,1/2,1/4,1,2,0,1,1].scramble * pi) )});
+    Ndef(\mod,{Splay.kr(Select.kr(Stepper.kr(Impulse.kr(1/8/(1..8))),[0.5,0.75,0.25,1/2,1/4,1,2,1.5,1,1].scramble * pi) )});
 
 
     SynthDef(\kick,{|amp = 0.2,freq = 8000|
                     var sig,env1,env2;
                     env1 = EnvGen.ar(Env.new([0,1,0],[{ExpRand(0.01,0.12)}!2,{ExpRand()}!2],[-3,3]),doneAction:2);
-                    env2 = EnvGen.ar(Env.new([freq,144,45],[0.015,0.02],[-3,3]));
+                    env2 = EnvGen.ar(Env.new([freq,432/8pi,432/2pi],[0.015,0.02],[-3,3]));
                     sig = Vibrato.ar(SinOsc.ar(env2+([0.01,0]) + LFSaw.ar(env2*1.5)) * env1,[4,5,6,7],0.2);
 
                     Out.ar(0,Splay.ar(sig,1,amp));
@@ -36,9 +36,9 @@ s.freeAll;
                     env1 = EnvGen.ar(Env.new([0,1,0],[0.02,dur/8],[-3,3]));
                     env2 = EnvGen.ar(Env.new([0,1,0],[dur/16,dur],[3,-3]));
                     env3 = EnvGen.ar(Env.new([0,1,0],[dur,dur*2],[-1,3]),doneAction:2);
-                    sig = SinOsc.ar(freq*Ndef(\mod).kr+((1.01*(1..8))/1.0) ) * env1;
-                    sig = LFSaw.ar(freq*Ndef(\mod).kr*(1.5)+((1.01*(1..8))/4.0) ) * env2 + sig; 
-                    sig = LFTri.ar(freq*Ndef(\mod).kr/1.5+((1.01*(1..8))/1.0) ) * env3 + sig + BrownNoise.ar(0.01*modd);
+                    sig = SinOsc.ar(freq*Ndef(\mod).kr+((1.0001*(1..8))/1.0) ) * env1;
+                    sig = LFSaw.ar(freq*Ndef(\mod).kr*(2)+((1.01*(1..8))/4.0) ) * env2 + sig; 
+                    sig = LFTri.ar(freq*Ndef(\mod).kr/2+((1.01*(1..8))/1.0) ) * env3 + sig + BrownNoise.ar(0.01*modd);
 
 
                     Out.ar(0,Splay.ar(sig,0.5,amp));
@@ -50,8 +50,8 @@ s.freeAll;
                     env2 = EnvGen.ar(Env.new([0,1,0],[dur/16,dur],[3,-3]));
                     env3 = EnvGen.ar(Env.new([0,1,0],[dur,dur*2],[-1,3]),doneAction:2);
                     sig = LFSaw.ar(freq*Ndef(\mod).kr+((1.01*(1..8))/1.0) ) * env1;
-                    sig = SinOsc.ar(freq*Ndef(\mod).kr*(3)+((1.01*(1..8))/4.0) ) * env2 + sig; 
-                    sig = LFTri.ar(freq*Ndef(\mod).kr/1.5+((1.01*(1..8))/1.0) ) * env3 + sig + BrownNoise.ar(0.01*modd);
+                    sig = SinOsc.ar(freq*Ndef(\mod).kr*(2)+((1.0001*(1..8))/4.0) ) * env2 + sig; 
+                    sig = LFTri.ar(freq*Ndef(\mod).kr/2+((1.00001*(1..8))/1.0) ) * env3 + sig + BrownNoise.ar(0.01*modd);
 
 
                     Out.ar(0,Splay.ar(sig,0.5,amp));
@@ -72,13 +72,13 @@ s.freeAll;
             Pbind(
                 \instrument, \tone2,
                 \dur, Pseq([1,1,1/2]*1/8,inf),
-                \freq, Pseq(([63,72,67]).midicps,inf),
+                \freq, Pseq(([60-12,60,60+12]).midicps,inf),
                 \amp, Pwhite(0.001,0.055,inf)
             ),
             Pbind(
                 \instrument, \tone,
                 \dur, Pseq([1,1,1/2,1/4,2,4,8],inf),
-                \freq, Pseq(([60,72,65]).midicps,inf),
+                \freq, Pseq(([60,60-24,60-36]).midicps,inf),
                 \amp, Pwhite(0.001,0.2,inf)
             ),
             Pbind(
