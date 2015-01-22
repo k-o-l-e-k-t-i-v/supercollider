@@ -32,7 +32,7 @@ Ndef(\1, {
 	Mix.new([sig1*0.5, sig2]);
 
 
-}).play;
+}).play; ////////// j_Wow
 )
 
 s.scope(2);
