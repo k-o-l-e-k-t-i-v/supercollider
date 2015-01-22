@@ -15,7 +15,7 @@ s.boot;
                            ,[4,5,6,7],1/(1..8)) +
                        LFSaw.ar((note+48).midicps / (oct1+oct2).lag(1/fib(8)) * (1.0001**(1..8)),mul:0.4) +
                        (SinOsc.ar([44,45]) * Pulse.ar(4/[1,2,2,4],mul:0.2)) + 
-                       HPF.ar((WhiteNoise.ar(0.2!4) * Pulse.ar(4/fib(8),mul:0.4)),SinOsc.ar(0.0001**(1..8)).range(444,4444))
+                       HPF.ar((WhiteNoise.ar(0.2!4) * Pulse.ar(4/fib(8),mul:0.4)),SinOsc.ar(1.0001**(1..8)).range(444,4444))
                        ,0.33,200)
                    ,0.5,1)}).play;
 
