@@ -24,7 +24,7 @@ s.boot;
     Ndef(\abc)[1] = \set -> Ppar([
         Pbind(
             \dur, Pseq([1/4], inf),
-            \note, Pseq([60,65,69,61,61,60-12,60-80,60+12], inf),
+            \note, Pseq([60,65,69,61,61,60-12,60,60+12], inf),
             \oct, Pseq([[0,12,-12].scramble,[0,-12,12].scramble,[24,0,0].scramble].scramble,inf)
         ),
         Pbind(
@@ -38,7 +38,7 @@ s.boot;
         ),
         Pbind(
             \dur, Pseq([1/4,1/4]*32, inf),
-            \oct2, Pseq([1,1.5,1.25,0.5,0.75,1.25,2,1].reverse,inf)
+            \oct2, Pseq([1.5,1.25,0.5,0.75,1.25,2,1].reverse,inf)
         )
     ])
 );
