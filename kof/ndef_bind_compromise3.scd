@@ -7,9 +7,9 @@ s.boot;
                Splay.ar(
                    FreeVerb.ar(
                        Vibrato.ar(
-                               LFTri.ar((mod1+mod2).midicps * oct1 * (1.001**(1..8)), mul:0.25) +
+                               LFTri.ar((mod1+mod2).midicps * oct1 * (1.001**(1..8)), mul:0.5) +
                                LFSaw.ar((note+oct).midicps * oct2 * (1.0001**(1..8)),mul:0.25) * 
-                           LFSaw.ar(1/8/[1,2,4,8]).squared
+                           LFSaw.ar(1/2/fib(8)).squared
                            ,[4,5,6,7],1/(1..8)) +
                        LFSaw.ar((note+48).midicps / (oct1+oct2).lag(1/fib(8)) * (1.0001**(1..8)),mul:0.2) +
                        (SinOsc.ar(66) * Decay.ar(Impulse.ar(4/[1,2,4]),{ExpRand()}!3,mul:0.8)) + 
