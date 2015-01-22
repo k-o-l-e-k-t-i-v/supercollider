@@ -1,6 +1,5 @@
-(
 s.plotTree;
-
+(
 ~synG = Group.new;
 ~efxG = Group.new(~synG, \addAfter);
 ~mixG = Group.new(~efxG, \addAfter);
@@ -10,8 +9,8 @@ s.plotTree;
 SynthDef(\ampFader, { | out = 0, bus, mute = 1, amp = 0.0 |
 	Out.ar(out, In.ar(bus, 2) * mute * amp)
 }).add;
-SynthDef(\fShift, { | bus target time |
-	ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), target], [time], \sin), doneAction: 2))
+SynthDef(\fShift, { | bus target dur |
+	ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), target], [dur], \sin), doneAction: 2))
 }).add;
 )
 
@@ -25,7 +24,7 @@ SynthDef(\fShift, { | bus target time |
 (
 SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
 	var aEnv = EnvGen.ar(Env.asr(0.1*sustain, 1,0.9*sustain),gate, doneAction:2);
-	var osc = LFSaw.ar([freq, freq+10],0,1);
+	var osc = SinOsc.ar([freq, freq+10],0,1);
 	var tone = osc * aEnv * amp;
 	Out.ar(out, tone);
 }).add;
@@ -48,8 +47,7 @@ Synth(\fShift,[\bus,~chAmp, \target, 0.0, \time, 5],~mixG);
 
 (
 Pbind(\instrument, \fShift, \group, ~mixG,	\bus, ~chAmp,
-	\time, Pseq([10]),
-	\target, Pseq([0.5])
+	#[\target,\dur], Pseq([[0.5,2],[0.3,5],[0.0,2]])
 ).play;
 )
 
