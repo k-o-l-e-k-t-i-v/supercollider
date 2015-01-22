@@ -9,9 +9,9 @@ s.boot;
                        CombN.ar(
                            Vibrato.ar(
                                LPF.ar(
-                           SinOsc.ar( (mod1+mod2).midicps * oct1 * (2.01**(1..8)), mul:0.2) +
-                           LFSaw.ar((note+oct).midicps * oct2 * (2.001**(1..8)),mul:0.2) * LFSaw.ar(1/4/fib(8)).squared
-                                   ,((note+oct).midicps + (mod1+mod2).midicps) * (2.01**(1..8)))
+                           LFTri.ar( (mod1+mod2).midicps * oct1 * (2.01**(1..8)), mul:0.75) +
+                           LFSaw.ar((note+oct).midicps * oct2 * (2.001**(1..8)),mul:0.75) * LFSaw.ar(1/4/fib(8)).squared
+                                   ,(note+oct).midicps + (mod1+mod2).midicps)
                                [4,5,6,7],0.2)
                            ,0.02,4,8) +
                        (SinOsc.ar(99+((1/oct1+1/oct2)*99)) * Pulse.ar(4/[1,2,4],mul:0.2)) + 
@@ -22,12 +22,12 @@ s.boot;
     Ndef(\abc)[1] = \set -> Ppar([
         Pbind(
             \dur, Pseq([1/4], inf),
-            \note, Pseq([60,61,72]-24,inf),
+            \note, Pseq([60,61,72],inf),
             \oct, Pseq([[0,12,-12],[0,-12,12],[24,0,0]],inf)
         ),
         Pbind(
             \dur, Pseq([1/4,1/4,1/2], inf),
-            \mod1, Pseq([60,67,61]-36,inf),
+            \mod1, Pseq([60,67,61]-12,inf),
             \mod2, Pseq([[0,12,-12],[0,-36,12],[24,0,-36]],inf)
         ),
         Pbind(
