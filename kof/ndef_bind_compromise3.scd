@@ -8,33 +8,33 @@ s.boot;
                    FreeVerb.ar(
                            Vibrato.ar(
                                LPF.ar(
-                           SinOsc.ar( (mod1+mod2).midicps * oct1 * (1.01**(1..8)), mul:0.5) +
-                                   LFSaw.ar((note+oct).midicps * oct2 * (1.001**(1..8)),mul:0.5) * LFSaw.ar(2/[1,2,4,8]).squared
-                                   ,((note+oct).midicps + (mod1+mod2).midicps * (1.01**(1..8))))
+                           LFTri.ar( (mod1+mod2).midicps * oct1 * (1.0001**(1..8)), mul:0.25) +
+                                   LFSaw.ar((note+oct).midicps * oct2 * (1.00001**(1..8)),mul:0.25) * LFSaw.ar(2/[1,2,4,8]).squared
+                                   ,((note+oct).midicps + (mod1+mod2).midicps * (1.00001**(1..8))))
                                [4,5,6,7],0.2)+
                        (SinOsc.ar(99+((1/oct1+1/oct2)*9)) * Decay.ar(Impulse.ar(4/[1,2,4]),0.1,mul:0.4)) + 
                        HPF.ar((WhiteNoise.ar(0.2!4) * Pulse.ar(4/fib(8),mul:0.4)),SinOsc.ar(0.01**(1..8)).range(444,4444))
-                       ,0.133,2)
+                       ,0.133,20)
                ,0.2,1)}).play;
 
     Ndef(\abc)[1] = \set -> Ppar([
         Pbind(
             \dur, Pseq([1/4], inf),
-            \note, Pseq([60,65,69],inf),
+            \note, Pseq([60,65,69,61,61,60-12,60-80,60+12]+12, inf),
             \oct, Pseq([[0,12,-12],[0,-12,12],[24,0,0]],inf)
         ),
         Pbind(
-            \dur, Pseq([1/4,1/4,1/2], inf),
-            \mod1, Pseq([60,67,61]-24,inf),
-            \mod2, Pseq([[0,12,-12],[0,-36,12],[24,0,-36]],inf)
+            \dur, Pseq([1/4,1/4], inf),
+            \mod1, Pseq([60,60-12,61]+24,inf),
+            \mod2, Pseq([[0,12,-12],[0,-0,12],[24,0,-0]],inf)
         ),
         Pbind(
-            \dur, Pseq([1/4,1/4,1/2]*16, inf),
+            \dur, Pseq([1/4,1/4]*16, inf),
             \oct1, Pseq([1,1.5,1.25,0.5,0.75,1.25,2,1],inf)
         ),
         Pbind(
-            \dur, Pseq([1/4,1/4,1/2]*32, inf),
-            \oct2, Pseq([1,1.5,1.25,0.5,0.75,1.25,2,1],inf)
+            \dur, Pseq([1/4,1/4]*32, inf),
+            \oct2, Pseq([1,1.5,1.25,0.5,0.75,1.25,2,1].reverse,inf)
         )
     ])
 );
