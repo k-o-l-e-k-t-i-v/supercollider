@@ -40,10 +40,10 @@ Pdef(\test,
 ).play;
 )
 
-Synth(\fShift,[\bus,~chAmp, \target, 0.4, \time, 8],~mixG);
+Synth(\fShift,[\bus,~chAmp, \target, 0.4, \dur, 8],~mixG);
 ~chAmp.set(0.0);
 ~chAmp.set(0.3);
-Synth(\fShift,[\bus,~chAmp, \target, 0.0, \time, 5],~mixG);
+Synth(\fShift,[\bus,~chAmp, \target, 0.0, \dur, 5],~mixG);
 
 (
 Pbind(\instrument, \fShift, \group, ~mixG,	\bus, ~chAmp,
