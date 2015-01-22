@@ -1,31 +1,38 @@
+(
 s.plotTree;
 
-(
-~mixGroup = Group.new;
-~synthGroup = Group.new;
-
-~chAmp = Bus.control(s, 1);
-~fader = Synth(\fader, [\out,0,\in,30,\amp, ~chAmp.asMap], ~mixGroup);
+~synG = Group.new;
+~efxG = Group.new(~synG, \addAfter);
+~mixG = Group.new(~efxG, \addAfter);
 )
 
 (
-SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
-	var aEnv = EnvGen.ar(Env.asr(0.1*sustain, 1,0.9*sustain),gate, doneAction:2);
-	var osc = SinOsc.ar([freq, freq],0,1);
-	var tone = osc * aEnv * amp;
-	Out.ar(out, tone);
+SynthDef(\ampFader, { | out = 0, bus, mute = 1, amp = 0.0 |
+	Out.ar(out, In.ar(bus, 2) * mute * amp)
 }).add;
-SynthDef(\fader, { | out = 0, in, mute = 1, amp = 0.3 |
-	Out.ar(out, In.ar(in, 2) * mute * amp)
-}).add;
-SynthDef(\sinenv, { | bus target time |
+SynthDef(\fShift, { | bus target time |
 	ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), target], [time], \sin), doneAction: 2))
 }).add;
 )
 
 (
+~ch = Bus.audio(s,2);
+~chAmp = Bus.control(s, 1);
+~chAmpFader = Synth(\ampFader, [\out,0,\bus,30,\amp, ~chAmp.asMap], ~mixG);
+)
+
+
+(
+SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
+	var aEnv = EnvGen.ar(Env.asr(0.1*sustain, 1,0.9*sustain),gate, doneAction:2);
+	var osc = LFSaw.ar([freq, freq+10],0,1);
+	var tone = osc * aEnv * amp;
+	Out.ar(out, tone);
+}).add;
+)
+(
 Pdef(\test,
-	Pbind(\instrument, \testSin, \out, 30, \group, ~synthGroup.nodeID,
+	Pbind(\instrument, \testSin, \out, 30, \group, ~synG,
 		\amp, 1,
 		\dur, 1, \legato, 1.4,
 		\octave, 3,
@@ -34,12 +41,19 @@ Pdef(\test,
 ).play;
 )
 
-Synth(\sinenv,[\bus,~chAmp, \target, 0.4, \time, 8],~mixGroup);
-~chAmp.set(0.1);
+Synth(\fShift,[\bus,~chAmp, \target, 0.4, \time, 8],~mixG);
+~chAmp.set(0.0);
 ~chAmp.set(0.3);
-Synth(\sinenv,[\bus,~chAmp, \target, 0.0, \time, 15],~mixGroup);
+Synth(\fShift,[\bus,~chAmp, \target, 0.0, \time, 5],~mixG);
+
+(
+Pbind(\instrument, \fShift, \group, ~mixG,	\bus, ~chAmp,
+	\time, Pseq([10]),
+	\target, Pseq([0.5])
+).play;
+)
 
 (
 Pdef(\test).stop;
-~fader.free;
+~chAmpFader.free;
 )
