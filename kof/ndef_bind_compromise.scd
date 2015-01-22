@@ -12,8 +12,8 @@ s.boot;
                            LFSaw.ar((note+oct).midicps * oct2 + (1.001**(1..8)),mul:0.5) * LFSaw.ar(1/4/fib(5)).squared
                                [4,5,6,7],0.2)
                            ,0.02,4,8) +
-                       (SinOsc.ar(99*(1/oct1+oct2)) * Pulse.ar(4/[1,2,4],mul:0.2)) + 
-                       (WhiteNoise.ar(0.1!4) * Pulse.ar(2/[1,2,4],mul:0.1)) 
+                       (SinOsc.ar(99*(1/oct1+oct2)) * Pulse.ar(4/[1,2,4],mul:0.2)) +
+                       (WhiteNoise.ar(0.1!4) * Pulse.ar(2/[1,2,4],mul:0.1))
                        ,0.33,100)
                )}).play;
 
@@ -39,3 +39,6 @@ s.boot;
     ])
 );
 )
+
+
+// <3

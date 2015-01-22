@@ -37,7 +37,7 @@ s.freeAll;
                     env2 = EnvGen.ar(Env.new([0,1,0],[dur/16,dur],[3,-3]));
                     env3 = EnvGen.ar(Env.new([0,1,0],[dur,dur*2],[-1,3]),doneAction:2);
                     sig = SinOsc.ar(freq*Ndef(\mod).kr+((1.0001*(1..8))/1.0) ) * env1;
-                    sig = LFSaw.ar(freq*Ndef(\mod).kr*(2)+((1.01*(1..8))/4.0) ) * env2 + sig; 
+                    sig = LFSaw.ar(freq*Ndef(\mod).kr*(2)+((1.01*(1..8))/4.0) ) * env2 + sig;
                     sig = LFTri.ar(freq*Ndef(\mod).kr/2+((1.01*(1..8))/1.0) ) * env3 + sig + BrownNoise.ar(0.01*modd);
 
 
@@ -50,7 +50,7 @@ s.freeAll;
                     env2 = EnvGen.ar(Env.new([0,1,0],[dur/16,dur],[3,-3]));
                     env3 = EnvGen.ar(Env.new([0,1,0],[dur,dur*2],[-1,3]),doneAction:2);
                     sig = LFSaw.ar(freq*Ndef(\mod).kr+((1.01*(1..8))/1.0) ) * env1;
-                    sig = SinOsc.ar(freq*Ndef(\mod).kr*(2)+((1.0001*(1..8))/4.0) ) * env2 + sig; 
+                    sig = SinOsc.ar(freq*Ndef(\mod).kr*(2)+((1.0001*(1..8))/4.0) ) * env2 + sig;
                     sig = LFTri.ar(freq*Ndef(\mod).kr/2+((1.00001*(1..8))/1.0) ) * env3 + sig + BrownNoise.ar(0.01*modd);
 
 
@@ -119,3 +119,6 @@ s.freeAll;
             )])
         }).play(quant:2);
     )
+
+
+//already done for Ikaria ^^ sweet!
