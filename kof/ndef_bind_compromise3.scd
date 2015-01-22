@@ -38,7 +38,7 @@ s.boot;
         ),
         Pbind(
             \dur, Pseq([1/4,1/4]*32, inf),
-            \oct2, Pseq([1,1.5,1.25,0.5,0.75,1.25,2,1].reverse,inf)
+            \oct2, Pseq([1.5,1.25,0.5,0.75,1.25,2,1].reverse,inf)
         )
     ])
 );
