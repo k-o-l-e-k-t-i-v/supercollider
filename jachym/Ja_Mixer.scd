@@ -42,10 +42,12 @@ SynthDef(\efxFreeVerb, { |bus, room = 0.0 |
 ////// windows setup ///////////////////////////////////////////////////////////
 
 (
-w = Window.new("ja_Mixer", Rect(1000,200,400,300));
 ~colBack = Color.new255(30,30,30);
 ~colFront = Color.new255(255,255,255);
 ~colActive = Color.new255(200,50,50);
+w = Window.new("ja_Mixer", Rect(1000,200,400,300));
+w.alpha_(0.95);
+w.alwaysOnTop_(true);
 w.background_(~colBack).front;
 
 ~collAmpValues = List.new(~numCh);
@@ -64,6 +66,7 @@ w.background_(~colBack).front;
 
 	~collAmpSlider.add(Slider(w, Rect(30+(40*i), 52, 10, 150))
 		.background_(~colBack)
+		.knobColor_(~colActive)
 		.action_({
 			~collAmpValues[i].value_(~collAmpSlider[i].value);
 			("chAmp" ++ i).asSymbol.envirGet.value = ~collAmpSlider[i].value;
