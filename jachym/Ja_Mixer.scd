@@ -27,24 +27,23 @@ SynthDef(\fShift, { | bus target dur |
 		], ~mixG)
 	);
 };
-)
 
 ////// efx setup ///////////////////////////////////////////////////////////
 
-(
 SynthDef(\efxFreeVerb, { |bus, room = 0.0 |
 	var tone = In.ar(bus, 2);
 	var efx = FreeVerb.ar(tone, 0.9, room, 0.5, 1, tone);
 	ReplaceOut.ar(bus, efx)
 }).add;
-)
 
 ////// windows setup ///////////////////////////////////////////////////////////
 
-(
+
 w = Window.new("ja_Mixer", Rect(1000,200,400,300));
-w.background_(Color.new255(30,30,30)).front;
+~colBack = Color.new255(30,30,30);
 ~colFront = Color.new255(255,255,255);
+~colActive = Color.new255(200,50,50);
+w.background_(~colBack).front;
 
 ~collAmpValues = List.new(~numCh);
 ~collAmpSlider = List.new(~numCh);
@@ -53,7 +52,12 @@ w.background_(Color.new255(30,30,30)).front;
 
 ~numCh.do { |i|
 	StaticText.new(w,Rect(20+(40*i),5,80+(30*i),15)).string_("Chnl_"++i).stringColor_(~colFront);
-	~collAmpValues.add(NumberBox(w, Rect(20+(40*i), 25, 30, 20)));
+	~collAmpValues.add(NumberBox(w, Rect(20+(40*i), 25, 30, 20))
+		.normalColor_(~colFront)
+		.background_(~colBack)
+		.align = \center;
+	);
+
 	~collAmpSlider.add(Slider(w, Rect(30+(40*i), 50, 10, 150)));
 	~collAmpSlider[i].action_({
 		~collAmpValues[i].value_(~collAmpSlider[i].value);
@@ -61,22 +65,24 @@ w.background_(Color.new255(30,30,30)).front;
 	});
 	~collAmpSlider[i].action.value;
 
-	~collMuteButtons.add(Button(w, Rect(30+(40*i), 210, 10, 10)));
-	~collMuteButtons[i].states = [["",Color.grey,Color.red],["",Color.grey,Color.green]];
-	~collMuteButtons[i].action_({
-		("chMute" ++ i).asSymbol.envirGet.value = ~collMuteButtons[i].value;
-	});
-
-
-	~collfxFVerbButtons.add(Button(w, Rect(25+(40*i), 230, 20, 20))
+	~collMuteButtons.add(Button(w, Rect(25+(40*i), 210, 20, 20))
 		.states_([
-			["efx",Color.grey,Color.red],
-			["efx",Color.white,Color.green]
+			["||",~colFront,~colBack],
+			[">",~colFront,~colActive]
 		])
 		.action_({ arg butt;
-			butt.value.postln;
+			if(butt.value == 1) { ("chMute" ++ i).asSymbol.envirGet.value = 1; };
+			if(butt.value == 0) { ("chMute" ++ i).asSymbol.envirGet.value = 0; };
+		})
+	);
+
+	~collfxFVerbButtons.add(Button(w, Rect(25+(40*i), 240, 20, 20))
+		.states_([
+			["fx",~colFront,~colBack],
+			["fx",~colFront,~colActive]
+		])
+		.action_({ arg butt;
 			if(butt.value == 1) {
-				"jsem tu".postln; // prob when more than one is relase
 				~collfxFVerbButtons[i] = Synth(\efxFreeVerb, [
 					\bus, ("ch" ++ i).asSymbol.envirGet,
 					\room, 5
@@ -84,7 +90,7 @@ w.background_(Color.new255(30,30,30)).front;
 			if(butt.value == 0) {
 				~collfxFVerbButtons[i].free;
 			};
-		};)
+		})
 	);
 };
 w.front;
@@ -104,7 +110,7 @@ Pdef(\test,
 	Ppar([
 		Pbind(\instrument, \testSin, \out, ~ch0, \group, ~synG,
 			\amp, 1,
-			\dur, 8, \legato, 1.2,
+			\dur, 8, \legato, 0.9,
 			\octave, 2,
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
 		),
@@ -134,7 +140,11 @@ Pdef(\test).stop;
 ////// close Mixer ///////////////////////////////////////////////////////////
 
 (
-~numCh.do { |i|	("chAmpFader" ++ i).asSymbol.envirGet.free; };
+Pdef(\test).stop;
+~numCh.do { |i|
+	("chAmpFader" ++ i).asSymbol.envirGet.free;
+	~collfxFVerbButtons[i].free;
+};
 w.close;
 ~synG.free;
 ~efxG.free;
