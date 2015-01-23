@@ -1,55 +1,36 @@
-s.scope(2);
 s.plotTree;
 
 ////// mixer setup ///////////////////////////////////////////////////////////
 
 (
 ~synG = Group.new;
-~efxG = Group.new(~synG, \addAfter);
-~mixG = Group.new(~efxG, \addAfter);
+~mixG = Group.new(~synG, \addAfter);
 ~numCh = 4;
 
-SynthDef(\ampFader, { |bus, amp = 0.0, mute = 1 |
-	Out.ar(0, In.ar(bus, 2) * amp * mute)
-}).add;
-SynthDef(\fShift, { | bus target dur |
-	ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), target], [dur], \sin), doneAction: 2))
+SynthDef(\ampFader, { |bus, amp = 0.0 |
+	Out.ar(0, In.ar(bus, 2) * amp)
 }).add;
 
 ~numCh.do { |i|
 	("ch" ++ i).asSymbol.envirPut( Bus.audio(s, 2) );
 	("chAmp" ++ i).asSymbol.envirPut( Bus.control(s, 1) );
-	("chMute" ++ i).asSymbol.envirPut( Bus.control(s, 1) );
 	("chAmpFader" ++ i).asSymbol.envirPut( Synth(\ampFader, [
 		\bus, ("ch" ++ i).asSymbol.envirGet,
-		\amp, ("chAmp" ++ i).asSymbol.envirGet.asMap,
-		\mute, ("chMute" ++ i).asSymbol.envirGet.asMap
+		\amp, ("chAmp" ++ i).asSymbol.envirGet.asMap
 		], ~mixG)
 	);
 };
 )
 
-////// efx setup ///////////////////////////////////////////////////////////
-
-(
-SynthDef(\efxFreeVerb, { |bus, room = 0.0 |
-	var tone = In.ar(bus, 2);
-	var efx = FreeVerb.ar(tone, 0.9, room, 0.5, 1, tone);
-	ReplaceOut.ar(bus, efx)
-}).add;
-)
-
 ////// windows setup ///////////////////////////////////////////////////////////
 
 (
-w = Window.new("ja_Mixer", Rect(1000,200,400,300));
+w = Window.new("ja_Mixer", Rect(1000,200,255,400));
 w.background_(Color.new255(30,30,30)).front;
 ~colFront = Color.new255(255,255,255);
 
 ~collAmpValues = List.new(~numCh);
 ~collAmpSlider = List.new(~numCh);
-~collMuteButtons = List.new(~numCh);
-~collfxFVerbButtons = List.new(~numCh);
 
 ~numCh.do { |i|
 	StaticText.new(w,Rect(20+(40*i),5,80+(30*i),15)).string_("Chnl_"++i).stringColor_(~colFront);
@@ -60,32 +41,6 @@ w.background_(Color.new255(30,30,30)).front;
 		("chAmp" ++ i).asSymbol.envirGet.value = ~collAmpSlider[i].value;
 	});
 	~collAmpSlider[i].action.value;
-
-	~collMuteButtons.add(Button(w, Rect(30+(40*i), 210, 10, 10)));
-	~collMuteButtons[i].states = [["",Color.grey,Color.red],["",Color.grey,Color.green]];
-	~collMuteButtons[i].action_({
-		("chMute" ++ i).asSymbol.envirGet.value = ~collMuteButtons[i].value;
-	});
-
-
-	~collfxFVerbButtons.add(Button(w, Rect(25+(40*i), 230, 20, 20))
-		.states_([
-			["efx",Color.grey,Color.red],
-			["efx",Color.white,Color.green]
-		])
-		.action_({ arg butt;
-			butt.value.postln;
-			if(butt.value == 1) {
-				"jsem tu".postln; // prob when more than one is relase
-				~collfxFVerbButtons[i] = Synth(\efxFreeVerb, [
-					\bus, ("ch" ++ i).asSymbol.envirGet,
-					\room, 5
-			], ~efxG)};
-			if(butt.value == 0) {
-				~collfxFVerbButtons[i].free;
-			};
-		};)
-	);
 };
 w.front;
 )
@@ -122,8 +77,8 @@ Pdef(\test,
 		),
 		Pbind(\instrument, \testSin, \out, ~ch3, \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([Pn(0.125,16), Rest(4)], inf), \legato, 0.09,
-			\octave, 8,
+			\dur, Pseq([Pn(0.125,16), Rest(4)], inf), \legato, 0.1,
+			\octave, 3,
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
 		)
 	],inf)
@@ -131,12 +86,10 @@ Pdef(\test,
 )
 Pdef(\test).stop;
 
-////// close Mixer ///////////////////////////////////////////////////////////
+////// close faderObjects ///////////////////////////////////////////////////////////
 
 (
-~numCh.do { |i|	("chAmpFader" ++ i).asSymbol.envirGet.free; };
-w.close;
-~synG.free;
-~efxG.free;
-~mixG.free;
+~numCh.do { |i|
+	("chAmpFader" ++ i).asSymbol.envirGet.free;
+};
 )
