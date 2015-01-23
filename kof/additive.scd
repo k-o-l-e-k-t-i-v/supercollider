@@ -1,7 +1,7 @@
 
 (
     Ndef(\addi,
-         {|note = 60,fre = 1,mod = 1|
+         {|note = 22,fre = 1,mod = 1|
           ~f = {(note.midicps)*fre};
           Splay.ar(
               
@@ -21,11 +21,11 @@
         ),
         Pbind(
             \dur,1/4,
-            \note, Pseq(([35,30]),inf)
+            \note, Pseq(([35,30,30+12,35-12,35,30,35-12,35+12]),inf)
         ),
         Pbind(
             \dur,4,
-            \mod, Pseq(([1,1.5,1.25,0.5,0.75,2]),inf)
+            \mod, Pseq((1+[1,1.5,1.25,0.5,0.75,2]),inf)
         )
     ])
 );
