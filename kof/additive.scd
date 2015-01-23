@@ -1,7 +1,7 @@
 
 (
 
-    ~tempo = 4;
+    ~tempo = 2;
 
     Ndef(\addi).quant = 2.0;
     Ndef(\addi,
@@ -39,5 +39,8 @@
     ]);
 );
 )
+
+
+// ^^ https://www.youtube.com/watch?v=YsZKvLnf7wU
 
 s.scope
