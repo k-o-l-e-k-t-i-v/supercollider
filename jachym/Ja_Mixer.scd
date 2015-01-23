@@ -36,9 +36,11 @@ SynthDef(\efxFreeVerb, { |bus, room = 0.0 |
 	ReplaceOut.ar(bus, efx)
 }).add;
 
+)
+
 ////// windows setup ///////////////////////////////////////////////////////////
 
-
+(
 w = Window.new("ja_Mixer", Rect(1000,200,400,300));
 ~colBack = Color.new255(30,30,30);
 ~colFront = Color.new255(255,255,255);
@@ -58,11 +60,13 @@ w.background_(~colBack).front;
 		.align = \center;
 	);
 
-	~collAmpSlider.add(Slider(w, Rect(30+(40*i), 50, 10, 150)));
-	~collAmpSlider[i].action_({
-		~collAmpValues[i].value_(~collAmpSlider[i].value);
-		("chAmp" ++ i).asSymbol.envirGet.value = ~collAmpSlider[i].value;
-	});
+	~collAmpSlider.add(Slider(w, Rect(30+(40*i), 52, 10, 150))
+		.background_(~colBack)
+		.action_({
+			~collAmpValues[i].value_(~collAmpSlider[i].value);
+			("chAmp" ++ i).asSymbol.envirGet.value = ~collAmpSlider[i].value;
+		});
+	);
 	~collAmpSlider[i].action.value;
 
 	~collMuteButtons.add(Button(w, Rect(25+(40*i), 210, 20, 20))
