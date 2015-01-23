@@ -120,7 +120,7 @@ Pdef( \lopvoice,
 ~a=Pseq([Rest(1.6),85,170,Pn(45,2),Pn(45,2),85,170,Pn(170,2)],1);
 ~b=Pseq([Rest(1.6),85,45,Pn(85,2),Pn(45,2),85,85,Pn(85,2)],1);
 
-~c=Pseq([Rest(1.6),85,Pn(45,3),45,170],1);
+~c=   Pseq([Rest(1.6),85,     Pn(45,3),         45,            85],1);
 
 ~dur1=Pseq([Rest(1.6),0.4,0.2,Pn(0.1,2),Pn(0.4,2),0.2,0.4,Pn(0.1,2)],1);
 ~dur2=Pseq([Rest(1.6),0.4,    Pn(0.4,3)          ,0.6         ,0.2],1);
@@ -131,7 +131,7 @@ Pdef( \lopvoice,
 		\amp, 3,
 		\dur,    Pseq([Pn(~dur1,4),~dur2],inf),
 		\legato, Pseq([Rest(1.6),Pn(0.5,4),Pn(0.8,2),Pn(0.4,4)],inf),
-		\freq, Pseq([~a,~a, Pxrand([~a,~b]),~c],inf),
+		\freq, Pseq([~a,~a, Pxrand([~a,~b],2),~c],inf),
 		\pan, Pxrand([-1,1],inf)).trace,
 
 
