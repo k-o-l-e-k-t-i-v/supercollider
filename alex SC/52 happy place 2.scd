@@ -72,8 +72,24 @@ SynthDef(\tic, {
 }).add;
 )
 
+(
+SynthDef(\long, {
+	arg gate=1, sustain=0.7, amp=1, pan=1,freq=330;
+	var sig, env;
+
+	env=EnvGen.ar(Env.adsr(sustain*25,sustain*0.25,sustain*0.05,sustain*0.45),gate,doneAction:2);
+	sig=Mix.fill(4,
+		{arg i;
+			Saw.ar(freq*[1,2,3,5]).lag(0.02)});
+
+	sig=Limiter.ar(sig*env*amp,0.5);
+
+	Out.ar(0,sig);
+}).add;
+)
 
 
+///////////////saw
 (
 Pdef( \lopsawr,
 	Pbind(
@@ -85,8 +101,10 @@ Pdef( \lopsawr,
 )).play(quant:2);
 )
 
-(
 
+///////////////voice 4 sec
+
+(
 Pdef( \lopvoice,
 	Pbind(
 		\instrument, \voice,
@@ -97,20 +115,24 @@ Pdef( \lopvoice,
 )).play(quant:2);
 )
 
-
+//////////////beat
 (
-~a=Pseq([Rest(1.6),85,170,Pn(45,2),Pn(45,2),85,170,Pn(200,2)],1);
+~a=Pseq([Rest(1.6),85,170,Pn(45,2),Pn(45,2),85,170,Pn(170,2)],1);
 ~b=Pseq([Rest(1.6),85,45,Pn(85,2),Pn(45,2),85,85,Pn(85,2)],1);
-~c=Pseq([Rest(1.6),85,85,Pn(45,2),Pn(85,2),85,85,Pn(85,2)],1);
 
-Ppar( [
+~c=Pseq([Rest(1.6),85,Pn(45,3),45,170],1);
+
+~dur1=Pseq([Rest(1.6),0.4,0.2,Pn(0.1,2),Pn(0.4,2),0.2,0.4,Pn(0.1,2)],1);
+~dur2=Pseq([Rest(1.6),0.4,    Pn(0.4,3)          ,0.6         ,0.2],1);
+
+~beat=Ppar( [
 	Pbind(
 		\instrument, \tum,
 		\amp, 3,
-		\dur,    Pseq([Rest(1.6),0.4,0.2,Pn(0.1,2),Pn(0.4,2),0.2,0.4,Pn(0.1,2)],inf),
+		\dur,    Pseq([Pn(~dur1,4),~dur2],inf),
 		\legato, Pseq([Rest(1.6),Pn(0.5,4),Pn(0.8,2),Pn(0.4,4)],inf),
 		\freq, Pseq([~a,~a, Pxrand([~a,~b]),~c],inf),
-		\pan, Pxrand([-1,1],inf)),
+		\pan, Pxrand([-1,1],inf)).trace,
 
 
 	Pbind(
@@ -119,19 +141,51 @@ Ppar( [
 		\dur,Pseq([Pn(0.2,4),Rest(3.2)],inf),
 		\legato,0.8,
 		\freq,65,
-		\pan,Pseq([1,-1],inf),
-	)
-	]
+		\pan,Pseq([1,-1],inf)),
 
-).play;
-
-Pdef(\loptic,
 	Pbind(
 		\instrument, \tic,
-		\dur, Pseq([0.2,0.2,0.2,0.6,Rest(2.6)],inf),
+		\dur, Pseq([0.2,0.2,0.2,0.6,Rest(2.8)],inf),
 		\legato,Pseq([0.5,0.5,0.4,0.9,0],inf),
-		\freq, Pseq([Pn(100,10),Pn(1000,5)],inf),
+		\freq, Pseq([Pn(100,10),Pn(10000,10)],inf),
 		\amp, Pseq([0.07,0.07,0.07,0.15,Rest(2.6)],inf),
-		\pan, Pseq([-1,1,-1,1,0],inf),
-)).play;
+		\pan, Pseq([-1,1,-1,1,0],inf))]
+);
+
+~beat.play;
+)
+
+///////////saw increasingly fast
+(
+Pdef(\looplong,
+	Pbind(
+		\instrument, \long,
+		\amp, 0.8,
+		\dur,Pseq([Pseries(4,-0.2,19),Pn(0.2,30)],inf),
+		\legato, 1.5,
+		\octave, Pseq([5,6,[4,6],5,[6,7]],inf),
+		\degree, [1,3,5]);
+).play;
+)
+
+//////saw one octave apart long<<>>short
+(
+Ppar([
+	Pbind(
+		\instrument, \long,
+		\amp, 0.8,
+		\dur,Pseq([Pseries(4,-0.2,19),Pn(0.2,30)],inf),
+		\legato, 1.5,
+		\octave, Pseq([5,6,[4,6],5,[6,7]],inf),
+		\degree, [1,3,5]),
+
+	Pbind(
+		\instrument, \long,
+		\amp, 0.5,
+		\dur,4,
+		\legato, 0.5,
+		\octave, Pseq([4,5,[3,5],4,[5,8]],inf),
+		\degree, [1,3,5])
+	]
+).play;
 )
