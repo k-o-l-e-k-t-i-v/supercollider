@@ -153,7 +153,24 @@ Pdef( \lopvoice,
 );
 
 ~beat.play;
+~saw4.play;
 )
+
+
+////////saw long 4 sec
+
+(
+~saw4=Pdef( \lopsawlong4,
+	Pbind(
+		\instrument, \long,
+		\amp, 0.1,
+		\dur,4,
+		\legato, 1.5,
+		\octave, Pseq([4,5,[3,5],4,[5,8]],inf),
+		\degree, [1,3,5])
+);
+)
+~saw4.play;
 
 ///////////saw increasingly fast
 (
@@ -190,4 +207,3 @@ Ppar([
 ).play;
 )
 
-//cool patterns^^ _k
