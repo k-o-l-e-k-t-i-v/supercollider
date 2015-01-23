@@ -27,15 +27,16 @@ SynthDef(\fShift, { | bus target dur |
 		], ~mixG)
 	);
 };
+)
 
 ////// efx setup ///////////////////////////////////////////////////////////
 
+(
 SynthDef(\efxFreeVerb, { |bus, room = 0.0 |
 	var tone = In.ar(bus, 2);
 	var efx = FreeVerb.ar(tone, 0.9, room, 0.5, 1, tone);
 	ReplaceOut.ar(bus, efx)
 }).add;
-
 )
 
 ////// windows setup ///////////////////////////////////////////////////////////
@@ -54,6 +55,7 @@ w.background_(~colBack).front;
 
 ~numCh.do { |i|
 	StaticText.new(w,Rect(20+(40*i),5,80+(30*i),15)).string_("Chnl_"++i).stringColor_(~colFront);
+
 	~collAmpValues.add(NumberBox(w, Rect(20+(40*i), 25, 30, 20))
 		.normalColor_(~colFront)
 		.background_(~colBack)
