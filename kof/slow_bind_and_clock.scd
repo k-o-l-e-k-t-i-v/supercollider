@@ -9,9 +9,9 @@ s.freeAll();
   Ndef(\tones,{|m1,m2,m3,m4|
                Splay.ar(
                  SinOsc.ar(432/([m1,m2,m3,m4]*4pi)*(2**(1..4)) * ([m1,m2,m3,m4]) * (1.00001**(1..12)),mul:0.2).distort + 
-                 LFSaw.ar(432/([m1,m2,m3,m4]*2pi)*(1.5**(1..4)) * ([m1,m2,m3,m4]) * (1.00001**(1..12)),mul:0.1).distort * 
+                 LFSaw.ar(432/([m1,m2,m3,m4]*2pi)*(1.5**(1..4)) * ([m1,m2,m3,m4]) * (1.000001**(1..12)),mul:0.1).distort * 
                  LFSaw.ar(1/4/[1,2,4,8]).squared 
-               ,0.2,1)});
+                 ,0.2,1)});
 
   Ndef(\tones)[1] = \set -> Ppar([
     Pbind(
@@ -47,10 +47,8 @@ s.freeAll();
   Ndef(\s)[1] = \filter -> {|in|
                             FreeVerb.ar(
                               CompanderD.ar(
-                                AllpassN.ar(
                                   in
-                                  ,0.133*(1.00001**(1..8)),1,2)
                                 ,0.5,1,0.5)
-                              ,0.13,0.5)
+                              ,0.13,100)
                            };
 )
