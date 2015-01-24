@@ -1,7 +1,8 @@
 s.scope(5);
-
-
 (
+///////////////////////synths///////////////////////
+////////////////////////////////////////////////////
+
 SynthDef(\sawr, {
 
 	arg gate=1, freq=50, sustain=0.7, amp=1;
@@ -13,22 +14,20 @@ SynthDef(\sawr, {
 	DetectSilence.ar(sig,doneAction:2);
 	Out.ar(0, sig);
 }).add;
-)
 
-(
 SynthDef(\voice, {
 
 	arg gate=1, freq=85, sustain=0.7, amp=1;
 	var sig, env;
 
-    env=EnvGen.ar(Env.adsr(sustain*45,sustain*0.05,sustain*0.05,sustain*0.45),gate);
+    env=EnvGen.ar(Env.adsr(sustain*0.05,sustain*0.05,sustain*0.35,sustain*0.55),gate);
 
     sig=Mix.fill(10,
 		{ arg i;
     BPF.ar(
         PinkNoise.ar(Array.fill(4,{arg i; i/10+0.5})),
-        freq:LFNoise0.kr(20).range(freq, freq+i),
-        rq:LFNoise0.kr(20).range(0.01,i/10))
+        freq:LFNoise0.kr(200).range(freq, freq+i),
+        rq:LFNoise0.kr(200).range(0.01,i/10))
     });
 
     sig=DelayN.ar(Limiter.ar(sig, 0.08)*env*amp,0.2,0.2);
@@ -38,9 +37,7 @@ SynthDef(\voice, {
     Out.ar(0,sig);
 
 }).add;
-)
 
-(
 SynthDef(\tum, {
     arg gate=1, freq=125, sustain=0.4, amp=1, pan=0;
 	var sig, env, fenv;
@@ -56,9 +53,7 @@ SynthDef(\tum, {
     Out.ar(0, sig);
 
 }).add;
-)
 
-(
 SynthDef(\tic, {
     arg gate=1, freq=1000,sustain=0.1,pan=1, amp=1;
     var sig, env;
@@ -70,9 +65,7 @@ SynthDef(\tic, {
 
 	Out.ar(0, sig);
 }).add;
-)
 
-(
 SynthDef(\long, {
 	arg gate=1, sustain=0.7, amp=1, pan=1,freq=330;
 	var sig, env;
@@ -86,7 +79,13 @@ SynthDef(\long, {
 
 	Out.ar(0,sig);
 }).add;
+
 )
+
+
+///////////////////////patterns//////////////////////////////
+//////////////////////////////////////////////////////////
+
 
 
 ///////////////saw
@@ -101,6 +100,17 @@ Pdef( \lopsawr,
 )).play(quant:2);
 )
 
+(
+Pdef( \lopsawrfast,
+	Pbind(
+		\instrument, \sawr,
+		\amp, Pseq([Pn(0.1,4),Pn(0.3,2)],inf),
+		\dur, 0.3,
+		\legato, 1.5,
+		\octave, Pseq([Pn(3,3),4,Pn(5,4)],inf),
+		\degree, Pseq([Pn([1,3,5],3),-1,Pn(-12,4)],inf),
+)).trace.play(quant:2);
+)
 
 ///////////////voice 4 sec
 
@@ -108,16 +118,18 @@ Pdef( \lopsawr,
 Pdef( \lopvoice,
 	Pbind(
 		\instrument, \voice,
-		\amp, 0.8,
-		\dur, 4,
+		\amp, 1,
+		\dur, 1,
 		\legato, 0.8,
-		\freq, Pseq([Pn(85,2),127.5,85,Pn(700,2)],inf)
-)).play(quant:2);
+		\octave, Pseq([3,3,2,4,3,3.4],inf),
+		\degree, Pseq([Pn([3,5],2),Pn([1,3],2),Pn(3,2),[5,7]],inf),
+		// \freq, Pseq([Pn(45,2),127.5,85,Pn(700,2)],inf)
+)).trace.play(quant:2);
 )
 
 //////////////beat
 (
-~a=Pseq([Rest(1.6),85,170,Pn(45,2),Pn(45,2),85,170,Pn(170,2)],1);
+~a=Pseq([Rest(1.6),85,120,Pn(45,2),Pn(45,2),85,120,Pn(120,2)],1);
 ~b=Pseq([Rest(1.6),85,45,Pn(85,2),Pn(45,2),85,85,Pn(85,2)],1);
 
 ~c=   Pseq([Rest(1.6),85,     Pn(45,3),         45,            85],1);
@@ -152,8 +164,7 @@ Pdef( \lopvoice,
 		\pan, Pseq([-1,1,-1,1,0],inf))]
 );
 
-~beat.play;
-~saw4.play;
+~beat.play(quant:2);
 )
 
 
@@ -188,7 +199,7 @@ Pdef(\looplong,
 )
 
 //////saw one octave apart long<<>>short
-(
+(Pdef(\ll,
 Ppar([
 	Pbind(
 		\instrument, \long,
@@ -206,6 +217,6 @@ Ppar([
 		\octave, Pseq([4,5,[3,5],4,[5,8]],inf),
 		\degree, [1,3,5])
 	]
-).play;
+)).play;
 )
 

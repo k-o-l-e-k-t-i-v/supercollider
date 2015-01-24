@@ -27,7 +27,7 @@ s.boot;
           \instrument, \kick,
           \dur, Pseq([Pn(1/8,8),Pn(1/2,4),Rest(1/2)],inf),
           \amp, Pwhite(0.75,1,inf),
-          \freq, Pkey(\dur).linexp(1/8,1,12000,1200)
+          \freq, Pkey(\dur).linexp(1/8,1,12000,1200)   //what are this?
         ),
         Pbind(
           \instrument, \hiss,
@@ -49,7 +49,7 @@ s.boot;
   Ndef(\melod,{|note = 60, mod=1|
                Splay.ar(
                  LFCub.ar(note.midicps*4pi*mod+SinOsc.ar(2/(1..8)).range(-2,2),mul:0.6/(1..8)) *
-                 LFSaw.ar(1/4).squared  
+                 LFSaw.ar(1/4).squared
                )
               }).play;
 
@@ -66,7 +66,7 @@ s.boot;
   Ndef(\melod1,{|note = 60, mod=1|
                Splay.ar(
                  LFSaw.ar(note.midicps*0.5pi*mod+SinOsc.ar(1/(1..8)).range(-2,2),mul:0.7/(1..8)) *
-                 LFSaw.ar(1/8).squared  
+                 LFSaw.ar(1/8).squared
                )
               }).play;
 
@@ -75,3 +75,6 @@ s.boot;
     Pbind(\dur,8,\note,Pseq([36,60],inf))
   ]);
 )
+
+
+//////a_<3 <3 <3

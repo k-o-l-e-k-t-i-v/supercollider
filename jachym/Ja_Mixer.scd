@@ -7,11 +7,12 @@ s.plotTree;
 ~synG = Group.new;
 ~efxG = Group.new(~synG, \addAfter);
 ~mixG = Group.new(~efxG, \addAfter);
-~numCh = 4;
+~numCh = 8;
 
 SynthDef(\ampFader, { |bus, amp = 0.0, mute = 1 |
 	Out.ar(0, In.ar(bus, 2) * amp * mute)
 }).add;
+
 SynthDef(\fShift, { | bus target dur |
 	ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), target], [dur], \sin), doneAction: 2))
 }).add;
