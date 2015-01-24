@@ -28,4 +28,4 @@ s.freeAll;
 Ndef(\d)[2] = \filter -> {|in| AllpassC.ar(Pulse.ar(4)*in,MouseY.kr(0.002,0.2),MouseY.kr(0.002,0.2,1),8)};
 
 
-// ^^ control by mouse
+// ^^ control with mouse
