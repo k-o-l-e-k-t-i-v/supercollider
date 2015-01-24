@@ -10,7 +10,6 @@ SynthDef(\bum, {
 	sig=Mix.fill(5, { arg i;
 		BPF.ar(BrownNoise.ar(2),Array.fill(4, {freq+1}), Saw.kr(freq).range(0.01,0.1));});
 	sig=FreeVerb.ar(Limiter.ar(sig,0.5),room:room);
-	// DetectSilence.ar(sig, doneAction:2);
 
 	Out.ar(0,sig);
 
@@ -60,9 +59,6 @@ SynthDef(\saw, {
 	sig=Mix.fill(4, { arg i;
 		Saw.ar(freq*[2,1,3,4,7]).lag(0.002)});
 	sig=Limiter.ar(sig*env*amp,0.5);
-	// sig=FreeVerb.ar(sig, room:room);
-	// DetectSilence.ar(sig,doneAction:2);
-
 	Out.ar(0, sig);
 }).add;
 )
@@ -86,7 +82,7 @@ SynthDef(\rrff,{
 
 )
 
-///////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////// really short beats
 ///////////////////////RN////RN////RN//////////////////////
 ///////////////////////////////////////////////////////////
 
@@ -156,20 +152,35 @@ SynthDef(\rrff,{
 ~h=Pdef(\ltumhiRN,
 	Pbind(
 		\instrument, \tum,
-		\amp,30,
+		\amp,20,
 		\legato,0.5,
-		\top, Prand([20,10],inf),
+		\top, Prand([5,7],inf),
 		\dur,Pseq([Rest(0.4),Pn(0.1,2),0.2,Pn(0.1,2)],inf),
 		\freq,Prand([
-			Pseq([Rest(0.4),Pn(440,2),220,Pn(110,2)],2),
-			Pseq([Rest(0.4),Pn(880,2),660,Pn(880,2)],2),
-			Pseq([Rest(0.4),Pn(110,2),880,Pn(440,2)],2)
+			Pseq([Rest(0.4),Pn(440,2),220,Pn(880,2)],2),
+			Pseq([Rest(0.2),Pn(880,4),1100,Pn(880,2)],2),
+			Pseq([Rest(0.4),Pn(220,2),880,Pn(440,2)],2)
 		],inf),
 )).play;
 )
 ~h.stop;
 
+(
+~g=Pdef(\lopttum,
 
+	Pbind(
+		\instrument, \tum,
+		\amp,2.3,
+		\legato,0.8,
+		\dur,Pseq([Pn(1,2),Rest(0.25),0.25],inf),
+		\freq,Pseq([
+			Pseq([Pn(65,8),Pn(85,4)],1),
+			Pseq([Pn(85,8),Pn(105,4)],1)
+		],inf),
+)).play;
+)
+
+~g.stop;
 
 /////////////////////rrff long/////////////////
 
@@ -224,7 +235,6 @@ Pdef( \lopbum,
 	Pbind(
 		\instrument, \bum,
 		\dur, 1,
-
 		\legato, 0.5,
 		\freq, Pseq([Pn(85,2), Pn(65,2),Pn(45,2)],inf),
 		\room, 0.5,
