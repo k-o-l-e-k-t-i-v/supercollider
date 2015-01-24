@@ -56,6 +56,7 @@ Ndef(\2).fadeTime=2;
 Ndef(\2).quant=2;
 Ndef(\2,{
 
+
 	var x,y,z,ex, ey, ez, b, freq;
 
 	b=4/3;  //0.666, 1.333, 2.666 etc
