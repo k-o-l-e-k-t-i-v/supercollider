@@ -3,7 +3,7 @@ s.reboot();
 s.freeAll;
 
 (
-  Ndef(\d).play
+  Ndef(\d).play;
   Ndef(\d).fadeTime = 0.02;
   Ndef(\d).quant = 2.0;
   Ndef(\d).play;
