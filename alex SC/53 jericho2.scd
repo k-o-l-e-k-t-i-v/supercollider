@@ -1,5 +1,5 @@
 s.scope(5);
-
+(
 (
 SynthDef(\bum, {
 	arg sustain=0.7, gate=1, freq=20, room=0.5;
@@ -84,7 +84,7 @@ SynthDef(\rrff,{
 }).add;
 )
 
-
+)
 
 ///////////////////////////////////////////////////////////
 ///////////////////////RN////RN////RN//////////////////////
@@ -94,7 +94,7 @@ SynthDef(\rrff,{
 ~x=Pdef(\ltumhiRN,
 	Pbind(
 		\instrument, \tum,
-		\amp,4,
+		\amp,30,
 		\legato,0.5,
 		\top, Prand([20,10],inf),
 		\dur,Pseq([Rest(0.4),Pn(0.1,2),0.2,Pn(0.1,2)],inf),
@@ -152,7 +152,22 @@ SynthDef(\rrff,{
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 
-
+(
+~h=Pdef(\ltumhiRN,
+	Pbind(
+		\instrument, \tum,
+		\amp,30,
+		\legato,0.5,
+		\top, Prand([20,10],inf),
+		\dur,Pseq([Rest(0.4),Pn(0.1,2),0.2,Pn(0.1,2)],inf),
+		\freq,Prand([
+			Pseq([Rest(0.4),Pn(440,2),220,Pn(110,2)],2),
+			Pseq([Rest(0.4),Pn(880,2),660,Pn(880,2)],2),
+			Pseq([Rest(0.4),Pn(110,2),880,Pn(440,2)],2)
+		],inf),
+)).play;
+)
+~h.stop;
 
 
 
@@ -167,7 +182,7 @@ SynthDef(\rrff,{
 		\amp,0.2,
 		\legato, Pseq([0.8,0.6],inf),
 		\freq,Pseq([90,45,Pn(60,2)],inf),
-		\lag, 0,
+		\lag, Pseq([Pn(0,6),Pn(0.02,4)],inf),              //switch to soft when lag is 0.02
 		\top, 5,
 )).play(quant:2);
 )
