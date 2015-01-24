@@ -24,16 +24,16 @@ s.reboot;
             Pbind(
                 \instrument,\one,
                 \dur, 1/8,
-                \freq,Pshuf(2**(1..8)*55*pi,inf),
+                \freq,Pshuf(2**(1..4)*55*pi,inf),
                 \mod,Pshuf([1,2,0.5,1,1.5],inf),
-                \freq2,Pshuf(2**(1..8)*55*pi,inf),
+                \freq2,Pshuf(2**(1..4)*55*pi,inf),
                 \amp,Pwhite(0.5,1,inf),
                 \harm, Pwhite(22,1800,inf)
             ),
             Pbind(
                 \instrument,\one,
-                \freq,Pshuf(2**(1..8)*5.5*pi,inf),
-                \freq2,Pshuf(2**(1..8)*5.5*pi,inf),
+                \freq,Pshuf(2**(1..3)*55,inf),
+                \freq2,Pshuf(2**(1..3)*55,inf),
                 \mod,Pshuf([1,2,0.5,1,1.5],inf),
                 \amp,Pwhite(0.5,1,inf),
                 \dur, 1/8,
@@ -44,8 +44,8 @@ s.reboot;
                 \dur, 1/4,
                 \mod,Pshuf([1,2,0.5,1,1.5],inf),
                 \amp,Pwhite(0.5,1,inf),
-                \freq,Pshuf(2**(1..8)*5.5*pi,inf),
-                \freq2,Pshuf(2**(1..8)*5.5*pi,inf),
+                \freq,Pshuf(2**(1..4)*55*0.5pi,inf),
+                \freq2,Pshuf(2**(1..4)*55*0.5pi,inf),
                 \harm, Pwhite(22,8000,inf)
             )
         ])}).play(quant:2);
