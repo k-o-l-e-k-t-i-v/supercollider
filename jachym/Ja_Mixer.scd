@@ -9,13 +9,23 @@ s.plotTree;
 ~mixG = Group.new(~efxG, \addAfter);
 ~numCh = 8;
 
+~chMaster = Bus.audio(s, 2);
+
+SynthDef(\ampMaster , {
+	var tone = In.ar(~chMaster,2);
+	tone = Limiter.ar(tone,1);
+	Out.ar(0,tone);
+}).add;
+
 SynthDef(\ampFader, { |bus, amp = 0.0, mute = 1 |
-	Out.ar(0, In.ar(bus, 2) * amp * mute)
+	Out.ar(~chMaster, In.ar(bus, 2) * amp * mute)
 }).add;
 
 SynthDef(\fShift, { | bus target dur |
 	ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), target], [dur], \sin), doneAction: 2))
 }).add;
+
+~chAmpFader = Synth(\ampMaster,target: ~mixG);
 
 ~numCh.do { |i|
 	("ch" ++ i).asSymbol.envirPut( Bus.audio(s, 2) );
@@ -155,6 +165,7 @@ Pdef(\test).stop;
 	("chAmpFader" ++ i).asSymbol.envirGet.free;
 	~collfxFVerbButtons[i].free;
 };
+~chAmpFader.free;
 w.close;
 ~synG.free;
 ~efxG.free;
