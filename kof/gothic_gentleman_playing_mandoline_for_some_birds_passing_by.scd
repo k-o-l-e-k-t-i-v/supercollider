@@ -44,11 +44,9 @@ s.reboot;
 
     Ndef(\dark_kick,{Splay.ar(
       FreeVerb.ar(
-        Delay2.ar(
           CombN.ar(
             SinOsc.ar(LFSaw.ar([4.4,5.5]).range(44,99)) * LFPulse.ar(4/[1,2,4,8]);
             ,0.02,0.133,0.5)
-        )
         ,0.33,2,0.75)
     )}).play;
   );
