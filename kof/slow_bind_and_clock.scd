@@ -55,3 +55,4 @@ s.freeAll();
 
 
 ///this produces no sound on my comp. is this a song for dogs?
+// sonds ok on mine >> any errors? ..it should play
