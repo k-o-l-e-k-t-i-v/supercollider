@@ -107,7 +107,11 @@ Pdef( \lopsawrfast,
 		\amp, Pseq([Pn(0.1,4),Pn(0.3,2)],inf),
 		\dur, 0.3,
 		\legato, 1.5,
-		\octave, Pseq([Pn(3,3),4,Pn(5,4)],inf),
+		\octave, Prand([
+			Pseq([Pn(5,3),4,Pn(6,4)],1),
+			Pseq([Pn(5,3),4,Pn(5,4)],2),
+			Pseq([Pn(4,3),5,Pn(6,4)],1)],inf),
+
 		\degree, Pseq([Pn([1,3,5],3),-1,Pn(-12,4)],inf),
 )).trace.play(quant:2);
 )
