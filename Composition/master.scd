@@ -8,14 +8,29 @@
 
 //  1) masterFile - main task to play all 3 part at same time ////////////////////////////
 (
-~tc = TempoClock.default;
+~composition = {|alex,jachym,krystof|
 
-Tdef(\master,
-	Tdef(\Track_A).fork;
-	Tdef(\Track_B).fork;
-	Tdef(\Track_C).fork;
-).play;
+(
+    ~tc = TempoClock.default;
+
+    Tdef(\master).stop;
+    Tdef(\master,
+         if(alex == True,{
+         Tdef(\Track_A).fork;
+         });
+
+         if(jachym == True,{
+         Tdef(\Track_B).fork;
+         });
+
+         if(krystof == True,{
+         Tdef(\Track_C).fork;
+         })
+
+        );
 );
+};
+)
 //  1) masterFile - end of file //////////////////////////////////////////////////////////
 
 
