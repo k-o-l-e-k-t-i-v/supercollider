@@ -4,7 +4,7 @@
 // - 3) composerTrack_B
 // - 4) composerTrack_C
 
-(
+
 
 //  1) masterFile - main task to play all 3 part at same time ////////////////////////////
 (
