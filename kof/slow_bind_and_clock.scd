@@ -56,3 +56,9 @@ s.freeAll();
 
 ///this produces no sound on my comp. is this a song for dogs?
 // sonds ok on mine >> any errors? ..it should play
+
+//Ndef('s')
+/**** ERROR: SynthDef system_link_audio_2 not found
+FAILURE IN SERVER /s_new SynthDef not found*/
+
+// j_on mine comp it doesnt play too
