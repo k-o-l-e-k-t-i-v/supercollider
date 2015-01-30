@@ -88,8 +88,8 @@ Pdef( \loophi,
 		\dur, 0.45*8,
 		\amp,2,
 		\legato, 1.1,
-		\room,0.1
-)).play;
+		\room,0.5
+)).play(quant:2);
 
 
 Pdef( \loopsin,
@@ -100,7 +100,7 @@ Pdef( \loopsin,
 		\amp,0.021,
 		\legato,1.1,
 
-)).play;
+)).play(quant:2);
 
 
 )
