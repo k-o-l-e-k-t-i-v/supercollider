@@ -8,6 +8,7 @@ s.plotTree;
 s = Server.local;
 
 Routine.run({
+	s.waitForBoot;
 
 	// MixerSynth ////////////////////
 
@@ -40,15 +41,23 @@ Routine.run({
 		("ch" ++ i).asSymbol.envirPut( Bus.audio(s, 2) );
 		("chAmp" ++ i).asSymbol.envirPut( Bus.control(s, 1) );
 		("chMute" ++ i).asSymbol.envirPut( Bus.control(s, 1) );
-		("FaderAmp" ++ i).asSymbol.envirPut( Synth(\Fader, [
-			\in, ("ch" ++ i).asSymbol.envirGet,
-			\out, ~master,
-			\amp, ("chAmp" ++ i).asSymbol.envirGet.asMap,
-			\mute, ("chMute" ++ i).asSymbol.envirGet.asMap,
+		("FaderAmp" ++ i).asSymbol.envirPut(
+			Synth(\Fader, [
+				\in, ("ch" ++ i).asSymbol.envirGet,
+				\out, ~master,
+				\amp, ("chAmp" ++ i).asSymbol.envirGet.asMap,
+				\mute, ("chMute" ++ i).asSymbol.envirGet.asMap,
 		], ~mixG));
 	};
 
 	s.sync;
+});
+)
+
+(
+~numEfx = 1;
+
+Routine.run({
 
 	// EfxSynth ////////////////////
 
@@ -61,7 +70,6 @@ Routine.run({
 	s.sync;
 });
 )
-
 
 ////// windows setup ///////////////////////////////////////////////////////////
 
@@ -145,14 +153,6 @@ w.front;
 	~collAmpSlider.add(sliderAmp);
 	~collAmpSlider[i].action.value;
 
-	/*
-	valFadeAmp = NumberBox(uv, Rect(25, 16, 20, 20));
-	valFadeAmp.normalColor_(~colFront);
-	valFadeAmp.background_(~colBack);
-	valFadeAmp.align_(\center);
-	valFadeAmp.font_(~fontSmall);
-	// ~collAmpValues.add(valAmp);
-	*/
 	~collMuteButtons.add(Button(uv, Rect(25, 210, 20, 20))
 		.states_([
 			["||",~colFront,~colBack],
@@ -209,7 +209,7 @@ w.onClose_({
 (
 SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
 	var aEnv = EnvGen.ar(Env.asr(0.1*sustain, 1,0.9*sustain),gate, doneAction:2);
-	var osc = SinOsc.ar([freq, freq+10],0,1);
+	var osc = SinOsc.ar([freq, freq+10],0,0.4,0.6)*Saw.ar([freq/2, (freq+10)/4],0.2,0.8);
 	var tone = osc * aEnv * amp;
 	Out.ar(out, tone);
 }).add;
@@ -218,30 +218,30 @@ Pdef(\test,
 	Ppar([
 		Pbind(\instrument, \testSin, \out, ~ch0, \group, ~synG,
 			\amp, 1,
-			\dur, 2, \legato, 0.9,
-			\octave, 3,
-			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
+			\dur, 0.5, \legato, 0.3,
+			\octave, 2,
+			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,6],inf))
 		),
 		Pbind(\instrument, \testSin, \out, ~ch1, \group, ~synG,
 			\amp, 1,
-			\dur, 1.0, \legato, 0.3,
-			\octave, 2,
-			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
+			\dur, Pseq([Pn(0.0625,28), Rest(0.25)], inf), \legato, 0.05,
+			\octave, 4,
+			\degree, Pstutter(Pseq([32,2,16,4],inf),Pseq([3,2,3,1],inf))
 		),
 		Pbind(\instrument, \testSin, \out, ~ch2, \group, ~synG,
 			\amp, 1,
-			\dur, 1, \legato, 2.02,
-			\octave, 3,
-			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
+			\dur, Pseq([0.5, Rest(3.5)], inf), \legato, 2.02,
+			\octave, 4,
+			\degree, Pstutter(Pseq([2,2,1,4],inf),Pseq([3,2,3,4],inf))
 		),
 		Pbind(\instrument, \testSin, \out, ~ch3, \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([Pn(0.125,16), Rest(4)], inf), \legato, 0.09,
-			\octave, 4,
+			\dur, Pseq([Pn(0.125,16), Rest(2)], inf), \legato, Pseq([Pn(0.09,15),Pn(1.09,2)],inf),
+			\octave, Pseq([Pn(3,15),Pn(2,2),Pn(4,17),Pn(2,15),Pn(3,2)], inf),
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
 		)
 	],inf)
-).play;
+).play(quant:1);
 )
 Pdef(\test).stop;
 
