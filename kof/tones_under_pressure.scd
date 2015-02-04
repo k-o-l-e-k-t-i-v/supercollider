@@ -19,8 +19,11 @@ s.boot;
               ,0.02,2,4)
             ,800)* LFSaw.ar(4/fib(21)).squared
           ,0.8,0.02*(2.01**(1..32)))
-        ,0.25,1,0.025).softclip * 3 
+        ,0.25,1,0.025).softclip * 3
       ,0.5,1,0.25)}).play;
 
 )
 s.scope;
+
+
+//naisssseses

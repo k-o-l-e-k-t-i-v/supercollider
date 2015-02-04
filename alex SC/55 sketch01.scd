@@ -86,14 +86,14 @@ SynthDef(\rf,{
 	Out.ar(out,sig);
 }).add;
 
-SynthDef(\ping, {
+SynthDef(\ping5, {                                           ///sustain*0.2  - 5 times in CombN
 	arg gate=1, sustain=0.5, freq=880,amp=1, lag=0.02, out;
-	var sig, env;
+	var sig, env, envp;
 
-	env=EnvGen.kr(Env.adsr(sustain*0.05, sustain*0.05,0.5,sustain*0.3),gate);
-	sig=SinOsc.ar(freq*(1..8))*env*amp;
-	sig=CombC.ar(sig,sustain/3,sustain/3,sustain);
-	DetectSilence.ar(sig,doneAction:2);
+	envp=Decay2.kr(Impulse.kr(sustain*0.01),decayTime:sustain*0.2);
+	env=EnvGen.kr(Env.adsr(sustain*0.05, sustain*0.05,0.5,sustain*0.9),gate,doneAction:2);
+	sig=SinOsc.ar(freq*(1..10))*envp;
+	sig=CombN.ar(sig,sustain*0.2,sustain*0.2,sustain)*env*amp;
 
 	Out.ar(out,sig);
 
@@ -104,19 +104,16 @@ SynthDef(\ping, {
 
 
 SynthDef(\reverb, {
-	arg in, out, room, amp;
-	Out.ar(out, GVerb.ar(In.ar(in),room,revtime:0.2,mul:amp,damping:1,drylevel:1))
+	arg in, out, room, revtime, amp;
+	Out.ar(out, GVerb.ar(In.ar(in),room,revtime:revtime,mul:amp,damping:0.4,drylevel:1))
 }).add;
 )
 
 
 //////////////////////////////////////bells/////////////////////////////////////
 
-{GVerb.ar(CombN.ar(SinOsc.ar(800)*Decay2.kr(Impulse.kr(0.5),decayTime:0.5),0.4,0.6,3),50)}.play;
-{CombN.ar(SinOsc.ar(800)*Decay2.kr(Impulse.kr(0.5),0.2),0.4,0.6,4)}.play;
-{ CombN.ar(Decay.ar(Dust.ar(1,0.5), 0.2, WhiteNoise.ar), 0.2, 0.2, 3) }.play;
-(
 
+(
 ~g1=Group();
 
 ~g2=Group.new(~g1,\addAfter);
@@ -126,7 +123,7 @@ Pdef(\lopsinsaw,
 	Pbind(
 		\instrument, \sinsaw,
 		\out, ~chverb,
-		\amp, 0.4,
+		\amp, 0.1,
 		\dur,4,
 		\legato, 0.6,
 		\octave, [3,4,5,6],
@@ -146,6 +143,7 @@ Pdef(\verbsin,
 		\out,0,
 		\dur, 0.2,
 		\room,1,
+		\revtime, 2,
 		\group, ~g2
 )).play(quant:2);
 )
@@ -191,13 +189,14 @@ Pdef(\loprev,
 			\reverb,
 			\dur, 2,
 		    \amp, 3,
-			\room,10,
+			\room,100,
+		\revtime, 3,
 			\in, ~chts,
 			\out, 0,
 			\group, ~g2)
 
 
-).play;
+).play(quant:2);
 )
 
 ////////////////////////////////saw tii///////////////////////////////////
@@ -252,15 +251,44 @@ Pdef(\losawfr,
 Pdef(\lopping,
 	Pbind(
 		\instrument, \ping,
-		\out, 0,
-		\amp, 0.4,
-		\dur,2,
+		\out, ~chverb,
+		\amp, 0.8,
+		\dur,4,
+		\strum, Pseq([Pn(0.15,2),0.1,Pn(0.2,2)],inf),
 		\legato, 1,
-		\freq, 800,
+		\freq, Prand([
+		Pseq([
+			Pn([400,800,800,1000],2),
+			Prand([800,1400,1200],1),
+			Pn([4000,800,600,400],2)],1),
+		 Pseq([
+			Pn([400,800,600,1400],2),
+			Prand([600,1400,1200],1),
+			Pn([1000,4000,600,1400],2)],1),
+		 Pseq([
+			Pn([800,400,800,1200],2),
+			Prand([400,1400,1200],1),
+			Pn([1000,800,800,6000],2)],1),
+		],inf),
 		\group, ~g1,
 
 )).play(quant:2);
 
 
+Pdef(\verbping5,
+	Pmono(
+		\reverb,
+		\in, ~chverb,
+		\amp,0.2,
+		\out,0,
+		\dur, 0.2,
+		\room,200,
+		\revtime,3,
+		\group, ~g2
+)).play(quant:2);
+)
 
 )
+
+s.scope(2);
+{arg t=2; GVerb.ar(CombN.ar(SinOsc.ar(800)*Decay2.kr(Impulse.kr(t/4),decayTime:t/4),t/4,t/4,t*2),50)}.play;

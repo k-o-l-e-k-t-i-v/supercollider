@@ -61,7 +61,9 @@ Routine.run({
 
 	// EfxSynth ////////////////////
 
-	SynthDef(\efxFreeVerb, { |bus, room = 0.0 |
+	~cb_FreeVerb_room = Bus.control(s,1);
+
+	SynthDef(\efxFreeVerb, { |bus, room = 0.0 , amp|
 		var tone = In.ar(bus, 2);
 		var efx = FreeVerb.ar(tone, 0.9, room, 0.5, 1, tone);
 		ReplaceOut.ar(bus, efx)
@@ -80,10 +82,10 @@ Routine.run({
 ~fontBig = Font("Segoe UI", 8,true, isPointSize:true);
 ~fontSmall = Font("Segoe UI", 6, isPointSize:true);
 
-~sizeXChnl = 50;
+~sizeXChnl = 65;
 ~sizeYChnl = 400;
 
-w = Window.new("ja_Mixer", Rect(1000,200,490,500));
+w = Window.new("ja_Mixer", Rect(1000,200,565,410));
 w.alpha_(0.95);
 w.alwaysOnTop_(true);
 w.background_(~colBack);
@@ -99,13 +101,13 @@ w.front;
 	var originX, originY, uv;
 	var name, valAmp, txtAmp, fqv, fqv_frame, sliderAmp, valFadeAmp;
 
-	originX = 10+((~sizeXChnl+10)*i);
+	originX = 5+((~sizeXChnl+5)*i);
 	originY = 5;
 
 	uv = UserView(w,Rect(originX, originY, ~sizeXChnl, ~sizeYChnl));
 	uv.background_(~colBack);
 
-	fqv_frame = Rect(5,45, uv.bounds.width-10,80);
+	// fqv_frame = Rect(5,45, uv.bounds.width-10,80);
 
 	uv.drawFunc = {
 		Pen.strokeColor = ~colFront;
@@ -113,37 +115,37 @@ w.front;
 
 		Pen.addRect(fqv_frame); // fqv frame
 
-		Pen.moveTo(5@130);
-		Pen.lineTo(uv.bounds.width-5@130);
+		Pen.moveTo(5@135);
+		Pen.lineTo(uv.bounds.width-5@135);
 		Pen.stroke;
 	};
 
-	name = StaticText.new(uv,Rect(5, 5, ~sizeXChnl-10, 10));
+	name = StaticText.new(uv,Rect(5, 7, ~sizeXChnl-10, 10));
 	name.string_("ch"++i);
 	name.stringColor_(~colFront);
 	name.font_(~fontBig);
 	// name.align_(\center);
 
-	txtAmp = StaticText.new(uv,Rect(5, 15, 20, 20));
+	txtAmp = StaticText.new(uv,Rect(5, 22, 20, 15));
 	txtAmp.string_("amp:");
 	txtAmp.stringColor_(~colFront);
 	txtAmp.font_(~fontSmall);
 
-	fqv = FreqScopeView(uv, fqv_frame);
+	fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80));
 	fqv.active_(true);
 	fqv.inBus = ("ch" ++ i).asSymbol.envirGet;
 	fqv.freqMode_(1);
 	fqv.background_(Color.black);
 	~collFreqViews.add(fqv);
 
-	valAmp = NumberBox(uv, Rect(25, 16, 20, 20));
+	valAmp = NumberBox(uv, Rect(27, 23, 20, 15));
 	valAmp.normalColor_(~colFront);
 	valAmp.background_(~colBack);
 	valAmp.align_(\center);
 	valAmp.font_(~fontSmall);
 	~collAmpValues.add(valAmp);
 
-	sliderAmp = Slider(uv, Rect(5, 140, 10, 100));
+	sliderAmp = Slider(uv, Rect(uv.bounds.width-13, 5, 8, 120));
 	sliderAmp.background_(~colBack);
 	sliderAmp.knobColor_(~colActive);
 	sliderAmp.action_({
@@ -153,11 +155,12 @@ w.front;
 	~collAmpSlider.add(sliderAmp);
 	~collAmpSlider[i].action.value;
 
-	~collMuteButtons.add(Button(uv, Rect(25, 210, 20, 20))
+	~collMuteButtons.add(Button(uv, Rect(27, 5, 20, 15))
 		.states_([
 			["||",~colFront,~colBack],
 			[">",~colFront,~colActive]
 		])
+		.font_(~fontSmall)
 		.action_({ arg butt;
 			if(butt.value == 1) { ("chMute" ++ i).asSymbol.envirGet.value = 1; };
 			if(butt.value == 0) { ("chMute" ++ i).asSymbol.envirGet.value = 0; };
@@ -173,7 +176,7 @@ w.front;
 		if(butt.value == 1) {
 			~collfxFVerbButtons[i] = Synth(\efxFreeVerb, [
 				\bus, ("ch" ++ i).asSymbol.envirGet,
-				\room, 5
+				\room, ~cb_FreeVerb_room.asMap;
 		], ~efxG)};
 		if(butt.value == 0) {
 			~collfxFVerbButtons[i].free;
