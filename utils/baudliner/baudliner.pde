@@ -44,9 +44,9 @@ void draw()
     float valR = constrain(fftR.getBand(i)*25,0,255); 
     float x = map(i,0,fftL.specSize(),0,width);
 
-    stroke(valL,0,0,12);
+    stroke(valL,20,20,30);
     line(x,height,x,height-1);
-    stroke(0,valR,0,12);
+    stroke(20,valR,20,30);
     line(x,height,x,height-1);}
   image(g,0,-1);
 
