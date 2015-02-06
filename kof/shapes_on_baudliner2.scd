@@ -10,11 +10,11 @@ s.boot;
                    BBandPass.ar(
                        CombN.ar(
                            SinOsc.ar((1.0001**(1..32))*(1..32)*43.2*pi*mod.lag(0.1/(1..32)),0,1/(1..32) *
-                                     Decay.ar(Impulse.ar(8/fib(2,3,12)),0.5*(1..32)))
+                                     Decay.ar(Impulse.ar(8/fib(2,3,12)),0.05*(1..32)))
                            ,0.2*(1..32),4/(1..32),32/(1..32)) * 12.8
-                       ,SinOsc.ar(1/4/fib(8,9,21)).range(44,11000/(1..32)),
+                       ,SinOsc.ar(1/4/fib(8,9,21)).range(44,22000/(1..32)),
                        SinOsc.ar(4/fib(2,3,12)).range(1,1/16/(1..32))).softclip
-                       ,0.75,(1..32)) * 2 * LFSaw.ar(1/(1..32)).squared
+                       ,0.75,(1..32)) * 8 * LFSaw.ar(1/4/(1..32)).squared
                    ,0.75,1,0.1)
                    ,0.5,1,0.5);
               }).play;
