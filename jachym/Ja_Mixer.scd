@@ -12,63 +12,70 @@ Routine.run({
 
 	// MixerSynth ////////////////////
 
-	SynthDef(\Limiter, { |bus|
+	SynthDef(\Limiter, { | bus |
 		Out.ar(0, Limiter.ar(In.ar(bus,2),0.95));
 	}).add;
-
-	SynthDef(\Fader, { |out, in, amp = 0.0, mute = 1 |
+	SynthDef(\Fader, { | in, out, amp, mute |
 		Out.ar(out, In.ar(in, 2) * amp * mute)
 	}).add;
-
-	SynthDef(\newVal, { | bus val time |
+	SynthDef(\newVal, { | bus, val, time |
 		ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), val], [time], \sin), doneAction: 2))
 	}).add;
-
 	s.sync;
 
 	// Busses & Nodes ////////////////////
 
-	~synG = Group.new;
-	~efxG = Group.new(~synG, \addAfter);
-	~mixG = Group.new(~efxG, \addAfter);
+	~numCh = 4;
+
+	~ch_Synth = List.new(~numCh);
+	~ch = List.new(~numCh);
+	~ch_cb_amp = List.new(~numCh);
+	~ch_cb_mute = List.new(~numCh);
+	~ch_group = List.new(~numCh);
 
 	~master = Bus.audio(s, 2);
-	~limit = Synth(\Limiter,[\bus, ~master],~mixG);
-	~numCh = 8;
+	~synG = Group.new;
 
 	~numCh.do { |i|
-
-		("ch" ++ i).asSymbol.envirPut( Bus.audio(s, 2) );
-		("chAmp" ++ i).asSymbol.envirPut( Bus.control(s, 1) );
-		("chMute" ++ i).asSymbol.envirPut( Bus.control(s, 1) );
-		("FaderAmp" ++ i).asSymbol.envirPut(
+		~ch_group.add(Group.new(~synG, \addAfter));
+		~ch.add(Bus.audio(s, 2));
+		~ch_cb_amp.add(Bus.control(s, 1));
+		~ch_cb_mute.add(Bus.control(s, 1));
+		~ch_Synth.add(
 			Synth(\Fader, [
-				\in, ("ch" ++ i).asSymbol.envirGet,
+				\in, ~ch[i],
 				\out, ~master,
-				\amp, ("chAmp" ++ i).asSymbol.envirGet.asMap,
-				\mute, ("chMute" ++ i).asSymbol.envirGet.asMap,
-		], ~mixG));
+				\amp, ~ch_cb_amp[i].asMap,
+				\mute, ~ch_cb_mute[i].asMap,
+			], ~ch_group[i],\addToTail)
+		);
 	};
+
+	~mixG = Group.new(addAction:\addToTail);
+
+	~master_Synth = Synth(\Limiter,[\bus, ~master],~mixG);
 
 	s.sync;
 });
 )
-
 (
-~numEfx = 1;
-
 Routine.run({
 
 	// EfxSynth ////////////////////
 
-	~cb_FreeVerb_room = Bus.control(s,1);
-
-	SynthDef(\efxFreeVerb, { |bus, room = 0.0 , amp|
-		var tone = In.ar(bus, 2);
-		var efx = FreeVerb.ar(tone, 0.9, room, 0.5, 1, tone);
-		ReplaceOut.ar(bus, efx)
+	SynthDef(\efxPan, { |bus, freq|
+		ReplaceOut.ar(bus,Pan2.ar(In.ar(bus, 1), SinOsc.kr(freq)));
 	}).add;
-
+	SynthDef(\efxLPF, { |bus, freq|
+		ReplaceOut.ar(bus, LPF.ar(In.ar(bus, 2),freq))
+	}).add;
+	SynthDef(\efxHPF, { |bus, freq|
+		ReplaceOut.ar(bus, HPF.ar(In.ar(bus, 2),freq))
+	}).add;
+	SynthDef(\efxBlur, { |bus, room|
+		var tone = In.ar(bus, 2);
+		ReplaceOut.ar(bus,OnePole.ar(FreeVerb.ar(tone,0.5, room,0.7,1,tone),0.7,1));
+	}).add;
 	s.sync;
 });
 )
@@ -76,55 +83,66 @@ Routine.run({
 ////// windows setup ///////////////////////////////////////////////////////////
 
 (
+~sizeXChnl = 65;
+~sizeYChnl = 400;
 ~colBack = Color.new255(30,30,30);
 ~colFront = Color.new255(255,255,255);
 ~colActive = Color.new255(200,50,50);
-~fontBig = Font("Segoe UI", 8,true, isPointSize:true);
+~fontBig = Font("Segoe UI", 7,true, isPointSize:true);
 ~fontSmall = Font("Segoe UI", 6, isPointSize:true);
 
-~sizeXChnl = 65;
-~sizeYChnl = 400;
-
-w = Window.new("ja_Mixer", Rect(1000,200,565,410));
+w = Window.new("ja_Mixer", Rect(1000,200,5+((~sizeXChnl+5)*~numCh),410));
 w.alpha_(0.95);
 w.alwaysOnTop_(true);
 w.background_(~colBack);
 w.front;
 
-~collAmpValues = List.new(~numCh);
-~collAmpSlider = List.new(~numCh);
-~collMuteButtons = List.new(~numCh);
-~collfxFVerbButtons = List.new(~numCh);
-~collFreqViews = List.new(~numCh);
+~coll_FreqViews = List.new(~numCh);
+
+~coll_fx_Pan_Synth = List.newClear(~numCh);
+~coll_fx_Pan_cb_freq = List.new(~numCh);
+
+~coll_fx_FVerb_Synth = List.newClear(~numCh);
+~coll_fx_FVerb_cb_room = List.new(~numCh);
+
+~coll_fx_LPF_Synth = List.newClear(~numCh);
+~coll_fx_LPF_cb_freq = List.new(~numCh);
+
+~coll_fx_HPF_Synth = List.newClear(~numCh);
+~coll_fx_HPF_cb_freq = List.new(~numCh);
+
 
 ~numCh.do { |i|
 	var originX, originY, uv;
-	var name, valAmp, txtAmp, fqv, fqv_frame, sliderAmp, valFadeAmp;
+	var name, txtAmp, fqv;
+	var valAmp, sliderAmp, buttMute;
+	var fxButt_Pan, val_Pan_freq;
+	var fxButt_FVerb, val_FVerb_room;
+	var fxButt_LPF, val_LPF_freq;
+	var fxButt_HPF, val_HPF_freq;
 
 	originX = 5+((~sizeXChnl+5)*i);
 	originY = 5;
 
 	uv = UserView(w,Rect(originX, originY, ~sizeXChnl, ~sizeYChnl));
 	uv.background_(~colBack);
-
-	// fqv_frame = Rect(5,45, uv.bounds.width-10,80);
-
 	uv.drawFunc = {
 		Pen.strokeColor = ~colFront;
 		Pen.addRect(Rect(0,0, uv.bounds.width,uv.bounds.height));
 
-		Pen.addRect(fqv_frame); // fqv frame
+		Pen.addRect(Rect(5,45, uv.bounds.width-22,80)); // fqv frame
 
-		Pen.moveTo(5@135);
-		Pen.lineTo(uv.bounds.width-5@135);
+		Pen.moveTo(5@133);
+		Pen.lineTo(uv.bounds.width-5@133);
+		Pen.moveTo(5@160);
+		Pen.lineTo(uv.bounds.width-5@160);
 		Pen.stroke;
 	};
 
-	name = StaticText.new(uv,Rect(5, 7, ~sizeXChnl-10, 10));
-	name.string_("ch"++i);
+	name = StaticText.new(uv,Rect(5, 5, uv.bounds.width-5, 12));
+	name.string_("ch["++i++"]");
 	name.stringColor_(~colFront);
 	name.font_(~fontBig);
-	// name.align_(\center);
 
 	txtAmp = StaticText.new(uv,Rect(5, 22, 20, 15));
 	txtAmp.string_("amp:");
@@ -133,74 +151,190 @@ w.front;
 
 	fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80));
 	fqv.active_(true);
-	fqv.inBus = ("ch" ++ i).asSymbol.envirGet;
+	fqv.inBus = ~ch[i];
 	fqv.freqMode_(1);
 	fqv.background_(Color.black);
-	~collFreqViews.add(fqv);
+	~coll_FreqViews.add(fqv);
 
 	valAmp = NumberBox(uv, Rect(27, 23, 20, 15));
 	valAmp.normalColor_(~colFront);
 	valAmp.background_(~colBack);
 	valAmp.align_(\center);
 	valAmp.font_(~fontSmall);
-	~collAmpValues.add(valAmp);
 
 	sliderAmp = Slider(uv, Rect(uv.bounds.width-13, 5, 8, 120));
 	sliderAmp.background_(~colBack);
 	sliderAmp.knobColor_(~colActive);
 	sliderAmp.action_({
-		~collAmpValues[i].value_(~collAmpSlider[i].value);
-		("chAmp" ++ i).asSymbol.envirGet.value = ~collAmpSlider[i].value;
+		valAmp.value = sliderAmp.value;
+		~ch_cb_amp[i].value = sliderAmp.value;
 	});
-	~collAmpSlider.add(sliderAmp);
-	~collAmpSlider[i].action.value;
 
-	~collMuteButtons.add(Button(uv, Rect(27, 5, 20, 15))
-		.states_([
-			["||",~colFront,~colBack],
-			[">",~colFront,~colActive]
-		])
-		.font_(~fontSmall)
-		.action_({ arg butt;
-			if(butt.value == 1) { ("chMute" ++ i).asSymbol.envirGet.value = 1; };
-			if(butt.value == 0) { ("chMute" ++ i).asSymbol.envirGet.value = 0; };
-		})
-	);
-
-	~fxVerbB = Button(uv, Rect(25, 240, 20, 20));
-	~fxVerbB.states_([
-		["fx",~colFront,~colBack],
-		["fx",~colFront,~colActive]
+	buttMute = Button(uv, Rect(27, 5, 20, 15));
+	buttMute.font_(~fontSmall);
+	buttMute.states_([
+		["||",~colFront,~colBack],
+		[">",~colFront,~colActive]
 	]);
-	~fxVerbB.action_({ arg butt;
+	buttMute.action_({ arg butt;
+		if(butt.value == 1) { ~ch_cb_mute[i].value = 1; };
+		if(butt.value == 0) { ~ch_cb_mute[i].value = 0; };
+	});
+
+	// efx control //////////////////////////////////////
+
+	// fx Pan ////////////
+
+	~coll_fx_Pan_cb_freq.add(Bus.control(s,1));
+
+	fxButt_Pan = Button(uv, Rect(5, 139, uv.bounds.width-40,15));
+	fxButt_Pan.states_([
+		["Pan",~colFront,~colBack],
+		["Pan",~colFront,~colActive]
+	]);
+	fxButt_Pan.font_(~fontSmall);
+	fxButt_Pan.action_({ arg butt;
 		if(butt.value == 1) {
-			~collfxFVerbButtons[i] = Synth(\efxFreeVerb, [
-				\bus, ("ch" ++ i).asSymbol.envirGet,
-				\room, ~cb_FreeVerb_room.asMap;
-		], ~efxG)};
+			~coll_fx_Pan_Synth.put(i, Synth(\efxPan, [
+				\bus, ~ch[i],
+				\freq, ~coll_fx_Pan_cb_freq[i].asMap;
+			], ~ch_Synth[i],\addBefore))
+		};
 		if(butt.value == 0) {
-			~collfxFVerbButtons[i].free;
+			~coll_fx_Pan_Synth[i].free;
 		};
 	});
-	~collfxFVerbButtons.add(~fxVerbB);
 
+	val_Pan_freq = NumberBox(uv, Rect(uv.bounds.width-30, 139, 25, 15));
+	val_Pan_freq.normalColor_(~colFront);
+	val_Pan_freq.background_(~colBack);
+	val_Pan_freq.align_(\center);
+	val_Pan_freq.font_(~fontSmall);
+	val_Pan_freq.value_(1);
+	val_Pan_freq.clipLo_(0);
+	val_Pan_freq.scroll_step_(0.1);
+	val_Pan_freq.action_({
+		~coll_fx_Pan_cb_freq[i].value = val_Pan_freq.value;
+	});
 
+	// fx Blur ////////////
 
+	~coll_fx_FVerb_cb_room.add(Bus.control(s,1));
 
+	fxButt_FVerb = Button(uv, Rect(5, 166, uv.bounds.width-40,15));
+	fxButt_FVerb.states_([
+		["Blur",~colFront,~colBack],
+		["Blur",~colFront,~colActive]
+	]);
+	fxButt_FVerb.font_(~fontSmall);
+	fxButt_FVerb.action_({ arg butt;
+		if(butt.value == 1) {
+			~coll_fx_FVerb_Synth.put(i, Synth(\efxBlur, [
+				\bus, ~ch[i],
+				\room, ~coll_fx_FVerb_cb_room[i].asMap;
+			], ~ch_group[i]))
+		};
+		if(butt.value == 0) {
+			~coll_fx_FVerb_Synth[i].free;
+
+		};
+	});
+
+	val_FVerb_room = NumberBox(uv, Rect(uv.bounds.width-30, 166, 25, 15));
+	val_FVerb_room.normalColor_(~colFront);
+	val_FVerb_room.background_(~colBack);
+	val_FVerb_room.align_(\center);
+	val_FVerb_room.font_(~fontSmall);
+	val_FVerb_room.clipLo_(0);
+	val_FVerb_room.scroll_step_(0.1);
+	val_FVerb_room.action_({
+		~coll_fx_FVerb_cb_room[i].value = val_FVerb_room.value;
+	});
+
+	// fx LPF ////////////
+
+	~coll_fx_LPF_cb_freq.add(Bus.control(s,1));
+
+	fxButt_LPF = Button(uv, Rect(5, 186, uv.bounds.width-40,15));
+	fxButt_LPF.states_([
+		["LPF",~colFront,~colBack],
+		["LPF",~colFront,~colActive]
+	]);
+	fxButt_LPF.font_(~fontSmall);
+	fxButt_LPF.action_({ arg butt;
+		if(butt.value == 1) {
+			~coll_fx_LPF_Synth.put(i, Synth(\efxLPF, [
+				\bus, ~ch[i],
+				\freq, ~coll_fx_LPF_cb_freq[i].asMap;
+			], ~ch_group[i]))
+		};
+		if(butt.value == 0) {
+			~coll_fx_LPF_Synth[i].free;
+
+		};
+	});
+
+	val_LPF_freq = NumberBox(uv, Rect(uv.bounds.width-30, 186, 25, 15));
+	val_LPF_freq.normalColor_(~colFront);
+	val_LPF_freq.background_(~colBack);
+	val_LPF_freq.align_(\center);
+	val_LPF_freq.font_(~fontSmall);
+	val_LPF_freq.value_(1000);
+	val_LPF_freq.clipLo_(50);
+	val_LPF_freq.scroll_step_(25);
+	val_LPF_freq.action_({
+		~coll_fx_LPF_cb_freq[i].value = val_LPF_freq.value;
+	});
+
+	// fx HPF ////////////
+
+	~coll_fx_HPF_cb_freq.add(Bus.control(s,1));
+
+	fxButt_HPF = Button(uv, Rect(5, 206, uv.bounds.width-40,15));
+	fxButt_HPF.states_([
+		["HPF",~colFront,~colBack],
+		["HPF",~colFront,~colActive]
+	]);
+	fxButt_HPF.font_(~fontSmall);
+	fxButt_HPF.action_({ arg butt;
+		if(butt.value == 1) {
+			~coll_fx_HPF_Synth.put(i, Synth(\efxHPF, [
+				\bus, ~ch[i],
+				\freq, ~coll_fx_HPF_cb_freq[i].asMap;
+			], ~ch_group[i]))
+		};
+		if(butt.value == 0) {
+			~coll_fx_HPF_Synth[i].free;
+
+		};
+	});
+
+	val_HPF_freq = NumberBox(uv, Rect(uv.bounds.width-30, 206, 25, 15));
+	val_HPF_freq.normalColor_(~colFront);
+	val_HPF_freq.background_(~colBack);
+	val_HPF_freq.align_(\center);
+	val_HPF_freq.font_(~fontSmall);
+	val_HPF_freq.value_(3000);
+	val_HPF_freq.clipLo_(400);
+	val_HPF_freq.scroll_step_(50);
+	val_HPF_freq.action_({
+		~coll_fx_HPF_cb_freq[i].value = val_HPF_freq.value;
+	});
 };
 
 w.onClose_({
 
 	~numCh.do { |i|
-		~collFreqViews[i].kill;
-		("chAmpFader" ++ i).asSymbol.envirGet.free;
-		~collfxFVerbButtons[i].free;
+		~coll_FreqViews[i].kill;
+		~coll_fx_Pan_Synth[i].free;
+		~coll_fx_FVerb_Synth[i].free;
+		~coll_fx_LPF_Synth[i].free;
+		~ch_group[i].free;
 	};
-	~chAmpFader.free;
 	w.close;
 	~synG.free;
-	~efxG.free;
 	~mixG.free;
+	s.freeAll;
 	"closed".postln;
 });
 
@@ -219,25 +353,25 @@ SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
 
 Pdef(\test,
 	Ppar([
-		Pbind(\instrument, \testSin, \out, ~ch0, \group, ~synG,
+		Pbind(\instrument, \testSin, \out, ~ch[0], \group, ~synG,
 			\amp, 1,
 			\dur, 0.5, \legato, 0.3,
 			\octave, 2,
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,6],inf))
 		),
-		Pbind(\instrument, \testSin, \out, ~ch1, \group, ~synG,
+		Pbind(\instrument, \testSin, \out, ~ch[1], \group, ~synG,
 			\amp, 1,
 			\dur, Pseq([Pn(0.0625,28), Rest(0.25)], inf), \legato, 0.05,
 			\octave, 4,
 			\degree, Pstutter(Pseq([32,2,16,4],inf),Pseq([3,2,3,1],inf))
 		),
-		Pbind(\instrument, \testSin, \out, ~ch2, \group, ~synG,
+		Pbind(\instrument, \testSin, \out, ~ch[2], \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([0.5, Rest(3.5)], inf), \legato, 2.02,
+			\dur, Pseq([0.5, Rest(1.5)], inf), \legato, 2.02,
 			\octave, 4,
 			\degree, Pstutter(Pseq([2,2,1,4],inf),Pseq([3,2,3,4],inf))
 		),
-		Pbind(\instrument, \testSin, \out, ~ch3, \group, ~synG,
+		Pbind(\instrument, \testSin, \out, ~ch[3], \group, ~synG,
 			\amp, 1,
 			\dur, Pseq([Pn(0.125,16), Rest(2)], inf), \legato, Pseq([Pn(0.09,15),Pn(1.09,2)],inf),
 			\octave, Pseq([Pn(3,15),Pn(2,2),Pn(4,17),Pn(2,15),Pn(3,2)], inf),
