@@ -13,7 +13,7 @@ void setup()
 
   minim = new Minim(this);
 
-  input = minim.getLineIn(Minim.STEREO, 2048);
+  input = minim.getLineIn(Minim.STEREO, 1024);
   input.mute();
 
   fftL = new FFT( input.bufferSize(), input.sampleRate() );
@@ -22,8 +22,8 @@ void setup()
   // calculate averages based on a miminum octave width of 22 Hz
   // split each octave into three bands
   // this should result in 30 averages
-  fftL.logAverages( 22, 256 );
-  fftR.logAverages( 22, 256 );
+  fftL.logAverages( 22, 8 );
+  fftR.logAverages( 22, 8 );
 
   background(0);
 
@@ -40,8 +40,8 @@ void draw()
 
   for(int i = 0; i < fftL.specSize(); i++)
   {
-    float valL = constrain(fftL.getBand(i)*25,0,255); 
-    float valR = constrain(fftR.getBand(i)*25,0,255); 
+    float valL = constrain(log(1+fftL.getBand(i)/8.0)*127,0,255); 
+    float valR = constrain(log(1+fftR.getBand(i)/8.0)*127,0,255); 
     float x = map(i,0,fftL.specSize(),0,width);
 
     stroke(valL,20,20,30);
