@@ -33,6 +33,7 @@ s.reboot;
         ~tc.sched(15+~offset, {
             "kof fadeout...".postln;
             Ndef(\lalala).stop(1);
+          Ndef(\lalala).clean;
         });
     });
 
