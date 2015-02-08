@@ -10,7 +10,7 @@ s = Server.local;
 Routine.run({
 	s.waitForBoot;
 
-	// MixerSynth ////////////////////
+	// Mixer Synth ////////////////////
 
 	SynthDef(\Limiter, { | bus |
 		Out.ar(0, Limiter.ar(In.ar(bus,2),0.95));
@@ -25,7 +25,7 @@ Routine.run({
 
 	// Busses & Nodes ////////////////////
 
-	~numCh = 4;
+	~numCh = 6;
 
 	~ch_Synth = List.new(~numCh);
 	~ch = List.new(~numCh);
@@ -58,11 +58,10 @@ Routine.run({
 	s.sync;
 });
 )
+
+////// EFX Synth ///////////////////////////////////////////////////////////
 (
 Routine.run({
-
-	// EfxSynth ////////////////////
-
 	SynthDef(\efxPan, { |bus, freq|
 		ReplaceOut.ar(bus,Pan2.ar(In.ar(bus, 1), SinOsc.kr(freq)));
 	}).add;
@@ -75,6 +74,10 @@ Routine.run({
 	SynthDef(\efxBlur, { |bus, room|
 		var tone = In.ar(bus, 2);
 		ReplaceOut.ar(bus,OnePole.ar(FreeVerb.ar(tone,0.5, room,0.7,1,tone),0.7,1));
+	}).add;
+	SynthDef(\efxCombC, { |bus, time, gap|
+		var tone = In.ar(bus, 2);
+		ReplaceOut.ar(bus,CombC.ar(tone, 2, 0.25, 2));
 	}).add;
 	s.sync;
 });
@@ -91,7 +94,7 @@ Routine.run({
 ~fontBig = Font("Segoe UI", 7,true, isPointSize:true);
 ~fontSmall = Font("Segoe UI", 6, isPointSize:true);
 
-w = Window.new("ja_Mixer", Rect(1000,200,5+((~sizeXChnl+5)*~numCh),410));
+w = Window.new("ja_Mixer", Rect(900,600,5+((~sizeXChnl+5)*~numCh),410));
 w.alpha_(0.95);
 w.alwaysOnTop_(true);
 w.background_(~colBack);
@@ -111,6 +114,10 @@ w.front;
 ~coll_fx_HPF_Synth = List.newClear(~numCh);
 ~coll_fx_HPF_cb_freq = List.new(~numCh);
 
+~coll_fx_Comb_Synth = List.newClear(~numCh);
+~coll_fx_Comb_cb_time = List.new(~numCh);
+~coll_fx_Comb_cb_gap = List.new(~numCh);
+
 
 ~numCh.do { |i|
 	var originX, originY, uv;
@@ -120,6 +127,7 @@ w.front;
 	var fxButt_FVerb, val_FVerb_room;
 	var fxButt_LPF, val_LPF_freq;
 	var fxButt_HPF, val_HPF_freq;
+	var fxButt_Comb, val_Comb_time, val_Comb_gap;
 
 	originX = 5+((~sizeXChnl+5)*i);
 	originY = 5;
@@ -186,6 +194,7 @@ w.front;
 	// fx Pan ////////////
 
 	~coll_fx_Pan_cb_freq.add(Bus.control(s,1));
+	~coll_fx_Pan_cb_freq[i].value = 1;
 
 	fxButt_Pan = Button(uv, Rect(5, 139, uv.bounds.width-40,15));
 	fxButt_Pan.states_([
@@ -220,6 +229,7 @@ w.front;
 	// fx Blur ////////////
 
 	~coll_fx_FVerb_cb_room.add(Bus.control(s,1));
+	~coll_fx_FVerb_cb_room[i].value = 0;
 
 	fxButt_FVerb = Button(uv, Rect(5, 166, uv.bounds.width-40,15));
 	fxButt_FVerb.states_([
@@ -246,7 +256,7 @@ w.front;
 	val_FVerb_room.align_(\center);
 	val_FVerb_room.font_(~fontSmall);
 	val_FVerb_room.clipLo_(0);
-	val_FVerb_room.scroll_step_(0.1);
+	val_FVerb_room.scroll_step_(0.5);
 	val_FVerb_room.action_({
 		~coll_fx_FVerb_cb_room[i].value = val_FVerb_room.value;
 	});
@@ -254,6 +264,7 @@ w.front;
 	// fx LPF ////////////
 
 	~coll_fx_LPF_cb_freq.add(Bus.control(s,1));
+	~coll_fx_LPF_cb_freq[i].value = 1000;
 
 	fxButt_LPF = Button(uv, Rect(5, 186, uv.bounds.width-40,15));
 	fxButt_LPF.states_([
@@ -281,7 +292,7 @@ w.front;
 	val_LPF_freq.font_(~fontSmall);
 	val_LPF_freq.value_(1000);
 	val_LPF_freq.clipLo_(50);
-	val_LPF_freq.scroll_step_(25);
+	val_LPF_freq.scroll_step_(50);
 	val_LPF_freq.action_({
 		~coll_fx_LPF_cb_freq[i].value = val_LPF_freq.value;
 	});
@@ -289,6 +300,7 @@ w.front;
 	// fx HPF ////////////
 
 	~coll_fx_HPF_cb_freq.add(Bus.control(s,1));
+	~coll_fx_HPF_cb_freq[i].value = 1500;
 
 	fxButt_HPF = Button(uv, Rect(5, 206, uv.bounds.width-40,15));
 	fxButt_HPF.states_([
@@ -314,13 +326,66 @@ w.front;
 	val_HPF_freq.background_(~colBack);
 	val_HPF_freq.align_(\center);
 	val_HPF_freq.font_(~fontSmall);
-	val_HPF_freq.value_(3000);
+	val_HPF_freq.value_(1500);
 	val_HPF_freq.clipLo_(400);
-	val_HPF_freq.scroll_step_(50);
+	val_HPF_freq.scroll_step_(100);
 	val_HPF_freq.action_({
 		~coll_fx_HPF_cb_freq[i].value = val_HPF_freq.value;
 	});
-};
+
+	// fx Comb ////////////
+
+	~coll_fx_Comb_cb_time.add(Bus.control(s,1));
+	~coll_fx_Comb_cb_gap.add(Bus.control(s,1));
+	// ~coll_fx_Comb_cb_time[i].value = 4;
+	// ~coll_fx_Comb_cb_gap[i].value = 0.25;
+
+	fxButt_Comb = Button(uv, Rect(5, 226, uv.bounds.width-40,15));
+	fxButt_Comb.states_([
+		["Comb",~colFront,~colBack],
+		["Comb",~colFront,~colActive]
+	]);
+	fxButt_Comb.font_(~fontSmall);
+	fxButt_Comb.action_({ arg butt;
+		if(butt.value == 1) {
+			~coll_fx_Comb_Synth.put(i, Synth(\efxCombC, [
+				\bus, ~ch[i],
+				\time, ~coll_fx_Comb_cb_time[i].asMap;
+				\gap, ~coll_fx_Comb_cb_gap[i].asMap;
+			], ~ch_group[i]))
+		};
+		if(butt.value == 0) {
+			~coll_fx_Comb_Synth[i].free;
+		};
+	});
+/*
+	val_Comb_time = NumberBox(uv, Rect(uv.bounds.width-30, 226, 25, 15));
+	val_Comb_time.normalColor_(~colFront);
+	val_Comb_time.background_(~colBack);
+	val_Comb_time.align_(\center);
+	val_Comb_time.font_(~fontSmall);
+	val_Comb_time.value_(4);
+	val_Comb_time.clipLo_(0.5);
+	val_Comb_time.scroll_step_(0.25);
+	val_Comb_time.action_({
+		~coll_fx_Comb_cb_time[i].value = val_Comb_time.value;
+		~coll_fx_Comb_cb_time[i].get.postln;
+	});
+
+	val_Comb_gap = NumberBox(uv, Rect(uv.bounds.width-30, 246, 25, 15));
+	val_Comb_gap.normalColor_(~colFront);
+	val_Comb_gap.background_(~colBack);
+	val_Comb_gap.align_(\center);
+	val_Comb_gap.font_(~fontSmall);
+	val_Comb_gap.value_(0.25);
+	val_Comb_gap.clipLo_(0.25);
+	val_Comb_gap.scroll_step_(0.125);
+	val_Comb_gap.action_({
+		~coll_fx_Comb_cb_gap[i].value = val_Comb_gap.value;
+		~coll_fx_Comb_cb_gap[i].get.postln;
+	});
+*/
+	};
 
 w.onClose_({
 
@@ -329,6 +394,8 @@ w.onClose_({
 		~coll_fx_Pan_Synth[i].free;
 		~coll_fx_FVerb_Synth[i].free;
 		~coll_fx_LPF_Synth[i].free;
+		~coll_fx_HPF_Synth[i].free;
+		~coll_fx_Comb_Synth[i].free;
 		~ch_group[i].free;
 	};
 	w.close;
@@ -361,7 +428,7 @@ Pdef(\test,
 		),
 		Pbind(\instrument, \testSin, \out, ~ch[1], \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([Pn(0.0625,28), Rest(0.25)], inf), \legato, 0.05,
+			\dur, Pseq([Pn(0.0625,24), Rest(0.5)], inf), \legato, 0.05,
 			\octave, 4,
 			\degree, Pstutter(Pseq([32,2,16,4],inf),Pseq([3,2,3,1],inf))
 		),
@@ -375,6 +442,12 @@ Pdef(\test,
 			\amp, 1,
 			\dur, Pseq([Pn(0.125,16), Rest(2)], inf), \legato, Pseq([Pn(0.09,15),Pn(1.09,2)],inf),
 			\octave, Pseq([Pn(3,15),Pn(2,2),Pn(4,17),Pn(2,15),Pn(3,2)], inf),
+			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
+		),
+		Pbind(\instrument, \testSin, \out, ~ch[4], \group, ~synG,
+			\amp, 1,
+			\dur, Pseq([Pn(0.125,4), Rest(1.5)], inf), \legato, 0.2,
+			\octave, 4, //Pseq([Pn(3,15),Pn(2,2),Pn(4,17),Pn(2,15),Pn(3,2)], inf),
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
 		)
 	],inf)
