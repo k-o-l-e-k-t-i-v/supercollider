@@ -234,14 +234,14 @@ Ndef(\3, {
 
 (
 
-Ndef(\r).fadeTime=2;
-Ndef(\r).quant=2;
-Ndef(\r, {
+Ndef(\k).fadeTime=2;
+Ndef(\k).quant=2;
+Ndef(\k, {
 
 	var s1,s2,s3,s4, e1,e2,e3,e4,b,b2,f,f2,p, lag;
 
 	b=4/3;
-	b2=Duty.kr(b*4,0,Dseq([b/8,b/4,b/2],inf));
+	b2=Array.fill(8,{arg i; b/2+b/i;}).sum;
 
 	f=Duty.kr(b*2,0,Dseq([16600,18800,15500,18800],inf));
 	f2=Duty.kr(b*2,0,Dseq([45,55,45,65],inf));
@@ -270,7 +270,7 @@ Bus.audio(s,1);
 
 
 
-
+s.scope(2);
 
 
 

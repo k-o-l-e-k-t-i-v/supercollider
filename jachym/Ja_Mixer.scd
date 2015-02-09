@@ -5,10 +5,10 @@ s.plotTree;
 ////// mixer setup ///////////////////////////////////////////////////////////
 
 (
-s = Server.local;
+s = Server.default;
+s.waitForBoot;
 
 Routine.run({
-	s.waitForBoot;
 
 	// Mixer Synth ////////////////////
 
@@ -60,10 +60,12 @@ Routine.run({
 )
 
 ////// EFX Synth ///////////////////////////////////////////////////////////
+
 (
 Routine.run({
 	SynthDef(\efxPan, { |bus, freq|
-		ReplaceOut.ar(bus,Pan2.ar(In.ar(bus, 1), SinOsc.kr(freq)));
+		var tone = In.ar(bus, 1);
+		ReplaceOut.ar(bus,Pan2.ar(tone, FSinOsc.kr(freq)));
 	}).add;
 	SynthDef(\efxLPF, { |bus, freq|
 		ReplaceOut.ar(bus, LPF.ar(In.ar(bus, 2),freq))
@@ -75,10 +77,11 @@ Routine.run({
 		var tone = In.ar(bus, 2);
 		ReplaceOut.ar(bus,OnePole.ar(FreeVerb.ar(tone,0.5, room,0.7,1,tone),0.7,1));
 	}).add;
-	SynthDef(\efxCombC, { |bus, time, gap|
+	SynthDef(\efxCombC, { |bus, decay, gap|
 		var tone = In.ar(bus, 2);
-		ReplaceOut.ar(bus,CombC.ar(tone, 2, 0.25, 2));
+		ReplaceOut.ar(bus,CombC.ar(tone, gap*2, gap, decay, 1, tone));
 	}).add;
+
 	s.sync;
 });
 )
@@ -337,8 +340,8 @@ w.front;
 
 	~coll_fx_Comb_cb_time.add(Bus.control(s,1));
 	~coll_fx_Comb_cb_gap.add(Bus.control(s,1));
-	// ~coll_fx_Comb_cb_time[i].value = 4;
-	// ~coll_fx_Comb_cb_gap[i].value = 0.25;
+	~coll_fx_Comb_cb_time[i].value = 4;
+	~coll_fx_Comb_cb_gap[i].value = 0.25;
 
 	fxButt_Comb = Button(uv, Rect(5, 226, uv.bounds.width-40,15));
 	fxButt_Comb.states_([
@@ -350,15 +353,15 @@ w.front;
 		if(butt.value == 1) {
 			~coll_fx_Comb_Synth.put(i, Synth(\efxCombC, [
 				\bus, ~ch[i],
-				\time, ~coll_fx_Comb_cb_time[i].asMap;
-				\gap, ~coll_fx_Comb_cb_gap[i].asMap;
+				\decay, ~coll_fx_Comb_cb_time[i].asMap,
+				\gap, ~coll_fx_Comb_cb_gap[i].asMap
 			], ~ch_group[i]))
 		};
 		if(butt.value == 0) {
 			~coll_fx_Comb_Synth[i].free;
 		};
 	});
-/*
+
 	val_Comb_time = NumberBox(uv, Rect(uv.bounds.width-30, 226, 25, 15));
 	val_Comb_time.normalColor_(~colFront);
 	val_Comb_time.background_(~colBack);
@@ -366,10 +369,9 @@ w.front;
 	val_Comb_time.font_(~fontSmall);
 	val_Comb_time.value_(4);
 	val_Comb_time.clipLo_(0.5);
-	val_Comb_time.scroll_step_(0.25);
+	val_Comb_time.scroll_step_(0.5);
 	val_Comb_time.action_({
 		~coll_fx_Comb_cb_time[i].value = val_Comb_time.value;
-		~coll_fx_Comb_cb_time[i].get.postln;
 	});
 
 	val_Comb_gap = NumberBox(uv, Rect(uv.bounds.width-30, 246, 25, 15));
@@ -379,13 +381,12 @@ w.front;
 	val_Comb_gap.font_(~fontSmall);
 	val_Comb_gap.value_(0.25);
 	val_Comb_gap.clipLo_(0.25);
-	val_Comb_gap.scroll_step_(0.125);
+	val_Comb_gap.scroll_step_(0.25);
 	val_Comb_gap.action_({
 		~coll_fx_Comb_cb_gap[i].value = val_Comb_gap.value;
-		~coll_fx_Comb_cb_gap[i].get.postln;
 	});
-*/
-	};
+
+};
 
 w.onClose_({
 
@@ -413,7 +414,7 @@ w.onClose_({
 (
 SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
 	var aEnv = EnvGen.ar(Env.asr(0.1*sustain, 1,0.9*sustain),gate, doneAction:2);
-	var osc = SinOsc.ar([freq, freq+10],0,0.4,0.6)*Saw.ar([freq/2, (freq+10)/4],0.2,0.8);
+	var osc = SinOsc.ar([freq, freq+10],0,0.4,0.6)*SinOsc.ar([freq/2, (freq+10)/4],0,0.2,0.8);
 	var tone = osc * aEnv * amp;
 	Out.ar(out, tone);
 }).add;
@@ -422,32 +423,31 @@ Pdef(\test,
 	Ppar([
 		Pbind(\instrument, \testSin, \out, ~ch[0], \group, ~synG,
 			\amp, 1,
-			\dur, 0.5, \legato, 0.3,
-			\octave, 2,
+			\dur, 0.25, \legato, 0.13,
+			\octave, 1,
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,6],inf))
 		),
 		Pbind(\instrument, \testSin, \out, ~ch[1], \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([Pn(0.0625,24), Rest(0.5)], inf), \legato, 0.05,
-			\octave, 4,
+			\dur, Pseq([Pn(0.0625,24), Rest(2.5)], inf), \legato, 0.05,
+			\octave, 9,
 			\degree, Pstutter(Pseq([32,2,16,4],inf),Pseq([3,2,3,1],inf))
 		),
 		Pbind(\instrument, \testSin, \out, ~ch[2], \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([0.5, Rest(1.5)], inf), \legato, 2.02,
-			\octave, 4,
-			\degree, Pstutter(Pseq([2,2,1,4],inf),Pseq([3,2,3,4],inf))
+			\dur, Pseq([0.125, 0.125, 0.25, Rest(7.5)], inf), \legato, 2.02,
+			\octave, 2,
+			\degree, Pstutter(Pseq([16,8,4,8],inf),Pseq([3,2,3,4],inf))
 		),
 		Pbind(\instrument, \testSin, \out, ~ch[3], \group, ~synG,
 			\amp, 1,
-			\dur, Pseq([Pn(0.125,16), Rest(2)], inf), \legato, Pseq([Pn(0.09,15),Pn(1.09,2)],inf),
+			\dur, Pseq([Pn(0.125,16), Rest(2)], inf), \legato, Pseq([Pn(0.09,15),Pn(0.39,2)],inf),
 			\octave, Pseq([Pn(3,15),Pn(2,2),Pn(4,17),Pn(2,15),Pn(3,2)], inf),
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
 		),
-		Pbind(\instrument, \testSin, \out, ~ch[4], \group, ~synG,
-			\amp, 1,
-			\dur, Pseq([Pn(0.125,4), Rest(1.5)], inf), \legato, 0.2,
-			\octave, 4, //Pseq([Pn(3,15),Pn(2,2),Pn(4,17),Pn(2,15),Pn(3,2)], inf),
+		Pbind(\instrument, \testSin, \out, ~ch[4], \group, ~synG, \amp, 1,
+			\dur, Pseq([Pn(0.125,4), Rest(3.5)], inf), \legato, 0.09,
+			\octave, 4, //Pseq([Pn(6,15),Pn(7,2),Pn(5,17),Pn(7,15),Pn(5,2)], inf),
 			\degree, Pstutter(Pseq([8,2,8,4],inf),Pseq([3,2,3,3b],inf))
 		)
 	],inf)
