@@ -63,7 +63,7 @@ Pdef(\SawC,
 	Pbind(\instrument, \SawA, \amp, 1, \out, ~ch[2], \group, ~synG,
 		\legato, 0.2,
 		\dur, Pseq([Pn(0.0625,16), Rest(7)], inf),
-		\octave, Pstutter(Pseq([32,14,2],inf),Pseq([2,1,8],inf)),
+		\octave, Pstutter(Pseq([32,14,2],inf),Pseq([7,6,8],inf)),
 		\degree, Pseq([Pn(4,16),Pn(7,8)],inf),
 	)
 ).play(quant:8);

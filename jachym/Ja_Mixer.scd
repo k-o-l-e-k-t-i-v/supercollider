@@ -64,8 +64,12 @@ Routine.run({
 (
 Routine.run({
 	SynthDef(\efxPan, { |bus, freq|
-		var tone = In.ar(bus, 1);
-		ReplaceOut.ar(bus,Pan2.ar(tone, FSinOsc.kr(freq)));
+		var tone, chR, chL;
+		tone = In.ar(bus, 2);
+		chR = tone[0];
+		chL = tone[1];
+		tone = chR + chL;
+		ReplaceOut.ar(bus,Pan2.ar(tone, SinOsc.kr(freq)));
 	}).add;
 	SynthDef(\efxLPF, { |bus, freq|
 		ReplaceOut.ar(bus, LPF.ar(In.ar(bus, 2),freq))
@@ -80,6 +84,15 @@ Routine.run({
 	SynthDef(\efxCombC, { |bus, decay, gap|
 		var tone = In.ar(bus, 2);
 		ReplaceOut.ar(bus,CombC.ar(tone, gap*2, gap, decay, 1, tone));
+	}).add;
+	SynthDef(\efxDBass, { |bus, freq|
+		var tone, freqs, amps, rings;
+		tone = In.ar(bus, 2);
+		freqs = (#[1, 2, 3, 4]);
+		amps = (#[0.5, 0.3, 0.15, 0.05]);
+		rings = (#[1, 0.65, 0.3, 0.15]);
+		tone = tone * BrownNoise.ar(0.5,0.5);
+		ReplaceOut.ar(bus, DynKlank.ar(`[freqs, amps, rings], tone,freq))
 	}).add;
 
 	s.sync;
@@ -121,6 +134,8 @@ w.front;
 ~coll_fx_Comb_cb_time = List.new(~numCh);
 ~coll_fx_Comb_cb_gap = List.new(~numCh);
 
+~coll_fx_DBass_Synth = List.newClear(~numCh);
+~coll_fx_DBass_cb_freq = List.new(~numCh);
 
 ~numCh.do { |i|
 	var originX, originY, uv;
@@ -131,6 +146,7 @@ w.front;
 	var fxButt_LPF, val_LPF_freq;
 	var fxButt_HPF, val_HPF_freq;
 	var fxButt_Comb, val_Comb_time, val_Comb_gap;
+	var fxButt_DBass, val_DBass_freq;
 
 	originX = 5+((~sizeXChnl+5)*i);
 	originY = 5;
@@ -386,6 +402,41 @@ w.front;
 		~coll_fx_Comb_cb_gap[i].value = val_Comb_gap.value;
 	});
 
+	// fx DBass ////////////
+
+	~coll_fx_DBass_cb_freq.add(Bus.control(s,1));
+	~coll_fx_DBass_cb_freq[i].value = 10;
+	// ~coll_fx_Comb_cb_gap[i].value = 0.25;
+
+	fxButt_DBass = Button(uv, Rect(5, 266, uv.bounds.width-40,15));
+	fxButt_DBass.states_([
+		["dBass",~colFront,~colBack],
+		["dBass",~colFront,~colActive]
+	]);
+	fxButt_DBass.font_(~fontSmall);
+	fxButt_DBass.action_({ arg butt;
+		if(butt.value == 1) {
+			~coll_fx_DBass_Synth.put(i, Synth(\efxDBass, [
+				\bus, ~ch[i],
+				\freq, ~coll_fx_DBass_cb_freq[i].asMap
+			], ~ch_group[i]))
+		};
+		if(butt.value == 0) {
+			~coll_fx_DBass_Synth[i].free;
+		};
+	});
+
+	val_DBass_freq = NumberBox(uv, Rect(uv.bounds.width-30, 266, 25, 15));
+	val_DBass_freq.normalColor_(~colFront);
+	val_DBass_freq.background_(~colBack);
+	val_DBass_freq.align_(\center);
+	val_DBass_freq.font_(~fontSmall);
+	val_DBass_freq.value_(10);
+	val_DBass_freq.clipLo_(0.0);
+	val_DBass_freq.scroll_step_(5);
+	val_DBass_freq.action_({
+		~coll_fx_DBass_cb_freq[i].value = val_DBass_freq.value;
+	});
 };
 
 w.onClose_({
@@ -397,6 +448,7 @@ w.onClose_({
 		~coll_fx_LPF_Synth[i].free;
 		~coll_fx_HPF_Synth[i].free;
 		~coll_fx_Comb_Synth[i].free;
+		~coll_fx_DBass_Synth[i].free;
 		~ch_group[i].free;
 	};
 	w.close;
