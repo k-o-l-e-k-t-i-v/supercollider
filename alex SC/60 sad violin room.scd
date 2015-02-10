@@ -51,5 +51,7 @@ var s1,s2,s3,s4,s5,f,f2,b, lag,d;
 }).play;
 )
 
+//very sad indeed, duty.kr is supernice ^^ _k
+
 s.scope(6);
 
