@@ -20,7 +20,6 @@ JMix {
 		server = Server.default;
 		numCh = initCh;
 		synG = Group.new;
-		mixG = Group.new(addAction:\addToTail);
 
 		ch_Synth = List.new(numCh);
 		ch_ab = List.new(numCh);
@@ -29,26 +28,26 @@ JMix {
 		ch_group = List.new(numCh);
 
 		master_ab = Bus.audio(server, 2);
-		master_Synth = Synth(\JMix_Limiter,[\bus, master_ab],mixG);
+		// master_Synth = Synth(\Limiter,[\bus, master_ab],mixG);
 
 		numCh.do { |i|
 			ch_group.add(Group.new(synG, \addAfter));
 			ch_ab.add(Bus.audio(server, 2));
 			ch_cb_amp.add(Bus.control(server, 1));
 			ch_cb_mute.add(Bus.control(server, 1));
-
-			ch_Synth.add(
-				Synth(\JMix_Fader, [
-					\in, ch_ab[i],
-					\out, master_ab,
-					\amp, ch_cb_amp[i].asMap,
-					\mute, ch_cb_mute[i].asMap,
-				], ch_group[i],\addToTail)
+			/*
+			~ch_Synth.add(
+			Synth(\Fader, [
+			\in, ~ch_ab[i],
+			\out, ~master,
+			\amp, ~ch_cb_amp[i].asMap,
+			\mute, ~ch_cb_mute[i].asMap,
+			], ~ch_group[i],\addToTail)
 			);
-
+			*/
 		};
 
-
+		mixG = Group.new(addAction:\addToTail);
 
 
 
@@ -60,9 +59,6 @@ JMix {
 
 		numCh.do { |i|
 			ch_group[i].free;
-			ch_ab[i].free;
-			ch_cb_amp[i].free;
-			ch_cb_mute[i].free;
 		};
 		synG.free;
 		mixG.free;
