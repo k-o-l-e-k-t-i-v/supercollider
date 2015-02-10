@@ -28,17 +28,17 @@ Ndef(\submelod,{
 
 	~trig = Impulse.ar(4/[1,2,4,8]);
 
-	~freq = Duty.kr(1/8,0,Dseq([1,1.5,2,1.5,1,1.5,0.5,0.75],inf)) * 43.2 * 1.5pi ;
-	~mod = Duty.kr(4,0,Dseq([1,1.5,1.25,0.5],inf));
+	~freq = Duty.kr(2*[1,2,4,8],0,Dseq([1,1.5,2,1.5,1,1.5,0.5,0.75],inf)) * 43.2 * 4pi ;
+	~mod = Duty.kr(8,0,Dseq([1,1.5,1.25,0.5],inf));
 	~vibrato = SinOsc.ar(1/2/(1.01**(1..8))).range(-40,40);
 
 	Splay.ar(
 		RLPF.ar(
 		CompanderD.ar(
-		LFSaw.ar(~freq*~mod,mul:0.25) * Decay.ar(~trig);
+		LFSaw.ar(~freq*~mod,mul:0.25) * LFSaw.ar(1/2/[1,2,4,8]);
 		,0.25,1,0.25,0.003,0.02) * 2
 		,~freq*2 + ~vibrato)
-	,0.5,0.25,0.5)
+	,0.5,0.15,0.5)
 }).play;
 
 /////////////////////////////////////////////
