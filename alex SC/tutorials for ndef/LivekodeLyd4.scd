@@ -12,7 +12,7 @@ Ndef(\tor).play
 Ndef(\tor).fadeTime= 5
 Ndef(\tor, {Splay.ar(LFPulse.ar(400)*0.3)})
 
-Ndef(\tor, {Splay.ar(LFPulse.ar([400, 404])*0.3)})
+Ndef(\tor, {Splay.ar(LFPulse.ar([400, 404])*0.3).lag(0.002)})
 
 Ndef(\tor, {Splay.ar(LFPulse.ar([400, 404]+LFPulse.ar(14, 0, 0.3, 100))*0.3)})
 
@@ -107,7 +107,7 @@ Ndef(\tri, {Splay.ar(LFTri.ar(400, 0, 10)&LFTri.ar(101, 0, 3))})
 
 Ndef(\tri, {Splay.ar(LFTri.ar(400, 0, 10)&LFTri.ar(10.1, 0, 3))})
 
-Ndef(\tri, {Splay.ar(LFTri.ar(400, 0, 10)|LFTri.ar(1.1, 0, 3))})
+Ndef(\tri, {Splay.ar(LFTri.ar(400, 0, 10)|LFTri.ar(1.1, 0, 3))})    ///nomnom*********************
 
 Ndef(\tri, {Splay.ar(LFTri.ar(400, 0, 10).bitXor(LFTri.ar(2.1, 0, MouseX.kr(1, 10))))})
 

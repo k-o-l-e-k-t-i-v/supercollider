@@ -241,7 +241,7 @@ Ndef(\k, {
 	var s1,s2,s3,s4, e1,e2,e3,e4,b,b2,f,f2,p, lag;
 
 	b=4/3;
-	b2=Array.fill(8,{arg i; b/2+b/i;}).sum;
+
 
 	f=Duty.kr(b*2,0,Dseq([16600,18800,15500,18800],inf));
 	f2=Duty.kr(b*2,0,Dseq([45,55,45,65],inf));
@@ -250,7 +250,7 @@ Ndef(\k, {
 	e1=Decay2.kr(Impulse.kr([b*4,b*2]),decayTime:0.1);
 	e2=Decay2.kr(Impulse.kr([b/2,b/4]),decayTime:0.15);
 	e3=Decay2.kr(Impulse.kr(b*2),0.001,decayTime:0.01);
-	e4=Decay2.kr(Impulse.kr(b2),0.2,decayTime:b/2);
+	e4=Decay2.kr(Impulse.kr(b),0.2,decayTime:b);
 
 	s1=SinOsc.ar(f*(0.5..1))*e1;
 	s2=Saw.ar(f/4*(1..1.2))*e2;
@@ -259,8 +259,9 @@ Ndef(\k, {
 	s3=Pan2.ar(s3,p);
 
 	s4=LFSaw.ar([55,57]).lag(0.02)*e4;
+	s4=Limiter.ar(s4,0.2);
 
-	Mix.new([s1,s2,s4]);
+	Mix.new([s1,s2,s3,s4]);
 
 }).play;
 
