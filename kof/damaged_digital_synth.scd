@@ -14,14 +14,14 @@ s.boot;
     ~env1 = Decay.ar(~imp,0.75);
     ~env2 = Decay.ar(~imp/16,0.45);
 
-    ~mm = Duty.kr(4,0,Dseq([60,67,63,61,69,72]+24,inf)).lag(0.1);
+    ~mm = Duty.kr(4,0,Dseq([60,67,57,60,72]+24,inf)).lag(0.1);
 
     ~melody = Duty.kr([1,2,4,8,16],0,Dseq([1,2,1.5,1,2,1.25,1,2,0.5,1,2],inf));
     ~voices = Duty.kr([1,2,4,8,16]*4,0,Dseq([1,2,1.5,1,2,1.25,1,2,0.5,1,2].reverse*4,inf));
     ~freq = ~mm * ~melody;
 
     ~c = Blip.ar(~freq*(1.5001**(1..8)),~voices,mul:4/(1..8)) + LFSaw.ar(~freq*2);
-    ~c = Resonz.ar(~c,~freq*SinOsc.ar([11,22,44]).range(0.5,1.5));
+    ~c = Resonz.ar(~c,~freq*SinOsc.ar(1/[11,22,44]).range(0.95,1.05));
     ~c = ~c * LFSaw.ar(1/4/[1,2,4,8,16]).squared;
     ~c = CombN.ar(~c,0.25,0.25,8);
     ~c = FreeVerb.ar(~c,4);
