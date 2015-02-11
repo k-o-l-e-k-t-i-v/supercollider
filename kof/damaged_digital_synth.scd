@@ -36,6 +36,6 @@ s.boot;
     ~comp = LPF.ar(~comp,SinOsc.ar(0.1*(1.0001**(1..8))).range(400,16000));
 
     Splay.ar(
-      (~comp + (~a * ~env1));
-    )}).play;
+      ~comp / 4.0 + ~sig
+    ,0.5,1,0.5)}).play;
 )
