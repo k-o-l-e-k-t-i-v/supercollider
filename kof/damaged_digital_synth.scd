@@ -28,14 +28,15 @@ s.boot;
     ~sig = (~a * ~env1) + (~b * ~env2) + ~c;
 
     ~crusher = CombN.ar(~sig,
-                        TExpRand.ar(0.02,0.25,Impulse.ar(1)).lag(1/32),
-                        TExpRand.ar(0.04,4,Impulse.ar(1/8)).lag(1/8),
+                        TExpRand.ar(0.002,0.25,Impulse.ar(1)).lag(1/32),
+                        TExpRand.ar(0.004,4,Impulse.ar(1/8)).lag(1/8),
                         4);
 
     ~comp  = CompanderD.ar(~crusher ,0.25,1,0.25,0.002,0.02) * 2;
     ~comp = LPF.ar(~comp,SinOsc.ar(0.1*(1.0001**(1..8))).range(400,16000));
+    ~strangler =  OnePole.ar(~comp,SinOsc.ar(0.01*(1.0001**(1..8))).range(0,1)) / 4.0;
 
     Splay.ar(
-      ~comp / 4.0 + ~sig
+      ~strangler + ~sig
     ,0.5,1,0.5)}).play;
 )
