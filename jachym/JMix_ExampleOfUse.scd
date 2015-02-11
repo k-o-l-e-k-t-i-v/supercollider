@@ -53,6 +53,9 @@ m.free; // close and clean JMix
 // solution for Ndef (maybe - to Alex this few minutes worked)
 // http://new-supercollider-mailing-lists-forums-use-these.2681727.n2.nabble.com/Ndef-Synth-and-Bus-td6759231.html
 // https://github.com/supercollider/supercollider/commit/1536a83e72b522e19041958eed319805d1c7272e
-Ndef(\s1, { SinOsc.ar ! 2 }).play(m.chBus(0),2, m.synG);
-
+(
+Ndef(\s1, { SinOsc.ar ! 2 }).play(m.chBus(0));
+Ndef(\s1).group = m.synG;
+// Ndef(\s1).parentGroup_(m.synG);
+)
 
