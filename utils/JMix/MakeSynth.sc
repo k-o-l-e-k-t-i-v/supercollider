@@ -2,6 +2,8 @@ MakeSynth {
 	classvar <global;
 	var <efxPath, <dict;
 
+// pozdrav z Tater
+
 
 	*new { |efxPath|
 		^super.newCopyArgs(efxPath).init;
