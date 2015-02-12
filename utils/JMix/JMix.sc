@@ -2,6 +2,7 @@
 
 // Ja_Mixer SC object, in progress..
 
+
 JMix {
 	classvar version = 0.10;
 	classvar server;
