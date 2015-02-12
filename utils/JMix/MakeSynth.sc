@@ -10,7 +10,7 @@ MakeSynth {
 		// ("global: " ++ this.filenameSymbol.asString.dirname +/+ "Efx").postln;
 
 		dict = IdentityDictionary.new;
-		efxPath = Platform.userExtensionDir ++ "\\JMix\\Efx\\";
+		efxPath = Platform.systemExtensionDir ++ "\/JMix\/Efx\/";
 		("Efx path: " ++ efxPath).postln;
 		("Efx path2: " ++ efxPath.dirname).postln;
 
@@ -25,7 +25,7 @@ MakeSynth {
 	*initClass {
 		// adresa slozky
 		StartUp.add{
-			global = this.new(this.filenameSymbol.asString.dirname ++ "\\Efx")
+			global = this.new(this.filenameSymbol.asString.dirname ++ "\/Efx")
 		}
 
 	}
@@ -37,8 +37,8 @@ MakeSynth {
 
 		// Lazy loading
 		if(dict[key]==0){
-			dict[key] = thisProcess.interpreter.compileFile("%\%.scd".format(efxPath, key)).value;
-			("thisProcess.interpreter.compileFile: %\%.scd".format(efxPath, key) ++ " - key: " ++ key).postln;
+			dict[key] = thisProcess.interpreter.compileFile("%\/%.scd".format(efxPath, key)).value;
+			("thisProcess.interpreter.compileFile: %\/%.scd".format(efxPath, key) ++ " - key: " ++ key).postln;
 		};
 		^dict[key]
 	}
