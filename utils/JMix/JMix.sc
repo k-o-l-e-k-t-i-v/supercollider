@@ -1,6 +1,6 @@
 // put it into your SCClassLibrary/DefaultLibrary and recompile the class library (Ctr+Shift+L)
 
-// Ja_Mixer SC object, in progress..
+// Ja_Mixer SC object, in progress.. git test
 
 
 JMix {
