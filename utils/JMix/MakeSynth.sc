@@ -2,7 +2,7 @@ MakeSynth {
 	classvar <global;
 	var <efxPath, <dict;
 
-// pozdrav z Tater
+	// pozdrav z Tater
 
 
 	*new { |efxPath|
@@ -93,6 +93,15 @@ MakeSynth {
 					}).add.removeWhenDone;
 				}
 			};
+
+			GUI.button.new(win, wrect.copy.left_(wrect.width*3/6).width_(wrect.width/6).height_(50).insetBy(5, 15))
+			.states_([["makeWindow"]])
+			.action_{
+				SynthDescLib.at(listview.item).makeWindow;
+				// .makeWindow ??????????????????????????????????????? vytvori okno s ovladaci, jak?
+				("SynthDescLib.at : " ++ SynthDescLib.at(listview.item)).postln;
+			};
+
 		}
 	}
 	*memStore { |libname=\global, completionMsg, keepDef = true|
