@@ -224,6 +224,7 @@ JMix_channel{
 		numEfx.do{|i|
 			var numEfx_cBus, val_Efx_cBus, name_Efx_cBus;
 
+
 			fxButt = Button(uv, Rect(5, 150+(60*i), uv.bounds.width-10, 15))
 			.font_(fontSmall)
 			// .valueAction_(cb_mute.value)
@@ -250,18 +251,18 @@ JMix_channel{
 				};
 			});
 
-			numEfx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames;
-			("numEfx_cBus :" ++ numEfx_cBus).postln;
+			numEfx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames.size;
+			("numEfx_cBus : " ++ numEfx_cBus).postln;
 
 			numEfx_cBus.do{|j|
-
+				j.postln;
 				name_Efx_cBus = StaticText.new(uv,Rect(5, 150+(30*i)+(20*j), 35, 20))
-				// .string_(SynthDescLib.at(master.efxSynthDef(i)).controlDict(j))
-				.string_("aaaaa")
+				.string_(SynthDescLib.at(master.efxSynthDef(i)).controlNames[j])
+				// .string_("aaaaa")
 				.stringColor_(colFront)
-				.font_(fontSmall);
-/*
-				val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 150+(30*j), 25, 15))
+				.font_(fontBig);
+
+				val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 150+(30*i)+(20*j), 25, 15))
 				.normalColor_(colFront)
 				.background_(colBack)
 				.align_(\center)
@@ -272,7 +273,7 @@ JMix_channel{
 				.action_({
 					// coll_fx_Pan_cb_freq[i].value = val_Efx_cBus.value;
 				});
-				*/
+
 			};
 
 		};
