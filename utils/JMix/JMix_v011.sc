@@ -237,6 +237,8 @@ JMix_channel{
 				// master.efxSynthDef(i).postln;
 
 				if(butt.value == 1) {
+					////////////////// SynthDesc helpfile
+
 					// SynthDescLib.at(master.efxSynthDef(i)).makeWindow;
 					("SynthDescLib.at().controlNames : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlNames).postln;
 					("SynthDescLib.at().controlDict : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlDict).postln;
