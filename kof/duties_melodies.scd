@@ -19,9 +19,9 @@ Ndef(\melod,{
 		,~freq*2 + ~vibrato)
 	,0.5,0.25,0.5)
 }).play;
-
+)
 /////////////////////////////////////////////
-
+(
 Ndef(\submelod).fadeTime = 2.0;
 Ndef(\submelod).quant = 2.0;
 Ndef(\submelod,{
@@ -41,8 +41,9 @@ Ndef(\submelod,{
 	,0.5,0.15,0.5)
 }).play;
 
+)
 /////////////////////////////////////////////
-
+(
 Ndef(\kick).quant =2.0;
   Ndef(\kick,{
 	~duty = Duty.ar(Dseq([1,1,2],inf),0,Dseq(8/[1,1,2,1],inf));
