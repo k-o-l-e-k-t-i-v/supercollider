@@ -8,31 +8,31 @@ s.boot;
       Ndef(\a).quant = 0;
       Ndef(\a,{
 
-        ~a = [0,3,7];
-        ~b = [0,4,7];
-        ~c = [2,5,8];
-        ~d = [2,5,9];
-        ~e = [3,7,10];
-        ~f = [4,7,11];
-        ~g = [0,5,8];
+        ~a = [0,3,5,7,8];
+        ~b = [2,5,7,7,7];
+        ~c = [0,3,7,8,10];
+        ~d = [0,2,5,8,8];
+        ~e = [0,2,3,7,7];
+        ~f = [0,3,5,8,8];
+        ~g = [2,3,7,10,10];
 
-
-        ~octave = 0.rrand(4) * 12;
 
         ~sel = 0.rrand(6);
+        
+        ~octave = ~sel * 12;
 
-        ~mod1 = [~a,~b,~c,~d,~e,~f,~g].at(~sel);
+        ~gr = [~a,~b,~c,~d,~e,~f,~g].at(~sel);
 
-        ~tone1 = 48+~octave+(~mod1);
+        ~mod1 = ~gr.at(0.rrand(4!3))+~octave;
 
 
-        ~sig1 = LFSaw.ar((~tone1).midicps,mul:0.2);
+        ~sig1 = SinOsc.ar((~mod1).midicps,mul:0.2);
 
         Splay.ar(
           ~sig1 
           ,0.5,0.5,0.5)
       }).play;
-      2.wait;
+      1.wait;
     }
   }).play;
 )
