@@ -8,7 +8,6 @@ JMix_v011 {
 	var numCh;
 	var <synG, mixG;
 	var master_Synth, master_aBus;
-	classvar coll_FreqViews;
 
 	*new { |numChannels|
 		^super.new.init(numChannels);
@@ -18,7 +17,7 @@ JMix_v011 {
 
 		server = Server.default;
 		mixSDef = this.storeSynth(this.folderMix); // Mix_Fader = 0; Mix_Limiter = 1
-		// efxSynth = this.storeSynth(this.folderEfx);
+		efxSDef = this.storeSynth(this.folderEfx);
 
 		server.waitForBoot{
 			numCh = xCh;
@@ -31,7 +30,7 @@ JMix_v011 {
 
 			coll_Channels = List.new(numCh);
 			numCh.do { |i|
-				coll_Channels.add(JMix_channel(this, i));
+				coll_Channels.add(JMix_channel(this));
 			};
 		}
 	}
@@ -45,7 +44,7 @@ JMix_v011 {
 
 		dict.keysDo{|key|
 			if(dict[key]==0){
-				dict[key] = thisProcess.interpreter.compileFile("%\/%.scd".format(this.folderMix, key)).value;
+				dict[key] = thisProcess.interpreter.compileFile("%\/%.scd".format(dir, key)).value;
 			};
 		};
 
@@ -79,12 +78,8 @@ JMix_v011 {
 		.background_(colBack)
 		.front;
 
-		coll_FreqViews = List.new(numCh);
-
 		numCh.do { |i|
-			var originX, originY, uv;
-			var name, txtAmp, fqv;
-			var valAmp, sliderAmp, buttMute;
+			var uv, originX, originY;
 
 			originX = 5+((sizeXChnl+5)*i);
 			originY = 5;
@@ -104,47 +99,9 @@ JMix_v011 {
 				Pen.stroke;
 			};
 
-			name = StaticText.new(uv,Rect(5, 5, uv.bounds.width-5, 12))
-			.string_("ch["++i++"]")
-			.stringColor_(colFront)
-			.font_(fontBig);
+			this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
 
-			txtAmp = StaticText.new(uv,Rect(5, 22, 20, 15))
-			.string_("amp:")
-			.stringColor_(colFront)
-			.font_(fontSmall);
 
-			fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80))
-			.active_(true)
-			.inBus_(this.ch(i))
-			.freqMode_(1)
-			.background_(Color.black);
-			coll_FreqViews.add(fqv);
-
-			valAmp = NumberBox(uv, Rect(27, 23, 20, 15))
-			.normalColor_(colFront)
-			.background_(colBack)
-			.align_(\center)
-			.font_(fontSmall);
-
-			sliderAmp = Slider(uv, Rect(uv.bounds.width-13, 5, 8, 120))
-			.background_(colBack)
-			.knobColor_(colActive)
-			.action_({
-				valAmp.value = sliderAmp.value;
-				this.channel(i).amp_cBus_(sliderAmp.value);
-			});
-
-			buttMute = Button(uv, Rect(27, 5, 20, 15))
-			.font_(fontSmall)
-			.states_([
-				["||",colFront,colBack],
-				[">",colFront,colActive]
-			])
-			.action_({ |butt|
-				if(butt.value == 1) { this.channel(i).mute_cBus_(1); };
-				if(butt.value == 0) { this.channel(i).mute_cBus_(0); };
-			});
 
 
 		};
@@ -160,6 +117,7 @@ JMix_v011 {
 	}
 
 	mixSynthDef {|num| ^mixSDef[num];}
+	efxSynthDef {|num| ^efxSDef[num];}
 	ch{ |num| ^coll_Channels[num].audioBus; }
 	channel{ |num| ^coll_Channels[num]; }
 	audioBus { ^master_aBus; }
@@ -173,16 +131,21 @@ JMix_v011 {
 JMix_channel{
 	classvar server, master;
 	classvar chnlG;
+	classvar numEfx;
 
 	var faderSynth;
 	var aBus;
 	var cb_amp, cb_mute;
 
-	*new{ |mix, id|
-		^super.new.init(mix, id);
+	var uv;
+	var name, txtAmp, fqv;
+	var valAmp, sliderAmp, buttMute;
+
+	*new{ |mix|
+		^super.new.init(mix);
 	}
 
-	init { |mix, id|
+	init { |mix|
 		server = Server.default;
 		master = mix;
 		chnlG = Group.new(master.synG, \addAfter);
@@ -198,6 +161,61 @@ JMix_channel{
 			\mute, cb_mute.asMap,
 		], chnlG,\addToTail);
 
+	}
+
+	buildEfx{
+
+	}
+
+	gui{ |uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall|
+
+
+
+		name = StaticText.new(uv,Rect(5, 5, uv.bounds.width-5, 12))
+		.string_("ch["++i++"]")
+		.stringColor_(colFront)
+		.font_(fontBig);
+
+		txtAmp = StaticText.new(uv,Rect(5, 22, 20, 15))
+		.string_("amp:")
+		.stringColor_(colFront)
+		.font_(fontSmall);
+
+		fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80))
+		.active_(true)
+		.inBus_(aBus(i))
+		.freqMode_(1)
+		.background_(Color.black);
+		coll_FreqViews.add(fqv);
+
+		valAmp = NumberBox(uv, Rect(27, 23, 20, 15))
+		.normalColor_(colFront)
+		.background_(colBack)
+		.align_(\center)
+		.font_(fontSmall);
+
+		sliderAmp = Slider(uv, Rect(uv.bounds.width-13, 5, 8, 120))
+		.background_(colBack)
+		.knobColor_(colActive)
+		.action_({
+			valAmp.value = sliderAmp.value;
+			cb_amp = sliderAmp.value;
+		});
+
+		buttMute = Button(uv, Rect(27, 5, 20, 15))
+		.font_(fontSmall)
+		.states_([
+			["||",colFront,colBack],
+			[">",colFront,colActive]
+		])
+		.action_({ |butt|
+			if(butt.value == 1) { cb_mute = 1; };
+			if(butt.value == 0) { cb_mute = 0; };
+		});
+	}
+
+	free{
+		fqv.kill;
 	}
 
 	audioBus { ^aBus; }
