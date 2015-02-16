@@ -1,13 +1,10 @@
 // put it into your SCClassLibrary/DefaultLibrary and recompile the class library (Ctr+Shift+L)
 
-// Ja_Mixer SC object, in progress.. git test
-
+// Ja_Mixer SC object, in progress..
 
 JMix {
-	classvar version = 0.10;
+	classvar version = 0.01;
 	classvar server;
-	// classvar <global;
-	var <efxPath, <dict;
 	var numCh;
 	var <synG, mixG, ch_group;
 	var master_ab, ch_ab;
@@ -61,67 +58,7 @@ JMix {
 				], ch_group[i],\addToTail)
 			);
 		};
-		("JMix (ver. " ++ version ++ ")").postln;
-	}
-
-	*initClass {
-
-		server = Server.default;
-/*
-		StartUp.add{
-			global = this.new(this.filenameSymbol.asString.dirname +/+ "Efx");
-			// global.postln;
-		}
-*/
-	}
-
-	readEfx{
-		var list, aSynth;
-		dict = IdentityDictionary.new;
-		efxPath = Platform.systemExtensionDir ++ "\\JMix\\Efx\\";
-		efxPath.postln;
-		(efxPath ++ "/*.scd").pathMatch.do{ |xPath|
-			dict.put(xPath.basename.splitext[0].asSymbol, 0);
-		};
-		dict.postln;
-		Server.default.waitForBoot{
-			this.memStore;
-
-
-			list = dict.keys(Array);
-			list.sort;
-
-			list[0].postln;
-			aSynth = Synth(list[0]);
-/*
-			OSCresponderNode(Server.default.addr, '/n_end', { |time, resp, msg|
-			if(aSynth.notNil and: {msg[1]==aSynth.nodeID}){
-			// Synth has freed (itself?) so ensure button state is consistent
-			//{startButton.value=0}.defer;
-			};
-			}).add.removeWhenDone;
-			*/
-		}
-	}
-
-	at { |key|
-		// Lazy loading
-		if(dict[key]==0){
-			dict[key] = thisProcess.interpreter.compileFile("%/%.scd".format(efxPath, key)).value;
-		};
-		^dict[key]
-	}
-	scanAll { // Unlazy
-		dict.keysDo{|key| this[key]}
-	}
-	/*
-	*memStore { |libname=\global, completionMsg, keepDef = true|
-	^global.add(libname, completionMsg, keepDef)
-	}
-	*/
-	memStore { |libname=\global, completionMsg, keepDef = true|
-		this.scanAll;
-		dict.do{|def| def.add(libname, completionMsg, keepDef)};
+		"JMix version 0.01".postln;
 	}
 
 	chBus{ arg num; ^ch_ab[num]; }
@@ -497,8 +434,16 @@ JMix {
 		mixG.free;
 	}
 
+	// *initClass Class Methods are called when the library compiles = you can initialize things here
+	// that are classvars
+	*initClass {
+
+		server = Server.default;
 
 
+
+
+	}
 
 
 }

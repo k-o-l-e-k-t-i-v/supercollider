@@ -2,9 +2,6 @@ MakeSynth {
 	classvar <global;
 	var <efxPath, <dict;
 
-	// pozdrav z Tater
-
-
 	*new { |efxPath|
 		^super.newCopyArgs(efxPath).init;
 	}
@@ -13,13 +10,13 @@ MakeSynth {
 
 		dict = IdentityDictionary.new;
 		efxPath = Platform.systemExtensionDir ++ "\/JMix\/Efx\/";
-		("Efx path: " ++ efxPath).postln;
-		("Efx path2: " ++ efxPath.dirname).postln;
+		// ("Efx path: " ++ efxPath).postln;
+		// ("Efx path2: " ++ efxPath.dirname).postln;
 
 		(efxPath ++ "*.scd").pathMatch.do{ |apath|
 			// Lazy loading - ignore the file contents for now
 			dict.put(apath.basename.splitext[0].asSymbol, 0); // we put "0" because can't actually put nil into a dictionary...
-			apath.postln;
+			// apath.postln;
 		};
 
 	}
@@ -40,14 +37,14 @@ MakeSynth {
 		// Lazy loading
 		if(dict[key]==0){
 			dict[key] = thisProcess.interpreter.compileFile("%\/%.scd".format(efxPath, key)).value;
-			("thisProcess.interpreter.compileFile: %\/%.scd".format(efxPath, key) ++ " - key: " ++ key).postln;
+			// ("thisProcess.interpreter.compileFile: %\/%.scd".format(efxPath, key) ++ " - key: " ++ key).postln;
 		};
 		^dict[key]
 	}
 	scanAll { // Unlazy
 		dict.keysDo{|key|
 			this[key];
-			("scanAll: " ++ key).postln;
+			// ("scanAll: " ++ key).postln;
 		}
 	}
 
@@ -58,7 +55,7 @@ MakeSynth {
 		var w, win, list, listview, wrect, startButton, aSynth;
 		Server.default.waitForBoot{
 			this.memStore;
-			"after this.memStore".postln;
+			// "after this.memStore".postln;
 
 			win = Window.new("MakeSynth", Rect(400,400,500,100));
 			win.alwaysOnTop_(true);
@@ -66,11 +63,11 @@ MakeSynth {
 
 			list = dict.keys(Array);
 			list.sort;
-			("list: " ++ list).postln;
+			// ("list: " ++ list).postln;
 
 			wrect = win.view.bounds;
 			listview = GUI.popUpMenu.new(win, wrect.copy.width_(wrect.width/2 - 75).height_(50).insetBy(5, 15)).items_(list);
-			("listview: " ++ listview).postln;
+			// ("listview: " ++ listview).postln;
 
 			// add a button to start and stop the sound.
 			startButton = GUI.button.new(win, Rect(listview.bounds.right+10, listview.bounds.top, 65, listview.bounds.height))
@@ -83,7 +80,7 @@ MakeSynth {
 				}{
 					aSynth = Synth(listview.item);
 					("listview.item : " ++ listview.item).postln;
-					("aSynth : " ++ aSynth).postln;
+					// ("aSynth : " ++ aSynth).postln;
 
 					OSCresponderNode(Server.default.addr, '/n_end', { |time, resp, msg|
 						if(aSynth.notNil and: {msg[1]==aSynth.nodeID}){
@@ -99,7 +96,7 @@ MakeSynth {
 			.action_{
 				SynthDescLib.at(listview.item).makeWindow;
 				// .makeWindow ??????????????????????????????????????? vytvori okno s ovladaci, jak?
-				("SynthDescLib.at : " ++ SynthDescLib.at(listview.item)).postln;
+				// ("SynthDescLib.at : " ++ SynthDescLib.at(listview.item)).postln;
 			};
 
 		}
@@ -108,10 +105,11 @@ MakeSynth {
 		^global.add(libname, completionMsg, keepDef)
 	}
 	memStore { |libname=\global, completionMsg, keepDef = true|
-		"memStore...".postln;
+		// "memStore...".postln;
 		this.scanAll;
 		dict.do{|def|
 			def.add(libname, completionMsg, keepDef);
-			("def.add: " ++ def).postln;};
+			// ("def.add: " ++ def).postln;};
+		}
 	}
 }
