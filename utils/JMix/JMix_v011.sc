@@ -7,8 +7,8 @@ JMix_v011 {
 	var <coll_Channels;
 	var numCh;
 	var <synG, mixG;
-	var master_Synth, master_ab;
-
+	var master_Synth, master_aBus;
+	classvar coll_FreqViews;
 
 	*new { |numChannels|
 		^super.new.init(numChannels);
@@ -26,8 +26,8 @@ JMix_v011 {
 			synG = Group.new;
 			mixG = Group.new(addAction:\addToTail);
 
-			master_ab = Bus.audio(server, 2);
-			master_Synth = Synth(this.mixSynthDef(1),[\bus, master_ab],mixG);
+			master_aBus = Bus.audio(server, 2);
+			master_Synth = Synth(this.mixSynthDef(1),[\bus, master_aBus],mixG);
 
 			coll_Channels = List.new(numCh);
 			numCh.do { |i|
@@ -59,8 +59,110 @@ JMix_v011 {
 		^list;
 	}
 
+	gui {
+		var win;
+		var sizeXChnl, sizeYChnl;
+		var colBack, colFront, colActive;
+		var fontBig, fontSmall;
+
+		sizeXChnl = 65;
+		sizeYChnl = 400;
+		colBack = Color.new255(30,30,30);
+		colFront = Color.new255(255,255,255);
+		colActive = Color.new255(200,50,50);
+		fontBig = Font("Segoe UI", 7,true, isPointSize:true);
+		fontSmall = Font("Segoe UI", 6, isPointSize:true);
+
+		win = Window.new("ja_Mixer v"++version, Rect(900,600,5+((sizeXChnl+5)*numCh),410))
+		.alpha_(0.95)
+		.alwaysOnTop_(true)
+		.background_(colBack)
+		.front;
+
+		coll_FreqViews = List.new(numCh);
+
+		numCh.do { |i|
+			var originX, originY, uv;
+			var name, txtAmp, fqv;
+			var valAmp, sliderAmp, buttMute;
+
+			originX = 5+((sizeXChnl+5)*i);
+			originY = 5;
+
+			uv = UserView(win, Rect(originX, originY, sizeXChnl, sizeYChnl))
+			.background_(colBack)
+			.drawFunc = {
+				Pen.strokeColor = colFront;
+				Pen.addRect(Rect(0,0, uv.bounds.width,uv.bounds.height));
+
+				Pen.addRect(Rect(5,45, uv.bounds.width-22,80)); // fqv frame
+
+				Pen.moveTo(5@133);
+				Pen.lineTo(uv.bounds.width-5@133);
+				Pen.moveTo(5@160);
+				Pen.lineTo(uv.bounds.width-5@160);
+				Pen.stroke;
+			};
+
+			name = StaticText.new(uv,Rect(5, 5, uv.bounds.width-5, 12))
+			.string_("ch["++i++"]")
+			.stringColor_(colFront)
+			.font_(fontBig);
+
+			txtAmp = StaticText.new(uv,Rect(5, 22, 20, 15))
+			.string_("amp:")
+			.stringColor_(colFront)
+			.font_(fontSmall);
+
+			fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80))
+			.active_(true)
+			.inBus_(this.ch(i))
+			.freqMode_(1)
+			.background_(Color.black);
+			coll_FreqViews.add(fqv);
+
+			valAmp = NumberBox(uv, Rect(27, 23, 20, 15))
+			.normalColor_(colFront)
+			.background_(colBack)
+			.align_(\center)
+			.font_(fontSmall);
+
+			sliderAmp = Slider(uv, Rect(uv.bounds.width-13, 5, 8, 120))
+			.background_(colBack)
+			.knobColor_(colActive)
+			.action_({
+				valAmp.value = sliderAmp.value;
+				this.channel(i).amp_cBus_(sliderAmp.value);
+			});
+
+			buttMute = Button(uv, Rect(27, 5, 20, 15))
+			.font_(fontSmall)
+			.states_([
+				["||",colFront,colBack],
+				[">",colFront,colActive]
+			])
+			.action_({ |butt|
+				if(butt.value == 1) { this.channel(i).mute_cBus_(1); };
+				if(butt.value == 0) { this.channel(i).mute_cBus_(0); };
+			});
+
+
+		};
+
+		win.onClose_({
+			numCh.do { |i|
+				coll_FreqViews[i].kill;
+			};
+			win.close;
+			"JMix closed".postln;
+		});
+
+	}
+
 	mixSynthDef {|num| ^mixSDef[num];}
-	chBus{ |num| ^coll_Channels[num].audioBus; }
+	ch{ |num| ^coll_Channels[num].audioBus; }
+	channel{ |num| ^coll_Channels[num]; }
+	audioBus { ^master_aBus; }
 
 	folderRoot{ ^Platform.systemExtensionDir ++ "\/JMix"; }
 	folderMix{ ^this.folderRoot ++ "\/Mix"; }
@@ -70,14 +172,12 @@ JMix_v011 {
 
 JMix_channel{
 	classvar server, master;
-	classvar chID;
 	classvar chnlG;
 
-	classvar faderSynth;
+	var faderSynth;
 	var aBus;
-	classvar cb_amp, cb_mute;
+	var cb_amp, cb_mute;
 
-	var master_Synth, ch_Synth;
 	*new{ |mix, id|
 		^super.new.init(mix, id);
 	}
@@ -85,11 +185,10 @@ JMix_channel{
 	init { |mix, id|
 		server = Server.default;
 		master = mix;
-		chID = id;
 		chnlG = Group.new(master.synG, \addAfter);
 
 		aBus = Bus.audio(server, 2);
-		cb_amp = Bus.control(server, 1).value_(0.33);
+		cb_amp = Bus.control(server, 1).value_(0);
 		cb_mute = Bus.control(server, 1).value_(1);
 
 		faderSynth = Synth(master.mixSynthDef(0), [
@@ -100,11 +199,12 @@ JMix_channel{
 		], chnlG,\addToTail);
 
 	}
-	audioBus {^aBus;}
-	/*
-	at {|i|
-	("Index "++i).postln;
-	^this;
-	}
-	*/
+
+	audioBus { ^aBus; }
+	amp_cBus { ^cb_amp; }
+	amp_cBus_ { |newValue| cb_amp.value = newValue; }
+	mute_cBus { ^cb_mute; }
+	mute_cBus_ { |newValue| cb_mute.value = newValue; }
+
+
 }
