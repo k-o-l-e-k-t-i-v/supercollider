@@ -30,7 +30,7 @@ JMix_v011 {
 
 			coll_Channels = List.new(numCh);
 			numCh.do { |i|
-				coll_Channels.add(JMix_channel(this));
+				coll_Channels.add(JMix_channel(this, i));
 			};
 		}
 	}
@@ -108,7 +108,7 @@ JMix_v011 {
 
 		win.onClose_({
 			numCh.do { |i|
-				coll_FreqViews[i].kill;
+				this.channel(i).free;
 			};
 			win.close;
 			"JMix closed".postln;
@@ -133,6 +133,7 @@ JMix_channel{
 	classvar chnlG;
 	classvar numEfx;
 
+	var id;
 	var faderSynth;
 	var aBus;
 	var cb_amp, cb_mute;
@@ -141,11 +142,12 @@ JMix_channel{
 	var name, txtAmp, fqv;
 	var valAmp, sliderAmp, buttMute;
 
-	*new{ |mix|
-		^super.new.init(mix);
+	*new{ |mix, xID|
+		^super.new.init(mix, xID);
 	}
 
-	init { |mix|
+	init { |mix, xID|
+		id = xID;
 		server = Server.default;
 		master = mix;
 		chnlG = Group.new(master.synG, \addAfter);
@@ -161,6 +163,7 @@ JMix_channel{
 			\mute, cb_mute.asMap,
 		], chnlG,\addToTail);
 
+		this.buildEfx;
 	}
 
 	buildEfx{
@@ -169,10 +172,8 @@ JMix_channel{
 
 	gui{ |uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall|
 
-
-
 		name = StaticText.new(uv,Rect(5, 5, uv.bounds.width-5, 12))
-		.string_("ch["++i++"]")
+		.string_("ch["++id++"]")
 		.stringColor_(colFront)
 		.font_(fontBig);
 
@@ -181,12 +182,11 @@ JMix_channel{
 		.stringColor_(colFront)
 		.font_(fontSmall);
 
-		fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80))
-		.active_(true)
-		.inBus_(aBus(i))
-		.freqMode_(1)
-		.background_(Color.black);
-		coll_FreqViews.add(fqv);
+		fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80));
+		fqv.active_(true);
+		fqv.inBus_(aBus);
+		fqv.freqMode_(1);
+		fqv.background_(Color.black);
 
 		valAmp = NumberBox(uv, Rect(27, 23, 20, 15))
 		.normalColor_(colFront)
@@ -199,23 +199,24 @@ JMix_channel{
 		.knobColor_(colActive)
 		.action_({
 			valAmp.value = sliderAmp.value;
-			cb_amp = sliderAmp.value;
+			cb_amp.value = sliderAmp.value;
 		});
 
 		buttMute = Button(uv, Rect(27, 5, 20, 15))
 		.font_(fontSmall)
+		.valueAction_(cb_mute.value)
 		.states_([
 			["||",colFront,colBack],
 			[">",colFront,colActive]
 		])
 		.action_({ |butt|
-			if(butt.value == 1) { cb_mute = 1; };
-			if(butt.value == 0) { cb_mute = 0; };
+			if(butt.value == 1) { cb_mute.value = 1; };
+			if(butt.value == 0) { cb_mute.value = 0; };
 		});
 	}
 
 	free{
-		fqv.kill;
+		fqv.kill // !!! nutne bez ";"
 	}
 
 	audioBus { ^aBus; }
