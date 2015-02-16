@@ -5,7 +5,7 @@ JMix_v011 {
 	classvar mixSDef, efxSDef;
 
 	var <coll_Channels;
-	var numCh;
+	var numCh, <numEfx;
 	var <synG, mixG;
 	var master_Synth, master_aBus;
 
@@ -18,6 +18,7 @@ JMix_v011 {
 		server = Server.default;
 		mixSDef = this.storeSynth(this.folderMix); // Mix_Fader = 0; Mix_Limiter = 1
 		efxSDef = this.storeSynth(this.folderEfx);
+		numEfx = efxSDef.size;
 
 		server.waitForBoot{
 			numCh = xCh;
@@ -131,12 +132,16 @@ JMix_v011 {
 JMix_channel{
 	classvar server, master;
 	classvar chnlG;
-	classvar numEfx;
 
 	var id;
 	var faderSynth;
 	var aBus;
 	var cb_amp, cb_mute;
+
+	var numEfx;
+	var coll_Efx_Synth;
+	var coll_Efx_cBus;
+	var fxButt;
 
 	var uv;
 	var name, txtAmp, fqv;
@@ -147,9 +152,10 @@ JMix_channel{
 	}
 
 	init { |mix, xID|
-		id = xID;
 		server = Server.default;
 		master = mix;
+		id = xID;
+		numEfx = master.numEfx;
 		chnlG = Group.new(master.synG, \addAfter);
 
 		aBus = Bus.audio(server, 2);
@@ -163,11 +169,8 @@ JMix_channel{
 			\mute, cb_mute.asMap,
 		], chnlG,\addToTail);
 
-		this.buildEfx;
-	}
-
-	buildEfx{
-
+		coll_Efx_Synth = List.newClear(numEfx);
+		coll_Efx_cBus = List.new(0);
 	}
 
 	gui{ |uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall|
@@ -204,7 +207,7 @@ JMix_channel{
 
 		buttMute = Button(uv, Rect(27, 5, 20, 15))
 		.font_(fontSmall)
-		.valueAction_(cb_mute.value)
+		// .valueAction_(cb_mute.value)
 		.states_([
 			["||",colFront,colBack],
 			[">",colFront,colActive]
@@ -213,6 +216,66 @@ JMix_channel{
 			if(butt.value == 1) { cb_mute.value = 1; };
 			if(butt.value == 0) { cb_mute.value = 0; };
 		});
+
+		/// efx ////////////////////
+
+
+
+		numEfx.do{|i|
+			var numEfx_cBus, val_Efx_cBus, name_Efx_cBus;
+
+			fxButt = Button(uv, Rect(5, 150+(60*i), uv.bounds.width-10, 15))
+			.font_(fontSmall)
+			// .valueAction_(cb_mute.value)
+			.states_([
+				[master.efxSynthDef(i),colFront,colBack],
+				[master.efxSynthDef(i),colFront,colActive]
+			])
+			.action_({ |butt|
+
+				// master.efxSynthDef(i).postln;
+
+				if(butt.value == 1) {
+					// SynthDescLib.at(master.efxSynthDef(i)).makeWindow;
+					("SynthDescLib.at().controlNames : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlNames).postln;
+					("SynthDescLib.at().controlDict : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlDict).postln;
+					// ("SynthDescLib.at : " ++ SynthDescLib.at(master.efxSynthDef(i))).postln;
+
+					coll_Efx_Synth.put(i,Synth(master.efxSynthDef(i), [ \bus, aBus,// \freq, coll_fx_Pan_cb_freq[i].asMap;
+						], faderSynth,\addBefore);
+					)
+				};
+				if(butt.value == 0) {
+					coll_Efx_Synth[i].free;
+				};
+			});
+
+			numEfx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames;
+			("numEfx_cBus :" ++ numEfx_cBus).postln;
+
+			numEfx_cBus.do{|j|
+
+				name_Efx_cBus = StaticText.new(uv,Rect(5, 150+(30*i)+(20*j), 35, 20))
+				// .string_(SynthDescLib.at(master.efxSynthDef(i)).controlDict(j))
+				.string_("aaaaa")
+				.stringColor_(colFront)
+				.font_(fontSmall);
+/*
+				val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 150+(30*j), 25, 15))
+				.normalColor_(colFront)
+				.background_(colBack)
+				.align_(\center)
+				.font_(fontSmall)
+				.value_(1)
+				.clipLo_(0)
+				.scroll_step_(0.1)
+				.action_({
+					// coll_fx_Pan_cb_freq[i].value = val_Efx_cBus.value;
+				});
+				*/
+			};
+
+		};
 	}
 
 	free{
