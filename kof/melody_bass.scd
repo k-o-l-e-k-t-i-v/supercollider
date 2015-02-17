@@ -8,7 +8,7 @@ s.boot;
   Ndef(\a,{
     ~octave = Duty.kr(4,0,Dseq([0,2,1]*12,inf));
     ~tune = Duty.kr(16,0,Dseq([1,2,1.5,1.25,0.75],inf));
-    ~base = Duty.kr(4,0,Dseq(([33,37,42,35]+~octave).midicps/(~tune*pi),inf));
+    ~base = Duty.kr(4,0,Dseq(([39,34,42,35]+~octave).midicps/(~tune*pi),inf));
     ~d1 = Duty.kr(1/8,0,Dseq([1,2,1,4,1,2,1,1.5],inf));
     ~d2 = Duty.kr(4,0,Dseq([1,2,1,4,1,2,1,1.5],inf));
     ~f = ~base * (~d1*2) * ~d2;
