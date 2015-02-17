@@ -11,7 +11,7 @@ s.boot;
     ~base = Duty.kr(4,0,Dseq(([33,37,42,35]+~octave).midicps/(~tune*pi),inf));
     ~d1 = Duty.kr(1/8,0,Dseq([1,2,1,4,1,2,1,1.5],inf));
     ~d2 = Duty.kr(4,0,Dseq([1,2,1,4,1,2,1,1.5],inf));
-    ~f = ~base * (pi * ~d1) * ~d2;
+    ~f = ~base * (~d1*2) * ~d2;
 
     ~sig = LFSaw.ar(~f,mul:0.15) * Decay.ar(Impulse.ar(4/fib(8)),(1..8)/6);
     ~sig = Resonz.ar(~sig,LFTri.ar(1/44/fib(8)).range(~f*4,~f/4));
