@@ -13,10 +13,14 @@ s.boot;
     ~d2 = Duty.kr(4,0,Dseq([1,2,1,4,1,2,1,1.5],inf));
     ~f = ~base * (~d1*2) * ~d2;
 
-    ~sig = LFSaw.ar(~f,mul:0.15) * Decay.ar(Impulse.ar(4/fib(8)),(1..8)/6);
+    ~detune = SinOsc.ar([4,5,6,7]).range(-2,2);
+    
+
+    ~sig = LFSaw.ar(~f+~detune,mul:0.15) * Decay.ar(Impulse.ar(4/fib(8)),(1..8)/6);
     ~sig = Resonz.ar(~sig,LFTri.ar(1/44/fib(8)).range(~f*4,~f/4));
     ~sig = AllpassN.ar(~sig.distort!4,0.25,0.25,32);
     ~sig = CompanderD.ar(~sig,0.5,1,1/6,0.002,0.02);
+    ~sig = Vibrato.ar(~sig,[4,5,6,7],0.2);
     ~sig = FreeVerb.ar(~sig,0.133,2);
 
     Splay.ar(
