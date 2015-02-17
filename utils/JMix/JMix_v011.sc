@@ -261,9 +261,12 @@ JMix_channel{
 					// ("SynthDescLib.at : " ++ SynthDescLib.at(master.efxSynthDef(i))).postln;
 
 
-					tempSynth = Synth(master.efxSynthDef(i), target:faderSynth, addAtion:\addBefore);
+					tempSynth = Synth(master.efxSynthDef(i), target:faderSynth, addAction:\addBefore);
 					numEfx_cBus.do{|j|
-						tempSynth.map(controlsNames_sd[j],multiBus_sd[j]);
+						j.postln;
+						("controlsNames_sd[j] : " ++ controlsNames_sd[j]).postln;
+						("multiBus_sd.index(j)" ++ multiBus_sd.index(j)).postln;
+						tempSynth.map(controlsNames_sd[j].asSymbol,multiBus_sd.index(j));
 					};
 
 
@@ -294,7 +297,7 @@ JMix_channel{
 				.clipLo_(0)
 				.scroll_step_(0.1)
 				.action_({
-					multiBus_sd[i].value = val_Efx_cBus.value;
+					multiBus_sd.setAt(i,val_Efx_cBus.value);
 					multiBus_sd[i].value.postln;
 				});
 
