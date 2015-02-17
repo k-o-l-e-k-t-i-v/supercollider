@@ -102,9 +102,6 @@ JMix_v011 {
 
 			this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
 
-
-
-
 		};
 
 		win.onClose_({
@@ -223,9 +220,27 @@ JMix_channel{
 
 		numEfx.do{|i|
 			var numEfx_cBus, val_Efx_cBus, name_Efx_cBus;
+			var sd, controls_sd, controlsNames_sd, controlsDic_sd;
+			var multiBus_sd;
 
 
-			fxButt = Button(uv, Rect(5, 150+(60*i), uv.bounds.width-10, 15))
+			sd = SynthDescLib.at(master.efxSynthDef(i));
+			controls_sd = sd.controls;
+			("controls_sd :" ++ controls_sd).postln;
+
+			numEfx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames.size;
+			("numEfx_cBus : " ++ numEfx_cBus).postln;
+
+			controlsNames_sd = SynthDescLib.at(master.efxSynthDef(i)).controlNames;
+			("controlsNames_sd : " ++ controlsNames_sd).postln;
+
+			controlsDic_sd = SynthDescLib.at(master.efxSynthDef(i)).controlDict;
+			("controlsDic_sd : " ++ controlsDic_sd).postln;
+
+			multiBus_sd = Bus.control(server,numEfx_cBus);
+
+
+			fxButt = Button(uv, Rect(5, 150+(80*i), uv.bounds.width-10, 15))
 			.font_(fontSmall)
 			// .valueAction_(cb_mute.value)
 			.states_([
@@ -233,38 +248,44 @@ JMix_channel{
 				[master.efxSynthDef(i),colFront,colActive]
 			])
 			.action_({ |butt|
-
+				var tempSynth;
 				// master.efxSynthDef(i).postln;
 
 				if(butt.value == 1) {
 					////////////////// SynthDesc helpfile
 
+					// ("SynthDescLib.at().controlNames : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlNames).postln;
+					// ("SynthDescLib.at().controlDict : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlDict).postln;
+
 					// SynthDescLib.at(master.efxSynthDef(i)).makeWindow;
-					("SynthDescLib.at().controlNames : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlNames).postln;
-					("SynthDescLib.at().controlDict : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlDict).postln;
 					// ("SynthDescLib.at : " ++ SynthDescLib.at(master.efxSynthDef(i))).postln;
 
-					coll_Efx_Synth.put(i,Synth(master.efxSynthDef(i), [ \bus, aBus,// \freq, coll_fx_Pan_cb_freq[i].asMap;
-						], faderSynth,\addBefore);
-					)
+
+					tempSynth = Synth(master.efxSynthDef(i), target:faderSynth, addAtion:\addBefore);
+					numEfx_cBus.do{|j|
+						tempSynth.map(controlsNames_sd[j],multiBus_sd[j]);
+					};
+
+
+					coll_Efx_Synth.put(i,tempSynth);
+
 				};
 				if(butt.value == 0) {
 					coll_Efx_Synth[i].free;
 				};
 			});
 
-			numEfx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames.size;
-			("numEfx_cBus : " ++ numEfx_cBus).postln;
+
 
 			numEfx_cBus.do{|j|
-				j.postln;
-				name_Efx_cBus = StaticText.new(uv,Rect(5, 150+(30*i)+(20*j), 35, 20))
-				.string_(SynthDescLib.at(master.efxSynthDef(i)).controlNames[j])
+				// j.postln;
+				name_Efx_cBus = StaticText.new(uv,Rect(5, 180+(80*i)+(20*j), 35, 20))
+				.string_(controlsNames_sd[j])
 				// .string_("aaaaa")
 				.stringColor_(colFront)
 				.font_(fontBig);
 
-				val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 150+(30*i)+(20*j), 25, 15))
+				val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 180+(80*i)+(20*j), 25, 15))
 				.normalColor_(colFront)
 				.background_(colBack)
 				.align_(\center)
@@ -273,7 +294,8 @@ JMix_channel{
 				.clipLo_(0)
 				.scroll_step_(0.1)
 				.action_({
-					// coll_fx_Pan_cb_freq[i].value = val_Efx_cBus.value;
+					multiBus_sd[i].value = val_Efx_cBus.value;
+					multiBus_sd[i].value.postln;
 				});
 
 			};
