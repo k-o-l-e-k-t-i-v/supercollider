@@ -135,7 +135,7 @@ JMix_channel{
 	var aBus;
 	var cb_amp, cb_mute;
 
-	var numEfx;
+	var numEfx, numCntNames;
 	var coll_Efx_Synth;
 	var coll_Efx_cBus;
 	var fxButt;
@@ -219,59 +219,34 @@ JMix_channel{
 
 
 		numEfx.do{|i|
-			var numEfx_cBus, val_Efx_cBus, name_Efx_cBus;
+			var efx_cBus, val_Efx_cBus, name_Efx_cBus;
 			var sd, controls_sd, controlsNames_sd, controlsDic_sd;
-			var multiBus_sd;
 
-
+			////////////////// SynthDesc helpfile
 			sd = SynthDescLib.at(master.efxSynthDef(i));
 			controls_sd = sd.controls;
-			("controls_sd :" ++ controls_sd).postln;
+			// ("controls_sd :" ++ controls_sd).postln;
 
-			numEfx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames.size;
-			("numEfx_cBus : " ++ numEfx_cBus).postln;
+			efx_cBus = SynthDescLib.at(master.efxSynthDef(i)).controlNames.size;
+			// ("numEfx_cBus : " ++ numEfx_cBus).postln;
 
 			controlsNames_sd = SynthDescLib.at(master.efxSynthDef(i)).controlNames;
-			("controlsNames_sd : " ++ controlsNames_sd).postln;
+			// ("controlsNames_sd : " ++ controlsNames_sd).postln;
 
 			controlsDic_sd = SynthDescLib.at(master.efxSynthDef(i)).controlDict;
-			("controlsDic_sd : " ++ controlsDic_sd).postln;
-
-			multiBus_sd = Bus.control(server,numEfx_cBus);
-
+			// ("controlsDic_sd : " ++ controlsDic_sd).postln;
 
 			fxButt = Button(uv, Rect(5, 150+(80*i), uv.bounds.width-10, 15))
 			.font_(fontSmall)
-			// .valueAction_(cb_mute.value)
 			.states_([
 				[master.efxSynthDef(i),colFront,colBack],
 				[master.efxSynthDef(i),colFront,colActive]
 			])
 			.action_({ |butt|
-				var tempSynth;
-				// master.efxSynthDef(i).postln;
-
 				if(butt.value == 1) {
-					////////////////// SynthDesc helpfile
 
-					// ("SynthDescLib.at().controlNames : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlNames).postln;
-					// ("SynthDescLib.at().controlDict : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlDict).postln;
-
-					// SynthDescLib.at(master.efxSynthDef(i)).makeWindow;
-					// ("SynthDescLib.at : " ++ SynthDescLib.at(master.efxSynthDef(i))).postln;
-
-
-					tempSynth = Synth(master.efxSynthDef(i), target:faderSynth, addAction:\addBefore);
-					numEfx_cBus.do{|j|
-						j.postln;
-						("controlsNames_sd[j] : " ++ controlsNames_sd[j]).postln;
-						("multiBus_sd.index(j)" ++ multiBus_sd.index(j)).postln;
-						tempSynth.map(controlsNames_sd[j].asSymbol,multiBus_sd.index(j));
-					};
-
-
-					coll_Efx_Synth.put(i,tempSynth);
-
+					coll_Efx_Synth.put(i,Synth(master.efxSynthDef(i), [\bus, aBus], target:faderSynth, addAction: \addBefore););
+					coll_Efx_Synth[i].release;
 				};
 				if(butt.value == 0) {
 					coll_Efx_Synth[i].free;
@@ -279,31 +254,38 @@ JMix_channel{
 			});
 
 
+			efx_cBus.do{|j|
+				if((controlsNames_sd[j] != \bus) and: (controlsNames_sd[j] != \out),
+					{
+						name_Efx_cBus = StaticText.new(uv,Rect(5, 180+(80*i)+(20*j), 35, 20))
+						.string_(controlsNames_sd[j])
+						.stringColor_(colFront)
+						.font_(fontBig);
 
-			numEfx_cBus.do{|j|
-				// j.postln;
-				name_Efx_cBus = StaticText.new(uv,Rect(5, 180+(80*i)+(20*j), 35, 20))
-				.string_(controlsNames_sd[j])
-				// .string_("aaaaa")
-				.stringColor_(colFront)
-				.font_(fontBig);
+						val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 180+(80*i)+(20*j), 25, 15))
+						.normalColor_(colFront)
+						.background_(colBack)
+						.align_(\center)
+						.font_(fontSmall)
+						.value_(100)
+						.clipLo_(0)
+						.scroll_step_(10)
+						.action_({
+							controlsNames_sd[j].postln;
+							coll_Efx_Synth[i].set(controlsNames_sd[j].asSymbol,val_Efx_cBus.value);
+							("controlsDic_sd : " ++ SynthDescLib.at(master.efxSynthDef(i)).controlDict).postln;
+						});
+					}
+				);
 
-				val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 180+(80*i)+(20*j), 25, 15))
-				.normalColor_(colFront)
-				.background_(colBack)
-				.align_(\center)
-				.font_(fontSmall)
-				.value_(1)
-				.clipLo_(0)
-				.scroll_step_(0.1)
-				.action_({
-					multiBus_sd.setAt(i,val_Efx_cBus.value);
-					multiBus_sd[i].value.postln;
-				});
 
 			};
 
 		};
+	}
+
+	buildEFX{
+
 	}
 
 	free{
@@ -318,3 +300,4 @@ JMix_channel{
 
 
 }
+

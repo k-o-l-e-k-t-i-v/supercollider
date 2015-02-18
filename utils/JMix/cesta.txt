@@ -1,1 +1,0 @@
-C:\ProgramData\SuperCollider\Extensions>mklink /D JMix c:\Dropbox\pd\Supercollider\GIT\utils\JMix
