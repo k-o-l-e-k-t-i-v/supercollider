@@ -14,7 +14,7 @@ s.boot;
     ~f = ~base * (~d1*2) * ~d2;
 
     ~detune = SinOsc.ar([4,5,6,7]).range(-2,2);
-    
+
 
     ~sig = LFSaw.ar(~f+~detune,mul:0.15) * Decay.ar(Impulse.ar(4/fib(8)),(1..8)/6);
     ~sig = Resonz.ar(~sig,LFTri.ar(1/44/fib(8)).range(~f*4,~f/4));
@@ -27,3 +27,6 @@ s.boot;
       ~sig.distort.softclip
     )}).play;
 )
+
+
+///it's like you were born in the 80s or smth ^^

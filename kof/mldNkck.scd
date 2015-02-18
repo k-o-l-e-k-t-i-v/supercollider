@@ -22,7 +22,7 @@ s.boot;
       FreeVerb.ar(
         CombN.ar(
             RLPF.ar(
-              CompanderD.ar(~sig,0.01+SinOsc.ar(4/(1..16)).range(0.0001,0.9),1,1/10,~att,0.2) * 
+              CompanderD.ar(~sig,0.01+SinOsc.ar(4/(1..16)).range(0.0001,0.9),1,1/10,~att,0.2) *
               ~sig
             ,~f)
         ,0.05*(1.0001**(1..16)),4,32)
@@ -44,11 +44,13 @@ s.boot;
         TExpRand.ar(0.15001,1.5,Impulse.ar(4)))
       , 500 );
     ~cmp = CompanderD.ar(~sig,0.15,1,0.26, clampTime: 0.004, relaxTime: 0.08);
-    
+
     Splay.ar(
       ~cmp * 3
       ,0.5,0.75,0.5)
-  }).play; 
+  }).play;
 )
 
+
+/////aiiii bonito ^^
 

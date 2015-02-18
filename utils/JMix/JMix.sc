@@ -3,47 +3,38 @@ JMix {
 	classvar server;
 
 	classvar mixSDef, efxSDef;
-
-	var <coll_Channels;
 	var numCh, <numEfx;
 	var <synG, mixG;
-	var master_Synth, master_aBus;
+	var coll_Channels;
+
+	var masterSynth, master_aBus;
 
 	*new { |numChannels|
 		^super.new.init(numChannels);
 	}
 
 	init { |xCh|
-
 		server = Server.default;
 		mixSDef = this.storeSynth(this.folderMix); // Mix_Fader = 0; Mix_Limiter = 1
 		efxSDef = this.storeSynth(this.folderEfx);
+		numCh = xCh;
 		numEfx = efxSDef.size;
 
 		server.waitForBoot{
-			numCh = xCh;
-
 			synG = Group.new;
 			mixG = Group.new(addAction:\addToTail);
 
 			master_aBus = Bus.audio(server, 2);
-			master_Synth = Synth(this.mixSynthDef(1),[\bus, master_aBus],mixG);
+			masterSynth = Synth(this.mixSynthDef(1),[\bus, master_aBus],mixG);
 
-			coll_Channels = List.newClear(numCh);
+			coll_Channels = List.new(numCh);
 			numCh.do { |i|
-				this.buildChannel(i);
+				coll_Channels.add(this.buildChannel(i));
 			};
 		}
 	}
 
-	buildChannel{|num|
-		var chnl = JMix_channel(this);
-		chnl.id = num;
-		coll_Channels.put(num, chnl);
-	}
-
-
-	storeSynth {|dir, libname=\global, completionMsg, keepDef = true|
+		storeSynth {|dir, libname=\global, completionMsg, keepDef = true|
 		var dict, list;
 		dict = IdentityDictionary.new;
 		(dir ++ "\/*.scd").pathMatch.do{ |path|
@@ -62,10 +53,30 @@ JMix {
 
 		list = dict.keys(Array);
 		list.sort;
-		("list of prepared synth: " ++ list).postln;
+		// ("list of prepared synth: " ++ list).postln;
 		^list;
 	}
 
+	buildChannel{|num|
+		var chnl;
+		chnl = JMix_channel(this);
+		chnl.id = num;
+		chnl.buildEfx(efxSDef);
+		^chnl;
+	}
+
+	printMix{^("list of prepared efx synth: " ++ mixSDef);}
+	printEfx{^("list of prepared efx synth: " ++ efxSDef);}
+
+	addEfx{|numChnl, numEfx|
+		this.channel(numChnl).effect(numEfx).add;
+		^("efx synth " ++ efxSDef[numEfx] ++ " added to JMix channel " ++ numChnl);
+	}
+	freeEfx{|numChnl, numEfx|
+		this.channel(numChnl).effect(numEfx).free;
+		^("efx synth " ++ efxSDef[numEfx] ++ " removed from JMix channel " ++ numChnl);
+	}
+/*
 	gui {
 		var win;
 		var sizeXChnl, sizeYChnl;
@@ -107,7 +118,7 @@ JMix {
 				Pen.stroke;
 			};
 
-			this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
+			// this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
 
 		};
 
@@ -120,12 +131,14 @@ JMix {
 		});
 
 	}
-
+*/
 	mixSynthDef {|num| ^mixSDef[num];}
 	efxSynthDef {|num| ^efxSDef[num];}
-	ch{ |num| ^coll_Channels[num].audioBus; }
+
 	channel{ |num| ^coll_Channels[num]; }
+
 	audioBus { ^master_aBus; }
+	ch{ |num| ^coll_Channels[num].audioBus; }
 
 	folderRoot{ ^Platform.systemExtensionDir ++ "\/JMix"; }
 	folderMix{ ^this.folderRoot ++ "\/Mix"; }
