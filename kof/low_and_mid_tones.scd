@@ -23,7 +23,7 @@ s.reboot;
         ~f2 = Duty.kr([1,2,1/2],0,Dseq(([60,~mod2,67]+~oct).midicps,inf));
 
         ~sig2 = SinOsc.ar(~f2*(1..8),mul:0.2/(1..8)) * Decay.ar(Impulse.ar(4/[1,2,4,8]),4/(1..4));
-        ~sig2 = Resonz.ar(~sig2,SinOsc.ar(1/4/(1..8)).exprange(~f2*8,~f2/2));
+        ~sig2 = Resonz.ar(~sig2,SinOsc.ar(4/(1..8)).exprange(~f2*8,~f2/2));
         ~sig2 = LPF.ar(~sig2,220+SinOsc.ar(1/(1..8)).range(0,4400)) * 1.5;
         ~sig2 = HPF.ar(~sig2,22+SinOsc.ar(1.5/(1..8)).range(0,4400));
         ~sig2 = Vibrato.ar(Mix.ar(~sig2).softclip!2,[5,6],0.2);
@@ -46,14 +46,20 @@ s.reboot;
         ~sig4 = RLPF.ar(~sig4,[50,60,40],0.5);
         ~sig4 = ~sig4 * Decay.ar(Impulse.ar(~beat),[0.1,0.5,2]);
         ~sig4 = Pan2.ar(~sig4,SinOsc.ar([1,1.1]).range(-0.2,0.2));
-        ~sig2 = Vibrato.ar(Mix.ar(~sig4).softclip,[2,4],0.4);
+        ~sig4 = Vibrato.ar(Mix.ar(~sig4).softclip,[2,4],0.4);
         ~sig4 = Compander.ar(~sig4,0.9,1,1/10);
         ~sig4 = FreeVerb2.ar(~sig4[0],~sig4[1],0.23,4);
 
 
         // play all
         Splay.ar(
-          Limiter.ar((~sig + ~sig2 + ~sig3 + ~sig4) / 2,0.4,0.01).softclip
+          Limiter.ar((
+              ~sig + 
+              ~sig2 + 
+              ~sig3 + 
+              ~sig4 +
+              0
+          ) / 2,0.4,0.01).softclip
         )
     }).play;
 )
