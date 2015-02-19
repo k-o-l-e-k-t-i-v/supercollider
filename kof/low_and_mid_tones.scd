@@ -28,10 +28,10 @@ s.reboot;
         ~sig2 = CombN.ar(~sig2,4,[4.02,4.03],32); 
         ~sig2 = FreeVerb2.ar(~sig2[0],~sig2[1],0.23,40);
 
-        ~sig3 = WhiteNoise.ar(0.4!2);
+        ~sig3 = WhiteNoise.ar(0.6!2);
         ~sig3 = BPF.ar(~sig3,TExpRand.ar(4000,20000,Impulse.ar(8/fib(8))),SinOsc.ar(1/4/(1..8)).range(0.004,0.1));
         ~sig3 = ~sig3 * Decay.ar(Impulse.ar(8/fib(8)),[0.1,0.5,0.4,1]);
-        ~sig3 = Pan2.ar(~sig3,SinOsc.ar([8,7]).range(-0.3,0.3));
+        ~sig3 = Pan2.ar(~sig3,SinOsc.ar([8,7]).range(-0.6,0.6));
         ~sig3 = Compander.ar(~sig3,0.5,1,1/10);
         ~sig3 = FreeVerb2.ar(~sig3[0],~sig3[1],0.23,40);
 
