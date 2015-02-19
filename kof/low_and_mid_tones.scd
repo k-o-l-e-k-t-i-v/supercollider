@@ -1,5 +1,3 @@
-
-
 s.reboot;
 (
     Ndef(\a).quant = 2.0;
