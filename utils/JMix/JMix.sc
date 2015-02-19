@@ -112,17 +112,15 @@ JMix {
 
 				Pen.moveTo(5@133);
 				Pen.lineTo(uv.bounds.width-5@133);
-				Pen.moveTo(5@160);
-				Pen.lineTo(uv.bounds.width-5@160);
 				Pen.stroke;
 			};
 
-			this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
-			this.channel(i).guiEfx;
+			// this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
+			// this.channel(i).guiEfx;
 		};
 
 		win.onClose_({
-			this.free;
+			this.close;
 		});
 
 	}
@@ -141,7 +139,7 @@ JMix {
 
 	close{
 		numCh.do { |i|
-			this.channel(i).free;
+			this.channel(i).freeFqv;
 		};
 		win.close;
 		"JMix closed".postln;

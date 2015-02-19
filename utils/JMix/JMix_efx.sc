@@ -9,6 +9,10 @@ JMix_efx
 	var num_cBus;
 	var coll_cName, coll_cBus;
 
+	var isActive;
+	var activeSizeY;
+	var <gapY_active, gapY_off, gapY_cBus;
+
 	*new{ |parent, def|
 		^super.new.init(parent, def);
 	}
@@ -18,6 +22,9 @@ JMix_efx
 		parentCh = parent;
 		synthDef = def;
 		this.buildControls;
+
+		isActive = false;
+		gapY_cBus = 15;
 	}
 
 	id_{|num| id = num;}
@@ -43,6 +50,8 @@ JMix_efx
 				}
 			)
 		};
+
+		gapY_active = num_cBus * gapY_cBus;
 	}
 
 	add{
@@ -56,15 +65,25 @@ JMix_efx
 			// ("name " ++ coll_cName[i]).postln;
 			// ("bus " ++ coll_cBus[i]).postln;
 		};
-	}
-	free{
-		efxSynth.free;
+		isActive = true;
 	}
 
-	gui{|uv, colBack, colFront, colActive, fontBig, fontSmall|
-		var fxButt, name_Efx_cBus, val_Efx_cBus;
-		var gapY_efx, gapY_cBus;
-		gapY_efx =
+	free{
+		efxSynth.free;
+		isActive = false;
+	}
+
+	gui{|uv, colBack, colFront, colActive, fontSmall, originY|
+		var efxFrame, fxButt, name_Efx_cBus, val_Efx_cBus;
+
+		if(isActive,
+			{
+				efxFrame = Rect(5, originY, uv.bounds.width - 10, gapY_active);
+			},{
+				efxFrame = Rect(5, originY, uv.bounds.width - 10, gapY_cBus);
+			}
+		);
+
 		fxButt = Button(uv, Rect(5, 150+(80*id), uv.bounds.width-10, 15))
 		.font_(fontSmall)
 		.states_([
@@ -85,7 +104,7 @@ JMix_efx
 			name_Efx_cBus = StaticText.new(uv,Rect(5, 180+(80*id)+(20*i), 35, 20))
 			.string_(coll_cName[i])
 			.stringColor_(colFront)
-			.font_(fontBig);
+			.font_(fontSmall);
 
 			val_Efx_cBus = NumberBox(uv, Rect(uv.bounds.width-30, 180+(80*id)+(20*i), 25, 15))
 			.normalColor_(colFront)
