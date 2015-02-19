@@ -20,7 +20,7 @@ s.reboot;
         // melodies
         ~oct2 = Duty.kr(16,0,Dseq([1,0,2,-2,-1,-3]*12,inf));
         ~mod2 = Duty.kr(8,0,Dseq([64,67,65],inf));
-        ~f2 = Duty.kr([1/4,2,1/2],0,Dseq(([60,~mod2,67]+~oct).midicps,inf));
+        ~f2 = Duty.kr([1,2,1/2],0,Dseq(([60,~mod2,67]+~oct).midicps,inf));
 
         ~sig2 = SinOsc.ar(~f2*(1..8),mul:0.2/(1..8)) * Decay.ar(Impulse.ar(4/[1,2,4,8]),4/(1..4));
         ~sig2 = Resonz.ar(~sig2,SinOsc.ar(1/4/(1..8)).exprange(~f2*8,~f2/2));
@@ -40,10 +40,10 @@ s.reboot;
         ~sig3 = FreeVerb2.ar(~sig3[0],~sig3[1],0.13,4);
 
         // kicks
-        ~beat = 4/[1,1.5,32];
-        ~f4 = [45,46,432/pi]+LFSaw.ar(~beat).exprange(1800.1,1);
+        ~beat = 4/[1,1.5,8];
+        ~f4 = [51,61,40]+LFSaw.ar(~beat).exprange(1800.1,1);
         ~sig4 = SinOsc.ar(~f4,LFSaw.ar(~beat).exprange(-8pi,0),mul:0.5);
-        ~sig4 = RLPF.ar(~sig4,[50,60,432/pi],0.5);
+        ~sig4 = RLPF.ar(~sig4,[50,60,40],0.5);
         ~sig4 = ~sig4 * Decay.ar(Impulse.ar(~beat),[0.1,0.5,2]);
         ~sig4 = Pan2.ar(~sig4,SinOsc.ar([1,1.1]).range(-0.2,0.2));
         ~sig2 = Vibrato.ar(Mix.ar(~sig4).softclip,[2,4],0.4);
