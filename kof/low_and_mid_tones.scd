@@ -51,13 +51,13 @@ s.reboot;
         ~sig4 = FreeVerb2.ar(~sig4[0],~sig4[1],0.23,4);
 
 
-        // play all
+        // play all, pulse as gates
         Splay.ar(
           Limiter.ar((
               ~sig + 
               ~sig2 + 
-              ~sig3 + 
-              ~sig4 +
+              (~sig3 * LFPulse.ar(1/32)) + 
+              (~sig4 * LFPulse.ar(1/16)) +
               0
           ) / 2,0.4,0.01).softclip
         )
