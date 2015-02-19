@@ -8,7 +8,11 @@ JMix {
 	var coll_Channels;
 
 	var masterSynth, master_aBus;
-	var win;
+
+	var <win, <uv;
+	var sizeXChnl, sizeYChnl;
+	var <colBack, <colFront, <colActive;
+	var <fontBig, <fontSmall;
 
 	*new { |numChannels|
 		^super.new.init(numChannels);
@@ -78,10 +82,6 @@ JMix {
 	}
 
 	gui {
-		var sizeXChnl, sizeYChnl;
-		var colBack, colFront, colActive;
-		var fontBig, fontSmall;
-
 		sizeXChnl = 65;
 		sizeYChnl = 400;
 		colBack = Color.new255(30,30,30);
@@ -97,7 +97,7 @@ JMix {
 		.front;
 
 		numCh.do { |i|
-			var uv, originX, originY;
+			var originX, originY;
 
 			originX = 5+((sizeXChnl+5)*i);
 			originY = 5;
@@ -118,7 +118,7 @@ JMix {
 			};
 
 			this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
-
+			this.channel(i).guiEfx;
 		};
 
 		win.onClose_({

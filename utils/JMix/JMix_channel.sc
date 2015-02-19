@@ -37,16 +37,24 @@ JMix_channel{
 	}
 
 	buildEfx{|efxSynthDef|
+		var num_Efx = 0;
 		coll_Efx = List.new(mixParent.numEfx);
-		efxSynthDef.do{|sDef|
+		efxSynthDef.do{|def|
 			var efx;
-			efx = JMix_efx(this, sDef);
+			efx = JMix_efx(this, def);
+			efx.id_(num_Efx);
 			coll_Efx.add(efx);
+			num_Efx = num_Efx + 1;
 		}
 	}
 
 	id_{|num| id = num;}
 
+	guiEfx{
+		coll_Efx.size.do{|i|
+			this.effect(i).gui(mixParent.uv, mixParent.colBack, mixParent.colFront, mixParent.colActive, mixParent.fontBig, mixParent.fontSmall);
+		};
+	}
 
 	gui{ |uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall|
 
