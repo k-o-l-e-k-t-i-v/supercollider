@@ -37,7 +37,7 @@ s.reboot;
 
 
         Splay.ar(
-          Limiter.ar((~sig + ~sig2 + ~sig3) / 3,0.4,0.01).softclip
+          Limiter.ar((~sig + ~sig2 + ~sig3) / 2,0.4,0.01).softclip
         )
     }).play;
 )
