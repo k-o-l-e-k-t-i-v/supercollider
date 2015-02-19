@@ -23,12 +23,12 @@ JMix_efx
 	buildControls{
 		var controlsNames_sd = SynthDescLib.at(synthDef).controlNames;
 		// ("controlsNames_sd : " ++ controlsNames_sd).postln;
-		num_cBus = -1;
+		num_cBus = 0;
 		controlsNames_sd.do{|name|
 			if((name.asSymbol != \bus) and: (name.asSymbol != \out),
 				{
 					num_cBus = num_cBus + 1;
-					num_cBus.postln;
+					// ("num_cBus " ++ num_cBus).postln;
 				}
 			)
 		};
@@ -40,12 +40,12 @@ JMix_efx
 				{
 					// var cbus = Bus.control(server, 1);
 					coll_cBus.add(Bus.control(server, 1));
-					coll_cName.add(name.asSymbol);
+					coll_cName.add(name);
 					// name.asSymbol.postln;
 				}
 			)
-		}
-	}
+		};
+			}
 
 	add{
 		efxSynth = Synth(synthDef, [
@@ -53,12 +53,11 @@ JMix_efx
 			\out, parentCh.audioBus
 		],parentCh.faderSynth, \addBefore);
 
-		coll_cBus.do{|i|
-			// ("name " ++ coll_cName[i]).postln;
+		num_cBus.do{|i|
+			efxSynth.set(coll_cName[i],coll_cBus[i].asMap);
+			("name " ++ coll_cName[i]).postln;
 			("bus " ++ coll_cBus[i]).postln;
-
-			// efxSynth.set(coll_cName[i],coll_cBus[i]);
-		}
+		};
 	}
 	free{
 		efxSynth.free;

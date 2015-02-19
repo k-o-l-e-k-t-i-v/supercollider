@@ -8,6 +8,7 @@ JMix {
 	var coll_Channels;
 
 	var masterSynth, master_aBus;
+	var win;
 
 	*new { |numChannels|
 		^super.new.init(numChannels);
@@ -34,7 +35,7 @@ JMix {
 		}
 	}
 
-		storeSynth {|dir, libname=\global, completionMsg, keepDef = true|
+	storeSynth {|dir, libname=\global, completionMsg, keepDef = true|
 		var dict, list;
 		dict = IdentityDictionary.new;
 		(dir ++ "\/*.scd").pathMatch.do{ |path|
@@ -53,7 +54,6 @@ JMix {
 
 		list = dict.keys(Array);
 		list.sort;
-		// ("list of prepared synth: " ++ list).postln;
 		^list;
 	}
 
@@ -76,9 +76,8 @@ JMix {
 		this.channel(numChnl).effect(numEfx).free;
 		^("efx synth " ++ efxSDef[numEfx] ++ " removed from JMix channel " ++ numChnl);
 	}
-/*
+
 	gui {
-		var win;
 		var sizeXChnl, sizeYChnl;
 		var colBack, colFront, colActive;
 		var fontBig, fontSmall;
@@ -118,20 +117,16 @@ JMix {
 				Pen.stroke;
 			};
 
-			// this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
+			this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
 
 		};
 
 		win.onClose_({
-			numCh.do { |i|
-				this.channel(i).free;
-			};
-			win.close;
-			"JMix closed".postln;
+			this.free;
 		});
 
 	}
-*/
+
 	mixSynthDef {|num| ^mixSDef[num];}
 	efxSynthDef {|num| ^efxSDef[num];}
 
@@ -143,6 +138,17 @@ JMix {
 	folderRoot{ ^Platform.systemExtensionDir ++ "\/JMix"; }
 	folderMix{ ^this.folderRoot ++ "\/Mix"; }
 	folderEfx{ ^this.folderRoot ++ "\/Efx"; }
+
+	close{
+		numCh.do { |i|
+			this.channel(i).free;
+		};
+		win.close;
+		"JMix closed".postln;
+	}
+	free{
+		// JMix all clean
+	}
 
 }
 
