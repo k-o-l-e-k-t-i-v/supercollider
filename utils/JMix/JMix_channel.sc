@@ -1,6 +1,8 @@
 JMix_channel{
 	classvar version = 0.12;
-	classvar server, mixParent;
+	classvar server;
+
+	var <mixParent;
 
 	var chnlG, id;
 	var channel_aBus;
@@ -12,6 +14,7 @@ JMix_channel{
 	var uv;
 	var name, txtAmp, fqv;
 	var valAmp, sliderAmp, buttMute;
+	var nextObjY;
 
 	*new{ |mix|
 		^super.new.init(mix);
@@ -34,6 +37,7 @@ JMix_channel{
 			\mute, cb_fader_mute.asMap,
 		], chnlG,\addToTail);
 
+
 	}
 
 	buildEfx{|efxSynthDef|
@@ -49,39 +53,48 @@ JMix_channel{
 	}
 
 	id_{|num| id = num;}
-	/*
-	guiEfx{
-	coll_Efx.size.do{|i|
-	this.effect(i).gui(mixParent.uv, mixParent.colBack, mixParent.colFront, mixParent.colActive, mixParent.fontBig, mixParent.fontSmall);
-	};
-	}
-	*/
-	gui{ |uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall|
-		var nextY;
 
-		name = StaticText.new(uv,Rect(5, 5, uv.bounds.width-5, 12))
+	guiEfx{
+		coll_Efx.size.do{|i|
+			var sizeY;
+			sizeY = this.effect(i).gui(nextObjY);
+			nextObjY = nextObjY + sizeY;
+			// ("nextObjY :" ++ nextObjY.postln);
+		};
+	}
+
+	guiChannel{
+		var uv = mixParent.uv;
+		var colBack = mixParent.colBack;
+		var colFront = mixParent.colFront;
+		var colActive = mixParent.colActive;
+		var fontBig = mixParent.fontBig;
+		var fontSmall = mixParent.fontSmall;
+		nextObjY = 0;
+
+		name = StaticText.new(uv,Rect(5, nextObjY+5, uv.bounds.width-5, 12))
 		.string_("ch["++id++"]")
 		.stringColor_(colFront)
 		.font_(fontBig);
 
-		txtAmp = StaticText.new(uv,Rect(5, 22, 20, 15))
+		txtAmp = StaticText.new(uv,Rect(5, nextObjY+22, 20, 15))
 		.string_("amp:")
 		.stringColor_(colFront)
 		.font_(fontSmall);
 
-		fqv = FreqScopeView(uv, Rect(5,45, uv.bounds.width-22,80));
+		fqv = FreqScopeView(uv, Rect(5,nextObjY+45, uv.bounds.width-22,80));
 		fqv.active_(true);
 		fqv.inBus_(channel_aBus);
 		fqv.freqMode_(1);
 		fqv.background_(Color.black);
 
-		valAmp = NumberBox(uv, Rect(27, 23, 20, 15))
+		valAmp = NumberBox(uv, Rect(27, nextObjY+23, 20, 15))
 		.normalColor_(colFront)
 		.background_(colBack)
 		.align_(\center)
 		.font_(fontSmall);
 
-		sliderAmp = Slider(uv, Rect(uv.bounds.width-13, 5, 8, 120))
+		sliderAmp = Slider(uv, Rect(uv.bounds.width-13, nextObjY+5, 8, 120))
 		.background_(colBack)
 		.knobColor_(colActive)
 		.action_({
@@ -89,7 +102,7 @@ JMix_channel{
 			cb_fader_amp.value = sliderAmp.value;
 		});
 
-		buttMute = Button(uv, Rect(27, 5, 20, 15))
+		buttMute = Button(uv, Rect(27, nextObjY+5, 20, 15))
 		.font_(fontSmall)
 		// .valueAction_(cb_mute.value)
 		.states_([
@@ -101,14 +114,7 @@ JMix_channel{
 			if(butt.value == 0) { cb_fader_mute.value = 0; };
 		});
 
-		nextY = 125;
-		coll_Efx.size.do{|i|
-			var newEfx;
-			newEfx = this.effect(i).gui(
-				// mixParent.uv, mixParent.colBack, mixParent.colFront, mixParent.colActive, mixParent.fontSmall, originY
-			);
-			nextY = nextY + newEfx.gapY_active;
-		}
+		nextObjY = nextObjY + 140;
 	}
 
 	freeFqv{

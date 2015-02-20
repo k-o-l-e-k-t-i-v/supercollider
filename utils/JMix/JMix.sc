@@ -9,7 +9,7 @@ JMix {
 
 	var masterSynth, master_aBus;
 
-	var <win, <uv;
+	var win, <>uv;
 	var sizeXChnl, sizeYChnl;
 	var <colBack, <colFront, <colActive;
 	var <fontBig, <fontSmall;
@@ -34,7 +34,7 @@ JMix {
 
 			coll_Channels = List.new(numCh);
 			numCh.do { |i|
-				coll_Channels.add(this.buildChannel(i));
+				coll_Channels.add(this.addChannel(i));
 			};
 		}
 	}
@@ -61,16 +61,16 @@ JMix {
 		^list;
 	}
 
-	buildChannel{|num|
+	printMix{^("list of prepared efx synth: " ++ mixSDef);}
+	printEfx{^("list of prepared efx synth: " ++ efxSDef);}
+
+	addChannel{|num|
 		var chnl;
 		chnl = JMix_channel(this);
 		chnl.id = num;
 		chnl.buildEfx(efxSDef);
 		^chnl;
 	}
-
-	printMix{^("list of prepared efx synth: " ++ mixSDef);}
-	printEfx{^("list of prepared efx synth: " ++ efxSDef);}
 
 	addEfx{|numChnl, numEfx|
 		this.channel(numChnl).effect(numEfx).add;
@@ -104,6 +104,7 @@ JMix {
 
 			uv = UserView(win, Rect(originX, originY, sizeXChnl, sizeYChnl))
 			.background_(colBack)
+			// .clearOnRefresh_(false)
 			.drawFunc = {
 				Pen.strokeColor = colFront;
 				Pen.addRect(Rect(0,0, uv.bounds.width,uv.bounds.height));
@@ -115,8 +116,9 @@ JMix {
 				Pen.stroke;
 			};
 
-			// this.channel(i).gui(uv, originX, originY, colBack, colFront, colActive, fontBig, fontSmall);
-			// this.channel(i).guiEfx;
+			this.channel(i).guiChannel;
+			this.channel(i).guiEfx;
+			// win.refresh;
 		};
 
 		win.onClose_({

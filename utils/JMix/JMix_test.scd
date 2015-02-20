@@ -2,14 +2,17 @@ s.plotTree;
 
 m = JMix(4);
 m.printEfx;
+m.gui;
+m.close;
+
 m.addEfx(1,2);
 m.addEfx(1,0);
 m.addEfx(1,1);
 m.freeEfx(1,0);
 m.freeEfx(1,1);
 m.freeEfx(1,2);
-m.gui;
-m.close;
+
+// m.free;
 
 (
 SynthDef(\testSin, {|out, freq, amp, sustain|
