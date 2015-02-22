@@ -33,3 +33,6 @@ s.boot;
 //what's mold? it doesn't work for me
 // ERROR: Message 'mold' not understood
 //alex
+
+// ^^ different version?
+// mold can change number of outputting channels per Ndef, even after its creation
