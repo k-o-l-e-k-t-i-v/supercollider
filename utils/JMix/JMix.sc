@@ -83,14 +83,14 @@ JMix {
 
 	gui {
 		sizeXChnl = 65;
-		sizeYChnl = 400;
+		sizeYChnl = 500;
 		colBack = Color.new255(30,30,30);
 		colFront = Color.new255(255,255,255);
 		colActive = Color.new255(200,50,50);
 		fontBig = Font("Segoe UI", 7,true, isPointSize:true);
 		fontSmall = Font("Segoe UI", 6, isPointSize:true);
 
-		win = Window.new("ja_Mixer v"++version, Rect(900,600,5+((sizeXChnl+5)*numCh),410))
+		win = Window.new("ja_Mixer v"++version, Rect(900,sizeYChnl-50,5+((sizeXChnl+5)*numCh),sizeYChnl+10))
 		.alpha_(0.95)
 		.alwaysOnTop_(true)
 		.background_(colBack)

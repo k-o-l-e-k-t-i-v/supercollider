@@ -9,7 +9,7 @@ s.boot;
 
     ~m = Duty.kr([4,8,16,32,64],0,Dseq([1,1.5,2,1.25,0.5],inf));
     ~sig = LFSaw.ar(43.2*[1,1.5,4,6,4*1.5]*(~m*pi)+LFTri.ar(4.32/(1..8)).range(-4.32/4,4.32/4),mul:0.5);
-    
+
     //~sig = ~sig + SinOsc.ar(43.2*(2**(1..8)),mul:0.5);
 
     ~sig = ~sig * LFSaw.ar(4/(2**(1..64))).exprange(0.0001,1);
@@ -28,3 +28,8 @@ s.boot;
   }).play;
   Ndef(\a).mold(2);
 )
+
+
+//what's mold? it doesn't work for me
+// ERROR: Message 'mold' not understood
+//alex

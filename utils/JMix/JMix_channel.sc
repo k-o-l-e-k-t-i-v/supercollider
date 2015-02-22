@@ -28,7 +28,7 @@ JMix_channel{
 
 		channel_aBus = Bus.audio(server, 2);
 		cb_fader_amp = Bus.control(server, 1).value_(0);
-		cb_fader_mute = Bus.control(server, 1).value_(1);
+		cb_fader_mute = Bus.control(server, 1).value_(0);
 
 		faderSynth = Synth(mixParent.mixSynthDef(0), [
 			\in, channel_aBus,
@@ -104,7 +104,6 @@ JMix_channel{
 
 		buttMute = Button(uv, Rect(27, nextObjY+5, 20, 15))
 		.font_(fontSmall)
-		// .valueAction_(cb_mute.value)
 		.states_([
 			["||",colFront,colBack],
 			[">",colFront,colActive]
