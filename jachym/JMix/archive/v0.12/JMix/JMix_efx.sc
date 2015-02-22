@@ -1,6 +1,6 @@
 JMix_efx
 {
-	classvar version = 0.13;
+	classvar version = 0.12;
 	classvar server;
 	var parentCh;
 	var id;

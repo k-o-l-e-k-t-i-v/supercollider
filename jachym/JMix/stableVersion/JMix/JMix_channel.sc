@@ -1,5 +1,5 @@
 JMix_channel{
-	classvar version = 0.13;
+	classvar version = 0.12;
 	classvar server;
 
 	var <mixParent;
