@@ -18,6 +18,7 @@ Select
 LPF
 HPF
 BPF
+Resonz
 FreeVerb
 Allpass
 Comb
