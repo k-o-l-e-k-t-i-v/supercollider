@@ -19,7 +19,7 @@ do
   printf "$i " >> $1;
   for n in "${names[@]}";
   do
-    printf "$(grep -r $i "../../$n" | wc -w) " >> "$1";
+    printf "$(grep -r --exclude-dir="tutorials for ndef" $i "../../$n" | wc -w) " >> "$1";
   done
   printf "\n" >> "$1"
 done
