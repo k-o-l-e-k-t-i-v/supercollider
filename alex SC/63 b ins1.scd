@@ -7,6 +7,7 @@ SynthDef(\bum, {
 	env=EnvGen.kr(Env.adsr(sustain*0.1,sustain*0.1,0.5,sustain*0.8),gate,doneAction:2);
 	fenv=EnvGen.kr(Env([freq*3,freq], [sustain*0.05],\welch),gate);
 	sig=Mix.fill(5, {SinOsc.ar(fenv*(1..10))});
+	sig=FreeVerb.ar(sig,mix:0.5,room:2,damp:1);
 	sig=Limiter.ar(sig,0.7)*env*amp;
 
 	Out.ar(0,sig);
@@ -19,12 +20,12 @@ SynthDef(\dribble, {
 	env=EnvGen.kr(Env.adsr(sustain*0.1,sustain*0.1,0.5,sustain*0.8),gate,doneAction:2);
 	sig=BPF.ar(BrownNoise.ar(amp),freq:freq+SinOsc.kr(freq*2).range(40,20),
 		rq:SinOsc.kr(freq).range(0.01,0.1));
-	sig=sig+Mix.fill(4,{LFSaw.ar(freq,mul:0.5).lag(lag)});
+	sig=sig+Mix.fill(4,{LFSaw.ar(freq!4,mul:0.5).lag(lag)});
 	sig=Limiter.ar(sig,0.2);
-	sig=FreeVerb.ar(sig,room:0.5,damp:1,add:sig);
+	sig=FreeVerb.ar(sig,room:1.5,damp:1,add:sig);
 
 	sig=DelayN.ar(sig,0.4,delaytime:0.2);
-	Out.ar(0, sig*amp);
+	Out.ar(0, sig*amp*env);
 }).add;
 
 
@@ -39,12 +40,13 @@ SynthDef(\woosh, {
 	sig=BPF.ar(WhiteNoise.ar(amp),fenv,0.5,mul:SinOsc.kr(5000).range(0.2,0.8));
 	sig=HPF.ar(sig,16000);
 	sig=FreeVerb.ar(sig,room:2,damp:0.1,add:sig);
-	sig=Pan2.ar(sig,SinOsc.kr(0.5));
+	sig=Pan2.ar(sig*env,SinOsc.kr(0.5));
 
 	sig=DelayN.ar(sig,0.8,delaytime:0.6);
 
 	Out.ar(0,sig*amp);
 }).add;
+
 
 SynthDef(\tictum, {
 	arg gate=1, sustain=0.2, freq=1000, amp=1;
