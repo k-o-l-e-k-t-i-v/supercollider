@@ -19,6 +19,7 @@ LPF
 HPF
 BPF
 Resonz
+Vibrato
 FreeVerb
 Allpass
 Comb
