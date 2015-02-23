@@ -8,12 +8,12 @@ Noise 165 39 190
 WhiteNoise 55 24 67 
 Ndef 417 13 1030 
 SynthDef 89 317 16 
-Pdef 120 582 12 
+Pdef 120 585 12 
 Tdef 9 71 23 
-Pbind 125 288 58 
+Pbind 125 290 58 
 Ppar 14 38 14 
-Pdef 120 582 12 
-Pseq 320 1033 75 
+Pdef 120 585 12 
+Pseq 327 1035 75 
 Dseq 98 0 54 
 Select 63 11 111 
 LPF 35 182 102 
@@ -26,7 +26,7 @@ Allpass 8 31 53
 Comb 83 116 97 
 Compander 1 0 75 
 midicps 10 0 104 
-var 141 655 25 
+var 141 656 25 
 pi 108 75 255 
 kr 992 374 597 
 range 212 13 503 
