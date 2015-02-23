@@ -21,6 +21,7 @@ BPF
 FreeVerb
 Allpass
 Comb
+Compander
 var
 pi
 kr
