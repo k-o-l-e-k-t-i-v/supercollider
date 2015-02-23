@@ -1,9 +1,6 @@
 SinOsc
 LFSaw
 LFPulse
-LFTri
-LFCub
-LFPar
 Pulse
 Impulse
 Ndef
@@ -23,3 +20,4 @@ FreeVerb
 Allpass
 Comb
 var
+pi

@@ -2,9 +2,6 @@ name,alex SC,jachym,kof,
 SinOsc 298 324 548 
 LFSaw 42 93 274 
 LFPulse 25 21 50 
-LFTri 5 0 29 
-LFCub 3 0 18 
-LFPar 1 0 13 
 Pulse 104 115 111 
 Impulse 293 2 305 
 Ndef 417 13 1030 
@@ -24,3 +21,4 @@ FreeVerb 98 88 92
 Allpass 8 31 53 
 Comb 83 116 97 
 var 141 655 25 
+pi 108 75 255 
