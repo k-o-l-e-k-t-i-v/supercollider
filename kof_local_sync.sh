@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "//////////// generating statistics ////////////////////////////////////"
+cd ~/annex/utils/lang_statistics
+./stat.sh
+gnuplot plot.gp
+
 echo "//////////// syncing annex folder ////////////////////////////////////"
 cd ~/annex
 git add .
