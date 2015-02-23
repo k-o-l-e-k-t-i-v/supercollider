@@ -12,9 +12,11 @@ SynthDef 89 317 16
 Pdef 120 582 12 
 Tdef 9 71 23 
 Pbind 125 288 58 
+Ppar 14 38 14 
 Pdef 120 582 12 
 Pseq 320 1033 75 
 Dseq 98 0 54 
+Select 63 11 111 
 LPF 35 182 102 
 HPF 35 96 42 
 BPF 33 2 28 

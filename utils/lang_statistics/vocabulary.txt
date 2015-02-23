@@ -11,9 +11,11 @@ SynthDef
 Pdef
 Tdef
 Pbind
+Ppar
 Pdef
 Pseq
 Dseq
+Select
 LPF
 HPF
 BPF
