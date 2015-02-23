@@ -21,7 +21,7 @@ set auto x
 set style data histogram
 set style fill solid border -1
 set boxwidth 0.75
-set xtic rotate by -90 scale 0
+set xtic right rotate by 90 scale 0
 set bmargin 7
 
 set object 1 rectangle from screen 0,0 to screen 1,1 fillcolor rgb "#000000" behind

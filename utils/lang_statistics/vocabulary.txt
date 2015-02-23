@@ -3,6 +3,8 @@ LFSaw
 LFPulse
 Pulse
 Impulse
+Noise
+WhiteNoise
 Ndef
 SynthDef
 Pdef
@@ -22,3 +24,5 @@ Comb
 var
 pi
 kr
+range
+rand
