@@ -63,6 +63,10 @@ JMix_channel{
 		};
 	}
 
+	refreshGuiEfx
+	{
+
+	}
 	guiChannel{
 		var uv = mixParent.uv;
 		var colBack = mixParent.colBack;

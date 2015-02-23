@@ -36,7 +36,7 @@ Ndef(\3, {
 	b=2;
 
 	f=Duty.kr(Dseq([b*2,b*4,b*2,b,b*2],inf),0,Dseq([45,47,35,37],inf));
-	v=Duty.kr(Dseq([b/10,b],inf),0, Dseq([0,1],inf));
+	v=Duty.kr(Dseq([b/2,b],inf),0, Dseq([0,1],inf));
 	e=EnvGen.kr(Env([0,0.01,0.05,0.08,0.1,0.09,0],b*[0.1,0.1,0.2,0.2,0.2,0.2,0.1]),gate:v);
 
 	s=LFSaw.ar(f+(1..3)).lag(0.02)*e*5;
@@ -76,6 +76,7 @@ Ndef(\5, {
 
 	f2=Duty.kr(Dseq([b,b*2,b,b/2],inf),0,Dseq([440,660,550,880,770,880,990],inf));
 	l=Duty.kr(Dseq([b*4,b*2,b,b*2],inf),0,Dseq([0.02,0.002,0.08,0.002],inf));
+
 	s=LFSaw.ar(Lag.kr(f2,b)+(1..8)).lag(l);
 	e1=Decay2.kr(Impulse.kr(b),b/4,b); ////
 	s=CombN.ar(s*e1,b/2,b/2,b*8);

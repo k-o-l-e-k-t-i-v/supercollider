@@ -104,7 +104,7 @@ Pdef( \loopall,
 	Ppar([
 		Pbind(
 			\instrument, \bum,
-			\dur, 4,
+			\dur, 8,
 			\legato, Pseq([Pn(0.25,3),Pn(0.5,4),Pn(0.7,2),Pn(0.5,5)],inf),
 			\freq, Pseq([Pn(45,3),Pn(65,2),Pn(55,2)],inf),
 			\amp, 0.8
@@ -138,11 +138,11 @@ Pdef( \loopall,
 		),
 		Pbind(
 			\instrument, \uup,
-			\dur, Pseq([Rest(2),1,1],inf),
+			\dur, Pseq([Rest(2),1,0.5,0.25,0.25],inf),
 			\legato, Pseq([
 				Pseq([1,0.1,0.02],1),
-				Pseq([1,0.2,0.3],2)],inf),
-			\freq, 14000,
+				Pseq([1,0.05,0.03],2)],inf),
+			\freq, 1000,
 			\amp, 0.8
 		),
 		Pbind(
@@ -150,15 +150,46 @@ Pdef( \loopall,
 		\dur, Pseq([
 				Pseq([Rest(12),Pn(1,4)],1),
 				Pseq([Rest(6),Pn(0.5,6),Pn(1,4),Pn(0.5,4),1],1),
-				Pseq([Rest(10),Pn(0.5,6),Pn(1,3)],inf),],inf),
+				Pseq([Rest(10),Pn(0.5,6),Pn(0.25,12)],inf),],inf),
 		\legato, Pseq([1,0.1,0.2,0.1,0.15],inf),
-		\freq, 18000,
-		\amp, 1.5,
+		\freq, 15000,
+		\amp, 4,
 		\pan, Pseq([0,Pseq([-1,1],2)],inf),
 	)
 	],inf);
 ).play;
 )
 
+(
+Pdef(\lopbum1,
+	Pbind(
+		\instrument, \bum,
+		\dur, Pseq([2,0.7],inf),
+		\legato, Pseq([0.7,0.5],inf),
+		\freq, 75,
+		\amp, 1
+	)
+).play;
 
+Pdef(\loptii,
+	Pbind(
+		\instrument, \tiiing,
+		\dur, Pseq([0.5,0.25,0.25,0.7],inf),
+		\legato, Pseq([0.5,0.1],inf),
+		\freq, Pseq([Pseq([6000,4000,8000,4000],2),
+			Pseq([2000,2000,9000,4000],1),
+			Pseq([1000,1000,8000,1000],2)],inf),
+		\amp, 0.5,
+		\pan, Pseq([0,Pseq([-1,1],2)],inf),
+	)
+).play;
 
+Pdef(\lopwooshu,
+	Pbind(
+		\instrument, \woosh,
+		\dur, 2.7,
+		\legato,0.4,
+		\freq,7000,
+		\amp,1
+)).play;
+)

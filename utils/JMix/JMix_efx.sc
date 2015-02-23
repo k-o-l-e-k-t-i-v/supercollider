@@ -23,7 +23,7 @@ JMix_efx
 		synthDef = def;
 		this.buildControls;
 
-		isActive = true;
+		// isActive = true;
 		gapY_cBus = 15;
 	}
 
@@ -56,6 +56,7 @@ JMix_efx
 	}
 
 	add{
+
 		efxSynth = Synth(synthDef, [
 			\bus, parentCh.audioBus,
 			\out, parentCh.audioBus
@@ -68,11 +69,17 @@ JMix_efx
 			// ("spec " ++ coll_cSpec[i]).postln;
 		};
 		isActive = true;
+		this.refreshMixWindow;
+
+		// parentCh.mixParent.refreshGui;
 	}
 
 	free{
+
 		efxSynth.free;
 		isActive = false;
+		this.refreshMixWindow;
+
 	}
 
 	getMetaData{|name|
@@ -105,7 +112,10 @@ JMix_efx
 		};
 
 	}
-
+	refreshMixWindow {
+		parentCh.mixParent.refreshGui;
+		// parentCh.guiEfx(140);
+	}
 	gui{|originY|
 		var uv = parentCh.mixParent.uv;
 		var colBack = parentCh.mixParent.colBack;
@@ -122,12 +132,16 @@ JMix_efx
 			[synthDef,colFront,colBack],
 			[synthDef,colFront,colActive]
 		])
+		.value_(isActive = false)
 		.action_({ |butt|
 			if(butt.value == 1) {
+
 				this.add;
+				isActive = true;
 			};
 			if(butt.value == 0) {
 				this.free;
+				isActive = false;
 			};
 		});
 		sizeY = sizeY + 20;

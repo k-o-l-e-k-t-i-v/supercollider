@@ -82,6 +82,7 @@ JMix {
 	}
 
 	gui {
+
 		sizeXChnl = 65;
 		sizeYChnl = 500;
 		colBack = Color.new255(30,30,30);
@@ -95,6 +96,11 @@ JMix {
 		.alwaysOnTop_(true)
 		.background_(colBack)
 		.front;
+
+
+		win.onClose_({
+			this.close;
+		});
 
 		numCh.do { |i|
 			var originX, originY;
@@ -118,13 +124,23 @@ JMix {
 
 			this.channel(i).guiChannel;
 			this.channel(i).guiEfx;
-			// win.refresh;
 		};
 
-		win.onClose_({
-			this.close;
-		});
+		// this.refreshGui;
+	}
 
+	refreshGui {
+		"ref".postln;
+		win.refresh;
+		// win.front;
+		// win.defer;
+
+		numCh.do { |i|
+
+			// this.channel(i).guiChannel;
+			// this.channel(i).refreshGuiEfx;
+			// win.refresh;
+		};
 	}
 
 	mixSynthDef {|num| ^mixSDef[num];}
