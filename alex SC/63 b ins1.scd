@@ -105,8 +105,8 @@ Pdef( \loopall,
 		Pbind(
 			\instrument, \bum,
 			\dur, 4,
-			\legato, Pseq([Pn(0.25,3),Pn(0.5,4)],inf),
-			\freq, [45,47,48],
+			\legato, Pseq([Pn(0.25,3),Pn(0.5,4),Pn(0.7,2),Pn(0.5,5)],inf),
+			\freq, Pseq([Pn(45,3),Pn(65,2),Pn(55,2)],inf),
 			\amp, 0.8
 		),
 		Pbind(
@@ -114,7 +114,7 @@ Pdef( \loopall,
 			\dur, 4,
 			\legato, Pseq([Pn(0.5,3),Pn(0.3,4)],inf),
 			\freq, [55,55.5,55.8],
-			\lag, Pseq([Pn(0.02,3),Pn(0.001,4)],inf),
+			\lag, Pseq([Pn(0.02,3),Pn(0.001,2),Pn(0.01,2)],inf),
 			\amp, 0.5,
 		),
 		Pbind(
@@ -139,16 +139,21 @@ Pdef( \loopall,
 		Pbind(
 			\instrument, \uup,
 			\dur, Pseq([Rest(2),1,1],inf),
-			\legato, 0.051,
+			\legato, Pseq([
+				Pseq([1,0.1,0.02],1),
+				Pseq([1,0.2,0.3],2)],inf),
 			\freq, 14000,
 			\amp, 0.8
 		),
 		Pbind(
 		\instrument, \tiiing,
-		\dur, Pseq([Rest(12),Pn(1,4)],inf),
-		\legato, Pseq([1,0.1,0.2,0.1,0.3],inf),
+		\dur, Pseq([
+				Pseq([Rest(12),Pn(1,4)],1),
+				Pseq([Rest(6),Pn(0.5,6),Pn(1,4),Pn(0.5,4),1],1),
+				Pseq([Rest(10),Pn(0.5,6),Pn(1,3)],inf),],inf),
+		\legato, Pseq([1,0.1,0.2,0.1,0.15],inf),
 		\freq, 18000,
-		\amp, 0.8,
+		\amp, 1.5,
 		\pan, Pseq([0,Pseq([-1,1],2)],inf),
 	)
 	],inf);
