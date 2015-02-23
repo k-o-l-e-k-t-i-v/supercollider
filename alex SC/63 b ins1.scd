@@ -107,7 +107,7 @@ Pdef( \loopall,
 			\dur, 4,
 			\legato, Pseq([Pn(0.25,3),Pn(0.5,4)],inf),
 			\freq, [45,47,48],
-			\amp, 0.2
+			\amp, 0.8
 		),
 		Pbind(
 			\instrument, \dribble,
