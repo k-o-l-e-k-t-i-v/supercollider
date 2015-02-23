@@ -16,4 +16,5 @@ BPF
 FreeVerb
 Comb
 BBandPass
-LFSawPulseImpulse
+Pulse
+Impulse

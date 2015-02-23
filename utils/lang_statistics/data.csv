@@ -17,4 +17,5 @@ BPF 33 2 28
 FreeVerb 98 88 92 
 Comb 83 116 97 
 BBandPass 5 0 19 
-LFSawPulseImpulse 0 0 0 
+Pulse 104 115 111 
+Impulse 293 2 305 
