@@ -1,17 +1,23 @@
 JMix_efx
 {
-	classvar version = 0.13;
+	classvar version = 0.14;
 	classvar server;
 	var parentCh;
 	var id;
 	var synthDef;
 	var efxSynth;
 	var num_cBus;
-	var coll_cName, coll_cBus, coll_cSpec;
+	var coll_NumBox, coll_cName, coll_cBus, coll_cSpec;
 
 	var isActive;
-	var activeSizeY;
-	var <gapY_active, gapY_off, gapY_cBus;
+	var sizeY;
+
+	var efxButt;
+
+	var efxFrame, originX, originY;
+
+	var colBack, colFront, colActive;
+	var fontSmall;
 
 	*new{ |parent, def|
 		^super.new.init(parent, def);
@@ -21,10 +27,9 @@ JMix_efx
 		server = Server.default;
 		parentCh = parent;
 		synthDef = def;
-		this.buildControls;
+		isActive = false;
 
-		// isActive = true;
-		gapY_cBus = 15;
+		this.buildControls;
 	}
 
 	id_{|num| id = num;}
@@ -43,6 +48,8 @@ JMix_efx
 		coll_cBus = List.new(num_cBus);
 		coll_cName = List.new(num_cBus);
 		coll_cSpec = List.new(num_cBus);
+		coll_NumBox = List.new(num_cBus);
+
 		controlsNames_sd.do{|name|
 			var metaD;
 			if((name.asSymbol != \bus) and: (name.asSymbol != \out),
@@ -55,125 +62,152 @@ JMix_efx
 		};
 	}
 
-	add{
-
-		efxSynth = Synth(synthDef, [
-			\bus, parentCh.audioBus,
-			\out, parentCh.audioBus
-		],parentCh.faderSynth, \addBefore);
-
-		num_cBus.do{|i|
-			efxSynth.set(coll_cName[i],coll_cBus[i].asMap);
-			// ("name " ++ coll_cName[i]).postln;
-			// ("bus " ++ coll_cBus[i]).postln;
-			// ("spec " ++ coll_cSpec[i]).postln;
-		};
-		isActive = true;
-		this.refreshMixWindow;
-
-		// parentCh.mixParent.refreshGui;
-	}
-
-	free{
-
-		efxSynth.free;
-		isActive = false;
-		this.refreshMixWindow;
-
-	}
-
 	getMetaData{|name|
 		var desc = SynthDescLib.at(synthDef);
 
 		if(desc.metadata.notNil) //have metadata
 		{
 			// ("SynthD : " ++ synthDef ++ " has metadata").postln;
-
 			if(desc.metadata[\specs].notNil) //have specs
 			{
 				// ("Collected metadata specs : " ++ name ++ " --- " ++ desc.metadata[\specs][name.asSymbol]).postln;
 				^desc.metadata[\specs][name.asSymbol];
-			}
-			{
+			}{
 				("
 					SynthDef " ++ synthDef ++ " does`t contain line: \n
-					SynthDef(name,{ |nameArg| code... }, metadata: ( specs: ( nameArg: ControlSpec(minVal, maxVal, \lin, stepSize, defaultVal))))
+					SynthDef(name,{ |nameArg| code... }, metadata:
+					( specs: ( nameArg: ControlSpec(minVal, maxVal, \lin, stepSize, defaultVal))))
 				").postln;
 				^nil;
 			} //neexistuje definice spec
-
-		}
-		{
+		}{
 			("
 				SynthDef " ++ synthDef ++ " doesn`t have metadata \n
-				SynthDef(name,{ |nameArg| code... }, metadata: ( specs: ( nameArg: ControlSpec(minVal, maxVal, \lin, stepSize, defaultVal))))
+				SynthDef(name,{ |nameArg| code... }, metadata:
+				( specs: ( nameArg: ControlSpec(minVal, maxVal, \lin, stepSize, defaultVal))))
 			").postln;
 			^nil;
 		};
-
 	}
-	refreshMixWindow {
-		parentCh.mixParent.refreshGui;
-		// parentCh.guiEfx(140);
-	}
-	gui{|originY|
-		var uv = parentCh.mixParent.uv;
-		var colBack = parentCh.mixParent.colBack;
-		var colFront = parentCh.mixParent.colFront;
-		var colActive = parentCh.mixParent.colActive;
-		var fontSmall = parentCh.mixParent.fontSmall;
 
-		var efxFrame, fxButt, name_Efx_cBus, val_Efx_cBus, ez_Efx_cBus;
-		var sizeY = 0;
+	refreshMixWindow {	parentCh.mixParent.refresh;	}
 
-		fxButt = Button(uv, Rect(5, originY + sizeY, uv.bounds.width-10, 15))
+	initGui{|originY|
+		var tempSizeY;
+		sizeY = 0;
+
+		colBack = parentCh.mixParent.colBack;
+		colFront = parentCh.mixParent.colFront;
+		colActive = parentCh.mixParent.colActive;
+		fontSmall = parentCh.mixParent.fontSmall;
+
+		efxFrame = UserView(parentCh.mixParent.frame,
+			Rect(
+				parentCh.frame.bounds.left,
+				originY + 10,
+				parentCh.frame.bounds.width,
+				25
+			)
+		)
+		.background_(colBack)
+		.drawFunc = {
+			Pen.strokeColor = colFront;
+			Pen.addRect(Rect(0,0, efxFrame.bounds.width, efxFrame.bounds.height));
+			Pen.stroke;
+		};
+
+
+		efxButt = Button(efxFrame, Rect(5, 5, efxFrame.bounds.width-10, 15))
 		.font_(fontSmall)
 		.states_([
 			[synthDef,colFront,colBack],
 			[synthDef,colFront,colActive]
 		])
-		.value_(isActive = false)
 		.action_({ |butt|
-			if(butt.value == 1) {
-
-				this.add;
-				isActive = true;
-			};
-			if(butt.value == 0) {
-				this.free;
-				isActive = false;
-			};
+			if(butt.value == 1) { this.add; };
+			if(butt.value == 0) { this.free; };
 		});
 		sizeY = sizeY + 20;
 
-		if(isActive, {
-			num_cBus.do{|i|
-				if(coll_cSpec[i] != nil){coll_cBus[i].value = coll_cSpec[i].default;};
 
-				ez_Efx_cBus = EZNumber(uv,        // parent
-					Rect(5, originY + sizeY, uv.bounds.width-10, 15),   // bounds
-					coll_cName[i], // label
-					coll_cSpec[i].asSpec,    // controlSpec
-					{ coll_cBus[i].value = ez_Efx_cBus.value; }, // action
-					nil,
-					labelWidth:30,numberWidth:30,unitWidth:0
-				);
-				ez_Efx_cBus.setColors(
-					stringBackground: colBack,
-					stringColor: colFront,
-					numBackground: colBack,
-					numStringColor: colFront,
-					numNormalColor: colFront,
-					numTypingColor: colActive
-				);
-				ez_Efx_cBus.font_(fontSmall);
+		tempSizeY = sizeY+5;
+		num_cBus.do{|i|
+			var oneNumBox;
 
-				sizeY = sizeY + 20;
-			};
-		});
+			if(coll_cSpec[i] != nil){coll_cBus[i].value = coll_cSpec[i].default;};
 
-		sizeY = sizeY + 5;
-		^sizeY;
+			oneNumBox = EZNumber.new(
+				efxFrame, // parent
+				Rect(5, tempSizeY, efxFrame.bounds.width-10, 15),	// bounds
+				coll_cName[i], // label
+				coll_cSpec[i].asSpec,    // controlSpec
+				{ coll_cBus[i].value = oneNumBox.value; }, // action
+				nil,
+				labelWidth:30,numberWidth:30,unitWidth:0
+			)
+			.setColors(
+				stringBackground: colBack,
+				stringColor: colFront,
+				numBackground: colBack,
+				numStringColor: colFront,
+				numNormalColor: colFront,
+				numTypingColor: colActive
+			)
+			.font_(fontSmall);
+
+			coll_NumBox.add(oneNumBox);
+			tempSizeY = tempSizeY + 20;
+		};
 	}
 
+	refreshGui{|originY|
+
+		efxFrame.moveTo(parentCh.frame.bounds.left, originY + 10);
+		efxFrame.resizeTo(efxFrame.bounds.width, sizeY + 5);
+
+		efxButt.bounds_(Rect(5, 5, efxFrame.bounds.width-10, 15));
+	}
+
+	add{
+		if(isActive == false){
+			efxSynth = Synth(synthDef, [
+				\bus, parentCh.audioBus,
+				\out, parentCh.audioBus ],
+				parentCh.faderSynth, \addBefore);
+			num_cBus.do{|i|
+				efxSynth.set(coll_cName[i],coll_cBus[i].asMap);
+				sizeY = sizeY + 20;
+			};
+			efxButt.value_(1);
+			isActive = true;
+		};
+
+		this.refreshMixWindow;
+	}
+
+	free{
+		if(isActive == true){
+			efxSynth.free;
+			num_cBus.do{|i|
+				sizeY = sizeY - 20;
+			};
+			efxButt.value_(0);
+			isActive = false;
+		};
+
+		this.refreshMixWindow;
+	}
+
+	changeValue{|target, val|
+		// coll_NumBox
+		// coll_cName
+		coll_cBus[target].value = val;
+		coll_NumBox[target].value = val;
+		// coll_cBus[i].value
+		this.refreshMixWindow; // chyba, pokud neni okono aktivni
+	}
+
+	dimension { ^sizeY + 5; }
+	frame { ^efxFrame; }
+	controlNames { ^coll_cName; }
 }

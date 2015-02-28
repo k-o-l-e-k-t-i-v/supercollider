@@ -1,5 +1,5 @@
 JMix {
-	classvar version = 0.13;
+	classvar version = 0.14;
 	classvar server;
 
 	classvar mixSDef, efxSDef;
@@ -9,8 +9,9 @@ JMix {
 
 	var masterSynth, master_aBus;
 
-	var win, <>uv;
-	var sizeXChnl, sizeYChnl;
+	var <win, mixFrame;
+
+	var <sizeXChnl, <sizeYChnl;
 	var <colBack, <colFront, <colActive;
 	var <fontBig, <fontSmall;
 
@@ -62,7 +63,27 @@ JMix {
 	}
 
 	printMix{^("list of prepared efx synth: " ++ mixSDef);}
-	printEfx{^("list of prepared efx synth: " ++ efxSDef);}
+
+	printEfx{
+
+		var answ = " ";
+		"\nlist of prepared efx synth: ".postln;
+
+		efxSDef.size.do{|i|
+
+			( i.asString ++ " : " ++ efxSDef[i].asString).postln;
+			// ( this.channel(0).efx(i).controlNames.size).postln;
+
+			this.channel(0).efx(i).controlNames.size.do{|j|
+				// answ = answ ++ "jsem";
+				( "  - " ++ j.asString ++ " : " ++ this.channel(0).efx(i).controlNames[j].asString).postln;
+			};
+			// "\n".postln;
+		};
+
+		// postf("list of prepared efx synth: %\n", "is", "test", pi.round(1e-4), (1..4));
+		^""; //
+	}
 
 	addChannel{|num|
 		var chnl;
@@ -73,73 +94,58 @@ JMix {
 	}
 
 	addEfx{|numChnl, numEfx|
-		this.channel(numChnl).effect(numEfx).add;
+		this.channel(numChnl).efx(numEfx).add;
 		^("efx synth " ++ efxSDef[numEfx] ++ " added to JMix channel " ++ numChnl);
 	}
 	freeEfx{|numChnl, numEfx|
-		this.channel(numChnl).effect(numEfx).free;
+		this.channel(numChnl).efx(numEfx).free;
 		^("efx synth " ++ efxSDef[numEfx] ++ " removed from JMix channel " ++ numChnl);
 	}
 
 	gui {
-
 		sizeXChnl = 65;
 		sizeYChnl = 500;
+
 		colBack = Color.new255(30,30,30);
 		colFront = Color.new255(255,255,255);
 		colActive = Color.new255(200,50,50);
 		fontBig = Font("Segoe UI", 7,true, isPointSize:true);
 		fontSmall = Font("Segoe UI", 6, isPointSize:true);
 
-		win = Window.new("ja_Mixer v"++version, Rect(900,sizeYChnl-50,5+((sizeXChnl+5)*numCh),sizeYChnl+10))
+		win = Window.new("ja_Mixer v"++version, Rect(900,sizeYChnl-50,15+((sizeXChnl+5)*numCh),sizeYChnl+10))
 		.alpha_(0.95)
 		.alwaysOnTop_(true)
 		.background_(colBack)
-		.front;
-
-
-		win.onClose_({
+		.front
+		.onClose_({
 			this.close;
 		});
 
-		numCh.do { |i|
-			var originX, originY;
-
-			originX = 5+((sizeXChnl+5)*i);
-			originY = 5;
-
-			uv = UserView(win, Rect(originX, originY, sizeXChnl, sizeYChnl))
-			.background_(colBack)
-			// .clearOnRefresh_(false)
-			.drawFunc = {
-				Pen.strokeColor = colFront;
-				Pen.addRect(Rect(0,0, uv.bounds.width,uv.bounds.height));
-
-				Pen.addRect(Rect(5,45, uv.bounds.width-22,80)); // fqv frame
-
-				Pen.moveTo(5@133);
-				Pen.lineTo(uv.bounds.width-5@133);
-				Pen.stroke;
-			};
-
-			this.channel(i).guiChannel;
-			this.channel(i).guiEfx;
+		mixFrame = UserView(win, Rect(5, 5, win.bounds.width-10, win.bounds.height-10))
+		.background_(colBack)
+		.drawFunc = {
+			Pen.strokeColor = colFront;
+			Pen.addRect(Rect(0,0, mixFrame.bounds.width, mixFrame.bounds.height));
+			Pen.stroke;
 		};
 
-		// this.refreshGui;
+		numCh.do { |i|
+			this.channel(i).initGui;
+			this.channel(i).initGuiEfx;
+		};
+
+
 	}
 
-	refreshGui {
-		"ref".postln;
+	refresh {
+		"refresh".postln;
 		win.refresh;
-		// win.front;
-		// win.defer;
+		mixFrame.refresh;
 
 		numCh.do { |i|
+			this.channel(i).refreshGui;
+			this.channel(i).refreshGuiEfx;
 
-			// this.channel(i).guiChannel;
-			// this.channel(i).refreshGuiEfx;
-			// win.refresh;
 		};
 	}
 
@@ -154,6 +160,8 @@ JMix {
 	folderRoot{ ^Platform.systemExtensionDir ++ "\/JMix"; }
 	folderMix{ ^this.folderRoot ++ "\/Mix"; }
 	folderEfx{ ^this.folderRoot ++ "\/Efx"; }
+
+	frame { ^mixFrame; }
 
 	close{
 		numCh.do { |i|

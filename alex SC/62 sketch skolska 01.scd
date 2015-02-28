@@ -127,3 +127,7 @@ Ndef(\6, {
 
 }).play;
 )
+
+{FreeVerb.ar(Pan2.ar(CombN.ar(SinOsc.ar(65)*Decay.kr(Impulse.kr(0.25),0.1),0.3,0.3,2),SinOsc.kr(0.5)),room:1,damp:2)}.play;
+
+{

@@ -1,9 +1,13 @@
 s.plotTree;
 
 m = JMix(4);
-m.printEfx;
 m.gui;
-m.close;
+
+m.printEfx;
+
+m.channel(1).addEfx(2);
+m.channel(1).efx(2).changeValue(0,8300);
+m.channel(1).freeEfx(2);
 
 m.addEfx(1,2);
 m.addEfx(1,0);
@@ -11,6 +15,8 @@ m.addEfx(1,1);
 m.freeEfx(1,0);
 m.freeEfx(1,1);
 m.freeEfx(1,2);
+
+m.close;
 
 // m.free;
 
@@ -28,3 +34,4 @@ Pdef(\testSin,
 ).play(quant:1);
 )
 Pdef(\testSin).stop;
+

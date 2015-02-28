@@ -1,5 +1,5 @@
 JMix {
-	classvar version = 0.13; // stable version
+	classvar version = 0.13;
 	classvar server;
 
 	classvar mixSDef, efxSDef;
