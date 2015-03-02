@@ -1,5 +1,5 @@
 JMix_channel{
-	classvar version = 0.14;
+	classvar version = 0.15;
 	classvar server;
 
 	var <mixParent;
@@ -16,7 +16,7 @@ JMix_channel{
 
 	var chnlFrame, originX, originY;
 
-	var colBack, colFront, colActive;
+	var colBack, colFront, colActive, colChange;
 	var fontBig, fontSmall;
 	var lastObjY;
 
@@ -61,6 +61,7 @@ JMix_channel{
 		colBack = mixParent.colBack;
 		colFront = mixParent.colFront;
 		colActive = mixParent.colActive;
+		colChange = mixParent.colChange;
 		fontBig = mixParent.fontBig;
 		fontSmall = mixParent.fontSmall;
 		lastObjY = 0;
@@ -137,10 +138,8 @@ JMix_channel{
 	initGuiEfx{
 		lastObjY = chnlFrame.bounds.height + 5;
 		coll_Efx.size.do{|i|
-			// ("pred lastObjY :" ++ lastObjY).postln;
 			this.efx(i).initGui(lastObjY);
 			lastObjY = lastObjY + this.efx(i).dimension;
-			// ("this.efx(i).dimension :" ++ this.efx(i).dimension).postln;
 		};
 		this.refreshGuiEfx;
 	}
@@ -148,16 +147,70 @@ JMix_channel{
 	refreshGuiEfx{
 		lastObjY = chnlFrame.bounds.height + 5;
 		coll_Efx.size.do{|i|
-
 			this.efx(i).refreshGui(lastObjY);
 			lastObjY = lastObjY + this.efx(i).dimension;
-			// ("this.efx(i).dimension :" ++ this.efx(i).dimension).postln;
-			// ("po refresh lastObjY :" ++ lastObjY).postln;
 		};
 	}
 
+	unmute {
+		if(buttMute.value==0) {
+			cb_fader_mute.value = 1;
+			buttMute.value = 1;
+		};
+		^("JMix channel " ++ id ++ " unmute");
+	}
+	mute {
+		if(buttMute.value==1) {
+			cb_fader_mute.value = 0;
+			buttMute.value = 0;
+
+		};
+		^("JMix channel " ++ id ++ " mute");
+	}
+
+	fade{|val, time|
+		var nwSynth;
+		var tempStep;
+		var rout;
+
+		nwSynth = Synth(mixParent.mixSynthDef(2), [
+			\bus, cb_fader_amp,
+			\val, val,
+			\time, time],
+			faderSynth,\addBefore);
+
+		rout = Routine.new({
+			chnlFrame.background_(colChange);
+
+			(4*time).do({ arg t;
+				var newVal = cb_fader_amp.getnSynchronous;
+				// newVal.postln;
+				valAmp.value = newVal[0];
+				sliderAmp.value = newVal[0];
+				0.25.wait;
+			});
+
+			chnlFrame.background_(colBack);
+			valAmp.value = cb_fader_amp.getnSynchronous[0];
+			sliderAmp.value = cb_fader_amp.getnSynchronous[0];
+
+			"fadeAmpDone".postln;
+
+		});
+		AppClock.play(rout);
+
+		this.refreshMixWindow; // chyba, pokud neni okono aktivni
+	}
+
+	refreshMixWindow {	mixParent.refresh;	}
+
 	freeFqv{
 		fqv.kill // !!! nutne bez ";"
+	}
+
+	free{
+		faderSynth.free;
+		chnlG.free;
 	}
 
 	audioBus { ^channel_aBus; }

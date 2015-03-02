@@ -1,5 +1,5 @@
 JMix {
-	classvar version = 0.14;
+	classvar version = 0.15;
 	classvar server;
 
 	classvar mixSDef, efxSDef;
@@ -12,7 +12,7 @@ JMix {
 	var <win, mixFrame;
 
 	var <sizeXChnl, <sizeYChnl;
-	var <colBack, <colFront, <colActive;
+	var <colBack, <colFront, <colActive, <colChange;
 	var <fontBig, <fontSmall;
 
 	*new { |numChannels|
@@ -109,10 +109,11 @@ JMix {
 		colBack = Color.new255(30,30,30);
 		colFront = Color.new255(255,255,255);
 		colActive = Color.new255(200,50,50);
+		colChange = Color.new255(75,65,45);
 		fontBig = Font("Segoe UI", 7,true, isPointSize:true);
 		fontSmall = Font("Segoe UI", 6, isPointSize:true);
 
-		win = Window.new("ja_Mixer v"++version, Rect(900,sizeYChnl-50,15+((sizeXChnl+5)*numCh),sizeYChnl+10))
+		win = Window.new("JMix v"++version, Rect(900,sizeYChnl-50,15+((sizeXChnl+5)*numCh),sizeYChnl+10))
 		.alpha_(0.95)
 		.alwaysOnTop_(true)
 		.background_(colBack)
@@ -171,7 +172,13 @@ JMix {
 		"JMix closed".postln;
 	}
 	free{
-		// JMix all clean
+		this.close;
+		numCh.do { |i|
+			this.channel(i).free;
+		};
+		masterSynth.free;
+		synG.free;
+		mixG.free;
 	}
 
 }
