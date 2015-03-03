@@ -9,7 +9,7 @@ s.reboot;
 
         ~sig = CompanderD.ar(
             RLPF.ar(
-                SinOsc.ar(~lfo!4,mul:0.9) * LFSaw.ar(2/[1,2,3,4]).range(0,1) * Decay.ar(Impulse.ar(2/[1,2,3,4],0.6))
+                SinOsc.ar(~lfo!4,mul:0.9) * LFSaw.ar(2/[1,2,3,4]).range(0,1) * Decay.ar(Impulse.ar(4/[1,2,3,4],0.6))
                 ,1200*(SinOsc.ar(1/4/(1..32)).range(1.01,10))/(~lfo2*10000.0+1)+44,SinOsc.ar(1.00001**(1..8)).range(0.01,1)) +
             (LFPulse.ar(~m*(1.00001**(1..32)),mul:0.02) * (Decay.ar(Impulse.ar(8/[1,2,3,4]),1/8*[1,2,3,4])))
             ,0.15,1,1/10,0.02,0.05);
@@ -18,8 +18,8 @@ s.reboot;
 
         Splay.ar(
             CombN.ar(
-                FreeVerb.ar(~sig.distort,0.12,10)
-                ,0.02,(1..16),2).softclip
+                FreeVerb.ar(~sig.distort,0.12,100)
+                ,1,(1..16),32).softclip
             ,0.12,1,0.5)
 
     }).play;
