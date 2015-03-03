@@ -16,8 +16,8 @@
         ~tone = Vibrato.ar(~tone,[4,3,5,6,7,8],0.2);
         ~tone = CombN.ar(~tone,1,(1..16),32);
         ~tone = ~tone * ~env.exprange(0.0001,1);
-        ~tone = CompanderD.ar(~tone,0.75,1,1/10,0.02,0.2);
         ~tone = ~tone + (SinOsc.ar(~base.lag(1)/8pi,mul:0.02) * LFSaw.ar(1/8/fib(12)).range(0,1));
+        ~tone = CompanderD.ar(~tone,0.75,1,1/10,0.02,0.2);
         ~tone = FreeVerb2.ar(~tone.distort,~tone.distort,0.133,2);
 
         Splay.ar(~tone,0.1,0.95,0.5);
