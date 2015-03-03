@@ -4,7 +4,7 @@
     Ndef(\tick,{
 
         ~oct = Duty.kr([16,8,4],0,Dseq([0,-12,-24,0,12,24,-36],inf));
-        ~mid = Duty.kr([1,1/2,1/4],0,Dseq([65,64,72],inf));
+        ~mid = Duty.kr([1,1/2,1/4],0,Dseq([65,69,64],inf));
         ~base = Duty.kr(4,0,Dseq([1,2,4,1,2,1.5,1,2,1.25],inf));
         ~base = ~base * ([60,~mid,67]-~oct).midicps;
 
