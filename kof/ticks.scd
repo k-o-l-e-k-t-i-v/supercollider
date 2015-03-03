@@ -11,7 +11,7 @@
         ~a = Impulse.ar(1/2,(1..16).scramble/16);
         ~env = Decay.ar(~a,(1..16)/SinOsc.ar(0.1/(1..8)).range(4,16));
         ~tone = SinOsc.ar(~base*(2**(1..8))/16pi,mul:0.2);
-        ~tone = ~tone + LFSaw.ar((~base/16.1pi)*(2**(1..8)),mul:0.2) * LFSaw.ar(1/4/(1..8)).range(0,1);
+        ~tone = ~tone + (LFSaw.ar((~base/16.1pi)*(2**(1..8)),mul:0.2) * LFSaw.ar(1/4/(1..8)).range(0,1));
         
         ~tone = CombN.ar(~tone,1,(1..16),32);
         ~tone = ~tone * ~env.exprange(0.0001,1);
