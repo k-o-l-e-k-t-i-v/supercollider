@@ -5,11 +5,16 @@
 }.play;
 )
 
+
 (
 {
+	~b=CombN.ar(LFSaw.ar([880,660,990,440]/(1..5)).lag(0.02)*Decay2.kr(Impulse.kr(4/(4..16)),[0.01,0.1,0.2],SinOsc.kr(0.25).range(3,4)),
+		maxdelaytime:SinOsc.kr(0.25).range(0.01,0.2),
+		delaytime:SinOsc.kr(0.25).range(0.01,0.2),
+		decaytime:SinOsc.kr(0.25).range(4,2)
+	);
 
-	WhiteNoise.ar(0.5)+SinOsc.ar([400,100,200,500])}.play;
+}.play;
 )
-
 
 s.scope(2);
