@@ -19,7 +19,7 @@
 		delaytime:SinOsc.kr(0.0125).range(0.01,0.2),
 		decaytime:SinOsc.kr(0.0125).range(4,2)
 	);
-		~b=FreeVerb.ar(CombN.ar(~b,1,1,3),room:1,add:~b);
+		~b=FreeVerb.ar(CombN.ar(~b,1,1,3),room:2,add:~b);
 		~b=Limiter.ar(~b,0.99);
 
 }.play;
@@ -29,11 +29,11 @@
 (
 {
 
+	~c=Pan2.ar(CombN.ar(Impulse.ar(0.25),SinOsc.kr(1).range(0.7,0.01),SinOsc.kr(0.25).range(0.2,0.1),3),SinOsc.kr(0.25));
+	~c=GVerb.ar(~c,100,damping:1);
 
 
-
-
-}).play;
+}.play;
 )
 
 s.scope(2);
