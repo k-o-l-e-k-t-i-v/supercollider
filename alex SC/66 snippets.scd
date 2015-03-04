@@ -58,7 +58,14 @@ s.scope(2);
 }.play;
 )
 
+(
+{WhiteNoise.ar(0.7).clip(0.1,SinOsc.kr(1).range(0.11,0.16))}.play;
+)
 
 (
 {WhiteNoise.ar(0.7).clip(SinOsc.kr(0.25).range(0.8,0.088),SinOsc.kr(0.25).range(0.65,0.065))}.play;
+)
+
+(
+{BrownNoise.ar(0.7).clip(SinOsc.kr(800).range(0.8,0.088),SinOsc.kr(800).range(0.85,0.065)).lag(0.001)}.play;
 )
