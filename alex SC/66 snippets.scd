@@ -58,8 +58,12 @@ s.scope(2);
 }.play;
 )
 
+
+
+///what the hell is happening here?
+
 (
-{WhiteNoise.ar(0.7).clip(0.1,SinOsc.kr(1).range(0.11,0.16))}.play;
+{WhiteNoise.ar(3).clip(0.14,SinOsc.kr(0.5).range(0.11,0.16))}.play;
 )
 
 (
@@ -67,5 +71,8 @@ s.scope(2);
 )
 
 (
-{BrownNoise.ar(0.7).clip(SinOsc.kr(800).range(0.8,0.088),SinOsc.kr(800).range(0.85,0.065)).lag(0.001)}.play;
+{BrownNoise.ar(0.7).clip(SinOsc.kr(800).range(0.8,0.088),SinOsc.kr(800).range(0.85,0.065)).lag(0.005)}.play;
 )
+
+
+
