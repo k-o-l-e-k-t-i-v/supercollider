@@ -1,3 +1,6 @@
+s.scope(2);
+
+
 (
 {
 
@@ -20,7 +23,7 @@
 		decaytime:SinOsc.kr(0.0125).range(4,2)
 	);
 		~b=FreeVerb.ar(CombN.ar(~b,1,1,3),room:2,add:~b);
-		~b=Limiter.ar(~b,0.99);
+	~b=Limiter.ar(~b,0.99);
 
 }.play;
 )
@@ -29,11 +32,18 @@
 (
 {
 
-	~c=Pan2.ar(CombN.ar(Impulse.ar(0.25),SinOsc.kr(1).range(0.7,0.01),SinOsc.kr(0.25).range(0.2,0.1),3),SinOsc.kr(0.25));
-	~c=GVerb.ar(~c,100,damping:1);
-
+	~c=Pan2.ar(CombN.ar(Impulse.ar(0.25),SinOsc.kr(1).range(0.7,0.01),SinOsc.kr(0.25).range(0.2,0.1),3),SinOsc.kr(2));
+	~c=GVerb.ar(~c+SinOsc.ar(35).range(0,0.1)*Decay2.kr(Impulse.kr(0.25),decayTime:4),100,damping:1);
 
 }.play;
 )
 
-s.scope(2);
+
+(
+{
+
+	~d=
+
+
+}.play;
+)
