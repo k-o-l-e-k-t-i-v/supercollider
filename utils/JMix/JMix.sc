@@ -1,10 +1,11 @@
 JMix {
-	classvar version = 0.15;
+	classvar version = 0.16;
 	classvar server;
 
-	classvar mixSDef, efxSDef;
+	classvar efxSDef;
 	var numCh, <numEfx;
-	var <synG, mixG;
+	var jmixG, <masterG, synG;
+	var synG_nodeID;
 	var coll_Channels;
 
 	var masterSynth, master_aBus;
@@ -20,24 +21,53 @@ JMix {
 	}
 
 	init { |xCh|
+
 		server = Server.default;
-		mixSDef = this.storeSynth(this.folderMix); // Mix_Fader = 0; Mix_Limiter = 1
+		this.storeMixSynth;
 		efxSDef = this.storeSynth(this.folderEfx);
 		numCh = xCh;
 		numEfx = efxSDef.size;
 
 		server.waitForBoot{
-			synG = Group.new;
-			mixG = Group.new(addAction:\addToTail);
+			// here is problem with Ndef, ndef.free kill synG and playing doesnt continue
+
+			jmixG = Group.new(addAction:\addToTail);
+			masterG = Group.new(jmixG, \addToTail);
+
+			synG = this.inGroup; // add if Ndef kill this group
 
 			master_aBus = Bus.audio(server, 2);
-			masterSynth = Synth(this.mixSynthDef(1),[\bus, master_aBus],mixG);
+			masterSynth = Synth(\Mix_Limiter,[\bus, master_aBus],masterG);
 
 			coll_Channels = List.new(numCh);
 			numCh.do { |i|
 				coll_Channels.add(this.addChannel(i));
 			};
+		};
+	}
+
+	inGroup{
+		// this works but with gap
+		// synG.free; synG = Group.new(jmixG, \addToHead);
+
+		// this works too, smaller glitch
+		synG = Group.basicNew(server, 999); // Create without sending
+		server.sendBundle(nil, synG.newMsg(jmixG, \addToHead););
+
+		// best option, check if exist nodeID by try, how???
+		/*
+		try {
+		if(synG.notNil) {
+		("synG nodeID :" ++ synG.nodeID).postln;
+		};
+		// } {|error| \caught.postln; error.dump }
+		}{|error|
+		("new synG").postln;
+		synG = Group.new(jmixG, \addToHead);
 		}
+		);
+		*/
+		^synG;
 	}
 
 	storeSynth {|dir, libname=\global, completionMsg, keepDef = true|
@@ -62,7 +92,23 @@ JMix {
 		^list;
 	}
 
-	printMix{^("list of prepared efx synth: " ++ mixSDef);}
+	storeMixSynth
+	{
+		SynthDef(\Mix_Limiter, { | bus |
+			Out.ar(0, Limiter.ar(In.ar(bus,2),0.95));
+		}).add;
+
+		SynthDef(\Mix_Fader, { | in, out, amp, mute |
+			var numCh, tone;
+			numCh = in.numChannels;
+			tone = In.ar(in, numCh);
+			Out.ar(out, Splay.ar(tone * amp * mute),0)
+		}).add;
+
+		SynthDef(\Mix_NewVal, { | bus, val, time |
+			ReplaceOut.kr(bus, EnvGen.kr(Env([In.kr(bus), val], [time], \sin), doneAction: 2))
+		}).add;
+	}
 
 	printEfx{
 
@@ -84,6 +130,9 @@ JMix {
 		// postf("list of prepared efx synth: %\n", "is", "test", pi.round(1e-4), (1..4));
 		^""; //
 	}
+
+
+
 
 	addChannel{|num|
 		var chnl;
@@ -134,8 +183,6 @@ JMix {
 			this.channel(i).initGui;
 			this.channel(i).initGuiEfx;
 		};
-
-
 	}
 
 	refresh {
@@ -150,16 +197,13 @@ JMix {
 		};
 	}
 
-	mixSynthDef {|num| ^mixSDef[num];}
 	efxSynthDef {|num| ^efxSDef[num];}
-
 	channel{ |num| ^coll_Channels[num]; }
 
 	audioBus { ^master_aBus; }
 	ch{ |num| ^coll_Channels[num].audioBus; }
 
 	folderRoot{ ^Platform.systemExtensionDir ++ "\/JMix"; }
-	folderMix{ ^this.folderRoot ++ "\/Mix"; }
 	folderEfx{ ^this.folderRoot ++ "\/Efx"; }
 
 	frame { ^mixFrame; }
@@ -178,9 +222,17 @@ JMix {
 		};
 		masterSynth.free;
 		synG.free;
-		mixG.free;
+		masterG.free;
+		jmixG.free;
 	}
 
+	/*
+	// protection againg force crtl+. stop
+	cmdPeriod{
+	// CmdPeriod.add(function)
+	this.init(numCh);
+	}
+	*/
 }
 
 

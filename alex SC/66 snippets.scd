@@ -41,7 +41,7 @@ s.scope(2);
 	  ~g=Pan2.ar(BPF.ar(WhiteNoise.ar(0.2).clip(0,0.2),freq:SinOsc.kr(10).range(45,55),rq:SinOsc.kr(20).rand),SinOsc.kr(0.5),level:SinOsc.kr(0.125).range(1,0.2));
 	~g=Limiter.ar(~g,0.5);
 
-	~w=CombN.ar(Lag.ar(SinOsc.ar(~n+(11,22..44)),SinOsc.kr(0.25).range(0.1,0.4)),maxdelaytime:0.2,delaytime:0.2,decaytime:2,mul:SinOsc.kr(0.25).range(1,2));
+	~w=CombN.ar(Lag.ar(SinOsc.ar(~n+(11,22..44)),SinOsc.kr(0.25).range(0.1,0.4)),maxdelaytime:0.2,delaytime:0.2,decaytime:2,mul:SinOsc.kr(0.25).range(1,4));
 
 	~m=~g+~c+~w;
 
@@ -57,3 +57,22 @@ s.scope(2);
 
 }.play;
 )
+
+
+
+///what the hell is happening here?
+
+(
+{WhiteNoise.ar(3).clip(0.14,SinOsc.kr(0.5).range(0.11,0.16))}.play;
+)
+
+(
+{WhiteNoise.ar(0.7).clip(SinOsc.kr(0.25).range(0.8,0.088),SinOsc.kr(0.25).range(0.65,0.065))}.play;
+)
+
+(
+{BrownNoise.ar(0.7).clip(SinOsc.kr(800).range(0.8,0.088),SinOsc.kr(800).range(0.85,0.065)).lag(0.005)}.play;
+)
+
+
+

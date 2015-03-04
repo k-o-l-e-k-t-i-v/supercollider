@@ -1,6 +1,6 @@
 JMix_efx
 {
-	classvar version = 0.15;
+	classvar version = 0.16;
 	classvar server;
 	var parentCh;
 	var id;
@@ -211,7 +211,7 @@ JMix_efx
 		var tempStep;
 		var rout;
 
-		nwSynth = Synth(parentCh.mixParent.mixSynthDef(2), [
+		nwSynth = Synth(\Mix_NewVal, [
 			\bus, coll_cBus[target],
 			\val, val,
 			\time, time],
@@ -221,7 +221,7 @@ JMix_efx
 
 		rout = Routine.new({
 			efxFrame.background_(colChange);
-			coll_NumBox[target].controlSpec.step = 1;
+			coll_NumBox[target].controlSpec.step = 0.001;
 
 			(4*time).do({ arg t;
 				var newVal = coll_cBus[target].getnSynchronous;

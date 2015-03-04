@@ -1,8 +1,26 @@
+// put this folder to:  platform.systemExtensionDir / JMix
+// version 0.16
+
 s.plotTree;
 
 m = JMix(4);
 m.gui;
 
+// Ndef example /////////////////////////
+(
+Ndef(\aaa).group = m.inGroup; // important line for mix
+Ndef(\aaa, {
+	var osc;
+	// alex example
+	osc = FreeVerb.ar( (SinOsc.ar(45+(0.2..1.2))+BrownNoise.ar(0.11).clip(0.1,0.3))*Decay2.kr(Impulse.kr(0.25),decayTime:2),SinOsc.kr(1),1,1);
+
+	Out.ar(m.ch(0),osc); // important line for mix
+}).play;
+)
+
+Ndef(\aaa).free;
+
+// Pdef example /////////////////////////
 (
 SynthDef(\testSin, {|out, gate = 1, freq, amp, sustain|
 	var fEnv = Line.kr(freq*0.8,Lag.kr(freq, 1.5*sustain),sustain);
@@ -18,7 +36,7 @@ Pdef(\testSin,
 	m.channel(1).efx(3).value(0,8000);
 	m.channel(1).efx(3).fade(0,1000,10);
 
-	Pbind(\instrument, \testSin, \out, m.ch(1), \group, m.synG, \amp, 1,
+	Pbind(\instrument, \testSin, \out, m.ch(1), \group, m.inGroup, \amp, 1,
 		\dur, 2, \legato, 1.3,
 		\octave, 3, \degree, Pseq([3,3,3,7], inf)
 	)
@@ -30,7 +48,7 @@ Pdef(\testSin,
 	m.channel(1).fade(0.0,10);
 	m.channel(1).efx(3).fade(0,8000,10);
 
-	Pbind(\instrument, \testSin, \out, m.ch(1), \group, m.synG, \amp, 1,
+	Pbind(\instrument, \testSin, \out, m.ch(1), \group, m.inGroup, \amp, 1,
 		\dur, 2, \legato, 1.3,
 		\octave, 3, \degree, Pseq([3,4,5,7], inf)
 	)
@@ -52,7 +70,6 @@ m.freeEfx(1,2);
 */
 
 m.printEfx;
-m.printMix;
 
 m.close;
 m.free;
