@@ -5,5 +5,11 @@
 }.play;
 )
 
+(
+{
+
+	WhiteNoise.ar(0.5)+SinOsc.ar([400,100,200,500])}.play;
+)
+
 
 s.scope(2);
