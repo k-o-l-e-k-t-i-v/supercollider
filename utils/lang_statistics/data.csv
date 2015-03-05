@@ -14,7 +14,7 @@ Pbind 148 290 58
 Ppar 14 38 14 
 Pdef 153 583 12 
 Pseq 376 1036 75 
-Dseq 110 0 64 
+Dseq 110 0 65 
 Select 63 11 111 
 LPF 35 139 107 
 HPF 38 57 45 
@@ -23,11 +23,11 @@ Resonz 4 0 31
 Vibrato 3 0 76 
 FreeVerb 115 87 100 
 Allpass 8 31 53 
-Comb 95 58 105 
+Comb 95 58 103 
 Compander 1 0 81 
 midicps 10 0 107 
 var 154 450 35 
 pi 118 62 261 
-kr 1066 370 608 
+kr 1066 370 607 
 range 234 13 532 
-rand 91 107 106 
+rand 91 107 104 
