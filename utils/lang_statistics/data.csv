@@ -1,12 +1,12 @@
 name,alex SC,jachym,kof,
-SinOsc 342 320 559 
+SinOsc 342 320 560 
 LFSaw 47 91 286 
-LFPulse 25 22 53 
-Pulse 104 118 119 
-Impulse 303 2 310 
+LFPulse 25 22 54 
+Pulse 104 118 122 
+Impulse 303 2 312 
 Noise 177 39 190 
 WhiteNoise 60 24 67 
-Ndef 423 7 1046 
+Ndef 423 7 1052 
 SynthDef 100 259 16 
 Pdef 153 583 12 
 Tdef 9 71 23 
@@ -14,7 +14,7 @@ Pbind 148 290 58
 Ppar 14 38 14 
 Pdef 153 583 12 
 Pseq 376 1036 75 
-Dseq 110 0 61 
+Dseq 110 0 63 
 Select 63 11 111 
 LPF 35 139 104 
 HPF 38 57 43 
@@ -26,7 +26,7 @@ Allpass 8 31 53
 Comb 95 58 103 
 Compander 1 0 78 
 midicps 10 0 106 
-var 154 450 25 
+var 154 450 26 
 pi 118 62 261 
 kr 1066 370 605 
 range 234 13 520 
