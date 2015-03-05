@@ -1,6 +1,6 @@
 
 
-ProxySpace.push(s)
+p = ProxySpace.push(s);
 
 ///////////////////////////
 // global variables
