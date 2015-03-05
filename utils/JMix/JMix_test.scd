@@ -1,7 +1,24 @@
-// put this folder to:  platform.systemExtensionDir / JMix
-// version 0.16
+/*
+put this folder to:  Platform.systemExtensionDir / JMix
+version 0.16
 
-s.plotTree;
+for new efx just put file to efx folder in form:
+
+SynthDef(\nameOfFile, { |bus, argA, argB|
+	ReplaceOut.ar(bus, LPF.ar(In.ar(bus, 2),argA, argB))
+	},
+	metadata: (
+		specs: (
+			argA: ControlSpec(50, 20000, \lin, 10, 400)
+			argB: ControlSpec(50, 20000, \lin, 10, 400)
+			// 50 = minValue of controler
+			// 20000 = maxValue of controler
+			// 10 = change value of one step
+			// 400 = default value of controler
+		)
+	)
+)
+*/
 
 m = JMix(4);
 m.gui;
