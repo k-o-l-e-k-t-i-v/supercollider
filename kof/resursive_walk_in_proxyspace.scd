@@ -13,7 +13,7 @@ p = ProxySpace.push(s);
            z3 = z3 + [-4,12,-12,7].choose; if(z3>60,{z3=0}); if(z3<(-60),{z3=0}); ~c.set(\a,z3);
 
 
-           (4).wait;
+           ([2,4].choose).wait;
          }
        }).play;
 
@@ -22,12 +22,22 @@ p = ProxySpace.push(s);
   ~b.quant = 2;
   ~c.quant = 2;
 
-  ~a.play;
-  ~b.play;
-  ~c.play;
 
-  ~a = {arg a=0; Splay.ar(SinOsc.ar( [60+a,65+a,67+a].midicps,mul:0.33)* Decay.ar(Impulse.ar([1,2,3]),0.5))};
-  ~b = {arg a=0; Splay.ar(SinOsc.ar( [60+a,69+a,67+a].midicps,mul:0.33)* Decay.ar(Impulse.ar([1,2,3]/4),1.75))};
-  ~c = {arg a=0; Splay.ar(SinOsc.ar( [60+a,60+a,67+a].midicps,mul:0.33)* Decay.ar(Impulse.ar([1,2,3]/2),0.95))};
+  ~a = {arg a=0; Splay.ar(SinOsc.ar( [60+a,65+a,67+a].midicps,mul:0.33)* Decay.ar(Impulse.ar(4/[1,2,4]),0.5))};
+  ~b = {arg a=0; Splay.ar(SinOsc.ar( [60+a,65+a,67+a].midicps,mul:0.33)* Decay.ar(Impulse.ar(4/[4,2,1]),1.75))};
+  ~c = {arg a=0; Splay.ar(SinOsc.ar( [60+a,65+a,67+a].midicps,mul:0.33)* Decay.ar(Impulse.ar(4/[1,2,3]),0.95))};
+
+  ~mix = {
+    Splay.ar(
+      FreeVerb.ar(
+        CombN.ar(
+          CompanderD.ar(
+            ~a+~b+~c
+            ,0.5,1,1/10,0.02)
+          ,1,1,4)
+        ,0.13,10)
+    )
+  };
+  ~mix.play;
 )
 
