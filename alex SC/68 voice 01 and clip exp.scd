@@ -48,8 +48,9 @@ Ndef(\l, {
 	~s3=HPF.ar(CombN.ar(~s,0.2,0.002,0.5),100)+GrayNoise.ar(0.001)*Decay2.kr(Dust.kr(4),decayTime:1);
 
 
+	//play from ~s1 to ~s3
 
-	Mix.new([~s3]);
+	Mix.new([~s1]);
 
 	}
 ).play;
