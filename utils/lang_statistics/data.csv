@@ -1,9 +1,9 @@
 name,alex SC,jachym,kof,
-SinOsc 362 323 578 
+SinOsc 362 323 579 
 LFSaw 54 91 292 
 LFPulse 25 22 53 
 Pulse 108 119 124 
-Impulse 305 4 320 
+Impulse 305 4 322 
 Noise 189 39 194 
 WhiteNoise 61 24 71 
 Ndef 432 11 1050 
