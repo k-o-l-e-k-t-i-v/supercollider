@@ -14,8 +14,13 @@ x.addResponder('/shared', { |r,t,msg|
 	defer { d.text=str.asString }
 });
 
-d.keyDownAction = {
+d.keyDownAction = {arg ...args;
+	if(args[3]!==65533,{
+		//postln("ok "++args[3]);
 	c.sendToEach('/shared', Document.current.string);
+	},{
+		//postln("not ok "++args[3]);
+	});
 };
 
 d.onClose = { x.stop };
