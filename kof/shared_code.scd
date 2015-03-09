@@ -21,13 +21,3 @@ d.keyDownAction = {
 d.onClose = { x.stop };
 
 )
-
-
-
-d = Document.new("livecoding","")
-(
-d.string = "";
-d.string = "test2";
-)
-
-HistoryGui.new
