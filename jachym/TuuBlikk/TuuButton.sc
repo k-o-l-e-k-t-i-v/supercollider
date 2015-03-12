@@ -1,9 +1,10 @@
 TuuButton
 {
 	var bActive, bTime;
-	var timePosition, freq;
+	var timePosition, octave, degree;
 	var posX, posY, frame, win;
-	var buttNode;
+	var synthDef;
+	var uView, buttNode;
 	var colBack, colFront, colActive, colTime;
 
 	*new { |time, tone, window|
@@ -12,21 +13,29 @@ TuuButton
 
 	init { |time, tone, window|
 		timePosition = time;
-		freq = tone;
+		octave = 4;
+		degree = tone;
 		win = window;
+		bActive = false;
 
 		colBack = Color.new255(30,30,30);
 		colFront = Color.new255(255,255,255);
 		colActive = Color.new255(200,50,50);
 		colTime = Color.new255(75,65,45);
 
-		this.origin(time*30+10, tone*30+10)
+		this.origin((time*30)+10, (tone*30)+10);
+		this.initGui;
+	}
+
+	frequency{
+		^(octave*12+degree).midicps;
 	}
 
 	origin{|originX, originY|
 		posX = originX;
 		posY = originY;
-		frame = Rect(posX, posY, 30, 30);
+		frame = Rect.new(posX, posY, 30, 30);
+		// ("posX: " ++ posX ++ " posY : " ++ posY).postln;
 	}
 
 	isTime{|currentTime|
@@ -34,20 +43,64 @@ TuuButton
 	}
 
 	isActive{^bActive}
+	switchActive{
+		if(bActive == true){bActive = false;}{bActive = true;};
+	}
 
 	initGui{
-		buttNode = Button(win, frame)
-		.states_([
-			[timePosition,colFront,colBack],
-			[freq,colFront,colActive]
-		])
-		.action_({ |butt|
-			if(butt.value == 1) { freq.midicps; };
-			if(butt.value == 0) { 0; };
+		uView = UserView.new(win,frame);
+		this.stateNormal;
+
+		uView.mouseDownAction_({|me, x, y, mod|
+			this.switchActive;
+			if(this.isActive){
+				this.stateActive;
+			}
+			{
+				this.stateNormal;
+			};
+			uView.refresh;
 		});
 	}
 
-	update{
+	stateActive{
+		uView.drawFunc = { |v|
+			Pen.strokeColor = colFront;
+			Pen.fillColor = colActive;
+			Pen.addOval(Rect(0,0,uView.bounds.width, uView.bounds.height));
+			Pen.fillStroke;
+			Pen.stroke;
+		};
+	}
+	stateTime{
+		uView.drawFunc = { |v|
+			Pen.strokeColor = colFront;
+			Pen.fillColor = colTime;
+			Pen.addOval(Rect(0,0,uView.bounds.width, uView.bounds.height));
+			Pen.fillStroke;
+			Pen.stroke;
+		};
+	}
+	stateNormal{
+		uView.drawFunc = { |v|
+			Pen.strokeColor = colFront;
+			Pen.addOval(Rect(0,0,uView.bounds.width, uView.bounds.height));
+			Pen.stroke;
+		};
+	}
 
+	update{|currentTime|
+		var rout;
+		rout = Routine({
+			if(this.isTime(currentTime))
+			{
+				this.stateTime;
+				uView.refresh;
+				0.125.wait;
+				if(this.isActive) {	this.stateActive; }	{ this.stateNormal;	};
+				uView.refresh;
+			}
+		});
+		AppClock.play(rout);
 	}
 }
