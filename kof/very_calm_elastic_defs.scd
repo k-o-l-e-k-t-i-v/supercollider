@@ -32,3 +32,6 @@ Ndef.defaultReshaping = \elastic;
 ~a[16]=\filter->{|in| FreeVerb.ar(in,SinOsc.ar(1/5/(1..8)).range(0.01,0.8),1)};
 
 )
+
+
+//zer nais ^^
