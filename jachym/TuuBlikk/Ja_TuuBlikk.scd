@@ -1,8 +1,11 @@
+
+
 (
 var numStep, numDegree;
 var w, collButt, collValue;
 var colBack, colFront, colActive, colTime;
 var rout;
+var posX = 0;
 
 s.boot;
 numStep = 32;
@@ -15,10 +18,7 @@ SynthDef(\help_sinegrain,
 		Out.ar(out, SinOsc.ar(freq, 0, env)!2)
 }).add;
 
-colBack = Color.new255(30,30,30);
-colFront = Color.new255(255,255,255);
-colActive = Color.new255(200,50,50);
-colTime = Color.new255(75,65,45);
+colBack = Color.new255(255,255,255);
 
 w = Window.new("pattern", Rect(50,200,1100,500), false);
 w.front;
@@ -28,10 +28,13 @@ w.alwaysOnTop = true;
 collButt = List.new;
 
 numStep.do{|x|
+
 	numDegree.do{|y|
 		var butt = TuuButton(x,y,w);
 		collButt.add(butt);
 	};
+	posX = posX + 30;
+	if(x % 4){posX = posX + 10};
 };
 
 rout = Routine({
