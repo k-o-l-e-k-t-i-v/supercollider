@@ -23,18 +23,18 @@ TuuButton
 		colActive = Color.new255(200,50,50);
 		colTime = Color.new255(75,65,45,255);
 
-		this.origin((time*30)+10, (tone*30)+10);
+		this.origin((time*50)+10, (tone*50)+10);
 		this.initGui;
 	}
 
 	frequency{
-		^(octave*12+degree).midicps;
+		^(octave*12+(12-degree)).midicps;
 	}
 
 	origin{|originX, originY|
 		posX = originX;
 		posY = originY;
-		frame = Rect.new(posX, posY, 30, 30);
+		frame = Rect.new(posX, posY, 50, 50);
 		// ("posX: " ++ posX ++ " posY : " ++ posY).postln;
 	}
 
