@@ -8,7 +8,7 @@ SynthDef(\bum, {
 	fenv=EnvGen.kr(Env([freq*2,freq], [sustain*0.05],\welch),gate);
 	sig=Mix.fill(5, {SinOsc.ar(fenv+(1..4))});
 	sig=FreeVerb.ar(sig,mix:0.5,room:room,damp:1);
-	sig=Limiter.ar(sig,0.7)*env*amp;
+	sig=Limiter.ar(sig,0.5)*env*amp;
 
 	Out.ar(0,sig);
 }).add;
@@ -90,7 +90,7 @@ Pdef(\zum1,
 		\legato,2,
 		\lag, 0.02,
 		\res, Prand([1,0.5,1.2,1.4,0.2],inf),
-		\amp, 0.5
+		\amp, Pseq([Pseries(0.2,0.1,2),Pseries(0.5,-0.1,2)],inf)
 ))
 );
 
@@ -103,9 +103,9 @@ Pdef(\bum1,
 		\strum, 0.25,
 		\legato, 0.3,
 		\freq, [[45,47],[47,45],[49,51]],
-		\amp,Pseq([Pseries(0.2,0.1,5),Pseries(0.8,-0.1,5)],inf)
+		\amp,0.8,/*Pseq([Pseries(0.2,0.2,5),Pseries(0.8,-0.01,5)],inf)*/
 
-))
+)).play;
 );
 
 (
@@ -145,7 +145,7 @@ Pdef(\ripple1,
 		\note, [2,2,4,2,3],
 		\amp, 1,
 		\f2, 2
-))
+)).play;
 );
 
 
@@ -219,11 +219,28 @@ Routine{
 
 
 
+////ok
+(
+Pdef(\bum1,
+	Pbind(
+		\instrument, \bum,
+		\dur,0.5,
+		\legato, Pseq([0.5,0.25],inf),
+		\freq, 85,
+		\amp,1,
+
+)).play(quant:2);
 
 
 
-
-
-
-
-		
+Pdef(\tss1,
+	Pbind(
+		\instrument, \tss,
+		\dur, Pseq([0.25,0.25,0.5,Rest(1)],inf),
+		\legato,0.5,
+		\freq, 6000,
+		\f2,5,
+		\pan, Pseq([-1,1,0],inf),
+		\amp, 0.051
+)).play(quant:2);
+)
