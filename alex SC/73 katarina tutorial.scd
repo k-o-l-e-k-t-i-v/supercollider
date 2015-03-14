@@ -13,8 +13,8 @@ Ndef(\test1, {
 
 	decay=Decay2.kr(Impulse.kr([1]),decayTime:SinOsc.kr(0.25).range(0.2,0.5));
 	signal=SinOsc.ar(freq);
-	signal=signal*LFSaw.ar(freq2);
-	signal=signal*SinOsc.ar(freq3)*decay;
+	signal=signal*LFSaw.kr(freq2);
+	signal=signal*SinOsc.kr(freq3)*decay;
 	signal=CombN.ar(signal, maxdelaytime:0.3,delaytime:0.3,decaytime:10);
 	signal=FreeVerb.ar(signal,room:0.7);
 
