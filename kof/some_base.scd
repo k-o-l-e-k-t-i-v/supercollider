@@ -8,7 +8,7 @@ p=ProxySpace.push(s.boot);
 
 
 ~freqMod.quant=2;
-~freqMod={LFNoise0.kr(1/16!3,1.5,8).round(1.5).lag(2)};
+~freqMod={LFNoise0.kr(1/8!3,1.5,8).round(1.5).lag(4)};
 );
 
 (
@@ -18,7 +18,7 @@ p=ProxySpace.push(s.boot);
 ~a={
 	var sig,notes,base;
 
-	notes=(37+7+(_*7!11)).midicps.scramble;
+	notes=(37+7+(_*7!11)-[0,12,24]).midicps.scramble;
 
 	base = notes/~freqMod*(1.00001**(1..11));
 
@@ -35,7 +35,7 @@ p=ProxySpace.push(s.boot);
 
 (
 ~a[10]=\filter->{|in|Vibrato.ar(in,[4,5,6],0.2)};
-~a[12]=\filter->{|in|BBandPass.ar(in,LFTri.ar(1/4/fib(12)).range(432.01*2,44),0.25,8)};
+~a[12]=\filter->{|in|BBandPass.ar(in,LFTri.ar(1/4/[1,2,4,8]).range(432.01*2,44),0.25,8)};
 ~a[14]=\filter->{|in|CompanderD.ar(in,0.5,1,1/25,0.02,0.2,1.5)};
 ~a[16]=\filter->{|in|Limiter.ar(in,1)};
 ~a[16]=\filter->{|in|AllpassN.ar(in,0.25,0.25,4)};
