@@ -12,7 +12,7 @@ p=ProxySpace.push(s);
 	env=EnvGen.kr(Env.adsr(sustain*0.2,sustain*0.1,0.7,sustain*0.7),t_trig);
 
 	sig=LFSaw.ar(freq*(2,4..8),SinOsc.kr(0.25).range(0,2pi));
-	sig=sig*LFPar.ar([100,0.5]);
+	sig=sig*LFPulse.ar([1,0.5]);
 	sig=sig*env*amp;
 
 };
