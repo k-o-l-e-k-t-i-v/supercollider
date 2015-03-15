@@ -9,7 +9,7 @@ c = Collective(\kof,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252"]).s
 
 
 
-// d.close;
+d.close;
 x = Participation(c).start;
 d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
@@ -26,9 +26,9 @@ d.textChangedAction = {|one,two,three,four,five|
 
 	/////////// UNCOMMENT HERE //////////////////////////
 
-	// q.sendToName(\kof,"isc",[two,three,four]);
-	q.sendToName(\alex,"isc",[two,three,four]);
-	q.sendToName(\joach,"isc",[two,three,four]);
+	// c.sendToName(\kof,"isc",[two,three,four]);
+	c.sendToName(\alex,"isc",[two,three,four]);
+	c.sendToName(\joach,"isc",[two,three,four]);
 
 };
 );
