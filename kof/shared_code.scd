@@ -9,7 +9,7 @@ c = Collective(\kof,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252"]).s
 
 
 
-d.close;
+//d.close;
 x = Participation(c).start;
 d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
