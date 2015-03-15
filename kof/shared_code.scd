@@ -14,7 +14,6 @@ x = Participation(c).start;
 d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
 x.addResponder('/shared', { |r,t,msg|
-	// msg.postln;
 	d.insertText(msg[3]+"",msg[1].asInt);
 });
 
@@ -31,7 +30,6 @@ d.textChangedAction = {|one,two,three,four,five|
 	q.sendToName(\alex,"isc",[two,three,four]);
 	q.sendToName(\joach,"isc",[two,three,four]);
 
-	//q.sendMsg('/shared', two,three,four);
 };
 );
 
