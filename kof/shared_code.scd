@@ -1,12 +1,12 @@
-
-s.boot;
 (
 
-q = Collective(s).start;//\peer,\livecoding,[\kof,"127.0.0.1"]).start;
 
-//c = Collective(\kof,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252"]).start;
+/////////// UNCOMMENT HERE //////////////////////////
+
+c = Collective(\kof,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252"]).start;
 //c = Collective(\alex,\livecoding,[\kof,"25.164.28.14",\joach,"25.0.209.252"]).start;
 //c = Collective(\joach,\livecoding,[\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
+
 
 
 // d.close;
@@ -22,14 +22,19 @@ x.addResponder('/shared', { |r,t,msg|
 
 (
 d.textChangedAction = {|one,two,three,four,five|
-	//q.sendToName(\peer,"isc",[two,three,four]);
-	q.sendMsg('/shared', two,three,four);
+	[two,three,four].postln;
+
+
+	/////////// UNCOMMENT HERE //////////////////////////
+
+	// q.sendToName(\kof,"isc",[two,three,four]);
+	q.sendToName(\alex,"isc",[two,three,four]);
+	q.sendToName(\joach,"isc",[two,three,four]);
+
+	//q.sendMsg('/shared', two,three,four);
 };
 );
 
 d.onClose = { x.stop };
 
 )
-
-
-q.sendToAll(\test,"a");
