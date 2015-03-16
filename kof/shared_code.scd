@@ -21,9 +21,10 @@ d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
 // sending
 
-d.textChangedAction = {|one,two,three,four,five|
+d.textChangedAction = {arg ...args;
+	args.postln;
 	// [one,two,three,four,five].postln;
-	c.sendToEach(\shared,name,two,four);
+	c.sendToEach(\shared,name,args[args.size-1],args[args.size-3]);
 };
 
 History.forwardFunc = { |code|
@@ -36,7 +37,7 @@ History.forwardFunc = { |code|
 x.addResponder(\shared, { |r,t,msg|
 	("recieved: "++msg).postln;
 	if((msg[msg.size-3].asString).contains(name.asString)==false){
-		("if passed"+msg[1]+msg[2]).postln;
+		("if passed"+msg[msg.size-3]).postln;
 		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
 	}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
 });
