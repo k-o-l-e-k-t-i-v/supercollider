@@ -1,3 +1,3 @@
-a = LiveKolektiv(\joach2);
+a = LiveKolektiv(\joach);
 a.printYou;
 a.printListeners;
