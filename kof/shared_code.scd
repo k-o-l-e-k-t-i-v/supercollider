@@ -24,7 +24,7 @@ d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 d.textChangedAction = {arg ...args;
 	args.postln;
 	// [one,two,three,four,five].postln;
-	c.sendToEach(\shared,name,args[args.size-1],args[args.size-3]);
+	c.sendToEach(\shared,name,args[args.size-3],args[args.size-1]);
 };
 
 History.forwardFunc = { |code|
