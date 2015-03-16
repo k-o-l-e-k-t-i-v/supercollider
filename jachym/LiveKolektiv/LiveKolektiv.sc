@@ -1,7 +1,7 @@
 LiveKolektiv {
 	classvar all_Names, all_IP;
 	var userName;
-	var c, x, d, o;
+	var c, x, d;
 
 	*new{ |name|
 		^super.new.init(name);
