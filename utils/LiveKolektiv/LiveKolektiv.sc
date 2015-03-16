@@ -24,8 +24,11 @@ LiveKolektiv {
 		// c.makeWin;
 		// c.autoCollect;
 
-		c = Collective().start;
-		c.myName_(\kof);
+		c = Collective(name,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
+		//c.autoCollect;
+		c.makeWin;
+
+		// c.myName_(\kof);
 
 		x = Participation(c).start;
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
@@ -40,15 +43,15 @@ LiveKolektiv {
 		var string, position;
 		d.textChangedAction = {arg ...args;
 			// args.postcs;
-			string = args[args.size-1];
-			position = args[args.size-3];
+			string = args.size-1;
+			position = args.size-3;
 
 			"\n".postln;/*
 			this.listenerNames.do{|name|
 				("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
 				c.sendToName(name,[0,string,position]);
 			};*/
-			c.sendToEach(\shared,c.myName,string,position);
+			c.sendToEach(\shared,args[string],args[position]);
 		};
 
 		History.forwardFunc = { |code|
