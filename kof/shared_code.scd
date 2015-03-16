@@ -44,7 +44,7 @@ x.addResponder(\exec, { |r,t,msg|
 	("exec:"+code).postln;
 	if((msg[0]++"").contains(name.asString)==false){
 		code.interpret;
-		History.enter(code,name.asString);
+		History.enter(code,msg[0]);
 	}
 });
 
