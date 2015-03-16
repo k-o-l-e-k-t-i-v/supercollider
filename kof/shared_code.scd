@@ -48,6 +48,6 @@ x.addResponder(\exec, { |r,t,msg|
 	}
 });
 
-d.onClose = { x.stop };
+d.onClose = { x.stop; History.end; };
 
 )
