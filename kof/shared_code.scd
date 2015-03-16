@@ -45,7 +45,7 @@ x.addResponder(\shared, { |r,t,msg|
 	}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
 });
 
-
+/*
 x.addResponder(\exec, { |r,t,msg|
 	var code = msg[msg.size-1];
 	("exec:"+code).postln;
@@ -58,6 +58,7 @@ x.addResponder(\exec, { |r,t,msg|
 
 History.clear;
 History.start;
+*/
 
 d.onClose = { x.stop; History.end; };
 
