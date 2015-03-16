@@ -14,7 +14,7 @@ if(d!==nil){
 History.clear;
 History.start;
 
-c = Collective(name,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252",\joach2,"25.54.28.51",\kof,"25.164.28.14"]).start;
+c = Collective(name,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
 
 c.autoCollect;
 
@@ -24,7 +24,8 @@ d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 // sending
 
 d.textChangedAction = {|one,two,three,four,five|
-	c.sendToEach(\shared,one,three,four);
+	[one,two,three,four,five].postln;
+	c.sendToEach(\shared,name,two,four);
 };
 
 History.forwardFunc = { |code|
@@ -35,11 +36,15 @@ History.forwardFunc = { |code|
 //receiving
 
 x.addResponder(\shared, { |r,t,msg|
-	("ok, recieved msg: "++msg).postln;
-	if((msg[0]++"").contains(name.asString)==false){
+("msg[0] : " ++ msg[0].asString).postln;
+("msg[1] : " ++ msg[1].asString).postln;                       ("msg[2] : " ++ msg[2].asString).postln;
+("msg[3] : " ++ msg[3].asString).postln;
+	if((msg[msg.size-3].asString).contains(name.asString)==false){
+
+
 		"if passed ".postln;
-		d.insertText(msg[3]+"",msg[2].asInt);
-	}{("ok, filtering out your own sends: "++name).postln;};
+		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt);
+	}{("ok, filtering out your own sends: "++msg[0]).postln;};
 });
 
 /*
