@@ -21,10 +21,10 @@ LiveKolektiv {
 		collectiveArray = collectiveArray.asArray;
 		("collectiveArray || " ++ collectiveArray).postln;
 
-		c = Collective(userName,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
+		c = Collective();//userName,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
 		// c = Collective(userName,\livecoding,[collectiveArray]).start;
 		// c.makeWin;
-		c.autoCollect;
+		//c.autoCollect;
 
 		x = Participation(c).start;
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
@@ -43,11 +43,12 @@ LiveKolektiv {
 			position = args[1];
 
 			"\n".postln;
-			this.listenerNames.do{|name|
+			/*this.listenerNames.do{|name|
 				("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
-				c.sendToName(name,[string,position]);
+				c.sendToName(name,[0,string,position]);
 			};
-			// c.sendToEach(\shared,userName,args[args.size-3],args[args.size-1]);
+			*/
+			c.sendToEach('/shared',c.myName,args[args.size-3],args[args.size-1]);
 		};
 
 		History.forwardFunc = { |code|
@@ -58,7 +59,7 @@ LiveKolektiv {
 	initReceiveMsg{
 
 		//receiving
-		x.addResponder(\shared, { |r,t,msg|
+		x.addResponder('/shared', { |r,t,msg|
 			("recieved: "++msg).postln;
 			/*
 			if((msg[msg.size-3].asString).contains(name.asString)==false){
