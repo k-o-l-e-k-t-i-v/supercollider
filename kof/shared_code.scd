@@ -14,7 +14,7 @@ if(d!==nil){
 History.clear;
 History.start;
 
-c = Collective(name,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252",\kof,"25.164.28.14"]).start;
+c = Collective(name,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252",\joach2,"25.54.28.51",\kof,"25.164.28.14"]).start;
 
 x = Participation(c).start;
 d = Document.new("livecoding.scd","//welcome to shared session\n\n");
@@ -36,7 +36,7 @@ x.addResponder(\shared, { |r,t,msg|
 	("ok, recieved msg: "++msg).postln;
 	if((msg[0]++"").contains(name.asString)==false){
 		d.insertText(msg[3]+"",msg[1].asInt);
-	}{("filtering out your name: "++name).postln;};
+	}{("ok, filtering out your own sends: "++name).postln;};
 });
 
 x.addResponder(\exec, { |r,t,msg|
