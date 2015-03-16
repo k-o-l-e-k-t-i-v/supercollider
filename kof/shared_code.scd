@@ -22,7 +22,7 @@ d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 // sending
 
 d.textChangedAction = {|one,two,three,four,five|
-	[one,two,three,four,five].postln;
+	// [one,two,three,four,five].postln;
 	c.sendToEach(\shared,name,two,four);
 };
 
@@ -34,14 +34,10 @@ History.forwardFunc = { |code|
 //receiving
 
 x.addResponder(\shared, { |r,t,msg|
-	("msg[0] : " ++ msg[0].asString).postln;
-	("msg[1] : " ++ msg[1].asString).postln;                       ("msg[2] : " ++ msg[2].asString).postln;
-	("msg[3] : " ++ msg[3].asString).postln;
+	("recieved: "++msg).postln;
 	if((msg[msg.size-3].asString).contains(name.asString)==false){
-
-
-		"if passed ".postln;
-		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt);
+		("if passed"+msg[1]+msg[2]).postln;
+		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
 	}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
 });
 
