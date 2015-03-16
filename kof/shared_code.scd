@@ -45,7 +45,8 @@ History.forwardFunc = { |code|
 
 x.addResponder(\shared, { |r,t,msg|
 	("recieved: "++msg).postln;
-	if((msg[msg.size-3].asString).contains(name.asString)==false){
+	// tahle podminka nefungovala; string.contains -> joach.contains(joach2) = TRUE ---> chyba
+	if(msg[msg.size-3].asString != name.asString){
 		("if passed"+msg[msg.size-3]).postln;
 		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
 	}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
