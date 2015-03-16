@@ -23,12 +23,13 @@ LiveKolektiv {
 
 		c = Collective(userName,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
 		// c = Collective(userName,\livecoding,[collectiveArray]).start;
+		// c.makeWin;
 		c.autoCollect;
 
 		x = Participation(c).start;
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
-		// d.onClose = { x.stop; History.end; };
+		d.onClose = { x.stop; History.end; };
 
 		this.initSendMsg;
 		this.initReceiveMsg;
@@ -69,12 +70,12 @@ LiveKolektiv {
 
 		/*
 		x.addResponder(\exec, { |r,t,msg|
-			var code = msg[msg.size-1];
-			("exec:"+code).postln;
-			if((msg[0]++"").contains(name.asString)==false){
-				code.interpret;
-				History.enter(code,msg[0]);
-			}
+		var code = msg[msg.size-1];
+		("exec:"+code).postln;
+		if((msg[0]++"").contains(name.asString)==false){
+		code.interpret;
+		History.enter(code,msg[0]);
+		}
 		});
 		*/
 	}
@@ -85,7 +86,7 @@ LiveKolektiv {
 		all_IP.add(ip);
 
 		all_Names.size.do{|i|
-			answ.add(all_Names[i].asString);
+			answ.add(all_Names[i]);
 			answ.add(all_IP[i].asString);
 		};
 		^answ;
