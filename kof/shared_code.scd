@@ -31,8 +31,9 @@ d.textChangedAction = {arg ...args;
 d.keyDownAction = {arg ...args;
 	("key down + "++args).postln;
 	// [one,two,three,four,five].postln;
-	if(args[args.size-3]!==65533)
+	if(args[args.size-3].asInt!==65533){
 	c.sendToEach(\shared,name,args[args.size-5],args[args.size-1]);
+	}
 };
 
 History.forwardFunc = { |code|
