@@ -11,8 +11,6 @@ if(d!==nil){
 	d.close;
 };
 
-History.clear;
-History.start;
 
 c = Collective(name,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
 
@@ -36,27 +34,31 @@ History.forwardFunc = { |code|
 //receiving
 
 x.addResponder(\shared, { |r,t,msg|
-("msg[0] : " ++ msg[0].asString).postln;
-("msg[1] : " ++ msg[1].asString).postln;                       ("msg[2] : " ++ msg[2].asString).postln;
-("msg[3] : " ++ msg[3].asString).postln;
+	("msg[0] : " ++ msg[0].asString).postln;
+	("msg[1] : " ++ msg[1].asString).postln;                       ("msg[2] : " ++ msg[2].asString).postln;
+	("msg[3] : " ++ msg[3].asString).postln;
 	if((msg[msg.size-3].asString).contains(name.asString)==false){
 
 
 		"if passed ".postln;
 		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt);
-	}{("ok, filtering out your own sends: "++msg[0]).postln;};
+	}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
 });
 
-/*
+
 x.addResponder(\exec, { |r,t,msg|
-var code = msg[msg.size-1];
-("exec:"+code).postln;
-if((msg[0]++"").contains(name.asString)==false){
-code.interpret;
-History.enter(code,msg[0]);
-}
+	var code = msg[msg.size-1];
+	("exec:"+code).postln;
+	if((msg[0]++"").contains(name.asString)==false){
+		code.interpret;
+		History.enter(code,msg[0]);
+	}
 });
-*/
+
+
+History.clear;
+History.start;
+
 d.onClose = { x.stop; History.end; };
 
 )
