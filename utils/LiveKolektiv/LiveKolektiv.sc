@@ -1,7 +1,7 @@
 LiveKolektiv {
 	classvar all_Names, all_IP;
 	var userName;
-	var c, x, d;
+	var a, n;
 
 	*new{ |name|
 		^super.new.init(name);
@@ -21,18 +21,18 @@ LiveKolektiv {
 		collectiveArray = collectiveArray.asArray;
 		("collectiveArray || " ++ collectiveArray).postln;
 
-		// c.makeWin;
-		// c.autoCollect;
+		a = OSCresponder(
+			nil , // Listen to all IP addresses
+			'/message_we_listen_for',
+			{ "This function will be executed when a message is recived!".postln }
+		);
+		a.add;
+		this.listenerIP.do{|ip|
+			n = NetAddr(ip, 57120);
+			n.sendMsg('/message_we_listen_for');
+		};
 
-		c = Collective(name,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
-		//c.autoCollect;
-		c.makeWin;
-
-		// c.myName_(\kof);
-
-		x = Participation(c).start;
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
-
 		d.onClose = { x.stop; History.end; };
 
 		this.initSendMsg;
@@ -42,35 +42,34 @@ LiveKolektiv {
 	initSendMsg{
 		var string, position;
 		d.textChangedAction = {arg ...args;
-			// args.postcs;
-			string = args.size-1;
-			position = args.size-3;
+			"\n".postln;
+			args.postcs;
+			string = args[3];
+			position = args[1];
 
-			"\n".postln;/*
 			this.listenerNames.do{|name|
 				("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
-				c.sendToName(name,[0,string,position]);
-			};*/
-			c.sendToEach(\shared,args[string],args[position]);
+			};
 		};
 
 		History.forwardFunc = { |code|
-			c.sendToEach(\exec,userName,code);
 		};
 	}
 
 	initReceiveMsg{
 
 		//receiving
-		x.addResponder(\shared, { |r,t,msg|
-			("recieved: "++msg).postln;
-			/*
-			if((msg[msg.size-3].asString).contains(name.asString)==false){
-			("if passed"+msg[msg.size-3]).postln;
-			d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
-			}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
-			*/
-		});
+		// x.addResponder(\shared, { |r,t,msg|
+
+		// x.addResponder(\livecoding, { |r,t,msg|
+		// ("recieved: "++msg).postln;
+		/*
+		if((msg[msg.size-3].asString).contains(name.asString)==false){
+		("if passed"+msg[msg.size-3]).postln;
+		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
+		}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
+		*/
+		// });
 
 		/*
 		x.addResponder(\exec, { |r,t,msg|
