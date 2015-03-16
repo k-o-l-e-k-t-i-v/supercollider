@@ -1,7 +1,7 @@
 LiveKolektiv {
 	classvar all_Names, all_IP;
 	var userName;
-	var a, n;
+	var a, n, d;
 
 	*new{ |name|
 		^super.new.init(name);
@@ -21,19 +21,10 @@ LiveKolektiv {
 		collectiveArray = collectiveArray.asArray;
 		("collectiveArray || " ++ collectiveArray).postln;
 
-		a = OSCresponder(
-			nil , // Listen to all IP addresses
-			'/message_we_listen_for',
-			{ "This function will be executed when a message is recived!".postln }
-		);
-		a.add;
-		this.listenerIP.do{|ip|
-			n = NetAddr(ip, 57120);
-			n.sendMsg('/message_we_listen_for');
-		};
+
 
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
-		d.onClose = { x.stop; History.end; };
+		d.onClose = { History.end; };
 
 		this.initSendMsg;
 		this.initReceiveMsg;
@@ -47,6 +38,12 @@ LiveKolektiv {
 			string = args[3];
 			position = args[1];
 
+
+			this.listenerIP.do{|ip|
+				n = NetAddr(ip, 57120);
+				n.sendMsg('/livecode',userName,string,position);
+			};
+
 			this.listenerNames.do{|name|
 				("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
 			};
@@ -57,6 +54,28 @@ LiveKolektiv {
 	}
 
 	initReceiveMsg{
+
+
+		a = OSCresponder(
+			nil , // Listen to all IP addresses
+			'/livecode',
+			{arg ...args;
+				var timestamp = args[0].asFloat;
+				var msg = args[2];
+				var sender = msg[1].asString;
+				var char = msg[2].asString;
+				var index = msg[3].asInt;
+
+				("Received message form"+sender+"char:"+char+"index:"+index).postln;
+
+				if(sender!=userName){
+					d.insertText(char,index);
+				};
+
+			}
+		);
+		a.add;
+
 
 		//receiving
 		// x.addResponder(\shared, { |r,t,msg|
