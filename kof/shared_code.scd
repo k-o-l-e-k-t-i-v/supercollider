@@ -20,11 +20,19 @@ x = Participation(c).start;
 d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
 // sending
-
+/*
 d.textChangedAction = {arg ...args;
 	args.postln;
 	// [one,two,three,four,five].postln;
 	c.sendToEach(\shared,name,args[args.size-3],args[args.size-1]);
+};
+*/
+
+d.keyDownAction = {arg ...args;
+	("key down + "++args).postln;
+	// [one,two,three,four,five].postln;
+	if(args[args.size-3]!==65533)
+	c.sendToEach(\shared,name,args[args.size-5],args[args.size-1]);
 };
 
 History.forwardFunc = { |code|
