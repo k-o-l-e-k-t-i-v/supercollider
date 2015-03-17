@@ -30,7 +30,8 @@ LiveKolektiv {
 
 	initSendMsg{
 		var string, position;
-		flag_isMyChange = false; //flag --> default false
+		
+                flag_isMyChange = false; //flag --> default false
 
 		d.keyDownAction = {arg ...args;
 			args.postln;
