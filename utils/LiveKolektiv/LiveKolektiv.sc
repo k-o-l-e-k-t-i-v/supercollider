@@ -28,9 +28,25 @@ LiveKolektiv {
 		this.initReceiveMsg;
 	}
 
+	getLineNumber{
+		var breaks,numLines;
+
+		breaks = d.rangeText(0,d.selectionStart).findAll("\n");
+		numLines = breaks.size + 1;
+		^numLines;
+
+	}
+
+	getLineBeginning{
+		var lastBrake = d.rangeText(0,d.selectionStart).findBackwards("\n");
+
+		^lastBrake;
+
+	}
+
 	initSendMsg{
-		var string, position;
-		
+		var string, start,end,currentLineNumnber;
+
                 flag_isMyChange = false; //flag --> default false
 
 		d.keyDownAction = {arg ...args;
@@ -41,21 +57,38 @@ LiveKolektiv {
 		};
 
 		d.textChangedAction = {arg ...args;
+
+			var flag_isMyChange = false;
+
+			var currLnText = d.currentLine.asString;
+			var currLnNum = this.getLineNumber;
+			var currLineBeginning = this.getLineBeginning;
+			var carretPos = d.selectionStart;
+			var currentLineNumber;
+
+
+			[currLnText,currLnNum,currLineBeginning,carretPos].postln;
+
+
 			("\nFlag_isMyChange || " ++ flag_isMyChange).postln;
 			if(flag_isMyChange){    //gate, if is it yours chanche of document than send to other listeners
 				flag_isMyChange = false; // flag back to default until you again press key || flag --> false
 
 				args.postcs;
-				string = args[3];
-				position = args[1];
+				string = currLnText;
+				start = currLineBeginning;
+				end = carretPos;
+				currentLineNumber = currLnNum;
+
 
 				this.listenerIP.do{|ip|
 					n = NetAddr(ip, 57120);
-					n.sendMsg('/livecode',userName,string,position);
+					// string, zacatek index, konec index, linenumber
+					n.sendMsg('/livecode',userName,string,start,end,currentLineNumber);
 				};
 
 				this.listenerNames.do{|name|
-					("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
+					("SendMsg to" + name + "||" + string + "||" + start + "||"+ end +"||"+currentLineNumber).postln;
 				};
 			}
 		};
@@ -71,16 +104,19 @@ LiveKolektiv {
 			nil , // Listen to all IP addresses
 			'/livecode',
 			{arg ...args;
+				var flag_isMyChange = false;
 				var timestamp = args[0].asFloat;
 				var msg = args[2];
-				var sender = msg[1].asString;
-				var char = msg[2].asString;
-				var index = msg[3].asInt;
+				var sender = msg[0].asString;
+				var txt = msg[1].asString;
+				var start = msg[2].asInt;
+				var end = msg[3].asInt;
+				var lnNum = msg[4].asInt;
 
 				args.postln;
-				("Received message form"+sender+"char:"+char+"index:"+index).postln;
+				("Received message form"+txt+"start:"+start+"end:"+end+"line number:"+lnNum).postln;
 
-				d.insertText(char,index);
+				d.prSetText(txt,\replace,start,end);
 			}
 		);
 		a.add;
