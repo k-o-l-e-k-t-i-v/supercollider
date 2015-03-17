@@ -14,14 +14,13 @@ LiveKolektiv {
 		all_Names = List.new();
 		all_IP = List.new();
 
-		collectiveArray = this.addPlayer(\joach2,"25.54.28.51");
-		collectiveArray = this.addPlayer(\joach,"25.0.209.252");
-		collectiveArray = this.addPlayer(\alex,"25.164.56.183");
-		collectiveArray = this.addPlayer(\kof,"25.164.28.14");
-		collectiveArray = collectiveArray.asArray;
-		("collectiveArray || " ++ collectiveArray).postln;
+		this.addPlayer(\joach2,"25.54.28.51");
+		this.addPlayer(\joach,"25.0.209.252");
+		this.addPlayer(\alex,"25.164.56.183");
+		this.addPlayer(\kof,"25.164.28.14");
 
-		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
+		// d = Document.new("livecoding.scd","//welcome to shared session");
+		d = Document.new("livecoding.scd");
 		d.onClose = { History.end; };
 
 		this.initSendMsg;
@@ -37,20 +36,16 @@ LiveKolektiv {
 			if(args[3].asInt<10000){
 				flag_isMyChange = true;	//watcher, if is it yours chanche of document || flag --> true
 			}
-
 		};
-
 
 		d.textChangedAction = {arg ...args;
 			("\nFlag_isMyChange || " ++ flag_isMyChange).postln;
 			if(flag_isMyChange){    //gate, if is it yours chanche of document than send to other listeners
 				flag_isMyChange = false; // flag back to default until you again press key || flag --> false
 
-
 				args.postcs;
 				string = args[3];
 				position = args[1];
-
 
 				this.listenerIP.do{|ip|
 					n = NetAddr(ip, 57120);
@@ -68,7 +63,7 @@ LiveKolektiv {
 	}
 
 	initReceiveMsg{
-
+		flag_isMyChange = false;
 
 		a = OSCresponder(
 			nil , // Listen to all IP addresses
@@ -83,12 +78,6 @@ LiveKolektiv {
 				args.postln;
 				("Received message form"+sender+"char:"+char+"index:"+index).postln;
 
-				// im not sure about this
-				/*
-				if(sender!=userName && index!=d.selectionStart){
-				d.insertText(char,index);
-				};
-				*/
 				d.insertText(char,index);
 			}
 		);
