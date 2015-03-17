@@ -7,7 +7,6 @@ LiveKolektiv {
 		^super.new.init(name);
 	}
 
-
 	init{|name|
 		var collectiveArray;
 		userName = name;
@@ -22,9 +21,6 @@ LiveKolektiv {
 		collectiveArray = collectiveArray.asArray;
 		("collectiveArray || " ++ collectiveArray).postln;
 
-
-
-
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 		d.onClose = { History.end; };
 
@@ -34,22 +30,32 @@ LiveKolektiv {
 
 	initSendMsg{
 		var string, position;
+		var flag_isMyChange = false; //flag --> default false
+
+		d.keyDownAction = {
+			flag_isMyChange = true;	//watcher, if is it yours chanche of document || flag --> true
+		};
+
 		d.textChangedAction = {arg ...args;
-			"\n".postln;
-			args.postcs;
-			string = args[3];
-			position = args[1];
+			("\nFlag_isMyChange || " ++ flag_isMyChange).postln;
+			if(flag_isMyChange){    //gate, if is it yours chanche of document than send to other listeners
+				flag_isMyChange = false; // flag back to default until you again press key || flag --> false
 
 
-			this.listenerIP.do{|ip|
-				n = NetAddr(ip, 57120);
-				n.sendMsg('/livecode',userName,string,position);
-			};
+				args.postcs;
+				string = args[3];
+				position = args[1];
 
-			this.listenerNames.do{|name|
-				("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
-			};
 
+				this.listenerIP.do{|ip|
+					n = NetAddr(ip, 57120);
+					n.sendMsg('/livecode',userName,string,position);
+				};
+
+				this.listenerNames.do{|name|
+					("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
+				};
+			}
 		};
 
 		History.forwardFunc = { |code|
@@ -72,38 +78,16 @@ LiveKolektiv {
 				args.postln;
 				("Received message form"+sender+"char:"+char+"index:"+index).postln;
 
+				// im not sure about this
+				/*
 				if(sender!=userName && index!=d.selectionStart){
-					d.insertText(char,index);
+				d.insertText(char,index);
 				};
-
+				*/
+				d.insertText(char,index);
 			}
 		);
 		a.add;
-
-
-		//receiving
-		// x.addResponder(\shared, { |r,t,msg|
-
-		// x.addResponder(\livecoding, { |r,t,msg|
-		// ("recieved: "++msg).postln;
-		/*
-		if((msg[msg.size-3].asString).contains(name.asString)==false){
-		("if passed"+msg[msg.size-3]).postln;
-		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
-		}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
-		*/
-		// });
-
-		/*
-		x.addResponder(\exec, { |r,t,msg|
-		var code = msg[msg.size-1];
-		("exec:"+code).postln;
-		if((msg[0]++"").contains(name.asString)==false){
-		code.interpret;
-		History.enter(code,msg[0]);
-		}
-		});
-		*/
 	}
 
 	addPlayer{|name, ip|

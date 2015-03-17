@@ -1,4 +1,4 @@
-a = LiveKolektiv(\joach);
+a = LiveKolektiv(\joach2);
 a = LiveKolektiv(\kof);
 
 a.printYou;
