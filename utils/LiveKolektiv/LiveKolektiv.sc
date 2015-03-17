@@ -7,6 +7,10 @@ LiveKolektiv {
 		^super.new.init(name);
 	}
 
+	id{
+		^d.hash;
+	}
+
 	init{|name|
 		var collectiveArray;
 		userName = name;
@@ -23,6 +27,7 @@ LiveKolektiv {
 
 
 
+
 		d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 		d.onClose = { History.end; };
 
@@ -35,8 +40,8 @@ LiveKolektiv {
 		d.textChangedAction = {arg ...args;
 			"\n".postln;
 			args.postcs;
-			string = args[3];
-			position = args[1];
+			string = args[1];
+			position = args[3];
 
 
 			this.listenerIP.do{|ip|
@@ -47,6 +52,7 @@ LiveKolektiv {
 			this.listenerNames.do{|name|
 				("SendMsg to " ++ name ++ " || " ++ string ++ " || " ++ position).postln;
 			};
+
 		};
 
 		History.forwardFunc = { |code|
@@ -66,6 +72,7 @@ LiveKolektiv {
 				var char = msg[2].asString;
 				var index = msg[3].asInt;
 
+				args.postln;
 				("Received message form"+sender+"char:"+char+"index:"+index).postln;
 
 				if(sender!=userName){
