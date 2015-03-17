@@ -7,9 +7,6 @@ LiveKolektiv {
 		^super.new.init(name);
 	}
 
-	id{
-		^d.hash;
-	}
 
 	init{|name|
 		var collectiveArray;
@@ -40,8 +37,8 @@ LiveKolektiv {
 		d.textChangedAction = {arg ...args;
 			"\n".postln;
 			args.postcs;
-			string = args[1];
-			position = args[3];
+			string = args[3];
+			position = args[1];
 
 
 			this.listenerIP.do{|ip|
