@@ -2,6 +2,7 @@ LiveKolektiv {
 	classvar all_Names, all_IP;
 	var userName;
 	var a, n, d;
+	var flag_isMyChange;
 
 	*new{ |name|
 		^super.new.init(name);
@@ -29,7 +30,7 @@ LiveKolektiv {
 
 	initSendMsg{
 		var string, position;
-		var flag_isMyChange = false; //flag --> default false
+		flag_isMyChange = false; //flag --> default false
 
 		d.keyDownAction = {arg ...args;
 			args.postln;
