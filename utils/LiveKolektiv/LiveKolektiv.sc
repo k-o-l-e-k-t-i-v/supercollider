@@ -72,7 +72,7 @@ LiveKolektiv {
 				args.postln;
 				("Received message form"+sender+"char:"+char+"index:"+index).postln;
 
-				if(sender!=userName){
+				if(sender!=userName && index!=d.selectionStart){
 					d.insertText(char,index);
 				};
 
