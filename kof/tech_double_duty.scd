@@ -20,7 +20,7 @@
   ~a={
     var sig = [
       SinOsc.ar(43.2*(1.06**(1..12))),
-      VarSaw.ar(4320*~mod*(1.02**(1..8))),
+      VarSaw.ar(4320*~mod*(1.02**(1..8)),mul:0.12),
       HPF.ar(WhiteNoise.ar(0.1!2),TRand.ar(8000,16000,Impulse.ar(1/4))),
       SinOsc.ar(43.2*(1.25**(1..8))) * LFTri.ar(1/4/fib(8)).exprange(0.0001,1.0),
     ];
@@ -29,6 +29,7 @@
     Splay.ar(sig,0.1);
   };
 
-  ~a[50]=\filter->{|in|BBandPass.ar(in,LFTri.ar(1/16*([1,1.01]),{Rand(0,2pi)}!4).exprange(1600.01,22))*0.5+(in*0.5)};
-  ~a[52]=\filter->{|in|CompanderD.ar(in,0.95,1,1/10)};
+  ~a[50]=\filter->{|in|BBandPass.ar(in,LFTri.ar(1/16*([1,1.01]),{Rand(0,2pi)}!4).exprange(1600.01,22))*0.25+(in*0.75)};
+  ~a[52]=\filter->{|in|CompanderD.ar(in,0.9,1,1/10)};
+  ~a[54]=\filter->{|in|FreeVerb.ar(in,0.1,100)};
 )
