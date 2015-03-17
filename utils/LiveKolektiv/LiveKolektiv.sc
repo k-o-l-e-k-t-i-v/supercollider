@@ -32,9 +32,14 @@ LiveKolektiv {
 		var string, position;
 		var flag_isMyChange = false; //flag --> default false
 
-		d.keyDownAction = {
-			flag_isMyChange = true;	//watcher, if is it yours chanche of document || flag --> true
+		d.keyDownAction = {arg ...args;
+			args.postln;
+			if(args[3].asInt<10000){
+				flag_isMyChange = true;	//watcher, if is it yours chanche of document || flag --> true
+			}
+
 		};
+
 
 		d.textChangedAction = {arg ...args;
 			("\nFlag_isMyChange || " ++ flag_isMyChange).postln;
