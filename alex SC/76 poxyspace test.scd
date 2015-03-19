@@ -1,11 +1,14 @@
+(
 p=ProxySpace.push(s);
 s.plotTree;
+s.scope(4);
+)
 
-~y.play;
-
+(
+~y.play(0,2);
 ~y.fadeTime=2;
-
 ~y.quant=2;
+)
 
 (
 ~y[0]= {
@@ -20,18 +23,16 @@ s.plotTree;
 
 };
 )
+//"the message xset is a variant of set, to crossfade the change using the current fadeTime"
 
-~y[10]= \xset -> Pbind(\amp,5,\t_trig,1, \freq, 45, \dur, 1, \legato, 0.8).trace;
-~y[30]= \filter -> {arg in; GVerb.ar(in,roomsize:100,revtime:1)};
-
-
-
-o=MyNewTest();
-o.playSin;
-o.currentFreq;
-o.octave(7);
+~y[10]= \xset -> Pbind(\amp,4,\t_trig,1, \freq, 65, \dur, 1, \legato, 0.8).trace;
+~y[30]= \filter -> {arg in; GVerb.ar(in,roomsize:100,revtime:2)};
+~y[30]=nil;
+~y[40]= \filter -> {arg in; FreeVerb.ar(in,mix:0.3,room:3)};
+~y[40]=nil;
 
 
-s.scope(4);
+~y.end; // "free the synths and the group, stop playback"
 
 currentEnvironment.free;
+p.clear(2);
