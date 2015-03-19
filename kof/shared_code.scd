@@ -1,75 +1,46 @@
 (
 
-//// your name here ///////////
-var name = \peer;   // \alex
-///////////////////////////////
+/////////// UNCOMMENT HERE //////////////////////////
 
-c=nil;
-x=nil;
-
-if(d!==nil){
-	d.close;
-};
+c = Collective(\kof,\livecoding,[\alex,"25.164.56.183",\joach,"25.0.209.252"]).start;
+//c = Collective(\alex,\livecoding,[\kof,"25.164.28.14",\joach,"25.0.209.252"]).start;
+//c = Collective(\joach,\livecoding,[\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
 
 
-c = Collective();//name,\livecoding,[\joach2,"25.54.28.51",\joach,"25.0.209.252",\alex,"25.164.56.183",\kof,"25.164.28.14"]).start;
 
-c.autoCollect;
-
+// d.close;
 x = Participation(c).start;
 d = Document.new("livecoding.scd","//welcome to shared session\n\n");
 
-// sending
+x.addResponder('/shared', { |r,t,msg|
+	msg.postln;
+	// if(msg[0]!=="kof"){
+	d.insertText(msg[3]+"",msg[1].asInt);
+// };
 
-d.textChangedAction = {arg ...args;
-	args.postln;
-	// [one,two,three,four,five].postln;
-	c.sendToEach(\shared,name,args[args.size-3],args[args.size-1]);
-};
-
-
-/*
-d.keyDownAction = {arg ...args;
-	("key down + "++args).postln;
-	// [one,two,three,four,five].postln;
-	if(args[args.size-3].asInt!==65533){
-	c.sendToEach(\shared,args[args.size-5],args[args.size-1]);
-	}
-};
-*/
-
-History.forwardFunc = { |code|
-	c.sendToEach(\exec,c.myName,code);
-};
-
-
-//receiving
-
-x.addResponder(\shared, { |r,t,msg|
-	("recieved: "++msg).postln;
-	//if((msg[msg.size-3].asString).contains(c.myName.asString)==false){
-	// tahle podminka nefungovala; string.contains -> joach.contains(joach2) = TRUE ---> chyba
-	if(msg[msg.size-3].asString != name.asString){
-		("if passed"+msg[msg.size-3]).postln;
-		d.insertText(msg[msg.size-1].asString,msg[msg.size-2].asInt+1);
-	}{("ok, filtering out your own sends: "++msg[msg.size-3]).postln;};
 });
 
-/*
-x.addResponder(\exec, { |r,t,msg|
-	var code = msg[msg.size-1];
-	("exec:"+code).postln;
-	if((msg[0]++"").contains(name.asString)==false){
-		code.interpret;
-		History.enter(code,msg[0]);
-	}
-});
-
-*/
-History.clear;
-History.start;
 
 
-d.onClose = { x.stop; History.end; };
+(
+d.textChangedAction = {|one,two,three,four,five|
+	// [two,three,four].postln;
+
+
+	/////////// UNCOMMENT HERE //////////////////////////
+
+	c.sendToEach(\shared,two,three,four);
+	// c.sendToName(\kof,"isc",\shared,two,three,four);
+	// c.sendToName(\alex,"isc",two,three,four);
+	// c.sendToName(\joach,"isc",two,three,four);
+
+};
+);
+
+d.onClose = { x.stop };
 
 )
+
+
+
+c.sendToName(\kof,"aisc",[\shared,1,"a",'a']);
