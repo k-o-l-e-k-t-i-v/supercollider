@@ -25,7 +25,7 @@ UserKolektiv{
 
 	logIn{
 		doc = Document.new("LiveKolektiv session","");
-		ideDoc = ScIDEDocument.findByQUuid(doc.quuid);
+		ideDoc = Document.findByQUuid(doc.quuid);
 	}
 
 	name { ^userName; }
