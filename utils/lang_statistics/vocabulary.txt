@@ -5,9 +5,10 @@ Pulse
 Impulse
 Noise
 WhiteNoise
+BrownNoise
+GrayNoise
 Ndef
 SynthDef
-Pdef
 Tdef
 Pbind
 Ppar
@@ -26,7 +27,9 @@ Comb
 Compander
 midicps
 var
+arg
 pi
 kr
 range
 rand
+clip
