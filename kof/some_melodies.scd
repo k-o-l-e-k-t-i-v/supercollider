@@ -16,12 +16,14 @@
 ~z={
 	var sig,freq,amp,gens;
 
-	sig = SinOsc.ar(~sq.kr/[2,1,4],mul:0.4/[3,2,1]);
+	sig = SinOsc.ar(~sq.kr/[1/1.5,2,1],mul:0.4/[5,2,1]);
+	sig = sig * SinOsc.ar(1/4/[1,2,4]).range(0,1);
 	sig = BBandPass.ar(sig,SinOsc.ar(1/4/[1,2,3,4]).range(4440,22)) + (sig/2);
 	sig = Limiter.ar(sig,0.9);
-	sig = CompanderD.ar(sig,0.75,1,1/10);
-	sig = CombN.ar(sig,1/2,1/2,1);
-	sig = FreeVerb.ar(sig,0.133,1);
+	sig = CompanderD.ar(sig,0.75,1,1/10) * 2;
+	sig = Vibrato.ar(sig,[4,5,6,7],0.2);
+	sig = CombN.ar(sig,1/2,1/2,2);
+	sig = FreeVerb.ar(sig,0.09,1);
 	Splay.ar(sig,0);
 };
 )
