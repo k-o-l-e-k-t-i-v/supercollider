@@ -1,7 +1,5 @@
 (
 
-
-
 Ndef(\2, {
 
 	var s1, s2, s3, e, f, f2, b, d;
@@ -23,7 +21,7 @@ Ndef(\2, {
 	s2=BPF.ar(Clip.ar(s2,-0.5,0.5),freq:SinOsc.kr(b/10).range(200,440),
 		rq:SinOsc.kr(b/20).range(0.1,0.001));
 	s2=FreeVerb.ar(s2,SinOsc.kr(b/10).range(0.1,0.7),room:3,add:s2);
-	s2=s2*SinOsc.kr(b/60).range(0,0.5);
+	s2=s2*SinOsc.kr(b/30).range(0,0.5);
 
 
 	//s3
@@ -31,10 +29,10 @@ Ndef(\2, {
 	s3=s3*Decay2.ar(Impulse.ar([b/16,b/32]),decayTime:0.05);
 	s3=CombN.ar(s3,maxdelaytime:0.2,delaytime:0.2,decaytime:d);
 	s3=FreeVerb.ar(s3,room:1,add:s3);
-	s3=s3*SinOsc.kr(b/80).range(0,0.4);
+	s3=s3*SinOsc.kr(b/50).range(0,0.4);
 
 
-	Mix.new([s1*0.2,s2*0.7,s3*0.4]);
+	Mix.new([s1*0.2,s2*0.5,s3*0.4]);
 
 }).play;
 
@@ -46,8 +44,8 @@ Ndef(\6, {
 
 	b=4;
 	f=Duty.kr(b,0, Dseq([
-		Dseq([[60,64,67],[48,52,55],[72,76,79],[64,74,69],[59,62,67]].midicps,3),
-		Dseq([[48,52,55],[64,74,69],[72,76,79],[59,62,67],[59,62,67]].midicps,2),
+		Dseq([[59,62,67],[48,52,55],[72,76,79],[64,74,69],[59,62,67]].midicps,3),
+		Dseq([[48,52,55],[64,74,69],[59,62,67],[59,62,67]].midicps,2),
 	],inf));
 
 	d=Duty.kr(b,0,Dseq([b/2,b,b/4],inf));
@@ -64,7 +62,7 @@ Ndef(\6, {
 	s2=Pan2.ar(s2,pos:Duty.kr(b/4,0,Drand([-1,0,1],inf)));
 	s2=FreeVerb.ar(s2,room:1,damp:0);
 
-	Mix.new([s1*3, s2*2]);
+	Mix.new([s1*2, s2*2]);
 
 }).play;
 )
