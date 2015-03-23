@@ -1,5 +1,5 @@
 s.scope(8);
-////HIGH FREQUENCY
+////HIGH FREQUENCY//////////111111
 
 (
 Ndef(\1).fadeTime=2;
@@ -16,19 +16,23 @@ Ndef(\l).stop;
 
 ////
 
+
+//////////TING RYTHM FAST///1111111
 (
 Pdef(\ting,
 	Pbind(
 		\instrument, \ting,
-		\dur, Pseq([0.12,Rest(0.2)],inf),
+		\dur, Pseq([0.12,Rest(0.8)],inf),
 		\freq,14000,
 		\pan, Prand([-1,1],inf),
 		\legato, 0.5,
-		\amp, 0.2,
+		\amp, 0.01,
 )).play(quant:2);
 )
 Pdef(\ting).stop;
 
+
+////////TING RANDOM
 (
 Pdef(\ting2,
 	Pbind(
@@ -45,6 +49,27 @@ Pdef(\ting2).stop;
 
 //////////////////////////////////////////////////////////////////////////
 
+
+
+
+//////RIPPLE
+
+(
+Pdef(\loprip1,
+	Pbind(
+		\instrument, \ripple,
+		\dur, 0.5,
+		\freq,Pseq([700,Pn(400,2),300],inf),
+		\amp, 0.6,
+		\legato,0.4,
+		\f2,1,
+)).play(quant:2);
+)
+Pdef(\lopup1).stop;
+
+
+
+
 ////BEATS
 
 (
@@ -54,7 +79,7 @@ Pdef( \bum1,
 		\dur, 2,
 		\freq,45,
 		\legato, Pseq([0.9,0.6],inf),
-		\amp, 0.7
+		\amp, 0.1
 )).play(quant:2);
 )
 Pdef( \bum1).stop;
@@ -66,7 +91,7 @@ Pdef( \bum2,
 	Pbind(
 		\instrument, \bum,
 		\dur, 0.5,
-		\freq,48,
+		\freq,65,
 		\legato, Pseq([
 			Pseq([0.8,0.2],2),
 			Pseq([0.8,0.4],1),
@@ -76,7 +101,7 @@ Pdef( \bum2,
 			Pseq([0.8,1.4],4),
 			Pseq([0.8,0.4],1),
 		],inf),
-		\amp, 0.7
+		\amp, 0.1
 )).play(quant:2);
 )
 Pdef( \bum2).stop;
@@ -99,7 +124,7 @@ Pdef(\bum3).stop;
 Pdef(\ting,
 	Pbind(
 		\instrument, \ting,
-		\dur, Pseq([0.12,Rest(0.2)],inf),
+		\dur, Pseq([0.12,Rest(0.8)],inf),
 		\freq,14000,
 		\pan, Prand([-1,1],inf),
 		\legato, 0.4
@@ -107,36 +132,33 @@ Pdef(\ting,
 )
 Pdef(\ting).stop;
 
-////roar
 
+//////HAT WITH ECHO
 (
-Pdef(\roar,
+Pdef( \lopwoosh,
 	Pbind(
-		\instrument, \dribble,
-		\dur, 2,                    /////attention to arg in synth
-		\freq,40,
-		\f2, 0.5,
-		\legato, 0.6,
-		\lag, 0.0008,
+		\instrument, \woosh,
+		\dur, Pseq([0.5,Rest(1.5)],inf),
+		\freq,10000,
+		\legato, 2,
+		\f2, Pseq([Pseries(2,4,5),Pseries(10,-2,3)],inf),  ///rythmical
+		\amp, 1
 )).play(quant:2);
 )
-
-Pdef(\roar).stop;
-
-//////RIPPLE
+Pdef( \lopwoosh).stop;
 
 (
-Pdef(\loprip1,
+Pdef( \lopwoosh1,
 	Pbind(
-		\instrument, \ripple,
-		\dur, 2,
-		\freq,Pseq([700,Pn(400,2),300],inf),
-		\amp, 0.2,
-		\legato,0.8,
-		\f2,1,
+		\instrument, \woosh,
+		\dur, Pseq([0.15],inf),       //very simple
+		\freq,11000,
+		\legato, 0.2,
+		\amp, 0.8,
+		\f2, 2,
 )).play(quant:2);
 )
-Pdef(\lopup1).stop;
+Pdef( \lopwoosh1).stop;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -158,18 +180,41 @@ Pdef(\loppzum,
 )
 Pdef(\loppzum).stop;
 
+
+///////////////////////////ASTRAL AS FUCK////////55555555555
 (
-Pdef(\sin3,
+Pdef(\ASTRAL,
 	Pbind(
 		\instrument, \sin,
 		\dur,4,
-		\octave, Pseq([3,4,5,3,6,7],inf),
+		\octave, Pseq([3,4,5,3,6,7,5,2],inf),
 		\note, [1,5,7,9],
 		\strum,0.45,
-		\amp, 0.02,
+		\amp, 0.008,
 		\legato,2,
 )).play;
 )
+Pdef(\ASTRAL).stop;
+
+/////////////////// ANGRY DOCTOR PART 66666666666666666 ////
+
+
+//////RIPPLE
+
+(
+Pdef(\loprip1,
+	Pbind(
+		\instrument, \ripple,
+		\dur, 0.5,
+		\freq,Pseq([700,Pn(400,2),300],inf),
+		\amp, 0.6,
+		\legato,0.4,
+		\f2,1,
+)).play(quant:2);
+)
+Pdef(\lopup1).stop;
+
+
 
 (
 Pdef(\loptic1,
@@ -182,54 +227,26 @@ Pdef(\loptic1,
 )).play(quant:2);
 )
 
-//////HAT WITH ECHO
-(
-Pdef( \lopwoosh,
-	Pbind(
-		\instrument, \woosh,
-		\dur, Pseq([0.5,Rest(1)],inf),
-		\freq,10000,
-		\legato, 2,
-		\f2, Pseq([Pseries(2,4,5),Pseries(10,-2,3)],inf),  ///rythmical
-		\amp, 1
-)).play(quant:2);
-)
-Pdef( \lopwoosh).stop;
-
-(
-Pdef( \lopwoosh1,
-	Pbind(
-		\instrument, \woosh,
-		\dur, Pseq([0.3,0.15,Rest(0.55)],inf),       //very simple
-		\freq,12000,
-		\legato, 0.3,
-		\amp, 2,
-		\f2, 1,
-)).play(quant:2);
-)
-Pdef( \lopwoosh1).stop;
-
-
-
-////////HAPPY CREEPY TIU TIU
-(
-Pdef(\lopbummhi3,
-	Pbind(
-		\instrument, \bum,
-		\dur, 2,
-		\octave, Pseq([7,6,5,7.4,5],inf),  ///LOW AMP!
-		\note, [8,6,4,4,4,8,2],
-		\strum, 0.75,
-		\amp, 0.01,
-		\legato, 0.3,
-)).play(quant:2);
-)
-Pdef(\lopbummhi3).stop;
+Pdef(\loptic1).stop;
 
 
 
 
-//////////DRONE
+
+////////HAPPY CREEPY TIU TIU////////////////7777777777777
+
+
+
+
+
+///there is no happy
+
+
+
+
+
+
+//////////DRONE////////99999999999999
 
 (
 Pdef(\dfm1,
@@ -247,6 +264,25 @@ Pdef(\dfm1,
 );
 
 Pdef(\dfm1).stop;
+
+
+////roar
+
+(
+Pdef(\roar,
+	Pbind(
+		\instrument, \dribble,
+		\dur, 1,                    /////attention to arg in synth
+		\freq,Pseq([Pn(60,4),Pn(85,2)],inf),
+		\f2, 0.5,
+		\legato, 0.6,
+		\lag, 0.8,
+)).play(quant:2);
+)
+
+Pdef(\roar).stop;
+
+
 
 
 
@@ -286,6 +322,8 @@ Pdef(\piano2).stop;
 
 
 (
+Ndef(\5).fadeTime=2;
+Ndef(\5).quant=2;
 Ndef(\5, {
 	var s2, b=4;
 
@@ -296,11 +334,12 @@ Ndef(\5, {
 	// s2=s2*SinOsc.kr(b/30).range(0,0.7);
 	s2=Splay.ar(s2,0.2);
 
+	s2=s2*0.2;
 
 }).play;
 )
 
-
+Ndef(\5).stop;
 
 
 
