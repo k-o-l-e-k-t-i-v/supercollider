@@ -116,9 +116,7 @@ SynthDef(\dfm, {
 	sig=Fold.ar(sig,0,0.6).lag(lag);
 	sig=DFM1.ar(sig,SinOsc.kr(0.25).range(freq,freq+10),res:res,
 		noiselevel:SinOsc.kr(0.125).range(0.0041,0.00008))-0.5;
-	sig=sig*env*amp;
-
-	Out.ar(0, sig);
+	Out.ar(0, sig*env*amp);
 
 }).add;
 
@@ -129,8 +127,8 @@ SynthDef(\ting, {
 	env=EnvGen.kr(Env.adsr(sustain*0.2,sustain*0.2,0.5,sustain*0.6),gate);
 	sig=SinOsc.ar(freq)*env;
 	sig=Pan2.ar(sig,pos:pan);
-	DetectSilence.ar(sig*amp,amp:0.01,doneAction:2);
-	Out.ar(0,sig);
+	DetectSilence.ar(sig,amp:0.01,doneAction:2);
+	Out.ar(0,sig*amp);
 }).add;
 
 SynthDef(\zum, {
@@ -138,15 +136,9 @@ SynthDef(\zum, {
 	var sig, env;
 
 	env=EnvGen.kr(Env.adsr(sustain*0.05,sustain*0.1,0.5,sustain*0.85),gate,doneAction:2);
-
 	sig=LFSaw.ar([freq,freq+10,freq.lag(lag+0.02),freq.lag(0.2),freq+5]).lag(lag);
-	sig=CombN.ar(sig,0.5,0.5,sustain);
-	sig=sig*env*amp;
-	// sig=FreeVerb.ar(sig,room:2);
-
-	// DetectSilence.ar(sig,doneAction:2);
-
-	Out.ar(0,sig);
+	// sig=CombN.ar(sig,sustain/4,sustain/4,sustain);
+	Out.ar(0,sig*env*amp);
 }).add;
 
 
