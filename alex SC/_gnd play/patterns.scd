@@ -282,6 +282,24 @@ Pdef(\piano2).stop;
 
 
 
+//////////////POLAR WIND?
+
+
+(
+Ndef(\5, {
+	var s2, b=4;
+
+	s2=GrayNoise.ar(LFSaw.ar(0.5).range(0,0.5));
+	s2=BPF.ar(Clip.ar(s2,-0.5,0.5),freq:SinOsc.kr(b/20).range(100,220),
+		rq:LFNoise0.kr(b/10).range(0.1,0.001));
+	s2=FreeVerb.ar(s2,SinOsc.kr(b/10).range(0.1,0.7),room:3,damp:0,add:s2);
+	// s2=s2*SinOsc.kr(b/30).range(0,0.7);
+	s2=Splay.ar(s2,0.2);
+
+
+}).play;
+)
+
 
 
 
