@@ -40,6 +40,8 @@
 	sig =  kick + (sig/4) + hat;
 	sig = CompanderD.ar(sig,0.75,1/2,1/10);
 
+	sig = FreeVerb.ar(sig,0.15,1.5);
+
 
 	Splay.ar(sig,0.2);
 };
