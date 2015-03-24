@@ -58,11 +58,11 @@ Pdef(\ting2).stop;
 Pdef(\loprip1,
 	Pbind(
 		\instrument, \ripple,
-		\dur, 0.5,
-		\freq,Pseq([700,Pn(400,2),300],inf),
+		\dur, 2,
+		\freq,Pseq([1000,Pn(1400,2),300],inf),
 		\amp, 0.6,
-		\legato,0.4,
-		\f2,1,
+		\legato,0.8,
+		\f2,0.5,
 )).play(quant:2);
 )
 Pdef(\lopup1).stop;
@@ -119,19 +119,6 @@ Pdef(\bum3,
 Pdef(\bum3).stop;
 
 
-////high beat very fast
-(
-Pdef(\ting,
-	Pbind(
-		\instrument, \ting,
-		\dur, Pseq([0.12,Rest(0.8)],inf),
-		\freq,14000,
-		\pan, Prand([-1,1],inf),
-		\legato, 0.4
-)).play(quant:2);
-)
-Pdef(\ting).stop;
-
 
 //////HAT WITH ECHO
 (
@@ -151,10 +138,10 @@ Pdef( \lopwoosh).stop;
 Pdef( \lopwoosh1,
 	Pbind(
 		\instrument, \woosh,
-		\dur, Pseq([0.15],inf),       //very simple
+		\dur, Pseq([2],inf),       //very simple
 		\freq,11000,
 		\legato, 0.2,
-		\amp, 0.8,
+		\amp, 0.4,
 		\f2, 2,
 )).play(quant:2);
 )
@@ -164,6 +151,18 @@ Pdef( \lopwoosh1).stop;
 
 ///////CONTEMPLATIVE
 
+(
+Pdef(\loptic1,
+	Pbind(
+		\instrument, \tictum,
+		\dur, Pseq([2,Rest(1)],inf),
+		\freq, Pseq([Pn(4000,4),Pn(500,2)],inf),  //////
+		\amp, 0.5,
+		\legato, 1,
+)).play(quant:2);
+)
+
+Pdef(\loptic1).stop;
 (
 Pdef(\loppzum,
 	Pbind(
@@ -259,7 +258,7 @@ Pdef(\dfm1,
 		\legato,2,
 		\lag, 0.002,
 		\res, Prand([1,0.5,1.2,1.4,0.2],inf),
-		\amp, 0.4,   //not bigger than 0.5
+		\amp, 0.2,   //not bigger than 0.5
 )).play(quant:2);
 );
 
@@ -272,11 +271,12 @@ Pdef(\dfm1).stop;
 Pdef(\roar,
 	Pbind(
 		\instrument, \dribble,
-		\dur, 1,                    /////attention to arg in synth
+		\dur, 4,                    /////attention to arg in synth
 		\freq,Pseq([Pn(60,4),Pn(85,2)],inf),
 		\f2, 0.5,
 		\legato, 0.6,
-		\lag, 0.8,
+		\lag, 0.02,
+		\amp, 1,
 )).play(quant:2);
 )
 
