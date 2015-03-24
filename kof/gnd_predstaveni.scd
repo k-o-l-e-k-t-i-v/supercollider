@@ -20,11 +20,12 @@ s.scope;
 ///////// 2 calm little melodies whan loud  ////////////////////////////////////////////////////////
 
 
+(
 
 ~modulate.quant=2;
 ~modulate = {Duty.kr(4*(1..8),0,Dseq([0,-48,-24,-12,-36]+12,inf))};
-
-~a[0]={
+~a.quant = 4;
+~a={
 	var sig;
 
 	sig = SinOsc.ar(([60,67,64,69,65,60-12+7,60-24+4]+~modulate).midiratio * (pi) * (1..12) * (1.0001**(1..12)),SinOsc.ar(8/[11,22,44]).range(-pi,pi),mul:1/(1..12));
@@ -39,28 +40,41 @@ s.scope;
 
 ~a.fadeTime = 20;
 ~a.play;
-~a.quant = 4;
 
 
 ~a[10]=\filter->{|in| Splay.ar(BBandPass.ar(in,SinOsc.ar(1/4/(1..8)).range(44,8000)) * 1.5)};
 ~a[12]=\filter->{|in| Splay.ar(Resonz.ar(in,SinOsc.ar(1/4/(1..8)).range(44,8000)) * 1.5)};
 ~a[14]=\filter->{|in| Splay.ar(Vibrato.ar(in,[4,5,6,7],0.2))};
 ~a[16]=\filter->{|in| Splay.ar(FreeVerb.ar(in,SinOsc.ar(1/10/(1..8)).range(0.01,0.18),1))};
-
+);
 
 
 ///////// 3  impro set 1.5 1.25 1.75 ////////////////////////////////////////////////////////////////
 
+(
+~low.quant=2;
+  ~low={
+
+	var oct,f,sig;
+
+      oct = Duty.kr(16,0,Dseq([0,1,2]*7,inf));
+      f = Duty.kr(4,0,Dseq(([60,64,67,63]-36+oct).midicps,inf)).lag(1/4);
+      sig = Blip.ar(f,40*LFSaw.ar(1/4/[1,2,4,8]).exprange(0.0001,1)+1,mul:0.2);
+
+      sig = Resonz.ar(sig,SinOsc.ar(1/4/[1,2]).exprange(f*8,f));
+      sig = Vibrato.ar(Mix.ar(sig).softclip!2,[4,5],0.2);
 
 
-
-~two={Splay.ar(SinOsc.ar( 43.2*1.5pi/1.5 *[1,1.5,3,2],mul:1) * LFSaw.ar([1,2,3,4]/2).exprange(1.001,0.01),0.1,m.kr(0,3)) };
-// ~two[50]=\filter->{|in| Splay.ar(CombN.ar(in,1/2,1/2,2))};
-
-~two.quant=0;
-~two.fadeTime=1;
-~two.play;                 ///  VVV - 1.75 1.5  ////////////////
-
+    Splay.ar(
+      Compander.ar(
+        FreeVerb2.ar(
+          sig[0],sig[1]
+            ,0.23,40) * 2.0
+        ,0.5,1,1/10)
+		,0.1,m.kr(0,3))
+  };
+~low.play;
+);
 
 
 /////////// 4 toned hihats ////////////////////////////////////////////////////////
@@ -113,13 +127,13 @@ s.scope;
 //////////// 5 alex astral /////////////////////////////////////////////////////////////
 
 
-);
+
 
 //////////// 6 inpropriate guitar basses /////////////////////////////////////////////////////////////
 
+
+
 (
-
-
 ~six={
 	var sig,mld;
 	mld = LFTri.ar(222/(1..8))*25;
@@ -133,6 +147,7 @@ s.scope;
 	Splay.ar(sig,0.1,m.kr(0,6));
 
 };
+);
 ~six.quant=2;
 ~six.play;
 
@@ -191,12 +206,15 @@ s.scope;
 		,0.1,m.kr(0,8))};
 
 );
-
+);
 
 
 ///////// 11 ////////////////////////////////////////////////////////////////////
 
+(
 
+(
+~ss.quant=2;
 
 ~ss = {Duty.kr(1/8,0,Dseq([1,2,0,0,0,0,3,3,3,4,0,0,0,0],inf))};
 
@@ -211,16 +229,17 @@ s.scope;
 		Pluck.ar(Pulse.ar(4000),Impulse.ar(4),0.5,0.5)
 	];
 
-	sel = Select.ar(~s,sigs);
+	sel = Select.ar(~ss,sigs);
 	sel = CompanderD.ar(sel,0.9,1,1/10);
 	sel = FreeVerb.ar(sel,0.12,2.5);
 
-	Splay.ar(sel,0.1,m.kr(1,2));
+	Splay.ar(sel,0.1,m.kr(1,1));
 
-};
+}
+);
+
 ~x.play;
 
-~ss.quant=2;
 ~x.quant =2;
 
 );
