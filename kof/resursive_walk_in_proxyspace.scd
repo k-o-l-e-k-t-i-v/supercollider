@@ -1,13 +1,14 @@
 
+
 p = ProxySpace.push(s);
 
 (
   Tdef(\aa,
        {
-         var z1 = 0; 
-         var z2 = 0; 
-         var z3 = 0; 
-         loop{ 
+         var z1 = 0;
+         var z2 = 0;
+         var z3 = 0;
+         loop{
            z1 = z1 + [-4,12,-12,7].choose; if(z1>60,{z1=0}); if(z1<(-60),{z1=0}); ~a.set(\a,z1);
            z2 = z2 + [-4,12,-12,7].choose; if(z2>60,{z2=0}); if(z2<(-60),{z2=0}); ~b.set(\a,z2);
            z3 = z3 + [-4,12,-12,7].choose; if(z3>60,{z3=0}); if(z3<(-60),{z3=0}); ~c.set(\a,z3);

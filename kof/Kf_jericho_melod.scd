@@ -4,14 +4,14 @@ StageLimiter.activate;
 (
 Ndef(\tone).fadeTime = 8;
 Ndef(\tone,{
-
-	~tune1 = {1.5pi + LFSaw.ar(1/4/[1,2,4,8]).range(-pi,pi).round(pi/4)};
-	~tune2 = {1.5pi + LFSaw.ar(1/2/[1,2,4,8]).range(-pi,pi).round(pi/8)};
+	var tune1,tune2;
+	tune1 = {1.5pi + LFSaw.ar(1/4/[1,2,4,8]).range(-pi,pi).round(pi/4)};
+	tune2 = {1.5pi + LFSaw.ar(1/2/[1,2,4,8]).range(-pi,pi).round(pi/8)};
 
 	Splay.ar(
 		HPF.ar(
 			Vibrato.ar(
-				SinOsc.ar(([60,72,62]+48).midicps / ~tune1 / (2**(1..16)),mul:1/fib(12)) + LFSaw.ar(22000/~tune2/(2**(1..16)),mul:0.02)
+				SinOsc.ar(([60,72,62]+48).midicps / tune1 / (2**(1..16)),mul:1/fib(12)) + LFSaw.ar(22000/tune2/(2**(1..16)),mul:0.02)
 				,(1..8)/8,0.2)
 			,10)
 )});

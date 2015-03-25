@@ -2,24 +2,29 @@ s.boot;
 
 (
 Ndef(\a, {
-	~osc1 = VarSaw.kr([0.5]);
-	~osc2 = SinOsc.kr([100]);
-	~osc3 = LFSaw.kr([1]);
-	~osc4 = SinOsc.kr([0.1]);
+	var osc1,osc2,osc3,osc4;
 
-	SinOsc.ar( ~osc3.range(220,300),0, ~osc4.range(0.3,1) )
+	osc1 = VarSaw.kr([0.5]);
+	osc2 = SinOsc.kr([100]);
+	osc3 = LFSaw.kr([1]);
+	osc4 = SinOsc.kr([0.1]);
+
+	SinOsc.ar( osc3.range(220,300),0, osc4.range(0.3,1) )
 }).play;
 )
 Ndef(\a).stop(2);
 
 (
 Ndef(\c, {
-	~osc1 = VarSaw.kr([0.5]);
-	~osc2 = SinOsc.kr([100]);
-	~osc3 = LFSaw.kr([1]);
-	~osc4 = SinOsc.kr([0.1]);
 
-	SinOsc.ar( ~osc3.range(80,300),0, ~osc4.range(0,0.7))+SinOsc.ar(150,0,0.3);
+	var osc1,osc2,osc3,osc4;
+
+	osc1 = VarSaw.kr([0.5]);
+	osc2 = SinOsc.kr([100]);
+	osc3 = LFSaw.kr([1]);
+	osc4 = SinOsc.kr([0.1]);
+
+	SinOsc.ar( osc3.range(80,300),0, osc4.range(0,0.7))+SinOsc.ar(150,0,0.3);
 }).play;
 )
 Ndef(\c).stop(2);

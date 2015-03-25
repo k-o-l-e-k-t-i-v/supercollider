@@ -1,3 +1,4 @@
+
 // mult 8 (1st 0)
 (
     x = { {|i| SinOsc.ar(200*i)}!8 };

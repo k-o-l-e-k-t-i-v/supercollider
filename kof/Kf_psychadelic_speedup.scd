@@ -1,7 +1,7 @@
 (
 Ndef(\psychadelic,{
-
-	~a = FreeVerb.ar(
+	var a;
+	a = FreeVerb.ar(
 		CombN.ar(
 			CombN.ar(
 				sin(LFSaw.ar(220*(LFSaw.ar(1/[1,2,4,8]).range(0.01,1))*2200))
@@ -10,6 +10,6 @@ Ndef(\psychadelic,{
 		,0.199,10) * 2;
 
 	Splay.ar(
-		Compander.ar(~a,~a,0.4,1,0.0025,0.01,0.01)
+		Compander.ar(a,a,0.4,1,0.0025,0.01,0.01)
 ,0.1,1).clip(-1,1)}).play;
 )

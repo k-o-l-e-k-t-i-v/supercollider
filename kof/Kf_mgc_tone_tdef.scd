@@ -10,10 +10,11 @@ Ndef(\rythm,{
 )
 
 
-~pos1 = {( SinOsc.ar(432e-3/fib(23) ).range(1,2).round(1/2) ** (1..23))};
-
 
 (
+var pos1;
+pos1 = {( SinOsc.ar(432e-3/fib(23) ).range(1,2).round(1/2) ** (1..23))};
+
 Tdef(\tt,{
 
 	loop{
@@ -24,7 +25,7 @@ Tdef(\tt,{
 				Splay.ar(
 					CompanderD.ar(
 						AllpassN.ar(
-							LFTri.ar(4/[4,5,6,7],mul:0.5) + LFTri.ar(0.432 / 2 * {[1,8,1.5,2,4,1/4,1/8].choose}!4 * ~pos1,mul:2/fib(12)) +
+							LFTri.ar(4/[4,5,6,7],mul:0.5) + LFTri.ar(0.432 / 2 * {[1,8,1.5,2,4,1/4,1/8].choose}!4 * pos1,mul:2/fib(12)) +
 							WhiteNoise.ar(0.015!32) * Ndef(\rythm).ar
 							,1,1/(1.2**(1..32)),32/(1.0012**(1..16)),mul:2/fib(12))
 						,0.5,1,0.5).softclip

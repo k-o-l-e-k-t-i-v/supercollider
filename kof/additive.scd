@@ -1,24 +1,24 @@
 
 (
 
-    ~tempo = 4;
+    var tempo = 4;
 
     Ndef(\addi).quant = 2.0;
     Ndef(\addi,
          {|note = 22,fre = 1,mod = 1|
-          ~f = {(note.midicps)*fre};
+          var f = {(note.midicps)*fre};
           Splay.ar(
 
               FreeVerb.ar(
                   CompanderD.ar(
                           LPF.ar(
                       SinOsc.ar(
-                          (~f)*(1..32) + (1.001**(1..32)) * mod.lag(0.15),
-                          SinOsc.ar(~f/(1.0001**(1..32))*mod.lag(0.025) ).range(0,2pi),
+                          (f)*(1..32) + (1.001**(1..32)) * mod.lag(0.15),
+                          SinOsc.ar(f/(1.0001**(1..32))*mod.lag(0.025) ).range(0,2pi),
                               mul:1/(1..32))
-                              ,SinOsc.ar(1/~tempo/(1.1**(1..32))).range(110,4000)) *
-                       Decay.ar(Impulse.ar(~tempo),TRand.ar(0.01,~tempo*2,Impulse.ar(~tempo!32))) +
-                      (SinOsc.ar((30.midicps*(1..32))*mod*fre,mul:1/(1..32)) * LFSaw.ar(1/~tempo!32).squared)
+                              ,SinOsc.ar(1/tempo/(1.1**(1..32))).range(110,4000)) *
+                       Decay.ar(Impulse.ar(tempo),TRand.ar(0.01,tempo*2,Impulse.ar(tempo!32))) +
+                      (SinOsc.ar((30.midicps*(1..32))*mod*fre,mul:1/(1..32)) * LFSaw.ar(1/tempo!32).squared)
                       ,0.75,1,0.25)
                   ,0.33,2)
               ,0.2,1)
@@ -31,7 +31,7 @@
             \fre, Pxrand([1,1.5,1.25,2,1.5,2],inf)
         ),
         Pbind(
-            \dur,1/~tempo,
+            \dur,1/tempo,
             \note, Pseq((([60,61,65,72]-12)),inf)
         ),
         Pbind(

@@ -8,15 +8,16 @@ Ndef(\bass).quant = 2.0;
 Ndef(\bass).fadeTime = 2.0;
 
 Ndef(\bass,{|f=1,v=1,d=1,dd=1,room=1,vol=1,fd = -1|
+	var f;
 	Splay.ar(
-		~f = t.cents.at([1,2,7,11]) / (pi * f);
+		f = t.cents.at([1,2,7,11]) / (pi * f);
 		FreeVerb.ar(
 			MoogFF.ar(
 				XFade2.ar(
-				LFSaw.ar(~f),
-					SinOsc.ar(~f),
+				LFSaw.ar(f),
+					SinOsc.ar(f),
 					fd.lag(dd*2))
-				,SinOsc.ar(~f/(v.lag(dd)*16+0.1)).range(~f/(d),~f*(d))
+				,SinOsc.ar(f/(v.lag(dd)*16+0.1)).range(f/(d),f*(d))
 		) * Decay.ar(Impulse.ar((dd*4)/[1,2,4,8]),2/dd)
 			,0.33,room.lag(dd)).softclip
 	)

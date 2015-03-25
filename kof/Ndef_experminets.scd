@@ -10,8 +10,8 @@ s.freeAll;
 )
 
 (
-  ~f = {|freq| Splay.ar(LPF.ar(SinOsc.ar(freq * MouseX.kr(0.5,4).round(1/8) * (1.001**(1..24)),mul:1.1/(1..24)),SinOsc.kr(1/(1..24)).range(44,8800)) ) };
-  Ndef(\d)[0] = ~f;
+  var f = {|freq| Splay.ar(LPF.ar(SinOsc.ar(freq * MouseX.kr(0.5,4).round(1/8) * (1.001**(1..24)),mul:1.1/(1..24)),SinOsc.kr(1/(1..24)).range(44,8800)) ) };
+  Ndef(\d)[0] = f;
 )
 
 

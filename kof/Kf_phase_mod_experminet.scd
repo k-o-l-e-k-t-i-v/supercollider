@@ -1,4 +1,4 @@
-s.boot;
+
 
 (
 Ndef(\atm,{Splay.ar(

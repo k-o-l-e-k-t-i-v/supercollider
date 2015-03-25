@@ -46,10 +46,11 @@ Ndef(\hiss)[1] = \set -> Pbind(
 t = Tuning.harmonic;
 Ndef(\bass).quant = 2.0;
 Ndef(\bass,{|mod1 = 1,mod2 = 0.5|
+	var f;
 	Splay.ar(
-		~t = t.cents.at([1,2,7,11]) / (mod1.lag(0.1) * pi) * mod2;
+		t = t.cents.at([1,2,7,11]) / (mod1.lag(0.1) * pi) * mod2;
 
-		FreeVerb.ar(	SinOsc.ar(~t,SinOsc.kr(~t.lag(1)/([1,2,4,8]*8000)).range(-8pi,8pi),mul:LFSaw.kr(1/4).exprange(0.001,0.4));
+		FreeVerb.ar(	SinOsc.ar(t,SinOsc.kr(t.lag(1)/([1,2,4,8]*8000)).range(-8pi,8pi),mul:LFSaw.kr(1/4).exprange(0.001,0.4));
 			,0.133,1)
 )}).play;
 

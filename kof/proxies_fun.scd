@@ -1,3 +1,4 @@
+
 ///////////////////////////////////////////////////////////////////// 1
 
 p = ProxySpace.push(s);
@@ -17,7 +18,7 @@ p = ProxySpace.push(s);
   ~a.quant = 2;
   ~a.fadeTime = 16.0;
   ~a = {
-    var freqs = ([60,67,48,65]).midicps; 
+    var freqs = ([60,67,48,65]).midicps;
     var sig = LFSaw.ar(freqs * ~mod * ~m * (1.000001**(1..8)));
     sig = sig * Decay.ar(Impulse.ar(4/fib(8)),0.75);
     sig = Resonz.ar(sig,freqs * ~m.ar.lag(1/8) * ~mod + LFSaw.ar(1*(1.0001**(1..8))).range(-8,8));
@@ -61,7 +62,7 @@ p = ProxySpace.push(s);
     sigL = CompanderD.ar(sigL,0.75,1,1/3,0.2,0.2,LFTri.ar(1/12.14).range(0.5,1.5));
     sigM = CompanderD.ar(sigM,0.75,1,1/2,0.02,0.02,LFTri.ar(1/13.14).range(0.5,1.5));
     sigH = CompanderD.ar(sigH,0.75,1,1/3,0.01,0.01,LFTri.ar(1/14.14).range(0.5,1.5));
- 
+
     sig = sigL + sigM + sigH;
 
     sig = Limiter.ar(sig,0.95,0.02);

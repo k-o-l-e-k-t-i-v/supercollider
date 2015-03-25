@@ -56,9 +56,10 @@ Tdef(\master,{
 			//////////////////////////////// VV
 
 			(
-				~num = 3.rrand(48);
-				~speed = 1.rrand(44)/[1,2,8,120,12,18,22,99,0.1];
-				~sharpness = 0.015.rrand(1);
+				var num,speed,sharpness;
+				num = 3.rrand(48);
+				speed = 1.rrand(44)/[1,2,8,120,12,18,22,99,0.1];
+				sharpness = 0.015.rrand(1);
 
 
 
@@ -68,7 +69,7 @@ Tdef(\master,{
 					Splay.ar(
 						BPF.ar(
 							Ndef(\gen).ar + LFSaw.ar((1..10)/100.1,mul:0.133)
-							,(1..~num)*(22000/~num)+SinOsc.ar({ExpRand()}!48).range(-40,40),~sharpness,SinOsc.ar({ExpRand()*~speed}!48).exprange(0.001,8.1)
+							,(1..num)*(22000/num)+SinOsc.ar({ExpRand()}!48).range(-40,40),sharpness,SinOsc.ar({ExpRand()*speed}!48).exprange(0.001,8.1)
 						).softclip
 						,0.17,1)});
 			);

@@ -2,7 +2,7 @@
 (
 Ndef(\a,{Splay.ar(
 
-
+	var env,f;
 	~env = LFSaw.ar(1/4/fib(21)).squared;
 	~f = LFNoise0.ar(1/4/fib(21)).range(0.01,12).round(pi/2).lag(0.1) /
 	{TRand.ar(0.5,8,Impulse.ar(1/4/fib(21))).round(1)} +

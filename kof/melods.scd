@@ -1,4 +1,5 @@
 
+
 s.boot;
 
 (
@@ -14,7 +15,7 @@ s.boot;
                      fenv = EnvGen.ar(Env([freq,freq*Ndef(\mod).kr,99*Ndef(\mod).kr],[0.02,dur/8],[3,-3]));
 
                      sig = LFSaw.ar(fenv+(1.001**(1..8))) * env;
-                     sig = 
+                     sig =
                      AllpassC.ar(
                          BBandPass.ar(
                              Vibrato.ar(
@@ -48,7 +49,7 @@ s.boot;
                 \dur, Prand([1/2,1]*8, inf),
                 \freq, Pxrand(([61,60,72,69]-24).midicps, inf),
                 \amp, Pwhite(0.1,0.4)
-            ) 
+            )
         ])
     }).play(quant:2);
 )

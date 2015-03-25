@@ -9,8 +9,8 @@ Ndef(\a,{|tempo = 1,sel = 4|
 
 
 	//////// signal ////////////
-
-	~s =
+	var s;
+	s =
 	SinOsc.ar(44) +
 	CombN.ar((LFPulse.ar(tempo*1/[1,4,2,3],[0,0.25,0,0.25]))) *
 	Pulse.ar(tempo*4/[1,2,3,4]) +
@@ -21,17 +21,17 @@ Ndef(\a,{|tempo = 1,sel = 4|
 	////////// band pass /////////////
 
 
-	~s = BBandPass.ar(~s,LFNoise0.ar(4!2).range(44,4320*2),1,mul:0.5,add:~s);
+	s = BBandPass.ar(s,LFNoise0.ar(4!2).range(44,4320*2),1,mul:0.5,add:s);
 
 	///////// add hisses /////////////
 
-	~s = ~s + RHPF.ar(Decay.ar(Impulse.ar(tempo*4/[1,2,4,8]),LFNoise0.ar(4!4).range(0.01,0.2)) * WhiteNoise.ar(0.5!4),LFNoise0.ar(4!4).range(432,16000));
+	s = s + RHPF.ar(Decay.ar(Impulse.ar(tempo*4/[1,2,4,8]),LFNoise0.ar(4!4).range(0.01,0.2)) * WhiteNoise.ar(0.5!4),LFNoise0.ar(4!4).range(432,16000));
 
 	////////// compressor ///////////
 
-	~s = Compander.ar(~s,~s,0.75,1,0.25,0.01,0.01);
+	s = Compander.ar(s,s,0.75,1,0.25,0.01,0.01);
 
-	Splay.ar(~s).clip(-1,1)};
+	Splay.ar(s).clip(-1,1)};
 
 ).play;
 

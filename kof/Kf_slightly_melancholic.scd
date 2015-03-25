@@ -33,23 +33,25 @@ Ndef(\High).quant = 2.0;
 
 t = Tuning.harmonic;
 
-Ndef(\High,{Splay.ar(
-	~modlong = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/16)),2*[1,2,4,2,1,2,4,8]);
+Ndef(\High,{
+	var modlong,mod,melody,notes;
+	Splay.ar(
+	modlong = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/16)),2*[1,2,4,2,1,2,4,8]);
 
-	~mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/4)),~modlong*31.4159265359/[1,2,4,2,1,2,4,8]);
+	mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/4)),modlong*31.4159265359/[1,2,4,2,1,2,4,8]);
 
-	~melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4])),[1,0.5,4,0.25,1.5,4,2,1.5]);
-	~notes = t.cents.at([1,2,11]) / ~mod * ~melody;
+	melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4])),[1,0.5,4,0.25,1.5,4,2,1.5]);
+	notes = t.cents.at([1,2,11]) / mod * melody;
 
 	FreeVerb.ar(
 		RLPF.ar(
 			XFade2.ar(
-				SinOsc.ar(~notes,mul:0.1).cubed,
-				LFSaw.ar(~notes,mul:0.1).distort,
+				SinOsc.ar(notes,mul:0.1).cubed,
+				LFSaw.ar(notes,mul:0.1).distort,
 				SinOsc.kr([0.1437,0.1897]).range(-0.9,0.9)) *
 
-			Decay.ar(Impulse.ar((~mod)/[1,2,3,5,8,13,21]),[1,2,3,5,8,13,21]/(~mod/32))
-			,SinOsc.kr(~notes/1024.012).range(~notes/2,~notes*2)
+			Decay.ar(Impulse.ar((mod)/[1,2,3,5,8,13,21]),[1,2,3,5,8,13,21]/(mod/32))
+			,SinOsc.kr(notes/1024.012).range(notes/2,notes*2)
 		) * SinOsc.kr((_*0.137!8)+0.0112).range(0.1,1);
 
 		,0.25,5,0.8)
@@ -66,20 +68,22 @@ Ndef(\Low).quant = 2.0;
 t = Tuning.harmonic;
 
 Ndef(\Low,{Splay.ar(
-	~mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/4)),2*31.415926536/[1,2,4,2,1,2,4,8]);
 
-	~melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4])),[1,0.5,4,0.25,1.5,4,2,1.5]);
-	~notes = t.cents.at([1,2,7]) / ~mod * ~melody;
+	var mod,melody,notes;
+	mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/4)),2*31.415926536/[1,2,4,2,1,2,4,8]);
+
+	melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4])),[1,0.5,4,0.25,1.5,4,2,1.5]);
+	notes = t.cents.at([1,2,7]) / mod * melody;
 
 	FreeVerb.ar(
 		RLPF.ar(
 			XFade2.ar(
-				SinOsc.ar(~notes,mul:0.1).cubed,
-				LFTri.ar(~notes,mul:0.1).distort,
+				SinOsc.ar(notes,mul:0.1).cubed,
+				LFTri.ar(notes,mul:0.1).distort,
 				SinOsc.kr([0.01,0.013]).cubed.range(-0.9,0.9)) *
 
-			Decay.ar(Impulse.ar((~mod*4)/[1,2,3,5,8,13,21]),[1,2,3,5,8,13,21]/(~mod/13))
-			,SinOsc.kr(~notes/512.01).range(~notes/2,~notes*2)
+			Decay.ar(Impulse.ar((mod*4)/[1,2,3,5,8,13,21]),[1,2,3,5,8,13,21]/(mod/13))
+			,SinOsc.kr(notes/512.01).range(notes/2,notes*2)
 		) * SinOsc.kr((_*0.1337!8)+0.01).range(0.1,1);
 
 		,0.1,5.5,0.8)
@@ -98,19 +102,20 @@ t = Tuning.harmonic;
 
 Ndef(\Long,{Splay.ar(
 
-	~modlong = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/16)),2*[1,2,4,2,1,2,4,8]);
-	~mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8,1/16]/8)),~modlong*31.415926536/[1,2,4,2,1,2,4,8]);
+	var modlong,mod,melody,notes;
+	modlong = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/16)),2*[1,2,4,2,1,2,4,8]);
+	mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8,1/16]/8)),modlong*31.415926536/[1,2,4,2,1,2,4,8]);
 
-	~melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8,1/16]/8)),[1,0.5,4,0.25,1.5,4,2,1.5]);
-	~notes = t.cents.at([1,2,7,11]) / ~mod / ~melody;
+	melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8,1/16]/8)),[1,0.5,4,0.25,1.5,4,2,1.5]);
+	notes = t.cents.at([1,2,7,11]) / mod / melody;
 
 	FreeVerb.ar(
 		RLPF.ar(
 			XFade2.ar(
-				LFSaw.ar(~notes/1.5+SinOsc.kr(0.1).range(-2,2),mul:0.4).cubed,
-				LFSaw.ar(~notes*1.5+SinOsc.kr(55).range(-2,2),mul:0.4).distort,
+				LFSaw.ar(notes/1.5+SinOsc.kr(0.1).range(-2,2),mul:0.4).cubed,
+				LFSaw.ar(notes*1.5+SinOsc.kr(55).range(-2,2),mul:0.4).distort,
 				SinOsc.kr([0.1,0.13]).cubed.range(-0.9,0.9))
-			,SinOsc.kr(~notes/2048.01).range(~notes/2,~notes*2)
+			,SinOsc.kr(notes/2048.01).range(notes/2,notes*2)
 		) * SinOsc.kr((_*0.1337!16)+0.01).exprange(0.01,1);
 
 		,0.8,SinOsc.kr(1/[1,2,4,8]).range(0.2,5.5),0.8)

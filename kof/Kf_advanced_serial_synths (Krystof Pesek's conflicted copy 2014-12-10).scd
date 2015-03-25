@@ -59,16 +59,17 @@ Ndef(\d,{Splay.ar(
 
 
 (
-~num = 16;
-~speed = 1/4/[12,18,22,99,0.1];
-~sharpness = 0.5;
+
+var num = 16;
+var speed = 1/4/[12,18,22,99,0.1];
+var sharpness = 0.5;
 
 Ndef(\filtr).fadeTime = 2.0;
 Ndef(\filtr,{
 	Splay.ar(
 		BPF.ar(
 			Ndef(\d).ar + SinOsc.ar((1..10)/100.1,mul:0.01)
-			,(1..~num)*(22000/~num)+SinOsc.ar({ExpRand()}!48).range(-40,40),~sharpness,SinOsc.ar({ExpRand()*~speed}!48).exprange(0.001,8)
+			,(1..num)*(22000/num)+SinOsc.ar({ExpRand()}!48).range(-40,40),sharpness,SinOsc.ar({ExpRand()*speed}!48).exprange(0.001,8)
 		)
 		,0.17,1)}).play;
 );

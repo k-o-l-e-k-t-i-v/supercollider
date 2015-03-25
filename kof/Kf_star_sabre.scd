@@ -18,11 +18,12 @@ Ndef(\zzz).fadeTime = 0.0;
 Ndef(\zzz).quant = 2.0;
 
 Ndef(\zzz,{
-	~mod = Select.kr(Stepper.kr(Impulse.kr(1/4)),[1,1,2,1.5,1.25,1.5,2,1,1,1]).lag(0.1);
+	var mod;
+	mod = Select.kr(Stepper.kr(Impulse.kr(1/4)),[1,1,2,1.5,1.25,1.5,2,1,1,1]).lag(0.1);
 
 	Splay.ar(
 		Ringz.ar(
-			Impulse.ar(1/[1,1/4,1/2]),[88,88/1.5,88/2]*~mod,[2,0.5,0.14],mul:0.0133
+			Impulse.ar(1/[1,1/4,1/2]),[88,88/1.5,88/2]*mod,[2,0.5,0.14],mul:0.0133
 		) +
 	Pan2.ar(
 		BPF.ar(

@@ -16,16 +16,17 @@ Ndef(\pila).stop
 
 
 (
-~num = 127;
-~speed = 1/16/[12,18,22,99,0.1];
-~sharpness = 0.02;
+var num,speed,sharpness;
+num = 127;
+speed = 1/16/[12,18,22,99,0.1];
+sharpness = 0.02;
 
 Ndef(\filtr).fadeTime = 2.0;
 Ndef(\filtr,{
 	Splay.ar(
 	BPF.ar(
 			Ndef(\pila).ar + SinOsc.ar((1..10)/100.1,mul:0.01)
-			,(1..~num)*(16000/~num)+SinOsc.ar({ExpRand()}!48).range(-40,40),~sharpness,SinOsc.ar({ExpRand()*~speed}!48).exprange(0.001,8)
+			,(1..num)*(16000/num)+SinOsc.ar({ExpRand()}!48).range(-40,40),sharpness,SinOsc.ar({ExpRand()*speed}!48).exprange(0.001,8)
 		)
 ,0.17,1)}).play;
 )

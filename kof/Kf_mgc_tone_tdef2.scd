@@ -10,12 +10,12 @@ Ndef(\rythm,{
 )
 
 
-~pos1 = {( SinOsc.ar(432e-3/fib(23) ).range(1,2).round(1/2) ** (1..23))};
 
 
 (
 Tdef(\tt,{
 
+	var pos1 = {( SinOsc.ar(432e-3/fib(23) ).range(1,2).round(1/2) ** (1..23))};
 	loop{
 		(
 			Ndef(\magick).quant = 2.0;

@@ -2,10 +2,11 @@
 Ndef(\a).fadeTime = 2.0;
 Ndef(\a).quant = 2.0;
 Ndef(\a,{
-	~base = [60,60.13] * LFNoise0.ar(1/8).range(0.75,3).round(0.25);
-	~saws = LFSaw.ar(1/8/[1,2,3,5,8,13,21,34,55,89]).squared;
+	var base,saws;
+	base = [60,60.13] * LFNoise0.ar(1/8).range(0.75,3).round(0.25);
+	saws = LFSaw.ar(1/8/[1,2,3,5,8,13,21,34,55,89]).squared;
 	Splay.ar(
-		~saws * LFSaw.ar(~base).lag(SinOsc.kr([11,11.1]).exprange(0.00001,0.01))
+		saws * LFSaw.ar(base).lag(SinOsc.kr([11,11.1]).exprange(0.00001,0.01))
 )}).play;
 
 Ndef(\a)[1] = \filter -> {|in| Pan2.ar(in,SinOsc.ar(0.1).range(-0.5,0.5))};

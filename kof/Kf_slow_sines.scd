@@ -3,13 +3,14 @@ Ndef(\ss).fadeTime = 2.0;
 Ndef(\ss).quant = 2.0;
 
 Ndef(\ss,{
-	~b = ([63-12,67-12]+24).midicps / 3pi;
-	~mod = SinOsc.ar(~b/1024.0).range(0.00001,0.015);
+	var b,mod;
+	b = ([63-12,67-12]+24).midicps / 3pi;
+	mod = SinOsc.ar(b/1024.0).range(0.00001,0.015);
 	Splay.ar(
 
 		AllpassC.ar(
 		RLPF.ar(
-				SinOsc.ar([~b*pi/2,~b*pi/3,~b*pi,~b*1.5]*LFNoise1.ar(8!8).lag(4).range(0.999-~mod,1.01+~mod),mul:0.133) * LFSaw.ar(8/[1,2,3,5,8,13]).squared
+				SinOsc.ar([b*pi/2,b*pi/3,b*pi,b*1.5]*LFNoise1.ar(8!8).lag(4).range(0.999-mod,1.01+mod),mul:0.133) * LFSaw.ar(8/[1,2,3,5,8,13]).squared
 
 			,880) +
 	Pan2.ar(
