@@ -48,8 +48,9 @@ LiveKolektiv {
 					var index = msg[1].asInt;
 					var remove = msg[2].asInt;
 					var string = msg[3].asString;
+
 					("ReceivedMsg || " ++ sender ++ " || " ++ index ++ " || " ++ remove ++ " || " ++ string).postln;
-					this.me.code.insertText(string,index);
+					this.me.code.string_(string,index,remove);
 				}
 			).add;
 		}

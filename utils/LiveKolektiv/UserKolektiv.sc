@@ -1,6 +1,6 @@
 UserKolektiv{
 	var userName, userNet;
-	var doc, ideDoc;
+	var doc;
 	var isMaster;
 
 	*new{ |name|
@@ -14,7 +14,7 @@ UserKolektiv{
 		isMaster = false;
 
 		ip = switch (userName)
-		{\alex}   { "25.164.56.183" }
+		{\alex} { "25.164.56.183" }
 		{\kof} { "25.164.28.14" }
 		{\joach} { "25.0.209.252" }
 		{\joach2} { "25.54.28.51" }
@@ -25,12 +25,11 @@ UserKolektiv{
 
 	logIn{
 		doc = Document.new("LiveKolektiv session","");
-		ideDoc = Document.findByQUuid(doc.quuid);
 	}
 
 	name { ^userName; }
 	net { ^userNet; }
-	code { ^ideDoc; }
+	code { ^doc; }
 }
 
 MasterKolektiv : UserKolektiv{
