@@ -8,7 +8,7 @@
 	sel = Duty.kr(4,0,Dseq([1,1.25,1.125,1.5,2,4],inf));
 
 	t = Impulse.ar(1/4,1/4*[0,1,1.25,2,3,3.25,3.75]);
-	env = Decay.ar(t,TExpRand.ar(0.5,5.75,t));
+	env = Decay.ar(t,TExpRand.ar(0.5,1.75,t));
 	fenv = Decay.ar(t,TExpRand.ar(0.2,0.15,t)).exprange(0.0001,1.01+(sel*1000.0));
 
 	sig = SinOsc.ar(44+fenv,mul:0.85) * env;
@@ -39,6 +39,7 @@
 )
 
 (
+~tone.fadeTime=4;
 ~tone.play;
 ~tone.quant=4;
 ~tone = {
@@ -49,16 +50,17 @@
 	env = Decay2.ar(t,0.25,TExpRand.ar(0.5,0.95,t));
 	fenv = Decay.ar(t,TExpRand.ar(0.02,0.5,t)).exprange(10.01+(15000.0),10.0001);
 
-	sig = LFSaw.ar(sel.midicps*(1.00001**(1..8))+SinOsc.ar([4,5,6,7],0,4),mul:0.025) * LFSaw.ar(8/(fib(12))).range(0,1);
-	sig = Resonz.ar(sig,fenv);
-	sig = CompanderD.ar(sig,0.5,1/1.5,1/10);
+	sig = SinOsc.ar(sel.midicps*(1.00001**(1..8))+SinOsc.ar([4,5,6,7],0,4),mul:0.025) * LFSaw.ar(8/(fib(12))).range(0,1);
+	// sig = Resonz.ar(sig,fenv);
+	sig = CompanderD.ar(sig,0.5,1/1.005,1/10);
 
-	Splay.ar(sig,0.1);
+	Splay.ar(sig,0.3);
 };
 
 )
 
 (
+~subtone.fadeTime=4;
 ~subtone.play;
 ~subtone.quant=4;
 ~subtone = {
@@ -69,11 +71,11 @@
 	env = Decay2.ar(t,0.25,TExpRand.ar(0.5,0.95,t));
 	fenv = Decay.ar(t,TExpRand.ar(0.02,1.5,t)).exprange(10.01+(15000.0),10.0001);
 
-	sig = LFSaw.ar(sel.midicps*(1.00001**(1..8)),SinOsc.ar(1/4/[4,5,6,7],0,8pi),mul:0.05) * LFSaw.ar(1/4/(1..8)).range(0,1);
+	sig = SinOsc.ar(sel.midicps*(1.00001**(1..8)),SinOsc.ar(1/4/[4,5,6,7],0,8pi),mul:0.15) * LFSaw.ar(1/4/(1..8)).range(0,1);
 	sig = BBandPass.ar(sig,fenv*SinOsc.ar(1/4/(1..8)).range(1,0.1) );
-	sig = CompanderD.ar(sig,0.5,1/1.5,1/10);
+	sig = CompanderD.ar(sig,0.5,1/1.05,1/10);
 
-	Splay.ar(sig,0.1);
+	Splay.ar(sig,0.3);
 };
 
 )
