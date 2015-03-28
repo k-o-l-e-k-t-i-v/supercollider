@@ -6,11 +6,11 @@
 
 ~mod.quant=2;
 ~mod.mold(4);
-~mod={Duty.kr([4,8,16,32]/4,0,Dseq(powerset([1,1.25,1.5,1.125,2,4,0.5]).scramble.pyramid.flat,inf))};
+~mod={Duty.kr([4,8,16,32]/4,0,Dseq(powerset([1,1.25,1.5,1.125,2,0.5]).scramble.pyramid.flat,inf))};
 
 ~mod2.quant=2;
 ~mod2.mold(1);
-~mod2={Duty.kr(8,0,Dseq(powerset([2,1,4,1.5]).scramble.pyramid.flat,inf))};
+~mod2={Duty.kr(4,0,Dseq([2,1.5,1],inf))};
 
 
 )
@@ -32,7 +32,7 @@
 	env = Decay.ar(t,1.5);
 
 	m = 43.2*(~mod2*pi)/~mod;
-	sig = RLPF.ar(LFSaw.ar(m*(1.001**(1..12)),mul:0.54*TExpRand.ar(0.2,0.6,t)) * env,m*(env.sqrt*~mod+1)) + sig;
+	sig = RLPF.ar(LFSaw.ar(m*(1.001**(1..12)),mul:0.54*TExpRand.ar(0.2,0.6,t)) * env,m*(env.sqrt*~mod2*~mod+1)) + sig;
 
 
 	sig = CombN.ar(sig,0.25,1,1);
