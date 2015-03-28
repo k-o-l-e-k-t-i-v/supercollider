@@ -32,10 +32,10 @@
 	env = Decay.ar(t,1.5);
 
 	m = 43.2*(~mod2*pi)/~mod;
-	sig = RLPF.ar(LFSaw.ar(m*(1.001**(1..12)),mul:0.54*TExpRand.ar(0.2,0.6,t)) * env,m*(env.sqrt*~mod2*~mod+1)) + sig;
+	sig = RLPF.ar(LFSaw.ar(m*(1.0001**(1..11)),mul:0.44*TExpRand.ar(0.5,1,t)) * env,m*(env.sqrt*~mod+1)) + sig;
 
 
-	sig = CombN.ar(sig,0.25,1,1);
+	sig = CombN.ar(sig,0.05,1,2);
 	sig = CompanderD.ar(sig,0.5,1/1.5,1/10);
 	sig = FreeVerb.ar(sig,0.1,0.5);
 
