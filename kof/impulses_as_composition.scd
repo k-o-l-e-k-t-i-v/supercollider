@@ -51,7 +51,7 @@
 
 	sig = LFSaw.ar(sel.midicps*(1.00001**(1..8))+SinOsc.ar([4,5,6,7],0,4),mul:0.025) * LFSaw.ar(8/(fib(12))).range(0,1);
 	sig = Resonz.ar(sig,fenv);
-	sig = CompanderD.ar(sig,0.5,1,1/10);
+	sig = CompanderD.ar(sig,0.5,1/1.5,1/10);
 
 	Splay.ar(sig,0.1);
 };
@@ -69,9 +69,9 @@
 	env = Decay2.ar(t,0.25,TExpRand.ar(0.5,0.95,t));
 	fenv = Decay.ar(t,TExpRand.ar(0.02,1.5,t)).exprange(10.01+(15000.0),10.0001);
 
-	sig = LFSaw.ar(sel.midicps*(1.00001**(1..8)),mul:0.05) * LFSaw.ar(1/4/(1..8)).range(0,1);
+	sig = LFSaw.ar(sel.midicps*(1.00001**(1..8)),SinOsc.ar(1/4/[4,5,6,7],0,8pi),mul:0.05) * LFSaw.ar(1/4/(1..8)).range(0,1);
 	sig = BBandPass.ar(sig,fenv*SinOsc.ar(1/4/(1..8)).range(1,0.1) );
-	sig = CompanderD.ar(sig,0.5,1,1/10);
+	sig = CompanderD.ar(sig,0.5,1/1.5,1/10);
 
 	Splay.ar(sig,0.1);
 };
