@@ -58,7 +58,7 @@ recB = OSCresponder(
 		var removeNum = msg[4].asInt;
 
 		("Received on userA form"+sender+"char:"+char+"index:"+index).postln;
-		userA.string_(char,index,removeNum);
+		userB.string_(char,index,removeNum);
 	}
 );
 recB.add;
