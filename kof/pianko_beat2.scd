@@ -13,13 +13,12 @@
 
 ~md3.quant=4;
 ~md3.mold(4);
-~md3={Duty.kr([4,8,16,32]*4,0,Dseq(powerset([1,1.25,1.125,1.5,2,0.75,0.5]).scramble.flat.pyramid.scramble,inf))};
+~md3={Duty.kr([4,8,16,32]*4,0,Dseq(powerset([1,1.25,1.125,1.5,0.75,0.5]).scramble.flat.pyramid.scramble,inf))};
 
 
 ~mod2.quant=4;
 ~mod2.mold(1);
-~mod2={Duty.kr(4,0,Dseq(powerset([2,1.5,1,4,0.5]).scramble.flat.pyramid,inf))};
-
+~mod2={Duty.kr(4,0,Dseq(powerset([2,1.5,1,4,0.5,1.5]).scramble.flat.pyramid,inf))};
 
 )
 
@@ -53,9 +52,9 @@
 	sig = RLPF.ar(LFSaw.ar(mel*(1.0001**(1..11))+SinOsc.ar(1/fib(11,1,3)),mul:0.54*TExpRand.ar(0.25,1,t)) * env,mel*(env.sqrt)) + sig;
 
 	t = Impulse.ar(1,1/8*([0,2,4,6]+4));
-	env = Decay.ar(t,0.75+TExpRand.ar(0.5,(1..4),t));
-	mel = 43.2021*1*((~mod2)*[1pi,2pi])/~md3;
-	sig = RLPF.ar(LFSaw.ar(mel*(1.000001**(1..11))+SinOsc.ar(1/fib(11,1,3)),mul:0.44*TExpRand.ar(0.25,1,t)) * env,mel*(env.sqrt)) + sig;
+	env = Decay.ar(t,0.95+TExpRand.ar(0.5,(1..4),t));
+	mel = 43.20213*1*((~mod2)*[1pi,2pi])/~md3;
+	sig = RLPF.ar(LFSaw.ar(mel*(1.000001**(1..11))+SinOsc.ar(1/fib(11,1,2)),mul:0.44*TExpRand.ar(0.25,1,t)) * env,mel*(env.sqrt)) + sig;
 
 
 
