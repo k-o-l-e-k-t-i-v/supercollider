@@ -6,9 +6,10 @@ Ndef(\2, {
 	var b, m,n,d,r, fenv, e1, e2, e3,e4, f, f2, f3, s1, s2, s3, s4;
 	b=3;
 
-	m=Impulse.kr(b*[0.25,0.5,0.75,1].scramble);
-	n=Impulse.kr(b*[0.75,0.125]);
-	d=Impulse.kr(b*[0.5,0.25]);
+	/////////// V - 1 = add tempo first, second is the phase, k
+	m=Impulse.kr(1,b*[0.25,0.5,0.75,1].scramble);
+	n=Impulse.kr(1,b*[0.75,0.125]);
+	d=Impulse.kr(1,b*[0.5,0.25]);
 
 	f=Duty.kr(b*2,0,Dseq([45,40,48,40,35,45],inf));
 	f2=Duty.kr(b,0,Dseq([4500,8000,6000,5000],inf));
