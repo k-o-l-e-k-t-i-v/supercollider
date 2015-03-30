@@ -7,9 +7,10 @@ Ndef(\2, {
 	b=3;
 
 	/////////// V - 1 = add tempo first, second is the phase, k
-	m=Impulse.kr(1,b*[0.25,0.5,0.75,1].scramble);
-	n=Impulse.kr(1,b*[0.75,0.125]);
-	d=Impulse.kr(1,b*[0.5,0.25]);
+	///i know, but this is the way I've been building them so far...I really liked youf fenv, tho ^^ TExpRand is lovely
+	m=Impulse.kr(b*[0.25,0.5,0.75,1].scramble);
+	n=Impulse.kr(b*[0.75,0.125]);
+	d=Impulse.kr(b*[0.5,0.25]);
 
 	f=Duty.kr(b*2,0,Dseq([45,40,48,40,35,45],inf));
 	f2=Duty.kr(b,0,Dseq([4500,8000,6000,5000],inf));

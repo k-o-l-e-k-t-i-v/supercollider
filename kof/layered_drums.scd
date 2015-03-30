@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s);
 (
 ~kick.quant=4;
 ~kick={
@@ -56,3 +56,6 @@ s.scope;
 };
 ~hat.play;
 )
+
+
+//very cool. I've been doing this with Synths and delay because it's easier to control time-wise
