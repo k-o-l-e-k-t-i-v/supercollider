@@ -44,7 +44,7 @@
 
 	t = Impulse.ar(1/4,1/8*([0,2,4,6]));
 	env = Decay.ar(t,3.75+TExpRand.ar(0.5,(1..4),t));
-	mel = 43.2021*((~mod2)*[0.5pi,1pi])/~md;
+	mel = 43.2021*2*((~mod2)*[0.5pi,1pi])/~md;
 	sig = RLPF.ar(LFSaw.ar(mel*(1.0001**(1..11))+SinOsc.ar(1/fib(11,1,3)),mul:0.84*TExpRand.ar(0.25,1,t)) * env,mel*(env.sqrt+1)) + sig;
 
 	sig = Vibrato.ar(sig,[4,5,6,7],0.04);
