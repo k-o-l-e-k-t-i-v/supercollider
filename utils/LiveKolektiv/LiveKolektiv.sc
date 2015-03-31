@@ -43,13 +43,14 @@ LiveKolektiv {
 				{arg ...args;
 					// var timestamp = args[0].asFloat;
 					var msg = args[2];
-					var sender = msg[0].asSymbol;
-					var index = msg[1].asInt;
-					var remove = msg[2].asInt;
-					var string = msg[3].asString;
-
+					var sender = msg[1].asSymbol;
+					var index = msg[2].asInt;
+					var remove = msg[3].asInt;
+					var string = msg[4].asString;
+					("Args: " ++ args).postln;
+					("Msg: " ++ msg).postln;
 					("ReceivedMsg || " ++ sender ++ " || " ++ index ++ " || " ++ remove ++ " || " ++ string).postln;
-					this.me.code.string_(string,index,remove);
+					this.me.code.string_(index,remove,string);
 				}
 			).add;
 		}
