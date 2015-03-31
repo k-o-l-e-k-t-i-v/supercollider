@@ -1,6 +1,5 @@
 LiveKolektiv {
 	var yourName;
-	var a, n, d;
 	var players;
 
 	*new{ |name|

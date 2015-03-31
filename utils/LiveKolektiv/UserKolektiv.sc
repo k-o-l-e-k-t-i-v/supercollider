@@ -20,7 +20,7 @@ UserKolektiv{
 		{\joach2} { "25.54.28.51" }
 		{"This userName isnt on list, srr".warn;};
 
-		userNet = NetAddr(ip, 57120);
+		userNet = NetAddr(ip, NetAddr.langPort);
 	}
 
 	logIn{
