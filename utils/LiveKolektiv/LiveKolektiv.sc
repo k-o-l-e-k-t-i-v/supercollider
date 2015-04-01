@@ -3,6 +3,8 @@ LiveKolektiv {
 	var players;
 
 	*new{ |name|
+		History.clear;
+		History.start;
 		^super.new.init(name);
 	}
 
@@ -34,7 +36,14 @@ LiveKolektiv {
 				("SendMsg || " ++ header ++ " || " ++ index ++ " || " ++ remove ++ " || " ++ string).postln;
 			};
 		};
-		// History.forwardFunc = { |code| };
+
+		History.forwardFunc = { |code|
+			this.listeners.do{|player|
+				var header = ("livecode_exec_" ++ this.me.name.asString ++ "_" ++ player.name.asString).asSymbol;
+				player.net.sendMsg(header,this.me.name,code);
+				("SendExecuteMsg || " ++ header ++ " || " ++ code ).postln;
+			};
+		};
 	}
 
 	initReceiveMsg{
@@ -50,6 +59,19 @@ LiveKolektiv {
 					var string = msg[4].asString;
 					("ReceivedMsg || " ++ sender ++ " || " ++ index ++ " || " ++ remove ++ " || " ++ string).postln;
 					this.me.code.string_(string,index,remove);
+				}
+			).add;
+
+			OSCresponder(
+				player.net,
+				("livecode_exec_" ++ player.name.asString ++ "_" ++ this.me.name.asString).asSymbol,
+				{arg ...args;
+					var msg = args[2];
+					var sender = msg[1].asString;
+					var code = msg[2].asString;
+					args.postln;
+					("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code).postln;
+					code.interpret;
 				}
 			).add;
 		}
