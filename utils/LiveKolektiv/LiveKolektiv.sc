@@ -19,6 +19,8 @@ LiveKolektiv {
 
 		this.initSendMsg;
 		this.initReceiveMsg;
+
+		this.printYou;
 	}
 
 	initSendMsg{
@@ -41,16 +43,13 @@ LiveKolektiv {
 				player.net,
 				("livecode_" ++ player.name.asString ++ "_" ++ this.me.name.asString).asSymbol,
 				{arg ...args;
-					// var timestamp = args[0].asFloat;
 					var msg = args[2];
-					var sender = msg[1].asSymbol;
+					var sender = msg[1].asString;
 					var index = msg[2].asInt;
 					var remove = msg[3].asInt;
 					var string = msg[4].asString;
-					("Args: " ++ args).postln;
-					("Msg: " ++ msg).postln;
 					("ReceivedMsg || " ++ sender ++ " || " ++ index ++ " || " ++ remove ++ " || " ++ string).postln;
-					this.me.code.string_(index,remove,string);
+					this.me.code.string_(string,index,remove);
 				}
 			).add;
 		}
