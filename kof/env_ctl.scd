@@ -15,3 +15,5 @@
     };
     ~env.play;
 )
+
+//i used Duty for gate but Impulse is nice as well 
