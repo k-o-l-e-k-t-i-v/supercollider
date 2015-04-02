@@ -1,22 +1,29 @@
 LiveKolektiv {
 	var yourName;
 	var players;
+	var blockFirstEval;
 
 	*new{ |name|
 		History.clear;
 		History.start;
+
+
+
 		^super.new.init(name);
 	}
 
 	init{|name|
 		players = List.new();
 		yourName = name;
+		blockFirstEval = true;
+
 
 		this.addPlayer(\kof);
 		this.addPlayer(\alex);
 		this.addPlayer(\alex2);
 		this.addPlayer(\joach);
 		this.addPlayer(\joach2);
+
 
 		this.me.logIn;
 
@@ -39,10 +46,15 @@ LiveKolektiv {
 		};
 
 		History.forwardFunc = { |code|
-			this.listeners.do{|player|
-				var header = ("livecode_exec_" ++ this.me.name.asString ++ "_" ++ player.name.asString).asSymbol;
-				player.net.sendMsg(header,this.me.name,code);
-				("SendExecuteMsg || " ++ header ++ " || " ++ code ).postln;
+			// block setup code from sending others
+			if(blockFirstEval==true){
+				"Setup code cached".postln;
+			}{
+				this.listeners.do{|player|
+					var header = ("livecode_exec_" ++ this.me.name.asString ++ "_" ++ player.name.asString).asSymbol;
+					player.net.sendMsg(header,this.me.name,code);
+					("SendExecuteMsg || " ++ header ++ " || " ++ code ).postln;
+				};
 			};
 		};
 	}
@@ -73,11 +85,11 @@ LiveKolektiv {
 					args.postln;
 					("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code).postln;
 
-                                        // added for some basic level of security
-                                        code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
-					                    // bit hacky way filtering out document...
-					                    code = code.replace("Document","!Document!");
-                                        code.interpret;
+					// added for some basic level of security
+					code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
+					// bit hacky way filtering out document...
+					code = code.replace("Document","!Document!");
+					code.interpret;
 				}
 			).add;
 		}
