@@ -88,8 +88,7 @@ LiveKolektiv {
 
 					// added for some basic level of security
 					code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
-					// bit hacky way filtering out document...
-					code = code.replace("Document","!Document!");
+
 					code.interpret;
 				}
 			).add;
