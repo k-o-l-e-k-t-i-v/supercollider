@@ -14,6 +14,7 @@ LiveKolektiv {
 
 		this.addPlayer(\kof);
 		this.addPlayer(\alex);
+		this.addPlayer(\alex2);
 		this.addPlayer(\joach);
 		this.addPlayer(\joach2);
 
@@ -71,9 +72,11 @@ LiveKolektiv {
 					var code = msg[2].asString;
 					args.postln;
 					("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code).postln;
-					
+
                                         // added for some basic level of security
                                         code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
+					                    // bit hacky way filtering out document...
+					                    code = code.replace("Document","!Document!");
                                         code.interpret;
 				}
 			).add;
