@@ -27,38 +27,36 @@ userB.textChangedAction = { arg ...args;
 	("SendMsg from " ++ userName ++ " || " ++ string ++ " || " ++ position ++ " || " ++ removeNum).postln;
 };
 
-recA = OSCresponder(
-	net , // Listen to all IP addresses
-	'/livecodeBA',
-	{arg ...args;
-		var timestamp = args[0].asFloat;
-		var msg = args[2];
-		var sender = msg[1].asString;
-		var string = msg[2].asString;
-		var position = msg[3].asInt;
-		var removeNum = msg[4].asInt;
+recA = OSCFunc({|msg, time, addr, recvPort|
+	var timestamp = time;
+	var sender = msg[1].asString;
+	var string = msg[2].asString;
+	var position = msg[3].asInt;
+	var removeNum = msg[4].asInt;
 
-		("RecivedMsg from " ++ sender ++ " || " ++ string ++ " || " ++ position ++ " || " ++ removeNum).postln;
-		userA.string_(string,position,removeNum);
-	}
-);
-recA.add;
+	("MSG : " ++ msg).postln;
+	("TIME : " ++ time).postln;
+	("ADDR : " ++ addr).postln;
+	("RECVPORT : " ++ recvPort).postln;
 
-recB = OSCresponder(
-	net , // Listen to all IP addresses
-	'/livecodeAB',
-	{arg ...args;
-		var timestamp = args[0].asFloat;
-		var msg = args[2];
-		var sender = msg[1].asString;
-		var string = msg[2].asString;
-		var position = msg[3].asInt;
-		var removeNum = msg[4].asInt;
+	("RecivedMsg from " ++ sender ++ " || " ++ string ++ " || " ++ position ++ " || " ++ removeNum).postln;
+	userA.string_(string,position,removeNum);
+}, '/livecodeBA', net);
 
-		("RecivedMsg from " ++ sender ++ " || " ++ string ++ " || " ++ position ++ " || " ++ removeNum).postln;
-		userB.string_(string,position,removeNum);
-	}
-);
-recB.add;
+recB = OSCFunc({|msg, time, addr, recvPort|
+	var timestamp = time;
+	var sender = msg[1].asString;
+	var string = msg[2].asString;
+	var position = msg[3].asInt;
+	var removeNum = msg[4].asInt;
+
+	("MSG : " ++ msg).postln;
+	("TIME : " ++ time).postln;
+	("ADDR : " ++ addr).postln;
+	("RECVPORT : " ++ recvPort).postln;
+
+	("RecivedMsg from " ++ sender ++ " || " ++ string ++ " || " ++ position ++ " || " ++ removeNum).postln;
+	userB.string_(string,position,removeNum);
+}, '/livecodeAB', net);
 )
 
