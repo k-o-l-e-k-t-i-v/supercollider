@@ -3,13 +3,16 @@
 
 
 (
+
 ~a={
 	var sig;
-	sig = Klank.ar(`[Array.fill(200,{ExpRand(4,2000)}),nil,Array.fill(200,{ExpRand(0.001,1)})], PinkNoise.ar(0.06!2),1,40,1.1);
-	sig = BBandPass.ar(sig,22000/16*(1..16),0.25,SinOsc.ar(1/2/(1..16).scramble).range(0,1));
-	sig = FreeVerb.ar(sig,0.13,1.25);
+	sig = Klank.ar({`[Array.fill(20,{ExpRand(44,14480)}),nil,Array.fill(20,{ExpRand(0.01,1)})]}!16,SelectX.ar(LFTri.ar(1/32).range(0.0,16.1),LPF.ar(PinkNoise.ar(0.001!16),22000/(1..16).scramble)));
+	sig = Mix.ar(sig);
+	sig = BBandPass.ar(sig,18800/32*(1..16)+80,0.15,SinOsc.ar(1/4/(1..32).scramble,{ExpRand(0,2pi)}!16).exprange(0.00001,1));
+	sig = CompanderD.ar(sig,1/1.2,1/2);
+	sig = FreeVerb.ar(sig,0.153,1.5);
 	Splay.ar(sig,0.1);
 
 };
-~a.play;
+~a.play.quant_(4);
 )
