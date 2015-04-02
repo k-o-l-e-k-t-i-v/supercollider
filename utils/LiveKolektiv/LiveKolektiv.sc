@@ -71,7 +71,10 @@ LiveKolektiv {
 					var code = msg[2].asString;
 					args.postln;
 					("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code).postln;
-					code.interpret;
+					
+                                        // added for some basic level of security
+                                        code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
+                                        code.interpret;
 				}
 			).add;
 		}
