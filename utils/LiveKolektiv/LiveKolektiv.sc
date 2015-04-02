@@ -49,6 +49,7 @@ LiveKolektiv {
 			// block setup code from sending others
 			if(blockFirstEval==true){
 				"Setup code cached".postln;
+				blockFirstEval=false;
 			}{
 				this.listeners.do{|player|
 					var header = ("livecode_exec_" ++ this.me.name.asString ++ "_" ++ player.name.asString).asSymbol;
