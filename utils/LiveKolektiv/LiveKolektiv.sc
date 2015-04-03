@@ -90,7 +90,7 @@ LiveKolektiv {
 
 	sendMsg_sync{
 		var txt = doc.text.asString;
-/*
+		/*
 		doc = Document.findByQUuid(Document.current.quuid);
 
 		ScIDE.setCurrentDocumentByQUuid(Document.current.quuid);
@@ -102,7 +102,7 @@ LiveKolektiv {
 		// txt = doc.text.asString;
 		// txt = Document.current.string(0,-1).asString;
 		// txt = txt.replace("\r","");
-*/
+		*/
 		"Got join msg, sending my document".postln;
 		("SyntMSG: " ++ txt).postln;
 		// net.sendMsg('/sync', name, txt.asString);
@@ -137,12 +137,12 @@ LiveKolektiv {
 		var position = msg[3].asInt;
 		var removeNum = msg[4].asInt;
 		var string = msg[5].asString;
-
+		var offset = thisThread.seconds - msg[2];
 		// ("MSG : " ++ msg).postln;
 		// ("TIME : " ++ timestamp).postln;
 
 		doc.string_(string, position, removeNum);
-		("ReceivedMsg || " ++ sender ++ " || rec: " ++ timestamp ++ " || send: " ++ sendTime
+		("ReceivedMsg || " ++ sender ++ " || rec: " ++ timestamp ++ " || send: " ++ sendTime ++ " || offset: " ++ offset
 			++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
