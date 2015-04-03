@@ -107,7 +107,7 @@ LiveKolektiv {
 	sendMsg_livecode {arg ...args;
 		var position = args[0][1];
 		var removeNum = args[0][2];
-		var string = args[0][3];
+		var string = args[0][3].asString;
 
 
 		string = string.replace("\r","");
