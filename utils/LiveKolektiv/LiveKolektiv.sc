@@ -96,15 +96,19 @@ LiveKolektiv {
 	}
 
 	sendMsg_sync{
+<<<<<<< HEAD
 		var txt;
 		// doc = Document.current;
 		doc.selectRange(0,doc.text.size());
 		txt = doc.selectedString.asString;
 		doc.selectRange(doc.text.size(),doc.text.size());
 
+=======
+		var txt = doc.string;
+>>>>>>> parent of cddf984... ultra magic obcure version, working ...
 
 		"Got join msg, sending my document".postln;
-		("MSG:"+txt).postln;
+		"MSG:"+txt.postln;
 		net.sendMsg('/sync', name, txt.asString);
 	}
 
