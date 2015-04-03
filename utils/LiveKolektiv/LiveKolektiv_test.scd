@@ -5,7 +5,7 @@ a = LiveKolektiv(\alex);
 a = LiveKolektiv(\alex2);
 
 a.printYou;
-a.printListeners;
+
 
 ////////////////
 
