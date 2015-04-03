@@ -87,7 +87,16 @@ LiveKolektiv {
 
 
 		doc = Document.findByQUuid(Document.current.quuid);
-		txt = doc.text.asString;
+
+
+		ScIDE.setCurrentDocumentByQUuid(Document.current.quuid);
+		ScIDE.setDocumentTextMirrorEnabled(Document.current.quuid,true);
+		ScIDE.getTextByQUuid(Document.current.quuid.ascii);
+		ScIDE.setEditablebyQUuid(Document.current.quuid.ascii,true);
+		txt = Document.current.string(0,-1).asString;
+
+
+		// txt = doc.text.asString;
 
 		// txt = Document.current.string(0,-1).asString;
 
