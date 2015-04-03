@@ -13,7 +13,7 @@ LiveKolektiv {
 		name = userName;
 
 		NetAddr.broadcastFlag_(flag:true);
-		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
+		net = NetAddr("25.255.255.255", 57120); // broadcast
 
 		History.clear;
 		History.start;
@@ -31,12 +31,12 @@ LiveKolektiv {
 	}
 
 	initReceiveMsg{
-        AbstractResponderFunc.clear;
+		// AbstractResponderFunc.clear;
 
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"myJoinMsg".postln}; }, '/sync');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)){this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
 	}
 
 	initSendMsg{
