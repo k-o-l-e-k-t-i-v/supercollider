@@ -87,6 +87,8 @@ LiveKolektiv {
 		doc = Document.current;
 		txt = doc.text.asString;
 
+		txt = txt.replace("\r","");
+
 		"Got join msg, sending my document".postln;
 		"MSG:"+txt.postln;
 		net.sendMsg('/sync', name, txt.asString);
@@ -94,15 +96,21 @@ LiveKolektiv {
 
 	receivedMsg_sync{arg ...args;
 		var msg = args;
+		var clean = args[0][2].asString;
 		"Got sync msg, replacing my document".postln;
 		args.postln;
-		doc.text=args[0][2].asString;
+
+
+		doc.text=clean;
 	}
 
 	sendMsg_livecode {arg ...args;
 		var position = args[0][1];
 		var removeNum = args[0][2];
 		var string = args[0][3];
+
+
+		string = string.replace("\r","");
 
 		args.postln;
 		net.sendMsg('/livecode', name, position, removeNum, string);
