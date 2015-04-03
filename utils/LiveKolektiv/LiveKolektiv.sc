@@ -1,8 +1,9 @@
 LiveKolektiv {
 	var name;
 	var net;
+	var proxy;
 	var doc;
-
+	var oscJoin, oscSync, oscText, oscExec;
 	var blockFirstEval;
 
 	*new{ |userName|
@@ -11,7 +12,7 @@ LiveKolektiv {
 
 	init{|userName|
 		name = userName;
-
+		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag:true);
 		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
 
@@ -26,6 +27,12 @@ LiveKolektiv {
 		this.initSendMsg;
 		this.initReceiveMsg;
 
+		doc.onClose = {
+			oscJoin.free; oscSync.free; oscText.free; oscExec.free;
+			History.end;
+			net.disconnect;
+			proxy.pop;
+		};
 
 		this.printYou;
 	}
@@ -33,11 +40,10 @@ LiveKolektiv {
 	initReceiveMsg{
 		// AbstractResponderFunc.clear;
 
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
-
+		oscJoin = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
+		oscSync = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
+		oscText = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
+		oscExec = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
 	}
 
 	initSendMsg{
@@ -83,11 +89,9 @@ LiveKolektiv {
 	}
 
 	sendMsg_sync{
-		var txt;
-
-
+		var txt = doc.text.asString;
+/*
 		doc = Document.findByQUuid(Document.current.quuid);
-
 
 		ScIDE.setCurrentDocumentByQUuid(Document.current.quuid);
 		ScIDE.setDocumentTextMirrorEnabled(Document.current.quuid,true);
@@ -95,16 +99,13 @@ LiveKolektiv {
 		ScIDE.setEditablebyQUuid(Document.current.quuid.ascii,true);
 		txt = Document.current.string(0,-1).asString;
 
-
 		// txt = doc.text.asString;
-
 		// txt = Document.current.string(0,-1).asString;
-
 		// txt = txt.replace("\r","");
-
+*/
 		"Got join msg, sending my document".postln;
-		"MSG:"+txt.postln;
-		net.sendMsg('/sync', name, txt.asString);
+		("SyntMSG: " ++ txt).postln;
+		// net.sendMsg('/sync', name, txt.asString);
 	}
 
 	receivedMsg_sync{arg ...args;
@@ -112,7 +113,6 @@ LiveKolektiv {
 		var clean = args[0][2].asString;
 		"Got sync msg, replacing my document".postln;
 		args.postln;
-
 
 		Document.current.string_(clean,0,-1);
 	}
@@ -122,18 +122,18 @@ LiveKolektiv {
 		var removeNum = args[0][2];
 		var string = args[0][3].asString;
 
-
-		string = string.replace("\r","");
+		// string = string.replace("\r","");
 
 		args.postln;
 		net.sendMsg('/livecode', name, position, removeNum, string);
-		// ("SendMsg || livecode || " ++ name ++ " || "++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		("SendMsg || livecode || " ++ name ++ " || "++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
 	receivedMsg_livecode{|time, message|
 		var timestamp = time;
 		var msg = message;
 
+		var sender = msg[1].asString;
 		var position = msg[2].asInt;
 		var removeNum = msg[3].asInt;
 		var string = msg[4].asString;
@@ -142,7 +142,7 @@ LiveKolektiv {
 		("TIME : " ++ timestamp).postln;
 
 		doc.string_(string, position, removeNum);
-		// ("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
 	printYou { ("You || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port).postln; }
