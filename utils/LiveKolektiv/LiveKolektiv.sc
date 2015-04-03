@@ -1,5 +1,6 @@
 LiveKolektiv {
-	var name, net;
+	var name;
+	var net;
 	var doc;
 
 	var blockFirstEval;
@@ -11,8 +12,8 @@ LiveKolektiv {
 	init{|userName|
 		name = userName;
 
-		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
 		NetAddr.broadcastFlag_(flag:true);
+		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
 
 		History.clear;
 		History.start;
@@ -29,9 +30,9 @@ LiveKolektiv {
 
 
 	initReceiveMsg{
-		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_join(time, msg) } }, ("joincode").asSymbol);
-		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_livecode(time, msg) } }, ("livecode").asSymbol);
-		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_execute(msg) } }, ("executecode").asSymbol);
+		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_join(time, msg)}, '/joincode');
+		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_livecode(time, msg) }, '/livecode');
+		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_execute(msg) }, '/executecode');
 	}
 
 	initSendMsg{
@@ -41,7 +42,7 @@ LiveKolektiv {
 
 	isMyMsg{|msg|
 		var sender = msg[0][1];
-		if(sender.asString == name.asString) {^true}{^false};
+		if(sender.asString == name.asString) {^false}{^true};
 	}
 
 	sendMsg_execute{|code|
@@ -50,7 +51,7 @@ LiveKolektiv {
 			"Setup code cached".postln;
 			blockFirstEval=false;
 		}{
-			net.sendMsg("executecode", name, code);
+			net.sendMsg('/executecode', name, code);
 			("SendExecuteMsg || executecode || " ++ name ++ " || " ++ code ).postln;
 		};
 	}
@@ -80,13 +81,13 @@ LiveKolektiv {
 	}
 
 	sendMsg_livecode {arg ...args;
-
+		//
 		var position = args[0][1];
 		var removeNum = args[0][2];
 		var string = args[0][3];
 
 		args.postln;
-		net.sendMsg("livecode", name, position, removeNum, string);
+		net.sendMsg('/livecode', name, position, removeNum, string);
 		// ("SendMsg || livecode || " ++ name ++ " || "++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
@@ -105,5 +106,5 @@ LiveKolektiv {
 		// ("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
-	printYou { ^("You || account " ++ name ++ " || ip " ++ net.hostname ++ " || port " ++ net.port).asString; }
+	printYou { ("You || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port).postln; }
 }
