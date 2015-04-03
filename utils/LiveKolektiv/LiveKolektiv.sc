@@ -2,6 +2,7 @@ LiveKolektiv {
 	var name;
 	var net;
 	var doc;
+	var o1,o2,o3,o4;
 
 	var blockFirstEval;
 
@@ -10,7 +11,13 @@ LiveKolektiv {
 	}
 
 	init{|userName|
+
 		name = userName;
+
+		CmdPeriod.run;
+		Interpreter.clear;
+		thisProcess.stop;
+
 
 		NetAddr.broadcastFlag_(flag:true);
 		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
@@ -19,24 +26,30 @@ LiveKolektiv {
 		History.start;
 
 		blockFirstEval = true;
-		// doc = Document.new("LiveKolektiv","");
-		Document.current.text="";
-		doc = Document.current;
+		doc = Document.new("LiveKolektiv","");
+		// Document.current.text="";
+		// doc = Document.current;
 
 		this.initSendMsg;
 		this.initReceiveMsg;
 
 
 		this.printYou;
+
+		doc.onClose = {
+			o1.free; o2.free; o3.free; o4.free;
+			History.end;
+			net.disconnect;
+		};
+
 	}
 
 	initReceiveMsg{
-		// AbstractResponderFunc.clear;
 
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
+		o1=OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
+		o2=OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
+		o3=OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
+		o4=OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
 
 	}
 
@@ -57,15 +70,15 @@ LiveKolektiv {
 			"Setup code cached".postln;
 			blockFirstEval=false;
 		}{
-			net.sendMsg('/executecode', name, code);
-			("SendExecuteMsg || executecode || " ++ name ++ " || " ++ code ).postln;
+			// net.sendMsg('/executecode', name, code);
+			// ("SendExecuteMsg || executecode || " ++ name ++ " || " ++ code ).postln;
 		};
 	}
 
 	receivedMsg_execute{|msg|
 		var sender = msg[1].asString;
 		// var code = msg[2].asString;
-		("MSG : " ++ msg).postln;
+		// ("MSG : " ++ msg).postln;
 
 
 		// added for some basic level of security
@@ -84,8 +97,10 @@ LiveKolektiv {
 
 	sendMsg_sync{
 		var txt;
-		doc = Document.current;
-		txt = doc.text.asString;
+		// doc = Document.current;
+		doc.selectRange(0, -1);
+		txt = doc.selectedString.asString;
+
 
 		"Got join msg, sending my document".postln;
 		("MSG:"+txt).postln;
