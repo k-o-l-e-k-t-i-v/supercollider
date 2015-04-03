@@ -1,7 +1,7 @@
 LiveKolektiv {
 	var name;
 	var net;
-	var doc;
+	classvar doc;
 	var o1,o2,o3,o4;
 
 	var blockFirstEval;
@@ -98,8 +98,9 @@ LiveKolektiv {
 	sendMsg_sync{
 		var txt;
 		// doc = Document.current;
-		doc.selectRange(0, -1);
+		doc.selectRange(0,doc.text.size());
 		txt = doc.selectedString.asString;
+		doc.selectRange(doc.text.size(),doc.text.size());
 
 
 		"Got join msg, sending my document".postln;
@@ -109,9 +110,12 @@ LiveKolektiv {
 
 	receivedMsg_sync{arg ...args;
 		var msg = args;
+		var txt = args[0][2].asString;
+
 		"Got sync msg, replacing my document".postln;
 		args.postln;
-		doc.text=args[0][2].asString;
+		txt = txt.replace("\r","");
+		doc.text=txt;
 	}
 
 	sendMsg_livecode {arg ...args;
@@ -135,8 +139,14 @@ LiveKolektiv {
 		("MSG : " ++ msg).postln;
 		("TIME : " ++ timestamp).postln;
 
+		string = string.replace("\r","");
+
 		doc.string_(string, position, removeNum);
 		// ("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+	}
+
+	getDocument{
+		^doc;
 	}
 
 	printYou { ("You || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port).postln; }
