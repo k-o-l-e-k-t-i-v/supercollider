@@ -118,15 +118,14 @@ LiveKolektiv {
 	}
 
 	sendMsg_livecode {arg ...args;
+		var sendTime = thisThread.seconds;
 		var position = args[0][1];
 		var removeNum = args[0][2];
 		var string = args[0][3].asString;
-
 		// string = string.replace("\r","");
 
-		args.postln;
-		net.sendMsg('/livecode', name, position, removeNum, string);
-		("SendMsg || livecode || " ++ name ++ " || "++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		net.sendMsg('/livecode', name, sendTime, position, removeNum, string);
+		("SendMsg || livecode || " ++ name ++ " || " ++ sendTime ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
 	receivedMsg_livecode{|time, message|
@@ -134,15 +133,17 @@ LiveKolektiv {
 		var msg = message;
 
 		var sender = msg[1].asString;
-		var position = msg[2].asInt;
-		var removeNum = msg[3].asInt;
-		var string = msg[4].asString;
+		var sendTime = msg[2].asString;
+		var position = msg[3].asInt;
+		var removeNum = msg[4].asInt;
+		var string = msg[5].asString;
 
-		("MSG : " ++ msg).postln;
-		("TIME : " ++ timestamp).postln;
+		// ("MSG : " ++ msg).postln;
+		// ("TIME : " ++ timestamp).postln;
 
 		doc.string_(string, position, removeNum);
-		("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		("ReceivedMsg || " ++ sender ++ " || rec: " ++ timestamp ++ " || send: " ++ sendTime
+			++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
 	printYou { ("You || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port).postln; }
