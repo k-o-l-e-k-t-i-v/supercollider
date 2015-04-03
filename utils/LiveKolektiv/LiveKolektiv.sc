@@ -13,15 +13,15 @@ LiveKolektiv {
 		name = userName;
 
 		NetAddr.broadcastFlag_(flag:true);
-		net = NetAddr("25.255.255.255", 57120); // broadcast
+		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
 
 		History.clear;
 		History.start;
 
 		blockFirstEval = true;
 		// doc = Document.new("LiveKolektiv","");
+		Document.current.text="";
 		doc = Document.current;
-		doc.text="";
 
 		this.initSendMsg;
 		this.initReceiveMsg;
@@ -37,6 +37,7 @@ LiveKolektiv {
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
+
 	}
 
 	initSendMsg{
@@ -82,15 +83,18 @@ LiveKolektiv {
 	}
 
 	sendMsg_sync{
-		var txt = doc.text;
+		var txt = doc.string;
+
 		"Got join msg, sending my document".postln;
-		net.sendMsg('/sync', name, txt);
+		"MSG:"+txt.postln;
+		net.sendMsg('/sync', name, txt.asString);
 	}
 
-	receivedMsg_sync{|message|
-		var msg = message;
+	receivedMsg_sync{arg ...args;
+		var msg = args;
 		"Got sync msg, replacing my document".postln;
-		doc.text=msg[2];
+		args.postln;
+		doc.text=args[0][2].asString;
 	}
 
 	sendMsg_livecode {arg ...args;
