@@ -11,6 +11,8 @@ LiveKolektiv {
 	}
 
 	init{|userName|
+		CmdPeriod.run;
+
 		name = userName;
 		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag:true);
@@ -59,7 +61,7 @@ LiveKolektiv {
 
 	sendMsg_execute{|code|
 		// block setup code from sending others
-		if(blockFirstEval==true){
+		if(blockFirstEval){
 			"Setup code cached".postln;
 			blockFirstEval=false;
 		}{
@@ -70,14 +72,12 @@ LiveKolektiv {
 
 	receivedMsg_execute{|msg|
 		var sender = msg[1].asString;
-		// var code = msg[2].asString;
-		("MSG : " ++ msg).postln;
-
+		var code = msg[2].asString;
 
 		// added for some basic level of security
-		// code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
-		// code.interpret;
-		// ^("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code);
+		code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
+		code.interpret;
+		^("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code);
 	}
 
 	sendMsg_join{
