@@ -83,10 +83,12 @@ LiveKolektiv {
 	}
 
 	sendMsg_sync{
-		var txt = doc.string;
+		var txt;
+		doc = Document.current;
+		txt = doc.text.asString;
 
 		"Got join msg, sending my document".postln;
-		"MSG:"+txt.postln;
+		("MSG:"+txt).postln;
 		net.sendMsg('/sync', name, txt.asString);
 	}
 
