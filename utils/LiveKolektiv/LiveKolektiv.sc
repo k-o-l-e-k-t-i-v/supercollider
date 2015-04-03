@@ -88,7 +88,7 @@ LiveKolektiv {
 		txt = doc.text.asString;
 
 		"Got join msg, sending my document".postln;
-		("MSG:"+txt).postln;
+		"MSG:"+txt.postln;
 		net.sendMsg('/sync', name, txt.asString);
 	}
 
