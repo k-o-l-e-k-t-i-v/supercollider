@@ -85,7 +85,7 @@ LiveKolektiv {
 	sendMsg_sync{
 		var txt;
 
-		txt = Document.current.string_(0,-1);
+		txt = Document.current.string_(0,-1).asString;
 
 		txt = txt.replace("\r","");
 
