@@ -85,9 +85,13 @@ LiveKolektiv {
 	sendMsg_sync{
 		var txt;
 
-		txt = Document.current.string(0,-1).asString;
 
-		txt = txt.replace("\r","");
+		doc = Document.findByQUuid(Document.current.quuid);
+		txt = doc.text.asString;
+
+		// txt = Document.current.string(0,-1).asString;
+
+		// txt = txt.replace("\r","");
 
 		"Got join msg, sending my document".postln;
 		"MSG:"+txt.postln;
