@@ -28,10 +28,9 @@ LiveKolektiv {
 		this.printYou;
 	}
 
-
 	initReceiveMsg{
 		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_join(time, msg)}, '/joincode');
-		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_livecode(time, msg) }, '/livecode');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
 		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_execute(msg) }, '/executecode');
 	}
 
@@ -40,9 +39,9 @@ LiveKolektiv {
 		History.forwardFunc = { |code| this.sendMsg_execute(code) };
 	}
 
-	isMyMsg{|msg|
-		var sender = msg[0][1];
-		if(sender.asString == name.asString) {^false}{^true};
+	isOtherMsg{|msg|
+		var sender = msg[1];
+		if(sender.asString != name.asString) {^true}{^false};
 	}
 
 	sendMsg_execute{|code|
