@@ -31,15 +31,12 @@ LiveKolektiv {
 	}
 
 	initReceiveMsg{
-		OSCdef(\join).clear;
-		OSCdef(\sync).clear;
-		OSCdef(\livecode).clear;
-		OSCdef(\executecode).clear;
+        AbstractResponderFunc.clear;
 
-		OSCdef(\join,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
-		OSCdef(\sync,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"myJoinMsg".postln}; }, '/sync');
-		OSCdef(\livecode,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
-		OSCdef(\executecode,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)){this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"myJoinMsg".postln}; }, '/sync');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)){this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
 	}
 
 	initSendMsg{
