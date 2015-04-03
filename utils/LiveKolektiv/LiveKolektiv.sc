@@ -30,12 +30,12 @@ LiveKolektiv {
 
 	initReceiveMsg{
 		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_join(time, msg) } }, ("joincode").asSymbol);
-		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_code(time, msg) } }, ("livecode").asSymbol);
+		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_livecode(time, msg) } }, ("livecode").asSymbol);
 		OSCFunc({|msg, time, addr, recvPort| if(this.isMyMsg.not) { this.receivedMsg_execute(msg) } }, ("executecode").asSymbol);
 	}
 
 	initSendMsg{
-		doc.textChangedAction = {|char| this.sendMsg_code(char) };
+		doc.textChangedAction = {arg ...args; this.sendMsg_livecode(args) };
 		History.forwardFunc = { |code| this.sendMsg_execute(code) };
 	}
 
@@ -79,27 +79,30 @@ LiveKolektiv {
 		// ^("ReceivedJoinMsg || " ++ sender ++ " || " ++ code);
 	}
 
-	sendMsg_code {arg ...args;
-		var position = args[1];
-		var removeNum = args[2];
-		var string = args[3];
+	sendMsg_livecode {arg ...args;
 
+		var position = args[0][1];
+		var removeNum = args[0][2];
+		var string = args[0][3];
+
+		args.postln;
 		net.sendMsg("livecode", name, position, removeNum, string);
-		("SendMsg || livecode || " ++ name ++ " || "++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		// ("SendMsg || livecode || " ++ name ++ " || "++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
-	receivedMsg_code{|time, msg|
+
+	receivedMsg_livecode{|time, message|
 		var timestamp = time;
-		var header = msg[0].asSymbol;
-		var sender = msg[1].asString;
+		var msg = message;
+
 		var position = msg[2].asInt;
 		var removeNum = msg[3].asInt;
 		var string = msg[4].asString;
 
 		("MSG : " ++ msg).postln;
-		("TIME : " ++ time).postln;
+		("TIME : " ++ timestamp).postln;
 
-		doc.string_(string, position, removeNum);
-		^("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string);
+		// doc.string_(string, position, removeNum);
+		// ("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
 	printYou { ^("You || account " ++ name ++ " || ip " ++ net.hostname ++ " || port " ++ net.port).asString; }
