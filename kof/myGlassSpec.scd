@@ -18,3 +18,6 @@
 ~glass.play;
 )
 
+p=ProxySpace.push(s);
+
+//wow, cool. Do you miss doing a more analog performace, sort of what we did in Bratislava? ^^
