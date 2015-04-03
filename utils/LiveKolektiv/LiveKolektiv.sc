@@ -19,22 +19,25 @@ LiveKolektiv {
 		History.start;
 
 		blockFirstEval = true;
-		doc = Document.new("LiveKolektiv","");
+		// doc = Document.new("LiveKolektiv","");
+		doc = Document.current;
 
 
 		this.initSendMsg;
 		this.initReceiveMsg;
 
+
 		this.printYou;
 	}
 
 	initReceiveMsg{
-		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_join(time, msg)}, '/joincode');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/joincode');
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
 		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_execute(msg) }, '/executecode');
 	}
 
 	initSendMsg{
+		this.sendMsg_join;
 		doc.textChangedAction = {arg ...args; this.sendMsg_livecode(args) };
 		History.forwardFunc = { |code| this.sendMsg_execute(code) };
 	}
@@ -68,7 +71,7 @@ LiveKolektiv {
 	}
 
 	sendMsg_join{
-
+		net.sendMsg('/joincode', name);
 	}
 	receivedMsg_join{|time, msg|
 		var timestamp = time;
@@ -101,7 +104,7 @@ LiveKolektiv {
 		("MSG : " ++ msg).postln;
 		("TIME : " ++ timestamp).postln;
 
-		// doc.string_(string, position, removeNum);
+		doc.string_(string, position, removeNum);
 		// ("ReceivedMsg || " ++ sender ++ " || " ++ timestamp ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
 	}
 
