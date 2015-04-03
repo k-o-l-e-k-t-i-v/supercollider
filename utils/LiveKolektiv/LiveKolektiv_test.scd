@@ -6,3 +6,6 @@ a = LiveKolektiv(\alex2);
 
 a.printYou;
 a.printListeners;
+
+////////////////
+
