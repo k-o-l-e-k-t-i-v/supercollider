@@ -31,7 +31,9 @@ LiveKolektiv {
 	}
 
 	initReceiveMsg{
-		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/joincode');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
+		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"myJoinMsg".postln}; }, '/sync');
+
 		OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
 		OSCFunc({|msg, time, addr, recvPort| this.receivedMsg_execute(msg) }, '/executecode');
 	}
@@ -71,19 +73,26 @@ LiveKolektiv {
 	}
 
 	sendMsg_join{
-		net.sendMsg('/joincode', name);
+		net.sendMsg('/join', name);
 	}
-	receivedMsg_join{|time, msg|
-		var timestamp = time;
-		var sender = msg[1].asString;
-		("MSG : " ++ msg).postln;
-		("TIME : " ++ time).postln;
 
-		// ^("ReceivedJoinMsg || " ++ sender ++ " || " ++ code);
+	receivedMsg_join{
+		this.sendMsg_sync;
+	}
+
+	sendMsg_sync{
+		var txt = doc.text;
+		"Got join msg, sending my document".postln;
+		net.sendMsg('/sync', name, txt);
+	}
+
+	receivedMsg_sync{|message|
+		var msg = message;
+		"Got sync msg, replacing my document".postln;
+		doc.text_=msg[2];
 	}
 
 	sendMsg_livecode {arg ...args;
-		//
 		var position = args[0][1];
 		var removeNum = args[0][2];
 		var string = args[0][3];
