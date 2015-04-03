@@ -21,7 +21,7 @@ LiveKolektiv {
 		blockFirstEval = true;
 		// doc = Document.new("LiveKolektiv","");
 		doc = Document.current;
-
+		doc.text="";
 
 		this.initSendMsg;
 		this.initReceiveMsg;
@@ -39,7 +39,7 @@ LiveKolektiv {
 		OSCdef(\join,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
 		OSCdef(\sync,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"myJoinMsg".postln}; }, '/sync');
 		OSCdef(\livecode,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
-		OSCdef(\executecode,{|msg, time, addr, recvPort| this.receivedMsg_execute(msg) }, '/executecode');
+		OSCdef(\executecode,{|msg, time, addr, recvPort| if(this.isOtherMsg(msg)){this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
 	}
 
 	initSendMsg{
