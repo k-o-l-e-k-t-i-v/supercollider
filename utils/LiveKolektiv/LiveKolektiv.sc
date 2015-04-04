@@ -75,12 +75,13 @@ Kolektiv {
 	receivedMsg_execute{|msg|
 		var sender = msg[1].asString;
 		var code = msg[2].asString;
+		msg.postln;
 
 		// added for some basic level of security
 		code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
 
+		if(debugBool){ ("Received_ExecuteMsg || " ++ sender ++ " || " ++ code).warn };
 		code.interpret;
-		if(debugBool){ ("Received_ExecuteMsg || " ++ sender ++ " || " ++ code); };
 	}
 
 	sendMsg_join{
@@ -92,7 +93,7 @@ Kolektiv {
 	receivedMsg_join{|msg|
 		var sender = msg[1].asString;
 		this.sendMsg_sync;
-		("Recived_JoinMsg || " ++ sender ++ " || join to shared document").inform;
+		("Recived_JoinMsg || " ++ sender ++ " || join to shared document").warn;
 	}
 
 	sendMsg_sync{
@@ -121,7 +122,7 @@ Kolektiv {
 		var txt = args[0][2].asString;
 
 		// Document.current.string_(txt,0,-1);
-		("Received_SyncMsg || " ++ sender ++ " is connected").inform;
+		("Received_SyncMsg || " ++ sender ++ " || is connected").warn;
 	}
 
 	sendMsg_livecode {arg ...args;
