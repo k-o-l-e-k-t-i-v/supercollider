@@ -37,6 +37,7 @@ Kolektiv {
 		CmdPeriod.run;
 		Server.killAll;
 
+		CmdPeriod.add(this);
 		name = userName;
 		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag: true);
