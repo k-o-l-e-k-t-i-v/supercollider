@@ -1,9 +1,10 @@
-LiveKolektiv {
+Kolektiv {
 	var name, net;
-	var proxy, doc;
+	var proxy;
 	var oscJoin, oscSync, oscText, oscExec;
 	var blockFirstEval_Flag;
 
+	classvar doc;
 	classvar debugBool;
 
 	*new{ |userName|
@@ -16,7 +17,7 @@ LiveKolektiv {
 
 		name = userName;
 		proxy = ProxySpace.push(Server.default);
-		NetAddr.broadcastFlag_(flag:true);
+		NetAddr.broadcastFlag_(flag: true);
 		net = NetAddr("25.255.255.255", NetAddr.langPort);
 
 		History.clear;
@@ -41,11 +42,10 @@ LiveKolektiv {
 		this.printYou;
 		("Check if are you boot on port 57120.").warn;
 		("If not, close this document, kill all servers and connect again \n").postln;
-
 	}
 
 	initReceiveMsg{
-		oscJoin = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg)} }, '/join');
+		oscJoin = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(msg)} }, '/join');
 		oscSync = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg)} }, '/sync');
 		oscText = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg)} }, '/livecode');
 		oscExec = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} }, '/executecode');
@@ -89,8 +89,10 @@ LiveKolektiv {
 		net.sendMsg('/join', name);
 	}
 
-	receivedMsg_join{
+	receivedMsg_join{|msg|
+		var sender = msg[1].asString;
 		this.sendMsg_sync;
+		("Recived_JoinMsg || " ++ sender ++ " || join to shared document").inform;
 	}
 
 	sendMsg_sync{
@@ -109,16 +111,17 @@ LiveKolektiv {
 		// txt = txt.replace("\r","");
 		*/
 
-		if(debugBool){ ("Send_SyncMsg (answer to joinMsg, sending my doc.text) || " ++ txt).postln; };
-		// net.sendMsg('/sync', name, txt.asString);
+		if(debugBool){ ("Send_SyncMsg || answer to recived joinMsg, sending my doc.text) || " ++ txt).postln; };
+		net.sendMsg('/sync', name, txt.asString);
 	}
 
 	receivedMsg_sync{arg ...args;
 		var msg = args;
+		var sender = args[0][1].asString;
 		var txt = args[0][2].asString;
 
-		Document.current.string_(txt,0,-1);
-		if(debugBool){ ("Received_SyncMsg (replaceing my doc.text) || " ++ txt).postln; };
+		// Document.current.string_(txt,0,-1);
+		("Received_SyncMsg || " ++ sender ++ " is connected").inform;
 	}
 
 	sendMsg_livecode {arg ...args;
@@ -151,4 +154,10 @@ LiveKolektiv {
 	printYou { ("\nYou || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port ++ "\n").postln; }
 
 	*switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
+
+	*printDoc {
+		doc = Document.current;
+		("Size of doc.text " ++ doc.text.size).postln;
+		doc.text.postln;
+	}
 }
