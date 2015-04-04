@@ -1,14 +1,36 @@
 Kolektiv {
-	var name, net;
-	var proxy;
-	var oscJoin, oscSync, oscText, oscExec;
-	var blockFirstEval_Flag;
 
+	classvar name, net, proxy, quuid;
+	classvar oscJoin, oscSync, oscText, oscExec;
 	classvar doc;
 	classvar debugBool;
 
+	var blockFirstEval_Flag;
+
 	*new{ |userName|
 		^super.new.init(userName);
+	}
+
+	*switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
+
+	*printDoc {
+		/*
+		doc = Document.findByQUuid(Document.current.quuid);
+
+		ScIDE.setCurrentDocumentByQUuid(Document.current.quuid);
+		ScIDE.setDocumentTextMirrorEnabled(Document.current.quuid,true);
+		ScIDE.getTextByQUuid(Document.current.quuid.ascii);
+		ScIDE.setEditablebyQUuid(Document.current.quuid.ascii,true);
+		// txt = Document.current.string(0,-1).asString;
+
+		// txt = doc.text.asString;
+		// txt = Document.current.string(0,-1).asString;
+
+		ScIDE.setCurrentDocumentByQUuid(Document.current.quuid);
+		*/
+		doc = Document.current;
+		("\nSize of doc.text || " ++ doc.text.size).postln;
+		("\nDOC.text || " ++ doc.text).postln;
 	}
 
 	init{|userName|
@@ -28,6 +50,8 @@ Kolektiv {
 
 		Document.current.text="";
 		doc = Document.current;
+		quuid = doc.quuid;
+		("Current doc QUUID || " ++ quuid.asString).postln;
 
 		this.initSendMsg;
 		this.initReceiveMsg;
@@ -97,7 +121,10 @@ Kolektiv {
 	}
 
 	sendMsg_sync{
-		var txt = doc.text.asString;
+
+		var txt;
+		doc = Document.current;
+		txt = doc.text.asString;
 		/*
 		doc = Document.findByQUuid(Document.current.quuid);
 
@@ -121,7 +148,8 @@ Kolektiv {
 		var sender = args[0][1].asString;
 		var txt = args[0][2].asString;
 
-		// Document.current.string_(txt,0,-1);
+		doc = Document.current;
+		doc.string_(txt,0,-1);
 		("Received_SyncMsg || " ++ sender ++ " || is connected").warn;
 	}
 
@@ -153,12 +181,4 @@ Kolektiv {
 	}
 
 	printYou { ("\nYou || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port ++ "\n").postln; }
-
-	*switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
-
-	*printDoc {
-		doc = Document.current;
-		("Size of doc.text " ++ doc.text.size).postln;
-		doc.text.postln;
-	}
 }
