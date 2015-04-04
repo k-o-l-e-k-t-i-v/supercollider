@@ -1,10 +1,8 @@
 LiveKolektiv {
-	var name;
-	var net;
-	var proxy;
-	var doc;
+	var name, net;
+	var proxy, doc;
 	var oscJoin, oscSync, oscText, oscExec;
-	var blockFirstEval;
+	var blockFirstEval_Flag, debugBool;
 
 	*new{ |userName|
 		^super.new.init(userName);
@@ -17,12 +15,14 @@ LiveKolektiv {
 		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag:true);
 		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
+		"Check if are you boot on port 57120. If not, close this document, kill all servers and connect again".warn;
 
 		History.clear;
 		History.start;
 
-		blockFirstEval = true;
-		// doc = Document.new("LiveKolektiv","");
+		blockFirstEval_Flag = true;
+		debugBool = true;
+
 		Document.current.text="";
 		doc = Document.current;
 
@@ -40,8 +40,6 @@ LiveKolektiv {
 	}
 
 	initReceiveMsg{
-		// AbstractResponderFunc.clear;
-
 		oscJoin = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
 		oscSync = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
 		oscText = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
@@ -60,13 +58,12 @@ LiveKolektiv {
 	}
 
 	sendMsg_execute{|code|
-		// block setup code from sending others
-		if(blockFirstEval){
-			"Setup code cached".postln;
-			blockFirstEval=false;
+		if(blockFirstEval_Flag){
+			if(debugBool){ "Start setup code cached (blockFirstEval_Flag)".postln; };
+			blockFirstEval_Flag = false;
 		}{
 			net.sendMsg('/executecode', name, code);
-			("SendExecuteMsg || executecode || " ++ name ++ " || " ++ code ).postln;
+			if(debugBool){ ("Send_ExecuteMsg || executecode || " ++ name ++ " || " ++ code ).postln; };
 		};
 	}
 
@@ -76,11 +73,13 @@ LiveKolektiv {
 
 		// added for some basic level of security
 		code = code.replace("unixCmd", "!unixCmd!").replace("File", "!File!").replace("Pipe", "!Pipe!");
+
 		code.interpret;
-		^("ReceivedExecuteMsg || " ++ sender ++ " || " ++ code);
+		if(debugBool){ ("Received_ExecuteMsg || " ++ sender ++ " || " ++ code); };
 	}
 
 	sendMsg_join{
+		"Dont write anyhing to code, until all players will be connected to shared document, synchronizationMsg dont work".warn;
 		net.sendMsg('/join', name);
 	}
 
@@ -103,18 +102,17 @@ LiveKolektiv {
 		// txt = Document.current.string(0,-1).asString;
 		// txt = txt.replace("\r","");
 		*/
-		"Got join msg, sending my document".postln;
-		("SyntMSG: " ++ txt).postln;
+
+		if(debugBool){ ("Send_SyncMsg (answer to joinMsg, sending my doc.text) || " ++ txt).postln; };
 		// net.sendMsg('/sync', name, txt.asString);
 	}
 
 	receivedMsg_sync{arg ...args;
 		var msg = args;
-		var clean = args[0][2].asString;
-		"Got sync msg, replacing my document".postln;
-		args.postln;
+		var txt = args[0][2].asString;
 
-		Document.current.string_(clean,0,-1);
+		Document.current.string_(txt,0,-1);
+		if(debugBool){ ("Received_SyncMsg (replaceing my doc.text) || " ++ txt).postln; };
 	}
 
 	sendMsg_livecode {arg ...args;
@@ -125,7 +123,7 @@ LiveKolektiv {
 		// string = string.replace("\r","");
 
 		net.sendMsg('/livecode', name, sendTime, position, removeNum, string);
-		("SendMsg || livecode || " ++ name ++ " || " ++ sendTime ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		if(debugBool){ ("Send_codeMsg || " ++ name ++ " || " ++ sendTime ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln; };
 	}
 
 	receivedMsg_livecode{|time, message|
@@ -138,13 +136,13 @@ LiveKolektiv {
 		var removeNum = msg[4].asInt;
 		var string = msg[5].asString;
 		var offset = thisThread.seconds - msg[2];
-		// ("MSG : " ++ msg).postln;
-		// ("TIME : " ++ timestamp).postln;
 
 		doc.string_(string, position, removeNum);
-		("ReceivedMsg || " ++ sender ++ " || rec: " ++ timestamp ++ " || send: " ++ sendTime ++ " || offset: " ++ offset
-			++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln;
+		if(debugBool){ ("Received_codeMsg || " ++ sender ++ " || " ++ position ++ " || " ++ removeNum ++ " || " ++ string).postln; };
+		if(debugBool){ (" -- infoTIME || rec: " ++ timestamp ++ " || send: " ++ sendTime ++ " || offset: " ++ offset).postln; };
 	}
 
 	printYou { ("You || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port).postln; }
+
+	switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
 }
