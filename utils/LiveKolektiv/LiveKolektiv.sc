@@ -15,7 +15,6 @@ LiveKolektiv {
 		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag:true);
 		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
-		"Check if are you boot on port 57120. If not, close this document, kill all servers and connect again".warn;
 
 		History.clear;
 		History.start;
@@ -37,13 +36,16 @@ LiveKolektiv {
 		};
 
 		this.printYou;
+		("Check if are you boot on port 57120.").warn;
+		("If not, close this document, kill all servers and connect again \n").postln;
+
 	}
 
 	initReceiveMsg{
-		oscJoin = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg) }{"myJoinMsg".postln}; }, '/join');
-		oscSync = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg) }{"mySyncMsg".postln}; }, '/sync');
-		oscText = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg) }{"myMsg".postln}; }, '/livecode');
-		oscExec = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} {"myExeMsg".postln};}, '/executecode');
+		oscJoin = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_join(time, msg)} }, '/join');
+		oscSync = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_sync(msg)} }, '/sync');
+		oscText = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_livecode(time, msg)} }, '/livecode');
+		oscExec = OSCFunc({|msg, time, addr, recvPort| if(this.isOtherMsg(msg)) {this.receivedMsg_execute(msg)} }, '/executecode');
 	}
 
 	initSendMsg{
@@ -79,7 +81,8 @@ LiveKolektiv {
 	}
 
 	sendMsg_join{
-		"Dont write anyhing to code, until all players will be connected to shared document, synchronizationMsg dont work".warn;
+		("Dont write anyhing to the code").warn;
+		("Start when all players will be connected to shared document, synchronizationMsg dont work").postln;
 		net.sendMsg('/join', name);
 	}
 
@@ -142,7 +145,7 @@ LiveKolektiv {
 		if(debugBool){ (" -- infoTIME || rec: " ++ timestamp ++ " || send: " ++ sendTime ++ " || offset: " ++ offset).postln; };
 	}
 
-	printYou { ("You || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port).postln; }
+	printYou { ("\nYou || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port ++ "\n").postln; }
 
 	switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
 }
