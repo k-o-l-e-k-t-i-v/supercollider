@@ -2,7 +2,9 @@ LiveKolektiv {
 	var name, net;
 	var proxy, doc;
 	var oscJoin, oscSync, oscText, oscExec;
-	var blockFirstEval_Flag, debugBool;
+	var blockFirstEval_Flag;
+
+	classvar debugBool;
 
 	*new{ |userName|
 		^super.new.init(userName);
@@ -10,11 +12,12 @@ LiveKolektiv {
 
 	init{|userName|
 		CmdPeriod.run;
+		Server.killAll;
 
 		name = userName;
 		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag:true);
-		net = NetAddr("25.255.255.255", NetAddr.langPort); // broadcast
+		net = NetAddr("25.255.255.255", NetAddr.langPort);
 
 		History.clear;
 		History.start;
@@ -147,5 +150,5 @@ LiveKolektiv {
 
 	printYou { ("\nYou || account " ++ name ++ " || ip " ++ net.ip ++ " || port " ++ net.port ++ "\n").postln; }
 
-	switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
+	*switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
 }
