@@ -5,9 +5,9 @@ SynthDef(\rq1, {
 	rq=EnvGen.kr(Env.new([0.1,0.005,2,0.01,0.001,0.5,3],[sustain*0.1,sustain*0.1,sustain*0.1,sustain*0.1,sustain*0.2,sustain*0.4]),gate);
 
 	env=EnvGen.kr(Env.adsr(sustain*0.1,sustain*0.2,0.7,sustain*0.7),gate);
-	sig=BPF.ar(PinkNoise.ar(amp),freq,rq);
+	sig=BPF.ar(GrayNoise.ar(amp!2),[freq,freq],rq);
 	sig=sig*env;
-	sig=FreeVerb.ar(sig,room:1);
+	sig=FreeVerb.ar(sig,room:1.5,damp:1);
 	DetectSilence.ar(sig,doneAction:2);
 	Out.ar(0,sig);
 }).add;
@@ -38,8 +38,8 @@ Pdef(\looprq1,
 		\instrument, \rq1,
 		\dur, Pseq([Pn(0.25,6),4,Rest(3)],inf),
 		\legato, 0.4,
-		\freq, [950,45,175,50,40,850,110,65,45],
-		\strum,0.001,
+		\freq, [950,45,65,45],
+		\strum,0.1,
 		// \rqq,0.1,
 		\amp, 1
 )).play;
