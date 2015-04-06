@@ -32,3 +32,6 @@ Ndef(\efx1, { Out.ar(32, CombC.ar(In.ar(30,1), 0.125, 0.0625, 0.25)) }).play;
 Ndef(\efx2, { Out.ar(34, LPF.ar(In.ar(32,1), Saw.kr(35, 420, 1630))) }).play;
 Ndef(\efx3, { Out.ar(0, GVerb.ar(In.ar(34,1), 15, 0.5, 0.5, 0.1, 32, 0.3)) }).play;
 )
+
+
+//my interpreter crashed 3 times until i managed to play this. this version of SC looks stabe - not :(
