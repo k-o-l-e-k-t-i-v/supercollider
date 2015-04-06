@@ -33,9 +33,9 @@ p=ProxySpace.push(s);
 
 	b=1;
 	t=Impulse.kr([b,b/2]);
-	rq=Decay.kr(t,b/10).range(0.11,0.00001);
+	rq=Decay.kr(t,b/10).range(1.1,0.01);
 
-	noise=[GrayNoise.ar(0.55).clip(0.4,1),
+	noise=[PinkNoise.ar(0.1),
 		BrownNoise.ar(0.2),
 		WhiteNoise.ar(1).clip(0.7,1)
 	];
@@ -44,18 +44,18 @@ p=ProxySpace.push(s);
 	f=Duty.kr(b,0,Drand([6000,8000,11000,15000],inf));
 
 	s1=SinOsc.ar(45*[1.25,1.35,1.65],add:add)*LFSaw.ar([b,beat]).lag(0.02);//rough !!LFSaw env **
-	s1=FreeVerb.ar(s1,room:2);
+	s1=FreeVerb.ar(s1,room:1);
 
 	s2=BPF.ar(BrownNoise.ar(1),LFNoise0.kr([b/2,b/4,b/8,b]).range(85,405),0.001); //nope
 
 	s3=SinOsc.ar(Decay.kr(Impulse.kr([b,b*2]),b*0.2).exprange(1,285)+65!2);//beat
-	s3=s3*Decay2.kr(Impulse.kr([b,b*4]),decayTime:b/4);
+	s3=s3*Decay2.kr(Impulse.kr([b,b*2]),decayTime:b/4);
 
 	s4=BPF.ar(WhiteNoise.ar,f,rq)*Decay2.kr(t,decayTime:b/5); //high
 	s4=CombN.ar(s4,b/4,b/4,b);
 
 
-	Mix.new([Limiter.ar(s1+(s3*0.5)+(s4*1.2),0.5)]);
+	Mix.new([Limiter.ar(s1+(s3*0.5)+s4,0.5)]);
 
 };
 ~w.play;
