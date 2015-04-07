@@ -25,7 +25,7 @@ p=ProxySpace.push(s);
 
 
 
-
+//random rythms from filters
 (
 ~a={var b, top, s1, s2,s3,x;
 
