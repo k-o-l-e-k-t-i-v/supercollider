@@ -1,18 +1,20 @@
 p=ProxySpace.push(s);
 
 (
-~d={var s1, b, f, top;
+~d={var s1,s2, b, f, top;
 	b=1;
-	top=Duty.kr(b,0,Dseq((1..12).invert,inf));
+	top=Duty.kr(b/10,0,Dseq((8..1),inf));
 
 	s1=BPF.ar(GrayNoise.ar(1),LFNoise0.kr(b/(top*(1..4))).range(85,460).round(24),
 		rq:	LFNoise0.kr(b/(top*(1..4))).range(0.00001,0.001));
 	s1=DFM1.ar(s1,LFNoise0.kr(b/(top*(1..12))).range(88,800).round(8),
 		res:LFNoise0.kr(b/(1..10)).range(0.1,0.7),noiselevel:0.00001)+s1;
 	s1=s1*6;
-	s1=GVerb.ar(s1,revtime:0.2,damping:1,spread:0.1,drylevel:0,taillevel:1)*0.1+s1;
 
-	s1=Limiter.ar(s1,0.1);
+	s2=HPF.ar(s1,360);
+	s2=GVerb.ar(s2,100,revtime:0.7,damping:0,spread:0.1,drylevel:0,taillevel:1)*0.1+s1;
+
+	s1=Limiter.ar(s1+s2*0.2,0.1);
 
 
 
