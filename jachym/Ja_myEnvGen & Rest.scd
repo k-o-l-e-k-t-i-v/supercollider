@@ -24,8 +24,8 @@ a[1] = { |my_gate2, my_legato, my_octave, my_degree, amp|
 })
 (
 a[10] = \xset -> Pbind(
-	\my_gate1, Pseq([1,0,-1], inf), // 1 = call; 0 = nothing; -1 is Rest (if both gates(1&2) are 0, it doesnt play but leaves synth on server)
-	\my_gate2, Pseq([0,1,-1], inf), // 1 = call; 0 = nothing; -1 is Rest (if both gates(1&2) are 0, it doesnt play but leaves synth on server)
+	\my_gate1, Pseq([1,-1,-1], inf), // 1 = call; -1 is Rest (0 doesnt play but leaves synth on server)
+	\my_gate2, Pseq([-1,1,-1], inf), // 1 = call; -1 is Rest (0 doesnt play but leaves synth on server)
 	\dur, Pseq([0.5,0.5,2], inf), // 2sec of rest
 	\my_legato, Pstutter(Pseq([2,1],inf), Pseq([1.5,1,0.3,1], inf)), // 2x 1.5stretch, 1x rest, 2x 0.3stretch, 1x rest
 	\amp, 0.1,
