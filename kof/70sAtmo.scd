@@ -16,3 +16,5 @@ p=ProxySpace.push(s);
 
 //this is insane
 //(ja) where to found BMoog -> Error: Class not defined
+
+//SC3-plugins ^^, k
