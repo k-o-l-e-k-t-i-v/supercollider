@@ -14,4 +14,5 @@ p=ProxySpace.push(s);
 ~a.play;
 )
 
-//this is insane 
+//this is insane
+//(ja) where to found BMoog -> Error: Class not defined
