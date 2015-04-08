@@ -19,7 +19,7 @@ p=ProxySpace.push(s);
 	s1=BMoog.ar(s1,LFNoise1.kr(b*(1..20)).range(40,800),0.1,saturation:0.1,mode:2);
 
 	s2=FreeVerb.ar(s1,room:1);
-	s3=(LPF.ar(s1,140)+BrownNoise.ar(0.001))*Decay.kr(Impulse.kr([b,b/2]));
+	s3=(LPF.ar(s1,150)+BrownNoise.ar(0.001))*Decay.kr(Impulse.kr(b*[0.25,0.75,1.5,1.25]));
 	s3=FreeVerb.ar(s3,room:2,damp:0,room:2);
 
 
