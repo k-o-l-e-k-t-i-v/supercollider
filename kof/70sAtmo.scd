@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s);
 (
 ~a={ var sig = LFSaw.ar(44*(_*1.5!8)+SinOsc.ar(1/(1..8)).range(-4,4));
 	sig = BMoog.ar(sig,LFSaw.ar(8/(1..8)).range(800,5));
@@ -14,3 +14,4 @@
 ~a.play;
 )
 
+//this is insane 
