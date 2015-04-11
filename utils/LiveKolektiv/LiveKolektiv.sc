@@ -41,7 +41,8 @@ Kolektiv {
 		name = userName;
 		proxy = ProxySpace.push(Server.default);
 		NetAddr.broadcastFlag_(flag: true);
-		net = NetAddr("25.255.255.255", NetAddr.langPort);
+		// net = NetAddr("25.255.255.255", NetAddr.langPort);
+		net = NetAddr("10.0.0.255", NetAddr.langPort);
 
 		History.clear;
 		History.start;
