@@ -3,7 +3,7 @@
 
 (
 ~a={
-	var env = Decay.ar(Impulse.ar(1/2),4);
+	var env = Decay.ar(Impulse.ar(1),2);
 	var sig = PinkNoise.ar(0.5!4) + SinOsc.ar(44*[1,2,4,8]*pi);
 
 
