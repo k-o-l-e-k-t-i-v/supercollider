@@ -10,7 +10,7 @@
 	sig = Vibrato.ar(sig,[4,5,6,7],0.2);
 	sig = CombN.ar(sig,0.01*(1..8),0.01*(1..8),8);
 	sig = Normalizer.ar(sig,0.5);
-	sig = BBandPass.ar(sig,LFTri.ar(1/32/[1,2,4,8]).exprange(16000.0001,33),0.5);
+	sig = BBandPass.ar(sig,LFTri.ar(1/8/[1,2,4,8]).exprange(16000.0001,33),0.5);
 	sig = HPF.ar(sig,150);
 	sig = GVerb.ar(sig)/1.75+sig/1.25;
 	sig = CompanderD.ar(sig,0.75,1/2,1/4);
@@ -25,5 +25,6 @@
 	Splay.ar(sig,0.3);
 
 };
+~a.quant=2;
 ~a.play;
 )
