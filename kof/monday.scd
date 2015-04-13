@@ -3,8 +3,8 @@
 
 (
 ~a={
-	var env = Decay.ar(Impulse.ar(1),2);
-	var sig = PinkNoise.ar(0.5!4) + SinOsc.ar(44*[1,2,4,8]*pi);
+	var env = Decay.ar(Impulse.ar(2),1.5);
+	var sig = GrayNoise.ar(0.5!4) + SinOsc.ar(44*[1,2,4,8]*pi);
 
 
 	sig = Vibrato.ar(sig,[4,5,6,7],0.2);
@@ -19,7 +19,7 @@
 	sig = sig + (SinOsc.ar(50*(env**10*0.001+1),mul:0.95) * env);
 	sig = sig + (SinOsc.ar(150*(env**10*0.001+1),mul:0.5) * env);
 
-	sig = CompanderD.ar(sig,0.75,1/1.5,1/1.5);
+	sig = CompanderD.ar(sig,0.75,1/1.5,1/1.5) / 2;
 
 
 	Splay.ar(sig,0.3);
