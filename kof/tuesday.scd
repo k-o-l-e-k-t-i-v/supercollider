@@ -3,15 +3,16 @@
 (
 ~a={
 	var tone;
-	var sig = SinOsc.ar(SinOsc.ar(11*[1,1.1]).range(44,88),mul:0.5);
+	var sig = SinOsc.ar(SinOsc.ar(11*[1,1.1]).range(44,88),mul:0.25);
 
-	sig = sig + BPF.ar(GrayNoise.ar(LFSaw.ar(1/10*[1,1.1]).exprange(0.0001,0.2)),SinOsc.ar(11*[1.1,1.2]).range(100,10000));
+	sig = sig + BPF.ar(GrayNoise.ar(LFSaw.ar(1/10*[1,1.1]).exprange(0.0001,0.01)),SinOsc.ar(11*[1.1,1.2]).range(100,10000));
 
 	sig = sig * LFTri.ar(1/11/[1,1.1])**2;
 
 	sig = CompanderD.ar(sig,1/2,1/2,4);
-	tone = LFSaw.ar(43.2*([8,4,2,1]*pi)/(TExpRand.ar(1,8,Impulse.ar(1/4/fib(12))).round([1,1.5])),mul:LFTri.kr(1/4/fib(12),pi).range(0.0001,0.4) );
-	tone = MoogFF.ar(tone,[44,440,4400]);
+	tone = LFSaw.ar(432*([8,4,2,1]*pi)/(TExpRand.ar(1,8,Impulse.ar(1/4/fib(12))).round([1,2])),mul:LFTri.kr(1/4/fib(12),pi).range(0.0001,0.4) );
+	tone = MoogFF.ar(tone,[44,440,440*1.5,4400]);
+	tone = tone * Decay.ar(Impulse.ar(1/2,(0..3)/4),2);
 
 	sig = sig + tone;
 
