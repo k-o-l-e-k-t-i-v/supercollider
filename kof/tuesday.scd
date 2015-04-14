@@ -2,7 +2,7 @@
 
 (
 ~a={
-	var mod = [1,2,0.5,0.25,4,0.75,1,2,4,0.5]/[2,4];
+	var mod = [1,2,1,1.5,0.5,1.5,4,0.5]/[2,4];
 	var tone;
 	var sig = SinOsc.ar(SinOsc.ar(11*[1,1.1]).range(44,88),mul:SinOsc.ar(1/16).range(0.0001,0.15));
 
@@ -12,9 +12,9 @@
 
 	mod = Select.kr(TExpRand.kr(0.001,9,Impulse.kr(1/2/fib(12))),mod);
 	sig = CompanderD.ar(sig,1/2,1/2,4);
-	tone = LFSaw.ar(432*mod*([8,4,2,1.5]*pi)/(TExpRand.ar(1,8,Impulse.ar(1/2/fib(12))).round([1,2])),mul:LFTri.kr(1/2/fib(12),pi).range(0.0001,0.4) );
-	tone = MoogFF.ar(tone,432*pi*mod);
-	tone = tone * Decay.ar(Impulse.ar(1/2,(0..3)/4),2);
+	tone = LFSaw.ar(432*mod*([8,4,2,1]*pi)/(TExpRand.ar(1,8,Impulse.ar(1/fib(12))).round([1,2])),mul:LFTri.kr(1/fib(12),pi).range(0.0001,0.4) );
+	tone = MoogFF.ar(tone,43.2*[4,8]*pi*mod);
+	tone = tone * Decay.ar(Impulse.ar(1/[1,2],(0..3)/4),4);
 
 	sig = sig + tone;
 
