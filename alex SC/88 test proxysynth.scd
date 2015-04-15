@@ -1,8 +1,21 @@
 p=ProxySpace.push(s);
+
 p.clock=TempoClock.default;
 
 (
-ProxySynthDef(\name1, { arg freq, amp, pan; Pan2.ar( SinOsc.ar(freq,add:BrownNoise.ar(0.051))*amp,pan)}).add;
+ProxySynthDef(\name1, { arg freq, amp, pan, sustain, t_gate=1, out=0;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env.perc(releaseTime:sustain),t_gate,timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env.new([freq*4,freq],sustain*0.04),t_gate,timeScale:sustain);
+	sig=Pan2.ar(SinOsc.ar(fenv)*env,pan);
+	Out.ar(out,sig*amp);
+
+}).add;
+
+
+
+
 ProxySynthDef(\k, { arg freq, lag,amp; Saw.ar([freq,freq]).lag(lag)*amp}).add;
 )
 
@@ -10,13 +23,12 @@ ProxySynthDef(\k, { arg freq, lag,amp; Saw.ar([freq,freq]).lag(lag)*amp}).add;
 ~d.play;
 
 ~d[0]=Pbind(\instrument, \name1,
-	\dur, 0.25,
-	// \strum, 0.5,
-	\octave, [4,3],
-	\degree, 4,
-	\amp, 0.21,
-	\pan, Pseq([-1,1],inf)
-).trace;
+	\dur, 0.8,
+	\legato, 0.8,
+\freq, 65,
+	\amp, 1,
+	\pan, Pseq([Pseries(-1,0.25,4), Pseries(1,-0.25,4)],inf)
+);
 )
 (
 ~d.play;
@@ -30,6 +42,7 @@ ProxySynthDef(\k, { arg freq, lag,amp; Saw.ar([freq,freq]).lag(lag)*amp}).add;
 	\lag, 0.02).trace;
 )
 ~d[30]=\filter-> { arg in; FreeVerb.ar(in,2,add:in)};
+
 ~d.removeAt[30];
 ~d.clear;
 currentEnvironment.free;
