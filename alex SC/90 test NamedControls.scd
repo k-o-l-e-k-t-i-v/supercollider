@@ -115,8 +115,28 @@ ProxySynthDef(\zzz, {
 	);
 )
 
+///fuck
 (
-~bum1.play;
-~bum2.play;
-~zum1.play;
+
+~zum2.quant=1;
+~zum2.play;
+~zum2.mold(2);
+
+~zum2[0]=Pbind(
+	\instrument, \zzz,
+	\dur, Pseq([2,1,4,6,2],inf),
+	\legato, Prand([0.5,0.7],inf),
+	\amp, Pseq([Pseries(0.05,0.1,3), Rest(3)],inf),
+	\lag, Pseq([Pn(0.01,4),Pn(0.001,2),Pn(0.0001,2)],inf),
+	\speed, 0.5,
+	\octave, [3,4],
+	\degree, Pseq([Pn([3,2],4),[4,2],6,8],inf),
+);
+
+
+~zum2[30]=\filter-> {arg in; FreeVerb.ar(in, SinOsc.kr(0.5).range(0.3,1),2,damp:\damp.kr)};
+~zum2[31]=\set->Pbind(\args,[\damp],
+	\dur, 8,
+	\damp, Pseq([0,0.5,0,0.5],inf)
+	);
 )
