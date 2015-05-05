@@ -17,14 +17,14 @@
     ~neue={
         var imp = Decay.ar(Impulse.ar(2/[2,4,8,6],(0..7)/8),0.75);
         var imp2 = Decay.ar(Impulse.ar(1/8,(0..7)++[0.5,0.25]+0.5/8),0.25);
-        var imp3 = Decay.ar(Impulse.ar(1/4,(0..7)++[0.5,0.25]+0.5/8),0.75);
+        var imp3 = Decay.ar(Impulse.ar(1/4,(0..7)++[0.5,0.25]/8),1.75);
         
         var sig;
         var notes = (~base.ar+[0,~sel.ar]).midicps*4/(~mel.ar*pi);
         notes = Select.kr(LFSaw.kr(4/[2,4]).range(0,notes.size+0.01),notes);
         sig = LFSaw.ar(notes*(1.001**(1..8))*(imp3**0.004+1),mul:2);
 
-        sig = LPF.ar(sig,150+(imp3*10000)) * imp3;
+        sig = Resonz.ar(sig,150+(imp3*10000)) * imp3;
 
         sig = HPF.ar(sig,75);
 
