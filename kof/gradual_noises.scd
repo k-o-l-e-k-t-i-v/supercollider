@@ -17,7 +17,7 @@
 
 	sig = FreeVerb.ar(sig,0.1*(1..5),10.5/(1..5));
 
-	Splay.ar(sig,0.1);
+	Splay.ar(sig,0.1,0.5);
 };
 ~q.play;
 )

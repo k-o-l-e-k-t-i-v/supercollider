@@ -22,7 +22,7 @@
 	sig = CompanderD.ar(sig,0.75,1/1.5,1/1.5) / 2;
 
 
-	Splay.ar(sig,0.1,0.25);
+	Splay.ar(sig.flat,0.1,0.25);
 
 };
 ~a.quant=2;

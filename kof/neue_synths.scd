@@ -14,6 +14,7 @@
 
     ///////////////////////////////////////////////////////////////////////
     
+    ~neue.quant=2;
     ~neue={
         var imp = Decay.ar(Impulse.ar(2/[2,4,8,6],(0..7)/8),0.75);
         var imp2 = Decay.ar(Impulse.ar(1/8,(0..7)++[0.5,0.25]+0.5/8),0.25);
@@ -24,7 +25,7 @@
         notes = Select.kr(LFSaw.kr(4/[2,4]).range(0,notes.size+0.01),notes);
         sig = LFSaw.ar(notes*(1.00001**(1..8))*(imp3**0.004+1),mul:2);
 
-        sig = CombN.ar(sig,1,1,4);
+        //sig = CombN.ar(sig,1,1,4);
 
         sig = Resonz.ar(sig,150+(imp3*10000)) * imp3;
 
@@ -47,6 +48,5 @@
     };
 
     ///////////////////////////////////////////////////////////////////////
-    ~neue.quant=2;
     ~neue.play;
 )

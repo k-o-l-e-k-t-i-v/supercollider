@@ -26,8 +26,9 @@
 
 	sig = Limiter.ar(sig).softclip(-0.9,0.9);
 
-	Splay.ar(sig,0.1,0.5);
+	Splay.ar(sig.flat,0.1,0.5);
 };
+~a.quant=2;
 ~a.play;
 )
 
