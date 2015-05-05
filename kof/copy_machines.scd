@@ -29,3 +29,6 @@
 ~pulse.play;
 
 )
+
+//crashes everything// SC_PortAudioDriver: exception in real time: alloc failed, increase server's memory allocation (e.g. via ServerOptions)
+//increased memory and still crashed :)
