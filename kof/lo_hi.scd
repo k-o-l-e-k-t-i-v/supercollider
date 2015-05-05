@@ -18,7 +18,7 @@
 	a = HPF.ar(a,15)/2;
 	a = GVerb.ar(a,20);
 
-	Splay.ar(a,0.1);
+	Splay.ar(a.flat,0.1);
 };
 ~poi.fadeTime=5;
 ~poi.quant=2;
