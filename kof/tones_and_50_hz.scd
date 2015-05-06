@@ -12,11 +12,11 @@
 
 	sig = HPF.ar(sig,120);
 	sig = GVerb.ar(sig,100,10);
-	sig = CompanderD.ar(sig,1/2,1/2,1/2);
+	sig = CompanderD.ar(sig,1/4,1/2,1/2);
 	sig = sig + LPF.ar((SinOsc.ar(50!2,pi,mul:0.5) * LFPulse.ar(1/[8,16,32],pi,0.05/[1,2,4])).lag(1/500),100);
 
 
-	Splay.ar(sig.flat,0.5);
+	Splay.ar(sig.flat,0.5,0.5);
 
 };
 ~c.quant=2;

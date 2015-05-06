@@ -23,7 +23,7 @@
 
 	sig = GVerb.ar(sig)/4+sig/3;
 
-	Splay.ar(sig.flat,0.1);
+	Splay.ar(sig.flat,0.1,0.5);
 };
 ~pulse.quant=2;
 ~pulse.play;

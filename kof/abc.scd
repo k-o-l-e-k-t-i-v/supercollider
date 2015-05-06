@@ -12,7 +12,7 @@
 	sig = Pan2.ar(sig,SinOsc.ar(sel));
 	sig = GVerb.ar(sig,10,3)/2 + sig/2;
 
-	Splay.ar(sig.flat,0.1);
+	Splay.ar(sig.flat,0.1,0.13);
 };
 ~abc.play;
 )

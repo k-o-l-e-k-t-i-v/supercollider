@@ -2,7 +2,7 @@
 
 
 (
-~a={
+~monday={
 	var env = Decay.ar(Impulse.ar(2),1.5);
 	var sig = GrayNoise.ar(0.5!4) + SinOsc.ar(44*[1,2,4,8]*pi);
 
@@ -25,8 +25,8 @@
 	Splay.ar(sig.flat,0.1,0.25);
 
 };
-~a.quant=2;
-~a.play;
+~monday.quant=2;
+~monday.play;
 )
 
 //jesus christ 
