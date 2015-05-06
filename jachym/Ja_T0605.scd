@@ -28,3 +28,6 @@ p = ProxySpace.push(s,clock:t);
 ~trash[31] = \set -> Pbind(\args, [\gTime], \dur, Pseq([1.9, 6.1], inf), \gTime, Pseq([0.15, Pwhite(6,14)], inf));
 )
 ~trash.end(2);
+
+
+// play(vol:0.5).. super, k.
