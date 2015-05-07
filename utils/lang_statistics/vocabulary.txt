@@ -16,6 +16,9 @@ Pdef
 Pseq
 Dseq
 Select
+Env
+EnvGen
+Decay
 LPF
 HPF
 BPF
