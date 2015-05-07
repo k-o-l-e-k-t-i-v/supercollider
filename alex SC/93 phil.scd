@@ -26,8 +26,8 @@ ProxySynthDef(\ph, {
 	\degree, [3,5,1],
 	\strum, 12,
 	\vol, 2,
-	\lag, 0.2,
-	\amp, 0.5,
+	\lag, 0.8, /*Prand([1,0.2,0.8],inf),*/
+	\amp, 1.2,
 	\speed, Prand([0.0125,0.00125,0.025],inf),
 
 );
@@ -41,5 +41,6 @@ ProxySynthDef(\ph, {
 	\noise, Prand([0.0003, 0.003, 0.002],inf),
 
 );
-~ph[32]=\filter-> {arg in; GVerb.ar(in,150,10)*0.5+FreeVerb.ar(in,room:2)};
+~ph[32]=\filter->{arg in; FreeVerb.ar(LPF.ar(in,200),room:2)+in};
+~ph[33]=\filter-> {arg in; GVerb.ar(in,150,10)*0.5+FreeVerb.ar(in,room:2)};
 )
