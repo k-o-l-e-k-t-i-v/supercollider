@@ -22,6 +22,7 @@ BPF
 Resonz
 Vibrato
 FreeVerb
+GVerb
 Allpass
 Comb
 Compander
@@ -32,4 +33,7 @@ pi
 kr
 range
 rand
+squared
 clip
+softclip
+distort
