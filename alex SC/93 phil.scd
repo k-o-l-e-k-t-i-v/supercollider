@@ -44,3 +44,5 @@ ProxySynthDef(\ph, {
 ~ph[32]=\filter->{arg in; FreeVerb.ar(LPF.ar(in,200),room:2)+in};
 ~ph[33]=\filter-> {arg in; GVerb.ar(in,150,10)*0.5+FreeVerb.ar(in,room:2)};
 )
+
+// very nice, code & sound
