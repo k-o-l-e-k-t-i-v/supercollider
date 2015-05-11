@@ -16,3 +16,10 @@ p = ProxySpace.push(s);
 	16,Pfindur(8, Pbind(\args, [\freq], \octave, 7, \degree, Pseq([7,3], inf), \dur, 0.25)),
 ],inf);
 )
+
+~q.monitor.fadeTime = 10.0;
+~q.monitor.stop;
+~q.play(vol:0.9);
+~q.play(vol:0.2);
+~q.monitor.stop(4);
+~q.free;
