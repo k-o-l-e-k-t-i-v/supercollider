@@ -1,14 +1,16 @@
 
 
 // History recorder
-
+// START RECORDING
 (
 History.stop;
 History.new;
 History.start;
 )
 
-// live coding starts here.. everyting recorded
+
+
+/////////// live coding starts here (or in any other Document).. everyting recorded
 
 "test1".postln;
 "test2".postln;
@@ -17,6 +19,7 @@ History.start;
 
 
 // when finished coding
+/////// SAVE IT //////////////////
 (
 History.stop;
 // History.document (optional)
@@ -26,7 +29,8 @@ Dialog.savePanel({arg path; History.saveStory(path);});
 )
 
 
-///// LOADING / PLAYING
+
+///// LOADING / PLAYING /////////////////
 (
 Dialog.openPanel({arg path; h = History.loadStory(path); h.play;});
 )
