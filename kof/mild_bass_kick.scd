@@ -4,7 +4,7 @@
 	mod1 = Duty.kr(4,0,Dseq([1,1,2,1,4,2,4],inf)).lag(1/10);
 	mod2 = Duty.kr(4,0,Dseq([1,1.5,1.25,1.125,2,4],inf)).lag(1/10);
 	imp = Impulse.ar(1/4,(0..7)++[0.5,0.25]/8);
-	imp = TDelay.ar(imp,TExpRand.ar(0.001,0.05,imp));
+	imp = TDelay.ar(imp,TExpRand.ar(0.001,0.125,imp));
 	env = EnvGen.ar(Env.perc(0.01,2),imp);
 	fenv = EnvGen.ar(Env.perc(0.0005,0.025,LFDNoise1.ar(1/[7,8,3,2]).exprange(150.01,350)),imp);
 	tenv = EnvGen.ar(Env.perc(0.5,0.0025),imp);
