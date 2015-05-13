@@ -32,5 +32,5 @@ Dialog.savePanel({arg path; History.saveStory(path);});
 
 ///// LOADING / PLAYING /////////////////
 (
-Dialog.openPanel({arg path; h = History.loadStory(path); h.play;});
+Dialog.openPanel({arg path; h = History.loadStory(path); h.document; h.play;});
 )
