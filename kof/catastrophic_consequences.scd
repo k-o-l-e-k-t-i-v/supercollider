@@ -3,7 +3,6 @@
 p=ProxySpace.push(s.reboot);
 
 (
-    ~morph.fadeTime=2;
     ~morph={
         var fd = LFSaw.ar(1/8/[8,17,33,65,71]);
         var sig = LFSaw.ar(4320/fd.range(1,43.2)) + SinOsc.ar(43.2!2,mul:0.5);
