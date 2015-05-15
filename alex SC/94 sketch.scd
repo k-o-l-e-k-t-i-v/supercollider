@@ -25,7 +25,7 @@ ProxySynthDef(\voice, {
         freq:LFNoise0.kr(10).range(\freq.kr, \freq.kr+i),
         rq:LFNoise0.kr(20).range(0.001,i/10))
     })*env*amp;
-	sig=PitchShift.ar(sig,SinOsc.kr(2).range(0.2,1.2))
+	// sig=PitchShift.ar(sig,SinOsc.kr(2).range(0.2,1.2))
 }).add;
 
 )
@@ -50,19 +50,20 @@ ProxySynthDef(\voice, {
 	spread:SinOsc.kr(\mix.kr).range(10,50))};
 ~d[2]=\set->Pbind(\args, [\mix], \mix, 0.25);
 ~d[3]=\filter->{arg in; LPF.ar(in,200)+in};
-)
 
-(
-~v.play(fadeTime:2);
-~v.quant=6;
-~v[0]=Pbind(\instrument, \voice,
-	\dur, Pseq([6,4,2,8],inf),
-	\legato, 1.5,
-	//\freq, [165,168,250,400],
-	\octave, Pseq([[3,4], 5, 6,[4,6]],inf),
-	\degree, Pseq([Pn([2,4,6],2), [1,3]],inf),
-	\amp, 0.7
+
+
+~v2.play(fadeTime:8);
+~v2.quant=16;
+~v2[0]=Pbind(\instrument, \voice,
+	\dur, Pseq([12, Rest(4)],inf),
+	\legato, 1.2,
+	\octave, Prand([[3,4], [5,2],6,[4,6]],inf),
+	\degree, Pseq([[2,4,6], [1,3]],inf),
+	\strum, Prand([2,4],inf),
+	\amp,0.5, //Pseq([Penv([0,1,0.5,0.3,0],[6,3,3],\welch),0.5],inf)
 );
-~v[30]=\filter->{arg in; GVerb.ar(DelayN.ar(in),1,0.2)};
-~v[31]=\filter->{arg in; FreeVerb.ar(in,room:2)};
+~v2[30]=\filter->{arg in; GVerb.ar(DelayN.ar(in),1.2,4)};
+// ~v2[31]=\set->Pbind(\args, [\room, \rev], \dur, 4, \room, Prand([1,1.2,1.5],inf), \rev, Prand([2,2.22,1,4],inf));
+~v2[32]=\filter->{arg in; FreeVerb.ar(in,room:2)};
 )
