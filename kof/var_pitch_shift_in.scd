@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s);
 
 (
 ~filt.fadeTime=4;
@@ -15,3 +15,5 @@
 
 
 ~filt.stop(20)
+
+//hm, no sound here. everything goes under -1.
