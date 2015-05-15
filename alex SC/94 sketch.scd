@@ -22,7 +22,7 @@ ProxySynthDef(\voice, {
 		{ arg i;
     BPF.ar(
         PinkNoise.ar(Array.fill(4,{arg i; i/10+0.5})),
-        freq:LFNoise0.kr(10).range(\freq.kr, \freq.kr+i),
+        freq:LFNoise0.kr(100).range(\freq.kr, \freq.kr+i),
         rq:LFNoise0.kr(20).range(0.001,i/10))
     })*env*amp;
 	// sig=PitchShift.ar(sig,SinOsc.kr(2).range(0.2,1.2))
