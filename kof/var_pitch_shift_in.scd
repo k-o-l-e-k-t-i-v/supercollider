@@ -17,3 +17,4 @@ p=ProxySpace.push(s);
 ~filt.stop(20)
 
 //hm, no sound here. everything goes under -1.
+//it need an audio in source
