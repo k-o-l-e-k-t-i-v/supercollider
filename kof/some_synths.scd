@@ -6,10 +6,11 @@
 ~na={
 	var imp,sig,separate,note;
 	var mod = Duty.kr([2,4],0,Dseq([0,12,3,5,7,-12],inf)) + (TRand.kr(0.001,36.0,Impulse.kr(1/8/(1..12))).round(12)+TRand.kr([-48,-12],13,Impulse.kr(1/4!2)).round([12,12])) + SinOsc.kr(4,SinOsc.kr(1/(1..12),mul:8pi),mul:0.02);
+
 	var env2 = Decay.ar(Impulse.ar(2),0.5);
 	var sig2 = GrayNoise.ar(0.5!4) + SinOsc.ar(44*[1,2,4,8]*pi);
 
-	note = ([60,36]+[0,12,0,24,0,36,0,12,0,-12,0,1]+mod).midicps;
+	note = ([36,24+7]+[0,12,0,24,0,36,0,12,0,-12,0,1]+mod).midicps;
 
 	sig = [
 		LFPar.ar(note),
@@ -55,7 +56,7 @@
 
 	// sig = PitchShift.ar(sig,0.1,env2.range(0.91,1));
 
-	sig = GVerb.ar(sig/2+(sig2/2),[10,50]) + (sig/3+(sig2/2));
+	sig = GVerb.ar(sig/2+(sig2/3),[10,50]) + (sig/3+(sig2/4));
 
 	sig = Pan2.ar(sig,SinOsc.ar([4,7.9]))/8;
 
