@@ -4,9 +4,20 @@
 ~na.quant=2;
 ~na.fadeTime=4;
 ~na={
-	var imp,sig,separate;
+	var imp,sig,separate,note;
 	var mod = Duty.kr([2,4]*4,0,Dseq([0,12,3,5,7,-12],inf)) + (TRand.kr(0.001,36.0,Impulse.kr(1/8/(1..12))).round(12)-24) + SinOsc.kr(4,SinOsc.kr(1/(1..12),mul:8pi),mul:0.02);
-	sig = LFPar.ar(([60,36]+[0,12,0,24,0,36,0,12,0,-12,0,1]+mod).midicps);
+	note = ([60,36]+[0,12,0,24,0,36,0,12,0,-12,0,1]+mod).midicps;
+
+	sig = [
+		LFPar.ar(note),
+		LFSaw.ar(note,mul:0.2),
+		SinOsc.ar(note),
+		LFPulse.ar(note,mul:0.2),
+		VarSaw.ar(note)
+	];
+
+	sig = SelectX.ar(SinOsc.ar(1/[4,8]).range(0,sig.size+0.01),sig);
+
 	imp = Decay2.ar(Impulse.ar(1/4,(1..16)/16),LFSaw.ar(1/4/(1..12)).range(0.1,0.75),0.15);
 
 	sig = sig * imp;
