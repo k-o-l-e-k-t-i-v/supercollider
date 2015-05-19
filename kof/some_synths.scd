@@ -31,7 +31,7 @@
 
 	sig = CompanderD.ar(sig,0.75,1/2,1/4);
 
-	sig = Pan2.ar(sig,SinOsc.ar([4,7.9]));
+	sig = Pan2.ar(sig,SinOsc.ar([4,7.9]))/4;
 
 
 	Splay.ar(sig.flat,0.5);
