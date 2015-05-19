@@ -12,7 +12,7 @@
 	sig = GVerb.ar(sig,[2,3,40,80])/2 + (sig/2);
 	sig = CompanderD.ar(BPF.ar(sig,1000*(mod.lag(4)**2)/(1..10)),0.9,1/2,1/2);
 
-	Splay.ar(sig.flat,0.1);
+	Splay.ar(sig.flat,0.5,0.5);
 
 };
 ~bass.quant=2;
