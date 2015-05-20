@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s);
 (
 ~qwe={
 	var imp = Impulse.ar(1/2,(0..7)++[0.5,7.5,7.75]/8);
@@ -9,3 +9,5 @@
 };
 ~qwe.play;
 )
+
+//cool ^^
