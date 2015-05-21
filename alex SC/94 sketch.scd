@@ -28,10 +28,56 @@ ProxySynthDef(\voice, {
 	// sig=PitchShift.ar(sig,SinOsc.kr(2).range(0.2,1.2))
 }).add;
 
+
+ProxySynthDef(\zzz, {
+	arg sustain, amp,speed,vol;
+	var sig, env,fenv, lagenv;
+
+	env=EnvGen.kr(Env.new(),\gate.kr(1),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env.new([\freq.kr*2,\freq.kr],[sustain*0.08]),\gate.kr(1),timeScale:sustain);
+	lagenv=EnvGen.kr(Env.new([\lag.kr*0.1,\lag.kr],[sustain*0.7]),\gate.kr(1),timeScale:sustain);
+	sig=Lag.ar(LFSaw.ar(fenv),lagenv)*env*amp;
+	sig=Pan2.ar(sig,SinOsc.kr(sustain/speed),vol);
+}).add;
+
+ProxySynthDef(\bum2, {
+	arg sustain, amp, voln, f2;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env.adsr(),\gate.kr(1),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env.new([\freq.kr*4,\freq.kr],[sustain*0.04]),\gate.kr(1),timeScale:sustain);
+	sig=SinOsc.ar(fenv!2,
+		add:HPF.ar(WhiteNoise.ar(voln).clip(0.05,0.1),Saw.kr(2).range(11000,f2))
+
+	)*env*amp;
+}).add;
+
+ProxySynthDef(\ping, {
+	arg sustain, amp,leng;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env.new(), \gate.kr(1),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env.new(curve:\welch),\gate.kr(1),timeScale:sustain);
+
+	sig=SinOsc.ar([\freq.kr,\freq.kr+2])*amp;
+	sig=sig*env;
+}).add;
+
+
 )
 
 
 
+(
+~e.play;
+~e[0]=Pbind(\instrument, \ping,
+	\dur, 4, \legato, 0.2,
+	\octave, Pseq([5,4,6,3],inf),
+	\degree, Prand([1,3,5],inf),
+	\amp, 0.1);
+~e[30]=\filter-> {arg in; GVerb.ar(in,roomsize:150,revtime:3,
+	spread:SinOsc.kr(\mix.kr).range(10,50))};
+)
 
 
 

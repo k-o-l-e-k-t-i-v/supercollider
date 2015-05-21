@@ -22,11 +22,11 @@ Ndef(\l).stop;
 Pdef(\ting,
 	Pbind(
 		\instrument, \ting,
-		\dur, Pseq([0.12,Rest(0.8)],inf),
-		\freq,14000,
+		\dur, Prand([0.12,0.5,Rest(0.8)],inf),
+		\freq,Prand([4000,400, 800, 1200,200,50,600],inf),
 		\pan, Prand([-1,1],inf),
 		\legato, 0.5,
-		\amp, 0.01,
+		\amp, 0.3,
 )).play(quant:2);
 )
 Pdef(\ting).stop;
@@ -76,10 +76,10 @@ Pdef(\lopup1).stop;
 Pdef( \bum1,
 	Pbind(
 		\instrument, \bum,
-		\dur, 2,
-		\freq,45,
-		\legato, Pseq([0.9,0.6],inf),
-		\amp, 0.1
+		\dur, Pseq([0.5,0.25,Rest(0.5),0.25],inf),
+		\freq,65,
+		\legato, Pseq([0.5,0.8,0.6],inf),
+		\amp, 0.4
 )).play(quant:2);
 )
 Pdef( \bum1).stop;
@@ -90,7 +90,7 @@ Pdef( \bum1).stop;
 Pdef( \bum2,
 	Pbind(
 		\instrument, \bum,
-		\dur, 0.5,
+		\dur, 0.85,
 		\freq,65,
 		\legato, Pseq([
 			Pseq([0.8,0.2],2),
@@ -101,7 +101,7 @@ Pdef( \bum2,
 			Pseq([0.8,1.4],4),
 			Pseq([0.8,0.4],1),
 		],inf),
-		\amp, 0.1
+		\amp, 0.4
 )).play(quant:2);
 )
 Pdef( \bum2).stop;
@@ -111,7 +111,7 @@ Pdef(\bum3,
 	Pbind(
 		\instrument, \bum,
 		\dur, Pseq([0.5,0.2,0.5,Rest(0.25)],inf),
-		\freq,Pseq([Pn(45,16), Pn(65,8)],inf),
+		\freq,Pseq([Pn(85,16), Pn(45,8)],inf),
 		\amp,0.4,
 		\legato,Pseq([0.8,0.6],inf),
 )).play(quant:2);
@@ -138,7 +138,7 @@ Pdef( \lopwoosh).stop;
 Pdef( \lopwoosh1,
 	Pbind(
 		\instrument, \woosh,
-		\dur, Pseq([2],inf),       //very simple
+		\dur, Pseq([Rest(1)],inf),       //very simple
 		\freq,11000,
 		\legato, 0.2,
 		\amp, 0.4,
@@ -340,6 +340,15 @@ Ndef(\5, {
 )
 
 Ndef(\5).stop;
+
+
+(
+Pbind(
+	\dur, Prand([0.5, 0.7,0.25],inf),
+	\octave, Prand([4,3,5,2],inf),
+	\degree, Prand([1,3,5],inf),
+).play;
+)
 
 
 

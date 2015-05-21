@@ -44,18 +44,18 @@ ProxySynthDef(\ping, {
 (
 ~n1.quant=1;
 ~n1.play;
-~n1[0]=Pbind(\instrument, \ping, \dur, 12, \legato, 0.05,
+~n1[0]=Pbind(\instrument, \ping, \dur, 6, \legato, 0.05,
 	\octave,Prand([4,6,5,6,3],inf),
-	\degree, [2,6],
+	\degree, [3,4,6],
 );
 ~n1[30]=\filter-> {arg in; CombN.ar(in,0.5,0.5,2)};
-~n1[31]=\filter->{arg in; FreeVerb.ar(in,0.5,1.2)};
+~n1[31]=\filter->{arg in; FreeVerb.ar(in,0.5,1.8)};
 )
 
 (
-~zum2.quant=1;
+// ~zum2.quant_1;
 ~zum2.play;
-~zum2.mold(2);
+// ~zum2.mold(2);
 
 ~zum2[0]=Pbind(
 	\instrument, \zzz,
@@ -80,7 +80,7 @@ ProxySynthDef(\ping, {
 (
 ~b1.quant=1;
 ~b1.play;
-~b1.mold(2);
+~b1.mold(4);
 ~b1[0]=Pbind(
 	\instrument, \bum2,
 	\dur, Pseq([0.25,0.25,0.25,0.25, Rest(0.25), 0.25, Rest(0.5)],inf),
@@ -92,10 +92,10 @@ ProxySynthDef(\ping, {
 		Pseq([0,0.6,0,0,0,0.5,0],2)],inf),
 	\f2, Pseq([Pn(4000,14), Pn(8000,7)],inf),
 	\amp, 0.6,
-	\octave,2,
-	\degree, Pseq([2,6,2,2,2,6,4],inf),
+	\octave,3,
+	\degree, Pseq([2,4,4,2,2,6,2],inf),
 );
-~b1[30]=\filter -> {arg in; FreeVerb.ar(in,room:0.25,damp:1)};
+~b1[30]=\filter -> {arg in; FreeVerb.ar(in,room:0.55,damp:1)};
 
 
 )
@@ -104,13 +104,13 @@ ProxySynthDef(\ping, {
 ~b2.quant=1;
 ~b2.play;
 ~b2[0]=Pbind(\instrument, \bum2,
-	\dur, 6, \legato, 0.2,
-	\voln, 0.5,
+	\dur, 6, \legato, 0.1,
+	\voln, 0.4,
 	\f2, 4000,
-	\freq, 65,
-	\amp, 0.2
+	\freq, [45,85],
+	\amp, 0.1
 );
-~b2[30]=\filter-> {arg in; GVerb.ar(in,100,1,damping:1,add:in)};
+~b2[30]=\filter-> {arg in; GVerb.ar(in,150,4,damping:1,add:in)};
 )
 
 (
