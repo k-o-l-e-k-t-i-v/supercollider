@@ -27,7 +27,7 @@ recButton.add(Button(w, Rect(15, 15, 20, 20))
 	.action_({ arg butt;
 		if(butt.value == 1) {
 			nameFile = "C:" +/+ "SC_" ++ Date.localtime.stamp ++ ".flac".standardizePath;
-			recGroup = Group.new(nil, \addAfter);
+			recGroup = Group.new(nil, \addToTail); // start this like last before REC, node to TAIL
 			recBuffer = Buffer.alloc(s, 262144, 2);
 			recBuffer.write(nameFile,"flac","int16",0,0,true);
 			recObject = Synth.tail(recGroup, \rec, [\bufnum, recBuffer]);
