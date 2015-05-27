@@ -17,20 +17,20 @@ Ndef(\l).stop;
 ////
 
 
-//////////TING RYTHM FAST RANDOM RANDOM RANDOM
+//////////TING RYTHM FAST///1111111
 (
 Pdef(\ting,
 	Pbind(
 		\instrument, \ting,
-		\dur, Prand([0.12,0.5,Rest(0.3)],inf),
-		\freq,Prand([400,60, 80, 120,200,50,600],inf),
+		\dur, Prand([0.12,0.5,Rest(0.8)],inf),
+		\freq,Prand([4000,400, 800, 1200,200,50,600],inf),
 		\pan, Prand([-1,1],inf),
 		\legato, 0.5,
 		\amp, 0.3,
 )).play(quant:2);
 )
 Pdef(\ting).stop;
-                                         //THESE TWO TOGETHER
+
 
 ////////TING RANDOM
 (
@@ -39,7 +39,7 @@ Pdef(\ting2,
 		\instrument, \ting,
 		\dur,
 		Prand([0.2,0.12,0.4,0.12,Rest(0.2),0.1,0.2,0.2,Rest(0.1),Rest(0.2),Rest(0.4)],inf),
-		\freq,12000,
+		\freq,16000,
 		\pan, Prand([-1,1],inf),
 		\legato, 0.5,
 		\amp, 0.01,
@@ -65,7 +65,7 @@ Pdef(\loprip1,
 		\f2,0.5,
 )).play(quant:2);
 )
-Pdef(\loprip1).stop;
+Pdef(\lopup1).stop;
 
 
 
@@ -76,10 +76,10 @@ Pdef(\loprip1).stop;
 Pdef( \bum1,
 	Pbind(
 		\instrument, \bum,
-		\dur, 2,
-		\freq,45,
-		\legato, Pseq([0.2,0.1,0.3],inf),
-		\amp, 0.2
+		\dur, Pseq([0.5,0.25,Rest(0.5),0.25],inf),
+		\freq,65,
+		\legato, Pseq([0.5,0.8,0.6],inf),
+		\amp, 0.4
 )).play(quant:2);
 )
 Pdef( \bum1).stop;
@@ -138,11 +138,11 @@ Pdef( \lopwoosh).stop;
 Pdef( \lopwoosh1,
 	Pbind(
 		\instrument, \woosh,
-		\dur, Pseq([2,Rest(1)],inf),       //very simple
+		\dur, Pseq([Rest(1)],inf),       //very simple
 		\freq,11000,
-		\legato, 0.3,
+		\legato, 0.2,
 		\amp, 0.4,
-		\f2, Pseq([14,4,4,2],inf),
+		\f2, 2,
 )).play(quant:2);
 )
 Pdef( \lopwoosh1).stop;
@@ -157,7 +157,7 @@ Pdef(\loptic1,
 		\instrument, \tictum,
 		\dur, Pseq([2,Rest(1)],inf),
 		\freq, Pseq([Pn(4000,4),Pn(500,2)],inf),  //////
-		\amp, 0.6,
+		\amp, 0.5,
 		\legato, 1,
 )).play(quant:2);
 )
@@ -173,7 +173,7 @@ Pdef(\loppzum,
 		\octave, Pseq([[8,6],[7,5],[4,7],[6,8,5],[7,4,8],[3,4,8]],inf),
 		\legato, 2,
 		\lag, 0.02,
-		\amp,0.04,
+		\amp,0.01,
 
 )).play(quant:2);
 )
@@ -204,10 +204,10 @@ Pdef(\ASTRAL).stop;
 Pdef(\loprip1,
 	Pbind(
 		\instrument, \ripple,
-		\dur, Pseq([1,Pn(0.7,2),1],inf),
-		\freq,Pseq([1700,Pn(600,2),100],inf),
+		\dur, 0.5,
+		\freq,Pseq([700,Pn(400,2),300],inf),
 		\amp, 0.6,
-		\legato,0.6,
+		\legato,0.4,
 		\f2,1,
 )).play(quant:2);
 )
@@ -247,6 +247,24 @@ Pdef(\loptic1).stop;
 
 //////////DRONE////////99999999999999
 
+(
+Pdef(\dfm1,
+	Pbind(
+		\instrument, \dfm,
+		\dur, 4,
+		\strum, 1,
+		\octave, Prand([[4,3],[5,2],[4,3],[4,4]],inf),
+		\notes, Prand([[1,5,7],[6,4,8],Prand([[2,5],[1,3],[2,4]],2)],inf),
+		\legato,2,
+		\lag, 0.002,
+		\res, Prand([1,0.5,1.2,1.4,0.2],inf),
+		\amp, 0.2,   //not bigger than 0.5
+)).play(quant:2);
+);
+
+Pdef(\dfm1).stop;
+
+
 ////roar
 
 (
@@ -256,7 +274,7 @@ Pdef(\roar,
 		\dur, 4,                    /////attention to arg in synth
 		\freq,Pseq([Pn(60,4),Pn(85,2)],inf),
 		\f2, 0.5,
-		\legato, 0.8,
+		\legato, 0.6,
 		\lag, 0.02,
 		\amp, 1,
 )).play(quant:2);

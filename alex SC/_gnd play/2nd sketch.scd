@@ -1,6 +1,4 @@
 
-p=ProxySpace.push(s);
-
 (
 
 ProxySynthDef(\bum2, {
@@ -89,14 +87,14 @@ ProxySynthDef(\woosh, {
 ~t[0]=Pbind(
 		\instrument, \ripple,
 		\dur, 0.5,
-		\freq,Pseq([8000,600,Pn(800,2),140],inf),
+		\freq,Pseq([700,Pn(400,2),300],inf),
 		\amp, 0.8,
-		\legato,0.5,
+		\legato,0.7,
 		\f2,0.5,
 );
-~t[30]=\filter -> {arg in; FreeVerb.ar(in,mix:SinOsc.kr(1).range(0.3,1),room:2,damp:1,add:in)};  //better with damp 0
+~t[30]=\filter -> {arg in; FreeVerb.ar(in,mix:SinOsc.kr(1).range(0.3,1),room:2,damp:1,add:in)};
 )
-~t.free;
+~t.freeAll;
 
 
 //////HAT WITH ECHO
@@ -117,35 +115,35 @@ Pdef( \lopwoosh).stop;
 Pdef( \lopwoosh1,
 	Pbind(
 		\instrument, \woosh,
-		\dur, Pseq([1,Rest(1)],inf),       //very simple
+		\dur, Pseq([Rest(1)],inf),       //very simple
 		\freq,11000,
-		\legato, 0.6,
-		\amp, 0.8,
-		\f2, 5,
+		\legato, 0.2,
+		\amp, 0.4,
+		\f2, 2,
 )).play(quant:2);
 )
 Pdef( \lopwoosh1).stop;
 
 ///////beat
 (
-~b1.quant=2;
+~b1.quant=1;
 ~b1.play;
 ~b1.mold(4);
 ~b1[0]=Pbind(
 	\instrument, \bum2,
 	\dur, Pseq([0.25,0.25,0.25,0.25, Rest(0.25), 0.25, Rest(0.5)],inf),
-	\legato, 1,
+	\legato, 1.2,
 	\voln, Pseq([
 		Pseq([Pn(0,7)],2),
 		Pseq([0,0.2,0,0,0,0.1,0],4),
 		Pseq([0,0.2,0,0.1,0,0.3,0],4),
 		Pseq([0,0.6,0,0,0,0.5,0],2)],inf),
 	\f2, Pseq([Pn(4000,14), Pn(8000,7)],inf),
-	\amp, 0.6, //dont touch this
+	\amp, 0.2, //dont touch this
 	\octave,2,
-	\degree, Pseq([2,2,2,8,9,5,8],inf),
+	\degree, Pseq([2,6,4,2,7,6,4],inf),
 );
-~b1[30]=\filter -> {arg in; FreeVerb.ar(in,room:1,damp:0.1,add:in)};
+~b1[30]=\filter -> {arg in; FreeVerb.ar(in,room:0.5,damp:1,add:in)};
 
 )
 ~b1.stop;
@@ -182,10 +180,10 @@ Pdef( \lopwoosh1).stop;
 		\strum, 1,
 		\octave, Prand([[4,3],[5,2],[4,3],[4,4]],inf),
 		\notes, Prand([[1,5,7],[6,4,8],Prand([[2,5],[1,3],[2,4]],2)],inf),
-		\legato,1.2,
+		\legato,2,
 		\lag, 0.002,
 		\res, Prand([1,0.5,1.2,1.4,0.2],inf),
-		\amp, 0.002,   //not bigger than 0.05
+		\amp, 0.2,   //not bigger than 0.5
 );
 )
 ~d.stop;
@@ -200,11 +198,11 @@ Pdef( \lopwoosh1).stop;
 ~y[0]=Pbind(
 		\instrument, \tictum,
 		\dur, Pseq([2,Rest(1)],inf),
-		\freq, Pseq([Pn(100,4),Pn(500,2)],inf),  //////
+		\freq, Pseq([Pn(4000,4),Pn(500,2)],inf),  //////
 		\amp, 0.5,
-		\legato, 1.2,
+		\legato, 1,
 );
-~y[30]=\filter -> {arg in; FreeVerb.ar(in,room:2,damp:0,add:in)};
+~y[30]=\filter -> {arg in; FreeVerb.ar(in,room:1,damp:0,add:in)};
 )
 ~y.stop;
 ~y.clear;

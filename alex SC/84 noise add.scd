@@ -31,7 +31,7 @@ p=ProxySpace.push(s);
 (
 ~w={var b,noise, s1,t, add,rq, beat, s2,s3,s4,f;
 
-	b=0.5;
+	b=1;
 	t=Impulse.kr([b,b/2]);
 	rq=Decay.kr(t,b/10).range(1.1,0.01);
 
@@ -41,7 +41,7 @@ p=ProxySpace.push(s);
 	];
 	add=SelectX.ar(Stepper.kr(Impulse.kr(b/2),0,max:2),noise);
 	beat=Duty.kr(Dseq([b,b*4],inf),0,Dseq([b,b/2],inf));
-	f=Duty.kr(b,0,Drand([6000,200,800,1100,15000],inf));
+	f=Duty.kr(b,0,Drand([6000,8000,11000,15000],inf));
 
 	s1=SinOsc.ar(45*[1.25,1.35,1.65],add:add)*LFSaw.ar([b,beat]).lag(0.02);//rough !!LFSaw env **
 	s1=FreeVerb.ar(s1,room:1);
