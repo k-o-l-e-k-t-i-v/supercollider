@@ -40,15 +40,15 @@ ProxySynthDef(\woosh, {
 
 
 (
-~o1.clock=TempoClock(10/60); //10 to 60
+~o1.clock=TempoClock(180/60); //10 to 60
 
 ~o1.play();
-~o1.fadeTime=3;
+~o1.fadeTime=6;
 ~o1.quant=3;
 ~o1[0]=Pbind(
 		\instrument, \bum2,
 	    \dur, Pseq([1,2],inf),
-        \freq,85,
+        \freq,95,
 		\amp, 0.5,
 		\legato,0.7,
 
@@ -59,7 +59,7 @@ ProxySynthDef(\woosh, {
 
 ~o2.play();
 ~o2.quant=3;
-~o2.fadeTime=3;
+~o2.fadeTime=6;
 
 ~o2[0]=Pbind(
 		\instrument, \bum2,
@@ -70,10 +70,11 @@ ProxySynthDef(\woosh, {
 		\f2,0.5,
 );
 
-~o3.clock=TempoClock(10/60).permanent_(true);  //60 to 60
+~o3.clock=TempoClock(60/60).permanent_(true);  //60 to 60
 
 ~o3.play();
 ~o3.quant=3;
+~o3.fadeTime=6;
 ~o3[0]=Pbind(
 		\instrument, \woosh,
 	    \dur, Pseq([Rest(2.7),0.3],inf),
