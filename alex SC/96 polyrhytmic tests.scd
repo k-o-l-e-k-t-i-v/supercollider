@@ -37,8 +37,6 @@ ProxySynthDef(\woosh, {
 }).add;
 )
 
-p.clock.tempo = 1.0; // set the tempo to 1
-p.clock.tempo = 90/60; // set the tempo to 2.2
 
 
 (
@@ -72,7 +70,7 @@ p.clock.tempo = 90/60; // set the tempo to 2.2
 		\f2,0.5,
 );
 
-~o3.clock=TempoClock(10/60);  //60 to 60
+~o3.clock=TempoClock(10/60).permanent_(true);  //60 to 60
 
 ~o3.play();
 ~o3.quant=3;
@@ -91,47 +89,3 @@ p.clock.tempo = 90/60; // set the tempo to 2.2
 )
 
 
-
-
-
-
-
-
-(
-~b1.clock=TempoClock(120/60).permanent_(true);
-~b1.play();
-~b1.quant=3;
-~b1[0]=Pbind(
-		\instrument, \bum2,
-	\dur, Pseq([0.5,0.5,0.25,1.25,0.5,Rest(0.3)],inf),
-	\freq,Pseq([Pn(85,12), Pn(65, 6), Pn(85,3), Pn(65, 3)],inf),
-		\amp, 0.5,
-		\legato,0.7,
-		\f2,0.5,
-);
-
-
-~b2.play();
-~b2.quant=3;
-~b2[0]=Pbind(
-		\instrument, \bum2,
-	    \dur, Pseq([0.75,0.75,0.375,0.375,0.75,Rest(0.3)],inf),
-		\freq,45,
-		\amp, 0.4,
-		\legato,0.7,
-		\f2,0.5,
-);
-
-
-~w1.play();
-~w1.quant=3;
-~w1[0]=Pbind(
-		\instrument, \woosh,
-	    \dur, Pseq([Rest(3),0.3],inf),
-	\freq,Prand([9000,600, 100, 12000],inf),
-		\amp, 1.2,
-		\legato,0.7,
-		\f2,20,
-);
-~w1[30]=\filter->{arg in; FreeVerb.ar(in,room:2)};
-)
