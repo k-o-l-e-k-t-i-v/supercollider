@@ -2,8 +2,10 @@
 
 (
 ~lowSaw={
+	var mod = Duty.kr(4,0,Dseq([1,1,1.5,1.25,2,1.25,1.5],inf));
 	var cadence = 4/fib(16);
-	var base = 43.2*[1,1.5,1.25,2];
+	var base = 43.2*[1,1.5,1.25,2] / mod;
+	/////////////////////////////////
 	var imp = SinOsc.ar(cadence).exprange(0.00001,1);
 	var f = base*([0.5,0.25,1,2,4,0.125]*pi)*[1,1,1.5,2,1.125,1.25,4,8].scramble + LPF.ar(BrownNoise.ar(1!8),5).range(-2,2) * (1.001**(1..8));
 	var sig = [
@@ -13,7 +15,7 @@
 		VarSaw.ar(f)
 	];
 
-	sig = SelectX.ar(LFSaw.ar(cadence).exprange(0.0001,sig.size+0.01),sig.flat) / 4;
+	sig = SelectX.ar(LFSaw.ar(cadence).exprange(0.0001,sig.size+0.01),sig.flat) / 8;
 
 	sig = Limiter.ar(sig);
 	sig = sig * imp;
