@@ -84,6 +84,7 @@ ProxySynthDef(\woosh, {
 
 ////beat grill party
 (
+~t.clock=TempoClock(60/60).permanent_(true);
 ~t.play;
 ~t.quant=2;
 ~t[0]=Pbind(
@@ -118,7 +119,7 @@ Pdef( \lopwoosh1,
 	Pbind(
 		\instrument, \woosh,
 		\dur, Pseq([1,Rest(1)],inf),       //very simple
-		\freq,11000,
+		\freq,6000,
 		\legato, 0.6,
 		\amp, 0.8,
 		\f2, 5,
@@ -128,6 +129,8 @@ Pdef( \lopwoosh1).stop;
 
 ///////beat
 (
+~b1.clock=TempoClock(120/60).permanent_(true);
+
 ~b1.quant=2;
 ~b1.play;
 ~b1.mold(4);
@@ -141,9 +144,9 @@ Pdef( \lopwoosh1).stop;
 		Pseq([0,0.2,0,0.1,0,0.3,0],4),
 		Pseq([0,0.6,0,0,0,0.5,0],2)],inf),
 	\f2, Pseq([Pn(4000,14), Pn(8000,7)],inf),
-	\amp, 0.6, //dont touch this
+	\amp, 0.3, //dont touch this
 	\octave,2,
-	\degree, Pseq([2,2,2,8,9,5,8],inf),
+	\degree, Pseq([2,2,7,5,8],inf),
 );
 ~b1[30]=\filter -> {arg in; FreeVerb.ar(in,room:1,damp:0.1,add:in)};
 
@@ -159,7 +162,7 @@ Pdef( \lopwoosh1).stop;
 ~a[0]=Pbind(
 		\instrument, \sin,
 		\dur,4,
-		\octave, Pseq([3,4,5,3,6,7,5,2],inf),
+		\octave, Pseq([5,6,7,5,6],inf),
 		\note, [1,5,7,9],
 		\strum,0.45,
 		\amp, 0.008,
@@ -179,13 +182,13 @@ Pdef( \lopwoosh1).stop;
 ~d[0]=Pbind(
 		\instrument, \dfm,
 		\dur, 4,
-		\strum, 1,
+	// \strum, 1,
 		\octave, Prand([[4,3],[5,2],[4,3],[4,4]],inf),
 		\notes, Prand([[1,5,7],[6,4,8],Prand([[2,5],[1,3],[2,4]],2)],inf),
 		\legato,1.2,
 		\lag, 0.002,
 		\res, Prand([1,0.5,1.2,1.4,0.2],inf),
-		\amp, 0.002,   //not bigger than 0.05
+		\amp, 0.02,   //not bigger than 0.05
 );
 )
 ~d.stop;
@@ -199,7 +202,7 @@ Pdef( \lopwoosh1).stop;
 ~y.quant=2;
 ~y[0]=Pbind(
 		\instrument, \tictum,
-		\dur, Pseq([2,Rest(1)],inf),
+		\dur, Pseq([3,Rest(12)],inf),
 		\freq, Pseq([Pn(100,4),Pn(500,2)],inf),  //////
 		\amp, 0.5,
 		\legato, 1.2,
@@ -248,3 +251,42 @@ Pdef(\piano2,
 )).play;
 )
 Pdef(\piano2).stop;
+
+
+
+
+///final monologue
+
+p=ProxySpace.push(s);
+(
+~w={var b,noise, s1,t, add,rq, beat, s2,s3,s4,f;
+
+	b=0.5;        //increase b in 5 min (line)
+	t=Impulse.kr([b,b/2]);
+	rq=Decay.kr(t,b/10).range(1.1,0.01);
+
+	noise=[PinkNoise.ar(0.1),
+		BrownNoise.ar(0.2),
+		WhiteNoise.ar(1).clip(0.7,1)
+	];
+	add=SelectX.ar(Stepper.kr(Impulse.kr(b/2),0,max:2),noise);
+	beat=Duty.kr(Dseq([b,b*4],inf),0,Dseq([b,b/2],inf));
+	f=Duty.kr(b,0,Drand([6000,200,800,1100,15000],inf));
+
+	s1=SinOsc.ar(45*[1.25,1.35,1.65],add:add)*LFSaw.ar([b,beat]).lag(0.02);//rough !!LFSaw env **
+	s1=FreeVerb.ar(s1,room:1);
+
+	s2=BPF.ar(BrownNoise.ar(1),LFNoise0.kr([b/2,b/4,b/8,b]).range(85,405),0.001); //nope
+
+	s3=SinOsc.ar(Decay.kr(Impulse.kr([b,b*2]),b*0.2).exprange(1,285)+65!2);//beat
+	s3=s3*Decay2.kr(Impulse.kr([b,b*2]),decayTime:b/4);
+
+	s4=BPF.ar(WhiteNoise.ar,f,rq)*Decay2.kr(t,decayTime:b/5); //high
+	s4=CombN.ar(s4,b/4,b/4,b);
+
+
+	Mix.new([Limiter.ar(s1+(s3*0.5)+s4,0.5)]);
+
+};
+~w.play;
+)

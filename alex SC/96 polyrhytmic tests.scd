@@ -63,12 +63,29 @@ ProxySynthDef(\ping, {
 )
 
 
-
-
-
+///random beat rare
 (
 
-~o1.clock=TempoClock(240/60).permanent_(true); //10 to 60
+~or.clock=TempoClock(40/60).permanent_(true); //10 to 60
+
+~or.play();
+~or.fadeTime=6;
+~or.quant=3;
+~or[0]=Pbind(
+		\instrument, \bum2,
+	    \dur, Prand([1,2,0.5],inf),
+	    \freq,Prand([Pn(95,24), Pn(85, 12), Pn(65,12)],inf),
+		\amp, 0.5,
+		\legato,0.7,
+		\f2,2,
+);
+~o1[30]=\filter-> {arg in; FreeVerb.ar(in,room:2,add:in)};
+)
+~or.stop;
+~o1.stop;
+(
+
+~o1.clock=TempoClock(120/60).permanent_(true); //10 to 60
 
 ~o1.play();
 ~o1.fadeTime=6;
@@ -77,15 +94,15 @@ ProxySynthDef(\ping, {
 		\instrument, \bum2,
 	    \dur, Pseq([1,2],inf),
 	    \freq,Pseq([Pn(95,24), Pn(85, 12), Pn(105,12)],inf),
-		\amp, 0.5,
-		\legato,0.7,
+		\amp, 0.8,
+	\legato,Pseq([0.7,0.5],inf),
 
 		\f2,2,
 );
 ~o1[30]=\filter-> {arg in; FreeVerb.ar(in,room:2,add:in)};
 
 
-~o2.clock=TempoClock(180/60).permanent_(true);  //60 to 60
+~o2.clock=TempoClock(60/60).permanent_(true);  //60 to 60
 
 ~o2.play();
 ~o2.quant=3;
@@ -94,22 +111,25 @@ ProxySynthDef(\ping, {
 ~o2[0]=Pbind(
 		\instrument, \bum2,
 	\dur, Pseq([1.5,1.5, Rest(3)],inf),
-        \freq,45,
-		\amp, 0.4,
+        \freq,400,
+		\amp, 0.3,
 		\legato,0.7,
 		\f2,0.5,
 );
+)
+(
 
-~o3.clock=TempoClock(60/60).permanent_(true);  //60 to 60
+~o3.clock=TempoClock(120/60).permanent_(true);  //60 to 60
 
 ~o3.play();
 ~o3.quant=3;
 ~o3.fadeTime=9;
 ~o3[0]=Pbind(
 		\instrument, \pulse,
+
 	\dur, Pseq([Rest(3),2, Rest(1)],inf),
 	\freq,Prand([90,60, 10, 120],inf),
-		\amp,0.7,
+		\amp,2,
 		\legato,0.7,
 	\f2,Prand([10,2,5,15],inf),
 );
@@ -117,8 +137,8 @@ ProxySynthDef(\ping, {
 	spread:SinOsc.kr(\mix.kr).range(10,50))};
 ~o3[31]=\set->Pbind(\args, [\mix], \mix, 0.25);
 ~o3[32]=\filter->{arg in; LPF.ar(in,200)+in};
-
-
+)
+(
 ~o4.clock=TempoClock(60/60).permanent_(true);
 ~o4.play;
 ~o4.quant=3;
