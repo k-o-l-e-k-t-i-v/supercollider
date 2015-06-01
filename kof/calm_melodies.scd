@@ -18,7 +18,7 @@
 
 	sig = GVerb.ar(sig,[100,10])/[4,2]+sig;
 
-	sig = CompanderD.ar(sig,3/4,1/2,1/2);
+	sig = CompanderD.ar(sig/2,3/4,1/2,1/2);
 
 	Splay.ar(sig.flat,0.25);
 
