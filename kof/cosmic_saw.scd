@@ -6,6 +6,8 @@
  \___\___/|___/_| |_| |_|_|\___|
 */
 
+m=ProxySubmix.new(\test);
+
 (
 ~saw.quant=2;
 ~saw.fadeTime=2;
