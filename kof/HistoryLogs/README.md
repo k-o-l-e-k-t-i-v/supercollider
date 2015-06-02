@@ -18,4 +18,22 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #HISTORY LOGGER
 
+In this frantic era we produce enormous ammounts of data every day, one of the way how to reflect this, is to actually record as many of them as possible, to see it bare eyed.
+
 #HOWTO
+
+To record your own history whitin supercollider add this line into startup script
+```
+History.clear.start;
+```
+It will record everything the interpreter is receiving in precise time.
+
+You can load history files to play them later like this:
+```
+h = History.new.loadCS("~/path/to/a/file.scd");
+h.play();
+```
+
+Enjoy!
+
+kof
