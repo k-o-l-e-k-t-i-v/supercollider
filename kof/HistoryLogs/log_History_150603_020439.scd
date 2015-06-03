@@ -2,7 +2,6 @@
 
 [
 [ 0, 'me', "(
-  p=ProxySpace.push(s.reboot);
   m=ProxySubmix.new(\\filter);
 );" ],
 [ 2.811890104, 'me', "(

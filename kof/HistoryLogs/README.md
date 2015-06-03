@@ -27,11 +27,30 @@ To record your own history whitin supercollider add this line into startup scrip
 History.clear.start;
 ```
 It will record everything the interpreter is receiving in precise time.
+If you want to save your text recording to temporary directory choose:
+
+```
+History.end
+```
 
 You can load history files to play them later like this:
 ```
-h = History.new.loadCS("~/path/to/a/file.scd");
+h = History.new.loadCS("~/path/to/a/file.scd",forward:true);
 h.play();
+```
+
+To record it after you can just do:
+
+```
+s.prepareForRecord("/tmp/record.aiff");
+s.record;
+
+h=History.new.loadCS("/path/to/HistoryLogs/log_History_150603_020439.scd",forward:true);
+h.play();
+
+// now wait until end of story
+
+s.stopRecording;
 ```
 
 Enjoy!
