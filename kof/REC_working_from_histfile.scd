@@ -1,7 +1,12 @@
-s.prepareForRecord("/tmp/record.aiff");
-s.record;
-
-h=History.new.loadCS("/home/kof/annex/kof/HistoryLogs/log_History_150603_020439.scd",forward:true);
-h.play;
-
+s.prepareForRecord("/tmp/render.aiff");
+(
+  Dialog.openPanel({ arg path;
+    path.postln;
+    s.record;
+    h=History.new.loadCS(path,forward:true);
+    h.play;
+  },{
+    "cancelled".postln;
+  });
+)  
 s.stopRecording;
