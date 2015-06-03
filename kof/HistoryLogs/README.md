@@ -43,11 +43,12 @@ To record it after you can just do:
 
 ```
 s.prepareForRecord("/tmp/record.aiff");
-s.record;
-
-h=History.new.loadCS("/path/to/HistoryLogs/log_History_150603_020439.scd",forward:true);
-h.play();
-
+// redy for recording
+(
+  s.record;
+  h=History.new.loadCS("/path/to/HistoryLogs/log_History_150603_020439.scd",forward:true);
+  h.play();
+)
 // now wait until end of story
 
 s.stopRecording;
