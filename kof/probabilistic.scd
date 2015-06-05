@@ -20,7 +20,7 @@
 ~hiss.play;
 ~hiss.quant=2;
 ~hiss={
-	var sig = HPF.ar(WhiteNoise.ar(0.1!2),8000) * Decay.ar(CoinGate.ar(0.3,Impulse.ar(1,(0..3)/4)),0.25);
+	var sig = HPF.ar(WhiteNoise.ar(0.1!2),1000*[1,2,4,8]) * Decay.ar(CoinGate.ar(0.75!4,Impulse.ar(1,(0..3)/4)),0.25);
 	sig = GVerb.ar(sig,10+((1..8)/10))/4+sig;
 	Splay.ar(sig.flat,0.25,0.25);
 };
