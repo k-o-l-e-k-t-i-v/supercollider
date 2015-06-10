@@ -3,9 +3,9 @@
 
 
 (
+		var l;
 Tdef(\worker,{
 	loop{
-		var l;
 		l = 2.rrand(4);
 		Ndef(\a).fadeTime = l;
 		Ndef(\a,{
@@ -22,7 +22,7 @@ Tdef(\worker,{
 
 					)
 					,{ExpRand()*4}!4,0.15)
-		)}).play;
+				,0.2,0.2)}).play;
 
 
 		l.wait;
@@ -48,7 +48,7 @@ Tdef(\worker,{
 					)
 
 					,{ExpRand()*4}!4,0.15)
-		)}).play;
+		,0.2,0.4)}).play;
 
 
 		l.wait;
@@ -73,7 +73,7 @@ Tdef(\worker,{
 					)
 
 					,{ExpRand()*4}!4,0.15)
-		)}).play;
+		,0.2,0.4)}).play;
 
 
 		l.wait;
