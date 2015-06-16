@@ -36,6 +36,20 @@ ProxySynthDef(\zzz, {
 	sig=Pan2.ar(sig,SinOsc.kr(sustain/speed),vol);
 }).add;
 
+
+ProxySynthDef(\voice, {
+	arg  sustain, amp;
+	var sig, env;
+    env=EnvGen.ar(Env.perc(sustain*0.25,sustain*0.75),doneAction:2);
+	sig=Mix.fill(10,
+		{ arg i;
+    BPF.ar(
+        PinkNoise.ar(Array.fill(4,{arg i; i/10+0.5})),
+        freq:LFNoise0.kr(100).range(\freq.kr, \freq.kr+i),
+        rq:LFNoise0.kr(20).range(0.001,i/10))
+    })*env*amp;
+
+}).add;
 )
 
 (
@@ -48,11 +62,11 @@ ProxySynthDef(\zzz, {
 	\instrument, \bum,
 	\dur,1,
 	\top, Pseq([2,2,15,2],inf),
-	\freq,65,
+	\freq,Pseq([Pn(65,8), Pn(45, 4), Pn(55,8)],inf),
 	\amp, 0.1,
 	\legato,Pseq([0.3,0.4,[0.3,0.7],0.5],inf),
 	\voln, Pseq([0.1,0.2,0.7,0],inf),
-	\f2,Pseq([20,100,50,1500],inf),
+	\f2,Prand([20,100,50,1500],inf),
 );
 ~b1[30]=\filter-> {arg in; GVerb.ar(in,roomsize:100,revtime:2,add:in)};
 
@@ -64,7 +78,7 @@ ProxySynthDef(\zzz, {
 ~z1.quant=1;
 ~z1[0]=Pbind(
 		\instrument, \lf,
-	\dur, Prand([4,2,1],inf),
+	    \dur, Prand([4,2,1, Rest(1), Rest(3)],inf),
 	    \freq,60,
 		\amp, 0.3,
 	    \legato,Pseq([0.7,0.9],inf),
@@ -85,8 +99,8 @@ ProxySynthDef(\zzz, {
 	\amp, Pseq([Pseries(0.05,0.5,3), Rest(3)],inf),
 	\lag, Pseq([Pn(0.01,4),Pn(0.001,2),Pn(0.0006,2)],inf),
 	\speed, 0.5,
-	\octave, [3,4],
-	\degree, Pseq([Pn([3,2],4),[4,2],6,8],inf),
+	\octave, [3,4,2],
+	\degree, Pseq([Pn([3,2],4),[4,2],5],inf),
 	\vol,0.2,
 );
 
@@ -95,5 +109,19 @@ ProxySynthDef(\zzz, {
 	\dur, 8,
 	\damp, Pseq([0,0.5,0,0.5],inf)
 	);
-)
 
+~v2.clock=TempoClock(60/60).permanent_(true);
+~v2.play(fadeTime:8);
+~v2.quant=16;
+~v2[0]=Pbind(\instrument, \voice,
+	\dur, Pseq([12, Rest(4)],inf),
+	\legato, 1.2,
+	\octave, Prand([[3,4], [5,2],6,[4,6]],inf),
+	\degree, Pseq([[2,4,6], [1,3]],inf),
+	\strum, Prand([2,4],inf),
+	\amp,0.2,
+);
+~v2[30]=\filter->{arg in; GVerb.ar(DelayN.ar(in),1.2,2)};
+
+~v2[32]=\filter->{arg in; FreeVerb.ar(in,room:2)};
+)
