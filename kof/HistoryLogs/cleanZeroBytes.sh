@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -name '*.scd' -size 0 -print0 | xargs -0 rm
+find . -name '*.scd' -size -2000c -print0 | xargs -0 rm
