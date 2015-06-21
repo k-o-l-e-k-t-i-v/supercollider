@@ -27,7 +27,6 @@ F F E C D C
         var freqs = [];
         var freq = 432;
         var factor = (2.0).pow(1.0/12.0);
-        var bang;
         25.do{|i|
               freq = freq * factor;
               (i+""+notes.at(i%notes.size)+""+freq).postln;
@@ -36,9 +35,7 @@ F F E C D C
         
         melod.collect({|i| mel=mel++freqs.at(i); });
         mel = Duty.kr(Dseq(durs,inf),0,Dseq(mel,inf)).lag(1/4);
-        bang = Decay.kr(Changed.kr(sig,0.1),0.5);
         sig = SinOsc.ar(mel+SinOsc.ar(1/4/fib(6)).range(-4,4),mul:0.25);
-        sig = sig + WhiteNoise.ar(0.1) * bang;
         sig = Resonz.ar(sig,44+(LFSaw.ar(1/4/fib(6)).exprange(0.001,1)*1000));
         sig = GVerb.ar(sig,10)/2+sig;
         Splay.ar(sig.flat,0.25,0.75);
