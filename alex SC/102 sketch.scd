@@ -13,12 +13,12 @@ ProxySynthDef(\bum, {
 }).add;
 
 ProxySynthDef(\bumblow, {
-	arg sustain, freq, amp;
+	arg sustain, freq, amp, voln;
 	var sig, env, fenv;
 
 	env=EnvGen.kr(Env.adsr(),\gate.kr(1),timeScale:sustain,doneAction:2);
 	fenv=EnvGen.kr(Env([freq*4, freq],[ sustain*0.04], [\welch]));
-	sig= SinOsc.ar(fenv!2,mul:0.5)+StkBlowHole.ar(\f2.kr!2,noisegain:60,register:12,mul:SinOsc.kr(\f2.kr/100,mul:0.2));
+	sig= SinOsc.ar(fenv!2,mul:0.5,add:GrayNoise.ar(voln).wrap(0,0.1)*LFSaw.kr([2,3]))+StkBlowHole.ar(\f2.kr!2,noisegain:60,register:12);
 	sig*env*amp;
 
 }).add;
@@ -169,7 +169,7 @@ ProxySynthDef(\saw, {
 ~g.play;
 ~g.fadeTime=1;
 ~g.quant=1;
-~g.clock=TempoClock(60/60).permanent_(true);
-~g[0]=Pbind(\instrument, \bumblow, \dur, Pseq([1, Rest(2)],inf),\octave, 2,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \f2, 700);
+~g.clock=TempoClock(140/60).permanent_(true);
+~g[0]=Pbind(\instrument, \bumblow, \dur, Pseq([1, Rest(2),0.25,0.5,Rest(0.25)],inf),\octave, 2,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \f2, [400,200,800], \voln, Pseq([0,0.1,0.05],inf));
 ~f[30]=\filter-> {arg in; FreeVerb.ar(in,room:0.7)};
 )
