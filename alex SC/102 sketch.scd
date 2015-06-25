@@ -12,6 +12,34 @@ ProxySynthDef(\bum, {
 
 }).add;
 
+ProxySynthDef(\bumblow, {
+	arg sustain, freq, amp;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env.adsr(),\gate.kr(1),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env([freq*4, freq],[ sustain*0.04], [\welch]));
+	sig= SinOsc.ar(fenv!2,mul:0.5)+StkBlowHole.ar(\f2.kr!2,noisegain:60,register:12,mul:SinOsc.kr(\f2.kr/100,mul:0.2));
+	sig*env*amp;
+
+}).add;
+
+ProxySynthDef(\tic, {
+	arg sustain, freq, amp, b;
+	var sig, env, fenv, mul;
+
+	mul=SelectX.ar(b, [
+		Decay.ar(Impulse.ar([10,15]),0.5),
+		LFSaw.ar([5,4]),
+		LFPulse.ar([40,22]).lag(0.02)]);
+
+	env=EnvGen.kr(Env.adsr(),\gate.kr(1),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env([freq*5, freq],[ sustain*0.04], [\welch]));
+	sig= SinOsc.ar(fenv!2)*(mul+WhiteNoise.ar(0.02));
+	sig*env*amp;
+
+}).add;
+
+
 ProxySynthDef(\sin, {
 	arg sustain, freq, amp, voln;
 	var sig, env, fenv;
@@ -49,9 +77,11 @@ ProxySynthDef(\saw, {
 	sig=LFSaw.ar(freq,[0,2,pi,2pi],add:WhiteNoise.ar(SinOsc.kr(\f2.kr).range(0.1,0.5))*voln).clip(-0.5,0.5).lag(0.0002)*env*amp;
 
 
-},makeFadeEnv:false).add;
+},makeFadeEnv:true).add;
 
 )
+
+{Decay.ar(Impulse.ar([10,1]),0.2)*SinOsc.ar(80)}.play;
 (
 ~a.play;
 ~a.clock=TempoClock(180/60).permanent_(true);
@@ -111,8 +141,8 @@ ProxySynthDef(\saw, {
 ~d.play;
 ~d.fadeTime=2;
 ~d.quant=2;
-~d[0]=Pbind(\instrument, \blow, \dur, Pseq([ 1,Rest(2)],inf), \legato, 0.7,\freq, 400, \f2, 0.4, /*\octave,5, \degree, [2,6,8]*/  \amp, 15);
-~d[30]=\filter-> {arg in; FreeVerb.ar(in,room:5)};
+~d[0]=Pbind(\instrument, \blow, \dur, Pseq([ 1,Rest(2)],inf), \legato, 0.7,\octave, 4,\degree, Pseq([4,2,6,2,8],inf), \f2, 0.4, /*\octave,5, \degree, [2,6,8]*/  \amp, 15);
+~d[30]=\filter-> {arg in; FreeVerb.ar(in,room:1)};
 )
 
 (
@@ -120,7 +150,26 @@ ProxySynthDef(\saw, {
 ~e.fadeTime=0.2;
 ~e.quant=2;
 ~e.clock=TempoClock(140/60).permanent_(true);
-~e[0]=Pbind(\instrument, \saw, \dur, Pseq([1, Rest(0.25),0.5,Rest(0.5), 0.75,Rest(1)],inf), \octave, 3, \degree, [2,4], \amp, 0.5,\f2, 4, \voln,0.5);
+~e[0]=Pbind(\instrument, \saw, \dur, Pseq([1, Rest(0.25),0.5,Rest(0.5), 0.75,Rest(1)],inf), \octave, 3, \degree, [2,4], \amp, 0.8,\f2, 4, \voln,0.5);
 // ~e[30]=\filter-> {arg in; CombN.ar(in,0.5,0.5)};
-~e[31]=\filter->{arg in; GVerb.ar(in,roomsize:40,revtime:1)};
+~e[31]=\filter->{arg in; FreeVerb.ar(in,room:1)};
+)
+
+(
+~f.play;
+~f.fadeTime=1;
+~f.quant=1;
+~f.clock=TempoClock(300/60).permanent_(true);
+~f[0]=Pbind(\instrument, \tic, \dur, Pseq([1, Rest(2), 0.5,Rest(0.25),0.5, Rest(0.75), 0.75, Rest(0.25)],inf),\octave, 3,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \b, Pseq([0,1,2],inf));
+~f[30]=\filter-> {arg in; FreeVerb.ar(in,room:0.7)};
+)
+
+
+(
+~g.play;
+~g.fadeTime=1;
+~g.quant=1;
+~g.clock=TempoClock(60/60).permanent_(true);
+~g[0]=Pbind(\instrument, \bumblow, \dur, Pseq([1, Rest(2)],inf),\octave, 2,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \f2, 700);
+~f[30]=\filter-> {arg in; FreeVerb.ar(in,room:0.7)};
 )
