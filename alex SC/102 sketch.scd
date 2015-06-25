@@ -30,7 +30,11 @@ ProxySynthDef(\tic, {
 	mul=SelectX.ar(b, [
 		Decay.ar(Impulse.ar([10,15]),0.5),
 		LFSaw.ar([5,4]),
-		LFPulse.ar([40,22]).lag(0.02)]);
+		LFPulse.ar([40,22]).lag(0.02),
+		Impulse.ar([7,9]).lag(0.0002)
+	],
+
+	);
 
 	env=EnvGen.kr(Env.adsr(),\gate.kr(1),timeScale:sustain,doneAction:2);
 	fenv=EnvGen.kr(Env([freq*5, freq],[ sustain*0.04], [\welch]));
@@ -132,7 +136,7 @@ ProxySynthDef(\saw, {
 ~c.clock=TempoClock(60/60).permanent_(true);
 ~c.fadeTime=2;
 // ~c.quant=2;
-~c[0]=Pbind(\instrument, \ts, \dur, 8, \legato, 1, \freq, 5, \amp, 1);
+~c[0]=Pbind(\instrument, \ts, \dur, 8, \legato, 0.4, \freq, 5, \amp, 1);
 ~c[30]=\filter->{arg in; FreeVerb.ar(in, room:1)};
 
 )
@@ -141,6 +145,7 @@ ProxySynthDef(\saw, {
 ~d.play;
 ~d.fadeTime=2;
 ~d.quant=2;
+
 ~d[0]=Pbind(\instrument, \blow, \dur, Pseq([ 1,Rest(2)],inf), \legato, 0.7,\octave, 4,\degree, Pseq([4,2,6,2,8],inf), \f2, 0.4, /*\octave,5, \degree, [2,6,8]*/  \amp, 15);
 ~d[30]=\filter-> {arg in; FreeVerb.ar(in,room:1)};
 )
@@ -150,9 +155,9 @@ ProxySynthDef(\saw, {
 ~e.fadeTime=0.2;
 ~e.quant=2;
 ~e.clock=TempoClock(140/60).permanent_(true);
-~e[0]=Pbind(\instrument, \saw, \dur, Pseq([1, Rest(0.25),0.5,Rest(0.5), 0.75,Rest(1)],inf), \octave, 3, \degree, [2,4], \amp, 0.8,\f2, 4, \voln,0.5);
+~e[0]=Pbind(\instrument, \saw, \dur, Pseq([1, Rest(0.25),0.5,Rest(0.5), 0.75,Rest(1)],inf), \octave, 2, \degree, [2,4], \amp, 0.8,\f2, 4, \voln,0.1);
 // ~e[30]=\filter-> {arg in; CombN.ar(in,0.5,0.5)};
-~e[31]=\filter->{arg in; FreeVerb.ar(in,room:1)};
+~e[31]=\filter->{arg in; FreeVerb.ar(in,room:1))};
 )
 
 (
@@ -160,7 +165,7 @@ ProxySynthDef(\saw, {
 ~f.fadeTime=1;
 ~f.quant=1;
 ~f.clock=TempoClock(300/60).permanent_(true);
-~f[0]=Pbind(\instrument, \tic, \dur, Pseq([1, Rest(2), 0.5,Rest(0.25),0.5, Rest(0.75), 0.75, Rest(0.25)],inf),\octave, 3,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \b, Pseq([0,1,2],inf));
+~f[0]=Pbind(\instrument, \tic, \dur, Pseq([1, Rest(2), 0.5,Rest(0.25),0.5, Rest(0.75), 0.75, Rest(0.25)],inf),\octave,2,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \b, Pseq([0,1,2],inf));
 ~f[30]=\filter-> {arg in; FreeVerb.ar(in,room:0.7)};
 )
 
@@ -171,5 +176,5 @@ ProxySynthDef(\saw, {
 ~g.quant=1;
 ~g.clock=TempoClock(140/60).permanent_(true);
 ~g[0]=Pbind(\instrument, \bumblow, \dur, Pseq([1, Rest(2),0.25,0.5,Rest(0.25)],inf),\octave, 2,  \degree,[3,5,7] , \legato, 0.8, \amp, 0.9, \f2, [400,200,800], \voln, Pseq([0,0.1,0.05],inf));
-~f[30]=\filter-> {arg in; FreeVerb.ar(in,room:0.7)};
+~f[30]=\filter-> {arg in; FreeVerb.ar(in,room:0.7,add:in)};
 )
