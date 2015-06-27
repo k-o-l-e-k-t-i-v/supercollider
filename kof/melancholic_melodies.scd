@@ -24,7 +24,7 @@
         sig = AllpassC.ar(sig,1/4,1/4,[5,4])+sig;
         sig = GVerb.ar(sig,[4,5]*2)/4+sig;
         sig = CompanderD.ar(sig,4/3,1/2,1/2)/2+sig;
-        Splay.ar(sig.flat,0.25,0.75);
+        Splay.ar(sig.flat,0.25,0.5);
       };
       ~varnam.play;
 
