@@ -10,7 +10,7 @@
     loop{
       ~arcitune.quant=2;
       ~arcitune.fadeTime=0.02;
-      ~arcitune = {Select.kr({ExpRand(1.0001,4)}!4,[1,2,1.25,1.5,1/2,1.75])};
+      ~arcitune = {Select.kr({ExpRand(1.0001,6)}!3,[1,2,1.25,1.5,1/2,1.75])};
 
       ~varnam.quant=2;
       ~varnam.fadeTime=2;
