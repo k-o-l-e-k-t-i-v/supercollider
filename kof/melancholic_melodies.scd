@@ -16,7 +16,7 @@
       ~varnam.fadeTime=2;
       ~varnam={
         var mld = [1,2,1.5,1.25,4,8,16] * ~arcitune.kr;
-        var puls = Decay.ar(Impulse.ar(1/2,(0..3)+[0.5,0.25]/4),0.85);
+        var puls = Decay.ar(Impulse.ar(1,(0..3)+[0.5,0.25]/4),0.85);
         var sig = LFSaw.ar(60*mld*[1,1.5,1,1.25,1,1.125]+(puls.range(0,2)**2),mul:{ExpRand(0.01,0.5)}!8);
         sig = RLPF.ar(sig,1400*LFTri.ar(1/4/fib(8)).exprange(0.001,1)+100);
         sig = sig * puls.range(0,1);
@@ -24,11 +24,11 @@
         sig = AllpassC.ar(sig,1/4,1/4,[5,4])+sig;
         sig = GVerb.ar(sig,[4,5]*2)/4+sig;
         sig = CompanderD.ar(sig,4/3,1/2,1/2)/2+sig;
-        Splay.ar(sig.flat,0.25,0.25);
+        Splay.ar(sig.flat,0.25,0.75);
       };
       ~varnam.play;
 
-      16.wait;
+      8.wait;
     };
 
   });
