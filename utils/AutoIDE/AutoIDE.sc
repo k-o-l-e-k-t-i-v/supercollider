@@ -80,7 +80,7 @@ AutoIDE
 			// ("LineStartIndex : " ++ lineStartIndex).postln;
 			// ("LineEndIndex : " ++ lineEndIndex).postln;
 			// ("CursorLineTxt : " ++ this.getCursorLineTxt).postln;
-
+/*
 			if(keySymbol == 112) // F1
 			{
 				("AutoIDE shortcut pressed F1 || nodeBasic" ++ this.getScript("nodebasic")).postln;
@@ -91,7 +91,7 @@ AutoIDE
 				("AutoIDE shortcut pressed F2 || " ++ this.getScript("envg")).postln;
 				this.insertText(cursorIndex, "envg").postln;
 			};
-
+*/
 
 			dict.keys.do({|key|
 				var replaceIndex = this.scanForKey(this.getCursorLineTxt, key);
