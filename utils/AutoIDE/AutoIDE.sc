@@ -1,16 +1,69 @@
 AutoIDE
 {
+	classvar version = 0.1;
 	classvar dict;
 	classvar doc;
-
 	var cursorIndex, lineStartIndex, lineEndIndex;
 
-	*new { ^super.new.init(); }
-	*run{ ^super.new.init(); }
+	*new{ ^super.new.init(); }
+	*run{
+		("AutoIDE [ver %] start running".format(version)).inform;
+		^super.new.start();
+	}
+	*add {|key, func|
+		var txt = func.def.sourceCode.asString;
+		var script = txt[1..(txt.size-2)]; // remove first and last symbol of function {}
+		if(script.beginsWith("\n")) { script = script[1..(txt.size)] }; // remove first symbol newline \n
+		script = script.replace("\t", ""); // remove all symbol indent \t
+		dict.put(key.asString,script);  // functionDef
+	}
+	*print{
+		var txt = "";
+		var instance = super.new.init();
+		dict.keys.do({|key|
+			var script = instance.getScript(key).asString;
+			if (script.size > 65) {script = script[0..40] ++ " .... " ++ script[(script.size-15)..script.size] };
+			txt = txt + ("\n\t-> [" + key + "||" + script + "]\n");
+		})
+		^("AutoIDE library" + txt);
+	}
+	*end {
+		if(doc.notNil) {
+			doc.keyDownAction = nil;
+			"AutoIDE stop".postln;
+		}
+		{ "AutoIDE is not running".warn; };
+	}
 
-	init {
+	init{
 		dict = Dictionary.new;
-		this.cmds;
+		this.readLibrary();
+	}
+
+	readLibrary {
+		var dir = Platform.systemExtensionDir ++ "\/AutoIDE";
+		var file = "AutoIDE_lib";
+		var path = ("%\/%.scd".format(dir, file));
+		if(File.exists(path)) {
+			thisProcess.interpreter.executeFile(path);
+		}
+		{
+			("AutoIDE_lib.scd not found in path %".format(path)).error;
+		}
+		;
+	}
+
+	read {|key, val|
+		var func = val.def.sourceCode;
+		dict.put(key,val.def.sourceCode); } // functionDef
+
+	// Document
+	getCommands { ^dict.keys; }
+
+	getScript{ |key| ^dict.at(key.asString) }
+
+	start {
+		this.init();
 
 		doc = Document.current;
 
@@ -22,16 +75,16 @@ AutoIDE
 
 			// CHECKPRINT
 			// ("KeyDownAction : " ++ args).postln;
-			"\n".postln;
-			("CursorIndex : " ++ cursorIndex).postln;
-			("LineStartIndex : " ++ lineStartIndex).postln;
-			("LineEndIndex : " ++ lineEndIndex).postln;
-			("CursorLineTxt : " ++ this.getCursorLineTxt).postln;
+			// "\n".postln;
+			// ("CursorIndex : " ++ cursorIndex).postln;
+			// ("LineStartIndex : " ++ lineStartIndex).postln;
+			// ("LineEndIndex : " ++ lineEndIndex).postln;
+			// ("CursorLineTxt : " ++ this.getCursorLineTxt).postln;
 
 			if(keySymbol == 112) // F1
 			{
-				("AutoIDE shortcut pressed F1 || " ++ this.getScript("test")).postln;
-				this.insertText(cursorIndex, "test").postln;
+				("AutoIDE shortcut pressed F1 || nodeBasic" ++ this.getScript("nodebasic")).postln;
+				this.insertText(cursorIndex, "nodebasic").postln;
 			};
 			if(keySymbol == 113) // F2
 			{
@@ -45,27 +98,16 @@ AutoIDE
 
 				if(replaceIndex.notNil) {
 					var script = this.getScript(key);
-					("ReplaceIndex : " ++ replaceIndex).postln;
-					("KEY : " ++ key).postln;
-					("CMD script : " ++ script).postln;
+					// ("ReplaceIndex : " ++ replaceIndex).postln;
+					// ("KEY : " ++ key).postln;
+					// ("CMD script : " ++ script).postln;
+					postf("AutoIDE completation [ % || % ]\n", key, script);
 					this.replaceText(replaceIndex, script, key)
 				}
 			});
 		};
 		doc.onClose({ AutoIDE.end; });
 	}
-
-	*end {
-		doc.textChangedAction = nil;
-		doc.keyDownAction = nil;
-		"AutoIDE stop".postln;
-	}
-
-	*add {|key, val| dict.put(key,val); }
-
-	*getCommands { ^dict.keys; }
-
-	getScript{ |key| ^dict.at(key.asString) }
 
 	getCursorIndex { ^doc.selectionStart }
 
@@ -93,12 +135,6 @@ AutoIDE
 	}
 
 	getCursorLineTxt { ^doc.rangeText(lineStartIndex,lineEndIndex-lineStartIndex) }
-
-	cmds{
-		AutoIDE.add("test", "Ndef(\\sin, { SinOsc.ar(60!2, 0, 0.3) }).play;");
-		AutoIDE.add("envg", "EnvGen.ar( Env( [0,1,0], [0.15,0.85]), \\aTrig.tr )");
-		AutoIDE.add("filterlpf", "\\filter -> {|in| LPF.ar(in, 400) };");
-	}
 
 	insertText {|index, cmd| ^Document.current.string_(this.getScript(cmd.asString), index, 0);	}
 
