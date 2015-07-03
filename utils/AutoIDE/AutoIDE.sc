@@ -74,7 +74,7 @@ AutoIDE
 			this.getLineIndex(cursorIndex); // set start and end index of current line
 
 			// CHECKPRINT
-			// ("KeyDownAction : " ++ args).postln;
+			("KeyDownAction : " ++ args).postln;
 			// "\n".postln;
 			// ("CursorIndex : " ++ cursorIndex).postln;
 			// ("LineStartIndex : " ++ lineStartIndex).postln;
