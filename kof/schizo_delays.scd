@@ -18,7 +18,7 @@
   var duty = Duty.kr(4,0,Dseq([1,2,1.5,1.25],inf));
   var mod = Duty.kr(16,0,Dseq([1,2,1.5,1.25].pyramid,inf));
   var freq = [60,58,55,72].midicps*2/(mod*pi)*(1.001**(1..8))*duty;
-  var puls = EnvGen.ar(Env([0,1,0],[0.002,0.75],[3,-3]),Impulse.ar(1,(0..3)++0.5/4));
+  var puls = EnvGen.ar(Env([0,1,0],[0.002,0.75/(mod*duty)],[3,-3]),Impulse.ar(1,(0..3)++0.5/4));
   var sig = [
     SinOsc.ar(freq+(puls*10)),
     WhiteNoise.ar(0.4),
@@ -30,7 +30,7 @@
   sig = BBandPass.ar(sig,4320/(1..8)) * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   sig = sig + (SinOsc.ar(50+(puls**2*150),mul:0.045)*Pulse.ar(4/[1,1.5]));
   sig = sig + (LFPulse.ar(1/4)*AllpassC.ar(sig,1/50.01*mod,1/50*duty,32));
-  sig = GVerb.ar(sig/1.5,[20,100])+sig;
+  sig = GVerb.ar(sig/1.5,[20,100]/(mod*duty))+sig;
   sig = CompanderD.ar(sig,4/3,1/3,1/2);
   sig = sig * puls;
 
