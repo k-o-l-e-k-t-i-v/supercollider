@@ -12,7 +12,8 @@ Kolektiv2 {
 		name = userName;
 		sendEvents = ();
 		blockFirstExecute_Flag = true;
-		net = NetAddr("10.0.0.254", NetAddr.langPort);
+		NetAddr.broadcastFlag_(flag: true);
+		net = NetAddr("10.0.0.255", NetAddr.langPort);
 
 		this.start;
 		this.print;
