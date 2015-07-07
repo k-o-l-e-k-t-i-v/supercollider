@@ -29,6 +29,19 @@ ProxySynthDef(\exp, {
 	/*sig=Pan2.ar(sig, SinOsc.ar(f2));*/
 }).add;
 
+ProxySynthDef(\glitch, {
+	arg sustain, freq, n, gate=1, amp;
+	var sig, env, glitch, fenv;
+	glitch=SelectX.ar(n,[
+		GlitchBPF.ar(WhiteNoise.ar(0.2),200),
+		GlitchHPF.ar(GrayNoise.ar(0.5),800),
+		LFPulse.ar(freq*4)]);
+	env=EnvGen.kr(Env([0,1,0], [0.1,0.9]),gate:gate,timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env([freq*4, freq], [sustain*0.04]),gate:gate,timeScale:sustain,doneAction:2);
+	sig=SinOsc.ar(fenv)+glitch;
+	sig*env*amp;}).add;
+
+
 
 
 )
@@ -71,14 +84,15 @@ ProxySynthDef(\exp, {
 ~f[30]=\filter->{arg in ;GVerb.ar(in,1.2,5,mul:0.7,add:in*0.2)};
 
 )
+GlitchBPF
 
 
-
+//unpredictable low volume
 (
 ~e.play;
 ~e.fadeTime=1;
 ~e.quant=1;
-~e.clock=TempoClock(120/60).permanent_(true);
+~e.clock=TempoClock(60/60).permanent_(true);
 ~e[0]=Pbind(\instrument, \exp,
 	\dur, 2,
 	\f2, 0.25,
