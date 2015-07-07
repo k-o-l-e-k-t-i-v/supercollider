@@ -30,15 +30,18 @@ ProxySynthDef(\exp, {
 }).add;
 
 ProxySynthDef(\glitch, {
-	arg sustain, freq, n, gate=1, amp;
+	arg sustain, freq, n, gate=1, amp, pos;
 	var sig, env, glitch, fenv;
 	glitch=SelectX.ar(n,[
-		GlitchBPF.ar(WhiteNoise.ar(0.2),200),
-		GlitchHPF.ar(GrayNoise.ar(0.5),800),
-		LFPulse.ar(freq*4)]);
+		HPF.ar(GrayNoise.ar(1)*Decay2.kr(Impulse.kr(15),decayTime:0.5),9000),
+		LFSaw.ar(LFNoise0.kr(100).range(3,0.5)),
+		LFPulse.ar(freq/15,add:Dust.ar(700)),
+		WhiteNoise.ar(Decay.kr(Impulse.kr(5)).exprange(0.8,0.01))
+
+	]);
 	env=EnvGen.kr(Env([0,1,0], [0.1,0.9]),gate:gate,timeScale:sustain,doneAction:2);
-	fenv=EnvGen.kr(Env([freq*4, freq], [sustain*0.04]),gate:gate,timeScale:sustain,doneAction:2);
-	sig=SinOsc.ar(fenv)+glitch;
+	fenv=EnvGen.kr(Env([freq*4, freq], [sustain*0.04]),gate:gate);
+	sig=Pan2.ar(Limiter.ar(Mix.fill(20,{SinOsc.ar(fenv)}),1)+glitch,pos);
 	sig*env*amp;}).add;
 
 
@@ -84,7 +87,7 @@ ProxySynthDef(\glitch, {
 ~f[30]=\filter->{arg in ;GVerb.ar(in,1.2,5,mul:0.7,add:in*0.2)};
 
 )
-GlitchBPF
+
 
 
 //unpredictable low volume
@@ -104,4 +107,21 @@ GlitchBPF
 ~e[30]=\filter->{arg in; GVerb.ar(in,LFNoise0.kr(0.5).range(0.9,2),add:in)};
 ~e[31]=\filter->{arg in; FreeVerb.ar(in,room:1)};
 ~e[32]=\filter->{arg in; LPF.ar(in,1800,add:in)};
+)
+
+(
+~z.play;
+~z.fadeTime=1;
+~z.quant=1;
+~z.clock=TempoClock(180/60).permanent_(true);
+~z[0]=Pbind(\instrument, \glitch,
+	\dur,2,
+	\legato,0.7,
+	\freq, 70,
+	\amp, 0.5,
+	\pos, Pseq([-1,1],inf),
+	\n, Pseq([0,1,2,3],inf),
+);
+// ~z[30]=\filter->{arg in ;CombN.ar(in,0.1,0.1,SinOsc.kr(0.125).range(0.2,1),add:in)};
+~z[31]=\filter-> {arg in; FreeVerb.ar(in,room:0.5,add:in)};
 )
