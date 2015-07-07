@@ -87,7 +87,7 @@ s.queryAllNodes;
 ~y.clock=TempoClock(60/60).permanent_(true);
 ~y[0]=Pbind(\instrument, \ts,
 	\dur, Pseq([1,Rest(1), 1, Rest(1.75),0.5,0.25,Rest(1)],inf),
-	\octave,Pseq([Pn([3,2],14),Pn([4,2],4),Pn([5,3],3)],inf),
+	\octave,3,
 	\degree, [6,8,4],
 	\pos, Pseq([1,-1],inf),
 	\b, Pseq([0,1,2],inf),
