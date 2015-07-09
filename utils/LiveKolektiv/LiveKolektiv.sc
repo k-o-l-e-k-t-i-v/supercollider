@@ -7,9 +7,7 @@ Kolektiv {
 
 	var blockFirstEval_Flag;
 
-	*new{ |userName|
-		^super.new.init(userName);
-	}
+	*new{ |userName| ^super.new.init(userName);	}
 
 	*switchDebugBool{ if(debugBool) {debugBool = false} { debugBool = true }; }
 
