@@ -94,6 +94,17 @@ ProxySynthDef(\pitch, {
 		pitchRatio:[0.5,0.8,1.2]);
 	sig=Pan2.ar(sig,0)*env*amp;}).add;
 
+ProxySynthDef(\klang, {
+	arg sustain,  gate=1, freq, amp;
+	var sig, env;
+
+	env=EnvGen.kr(Env([0,1,0],[0.5,0.5],[\welch,\sin,\lin]),gate,timeScale:sustain,doneAction:2);
+	sig=Klang.ar(`[
+
+		Array.rand(12, 80.0, 200.0)+freq,
+
+	]);
+	sig*env*amp}).add;
 
 )
 
@@ -232,7 +243,22 @@ currentEnvironment.free;
 
 
 )
+(
+~b.play;
+~b.fadeTime=1;
 
+~b.quant=1;
+~b.clock=TempoClock(60/60).permanent_(true);
+~b[0]=Pbind(\instrument, \klang,
+	\dur,2,
+	\legato, 2,
+	\octave, Pseq([Pn([2,3],1), Pn(3,2), Pn([4,3],4), Pn([6,5],2)],inf),
+	\degree,[6,4,8],
+	\strum,4,
+	\amp, 0.1,
+
+);
+)
 
 currentEnvironment.free;
 currentEnvironment.postln;
