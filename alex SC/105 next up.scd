@@ -8,38 +8,91 @@ ProxySynthDef(\step, {
 	env=EnvGen.kr(Env([0,0.5,1,0],[0.3,0.65,0.05],[\lin, \step,\lin]),gate, timeScale:sustain,doneAction:2);
 	fenv=EnvGen.kr(Env([freq,freq, freq*2.7, freq], [0.95,0.0001,0.01], [\lin, \step,\welch]),gate,timeScale:sustain);
 	nenv=EnvGen.kr(Env([0, 0.05, 0.4, 0.7, 0], [0.85,0.05,0.05,0.05], [\lin, \step,\step]),gate,timeScale:sustain);
-	penv=EnvGen.kr(Env([0, -1, 0,0, 1], [0.6,0.65,0.05], [\lin, \step,\welch]),gate,timeScale:sustain);
+	penv=EnvGen.kr(Env([0, -1, 1], [0.6,0.3,0.1], [\lin, \step,\welch]),gate,timeScale:sustain);
 
 
 	sig=Pan2.ar(SinOsc.ar(fenv,add:GrayNoise.ar(nenv)),penv);
 	sig*env*amp}).add;
-)
 
+
+
+ProxySynthDef(\quitar, {
+	arg sustain, amp, freq, gate=1, lpf;
+	var sig, env, fenv, nenv, penv;
+
+	env=EnvGen.kr(Env.perc(0.01,0.99),gate, timeScale:sustain,doneAction:2);
+	sig=LPF.ar(LeakDC.ar(CombN.ar(PinkNoise.ar(1)*env,freq.reciprocal,freq.reciprocal,4)),lpf);
+	sig=Pan2.ar(sig,0);
+
+
+}).add;
+
+ProxySynthDef(\glitch, {
+	arg sustain, freq, n, gate=1, amp, pos;
+	var sig, env, glitch, fenv;
+	glitch=SelectX.ar(n,[
+		HPF.ar(GrayNoise.ar(1)*Decay2.kr(Impulse.kr(15),decayTime:0.5),9000),
+		LFSaw.ar(LFNoise0.kr(100).range(3,0.5)),
+		LFPulse.ar(freq/15,add:Dust.ar(700)),
+		WhiteNoise.ar(Decay.kr(Impulse.kr(5)).exprange(0.8,0.01))
+
+	]);
+	env=EnvGen.kr(Env([0,1,0], [0.1,0.9]),gate:gate,timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env([freq*4, freq], [sustain*0.04]),gate:gate);
+	sig=Pan2.ar(Limiter.ar(Mix.fill(20,{SinOsc.ar(fenv)}),1)+glitch,pos);
+
+	sig*env*amp;}).add;
+
+
+
+
+
+
+)
+~t.rebuild;
 
 (
 ~t.play;
 ~t.fadeTime=1;
 ~t.quant=1;
 ~t[0]=Pbind(\instrument, \step,
-	\dur, 4,
+	\dur, Pseq([Pseries(10,-1,9),Pn(1,inf)],1),
 	\legato, 0.6,
-	\octave, Pseq([2,3,2,3,9],inf),
-	\degree, [1,3],
+	\octave, Pseq([Pseq([1,2,3,11,2],20),Pseq([2,3,2,3,9],20)],inf),
+	\degree, Pseq([Pn([1,5,3],20),Pn([5,1,3],20)],inf),
 	\strum, 0.2,
-	\amp, 0.1);
+	\amp, 0.1).trace;
 ~t[30]=\filter->{arg in; GVerb.ar(in,SinOsc.ar([0.125,0.025,0.0125,]).range(60,20),maxroomsize:64,add:in)};
-~t[31]=\filter->{arg in; GVerb.ar(in,Phasor.ar(Impulse.ar([0.125,0.025,0.0125]),0.001).range(40,80),2,taillevel:0.7,maxroomsize:120)};
+~t[31]=\filter->{arg in; GVerb.ar(in,Phasor.ar(Impulse.ar([0.125,0.025,0.0125]),0.001).range(120,80),2,taillevel:0.7,maxroomsize:125)};
 ~t[32]=\filter->{arg in; LPF.ar(in,\lpf.kr)};
-~t[33]=\set->Pbind(\args, [\lpf], \dur, 4, \lpf, Pseq([1200,1400,600,400,800],inf));
+~t[33]=\set->Pbind(\args, [\lpf], \dur,10, \lpf, Pseq([1200,1400,1600,2400,2800,1200,400],inf));
+
+~t[36]=\filter-> {arg in;  Limiter.ar(in, 1)};
+)
+~t.set(\fpf, 100);
+
+
+(
+~qui.play;
+~qui.fadeTime=1;
+~qui.quant=1;
+~qui.clock=TempoClock(120/60).permanent_(true);
+~qui[0]=Pbind(\instrument, \quitar,
+	\dur, Pseq([7,6,8,2],inf),
+	\legato, 1.2,
+	\octave, Pseq([Pn(3,4), 4, [5,3]],inf),
+	\degree, [4,6,2],
+	\lpf, Pseq([10000,12000,5000],inf),
+	\strum,Pseq([0.1,1,0.5,2],inf),
+	\amp, 1).trace;
+
+
+~qui[32]=\filter->{arg in; LPF.ar(in,\lpf2.kr,add:in*0.1)};
+~qui[33]=\set->Pbind(\args, [\lpf2], \dur,Pseq([7,6,8,2],inf), \lpf2, Pseq([5200,3400,4600,3400,8000,4200,5400],inf));
+
+~qui[37]=\filter->{arg in; Limiter.ar(in,1)};
+
 )
 
 
-{GrainSin.ar(2, Impulse.ar([4,1,0.25,0.125,0.45,2]),[0.1,0.2,0.5,0.06],[200,120,400,800,600],0)}.play;
-
-(
-{FreeVerb.ar(
-	in:MoogFF.ar(LFPulse.ar([300,302],[0,1.2]).lag(0.02)+LFCub.ar([150,151]),freq:[240,250,260],gain:SinOsc.ar([0.25,0.125],[0,5]).range(0.1,4)),
-	mix:SinOsc.ar([0.125,0.5]).range(0.3,0.7),
-	room:1,
-	damp:SinOsc.ar([0.025,0.25,0.125]).range(0.1,0.7))-0.3}.play;
 )
