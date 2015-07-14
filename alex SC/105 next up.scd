@@ -22,7 +22,20 @@ ProxySynthDef(\quitar, {
 
 	env=EnvGen.kr(Env.perc(0.01,0.99),gate, timeScale:sustain,doneAction:2);
 	sig=LPF.ar(LeakDC.ar(CombN.ar(PinkNoise.ar(1)*env,freq.reciprocal,freq.reciprocal,4)),lpf);
-	sig=Pan2.ar(sig,0);
+	sig=Pan2.ar(sig,0)*amp;
+
+
+}).add;
+
+
+ProxySynthDef(\grains, {
+	arg sustain, amp, freq, gate=1, lpf, lag, n;
+	var sig, env, fenv, nenv, penv, noise;
+
+	env=EnvGen.kr(Env([0,1,0],[0.1,0.9],\welch),gate, timeScale:sustain,doneAction:2);
+	sig=LPF.ar(LeakDC.ar(
+		Lag.ar(CombC.ar(GrayNoise.ar(amp)*env,Lag.kr(freq.reciprocal,0.2),Lag.kr(freq.reciprocal,0.3),12),lag)),lpf);
+	sig=Pan2.ar(sig,0)*amp;
 
 
 }).add;
@@ -89,10 +102,28 @@ ProxySynthDef(\glitch, {
 
 ~qui[32]=\filter->{arg in; LPF.ar(in,\lpf2.kr,add:in*0.1)};
 ~qui[33]=\set->Pbind(\args, [\lpf2], \dur,Pseq([7,6,8,2],inf), \lpf2, Pseq([5200,3400,4600,3400,8000,4200,5400],inf));
-
+~qui[34]=\filter->{arg in; Resonz.ar(in,\freq2.kr*[1,1.1,1.4,1.2],[0.1,0.1,0.2,0.1,0.5],add:in)};
+~qui[35]=\set->Pbind(\args, [\freq2], \dur, 8, \freq2, Pseq([3000,4000,2500,1500],inf));
 ~qui[37]=\filter->{arg in; Limiter.ar(in,1)};
 
 )
 
 
+(
+~grain.play;
+~grain.fadeTime=1;
+~grain.quant=1;
+~grain.clock=TempoClock(120/60).permanent_(true);
+~grain[0]=Pbind(\instrument, \grains,
+	\dur, Pseq([1,Rest(3)],inf),
+	\octave,Pseq([Pn(3,4),Pn(4,4),Pn([2,5],4)],inf),
+	\legato,4,
+	\lag, Pseq([Penv([0.001,0.1,0.5],[0.1,0.2,0.02],\welch),0.02,0.4],inf),
+	\lpf, 1500,
+	\amp, 2,
+	\degree, Pseq([5,4,3,2,4,5],inf));
+~grains[30]=\filter->{arg in; Compander.ar(in)};
+~grain[30]=\filter->{arg in; GVerb.ar(in,60,maxroomsize:65,add:in)};
+~grain[36]=\filter-> {arg in; Limiter.ar(in,level:0.6)};
 )
+	
