@@ -24,7 +24,7 @@
   sig = sig + (BrownNoise.ar(noisenv));
   sig = Resonz.ar(sig,filenv + SinOsc.ar(12).range(-8,80));
   sig = GVerb.ar(sig,30,3,0.96,0.95,145);
-  sig = sig + CompanderD.ar(Ramp.ar(sig,LFSaw.ar(1/fib(4)).exprange(0.00002,0.002)),4/3,1/2,1/2,0.002,0.002);
+  sig = sig + CompanderD.ar(sig,4/3,1/2,1/2,0.002,0.002);
   Splay.ar(sig.flat,0.25,0.5);
 };
 e.addMix(~lfos,postVol:true);
