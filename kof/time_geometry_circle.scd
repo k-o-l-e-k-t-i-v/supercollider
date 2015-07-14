@@ -8,8 +8,9 @@
 
 // circle synth ///////////////////////////////////////
 
+~t={SinOsc.kr(1/120).exprange(0.0001,1)};
+
 (
-  ~t={SinOsc.kr(1/120).exprange(0.0001,1)};
   ~circle.quant=1;
   ~circle.fadeTime=0.02;
   ~circle={
