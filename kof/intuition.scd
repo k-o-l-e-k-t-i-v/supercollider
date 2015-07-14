@@ -5,6 +5,9 @@
     p=ProxySpace.push(s.reboot);
 );
 
+s.prepareForRecord("/tmp/test.flac");
+s.record;
+s.stopRecording;
 
 // feedback synth ///////////////////////////////////////
 
@@ -24,13 +27,13 @@
 
         // channel distribution
         x = Normalizer.ar(sig)/4;
-        y = SinOsc.ar(70.2*mod/[1,1.5,1.25,1.125],mul:LFTri.ar(1/4/fib(4)).exprange(0.001,0.075));
-        #x,y = Rotate2.ar(x,y,SinOsc.ar(LFTri.ar(1/16*fib(8)).exprange(4.001,9)*[1,2,4,8]));
+        y = LFSaw.ar(43.2*mod/[1,1.5,1.25,1.125],mul:LFTri.ar(1/4/fib(4)).exprange(0.001,0.075));
+        #x,y = Rotate2.ar(x,y,SinOsc.ar(LFTri.ar(1/16*fib(8)).exprange(4.001,7)/8pi));
 
 
         // filters, reverbs
         sig = Limiter.ar([]++x++y,0.95);
-        sig = Resonz.ar(sig,19000*LFSaw.ar(1/4/fib(8)).exprange(0.0001,1)+40);
+        sig = Resonz.ar(sig,1900*LFSaw.ar(1/4/fib(8)).exprange(0.0001,1)+40);
         sig = FreeVerb2.ar(x,y,0.133,0.04);
         sig = GVerb.ar(sig,30,4,0.01,0.95,65);
 
@@ -44,6 +47,6 @@
     };
     ~feedback.play;
 );
-~feedback.stop(7);
+~feedback.stop(30);
 ~feedback.clear;
 
