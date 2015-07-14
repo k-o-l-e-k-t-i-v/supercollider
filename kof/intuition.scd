@@ -25,7 +25,7 @@
     // channel distribution
     x = Normalizer.ar(sig)/8;
     y = LFSaw.ar(43.2*mod/[1,1.5,1.25,1.125],mul:LFTri.ar(1/4/fib(4)).exprange(0.001,0.075));
-    #x,y = Rotate2.ar(x,y,SinOsc.ar(1/8/fib(8)).range(-0.25,0.25));
+    #x,y = Rotate2.ar(x,y,SinOsc.ar(1/8/fib(8)).range(-0.75,0.75));
     
     // filters, reverbs
     sig = FreeVerb2.ar(x,y,0.133,0.04);
@@ -39,7 +39,7 @@
     high = CompanderD.ar(HPF.ar(sig,8200),4/3,1/2,1/2);
     sig = CompanderD.ar((high+mid+low).flat,4/3,1/1.1,1/1.1);
 
-    Splay.ar(sig,0.75,0.25);
+    Splay.ar(sig,0.95,0.25);
   };
   ~feedback.play;
 );
