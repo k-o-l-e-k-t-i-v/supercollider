@@ -19,7 +19,7 @@ do
   printf "$i " >> $1;
   for n in "${names[@]}";
   do
-    printf "$(grep -roh --exclude-dir="tutorials for ndef" $i "../../$n" | wc -w) " >> "$1";
+    printf "$(grep -roh --exclude-dir="HistoryLogs" $i "../../$n" | wc -w) " >> "$1";
   done
   printf "\n" >> "$1"
 done
