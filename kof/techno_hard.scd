@@ -11,7 +11,7 @@
 // kick synth ///////////////////////////////////////
 (
 (
-~kick.quant=1;
+~kick.quant=4;
 ~kick.fadeTime=0.02;
 ~kick={
   var env = EnvGen.ar(Env([0,1,0],[0.0002,0.75],[9,-2]),Impulse.ar(1/2,(0..3)++0.5/4));
