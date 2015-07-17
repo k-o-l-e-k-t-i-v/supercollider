@@ -1,0 +1,57 @@
+TITLE:: AutoIDE
+summary:: Automatic completation code in current document for Kolektiv by _joach.
+categories:: Libraries>KolektivUtils
+related:: Classes/Document
+
+DESCRIPTION::
+Using external library for fill shortcut from written code in current document.
+
+CLASSMETHODS::
+
+METHOD:: print
+Print to console all stored keys and preview of saved code. Also is possible use keyboard F1, when AutoIDE is running (only on Win).
+
+METHOD:: code
+Print whole code for specific stored key.
+
+ARGUMENT:: key
+Name of stored key (Symbol)
+
+METHOD:: add
+Add key and code to library. When is key already used, the old one will be replaced.
+
+ARGUMENT:: key
+A name of key to use (Symbol)
+
+ARGUMENT:: func
+A function representing new code. For replacing code will be used all chars inside brackets {some code}. Not recommended to put space char between {} and code.
+
+METHOD:: remove
+Remove stored key and code from library.
+
+ARGUMENT:: key
+A symbol representing key in library (Symbol)
+
+METHOD:: run
+Start AutoIDE to searching in library (AutoIDE_lib.scd) for keys and replacing text in current Document by predefined code.
+
+METHOD:: end
+Stop replacing by AutoIDE.
+
+EXAMPLES::
+
+code::
+AutoIDE.print;
+
+AutoIDE.add(\test, {Ndef(\sin, { SinOsc.ar(60!2, 0, 0.3) }).play;} );
+AutoIDE.print;
+
+AutoIDE.code(\test);
+
+AutoIDE.run;
+// for instant help press F1
+AutoIDE.end;
+
+AutoIDE.remove(\test);
+AutoIDE.print;
+::
