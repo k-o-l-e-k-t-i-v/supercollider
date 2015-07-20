@@ -54,34 +54,54 @@ ProxySynthDef(\rotate, {
 	fenv=EnvGen.kr(Env([freq*1.2, freq, freq*1.2, freq], [sustain*0.04, sustain*0.2, sustain*0.02]),gate:gate);
 
 	sig1=LPF.ar(LFSaw.ar([fenv,fenv+2, Lag.kr(fenv,0.2), Lag.kr(fenv,0.4), Lag.kr(fenv,0.02), Lag.kr(fenv+10,0.8)]), lpf)
-	*Decay.kr(Impulse.kr([b, b*1.5,b/2]),0.5);
-	sig2=HPF.ar(WhiteNoise.ar(LFNoise0.ar(20).range(0.01,0.9))*Decay2.kr(Impulse.kr([b,b*1.5,b]),decayTime:0.2),hpf);
+	*Decay.kr(Impulse.kr([b, b*1.5,b*2]),5);
+	sig2=HPF.ar(WhiteNoise.ar(LFNoise0.ar(20).range(0.01,0.9))*Decay2.kr(Impulse.kr([b,b*2,b/4,b/2]),decayTime:0.2),hpf);
 
-	sig=Rotate2.ar(sig1,sig2,SinOsc.kr([0.125,0.25]))*env*amp;}).add;
+	sig=Rotate2.ar(sig1,sig2,SinOsc.kr([0.125,0.25,0.5,2]))*env*amp;}).add;
 
 
 )
+
+currentEnvironment.clear;
 (
 
 ~rotate1.play;
 ~rotate1.fadeTime=4;
 ~rotate1.quant=1;
-~rotate1.clock=TempoClock(60/60).permanent_(true);
+~rotate1.clock=TempoClock(120/60).permanent_(true);
 ~rotate1[0]=Pbind(\instrument, \rotate,
-	\dur,8, //Pseq([Pn(20,0.2),Pn(5,0.1),Pn(2,0.2)],inf),
+	\dur,1,
 	\octave, Pseq([[3,4],4,[2,3],4],inf),
 	\degree, [4,2],
 	\lpf, 400,
 	\hpf, 9000,
-	\amp, 0.4,
+	\amp, 0.1,
 	\b,4
 );
 ~rotae1[28]=\filter-> {arg in; Compander.ar(in)};
-~rotae1[29]=\filter-> {arg in; CombN.ar(in,1,1,5)};
+// ~rotae1[29]=\filter-> {arg in; CombN.ar(in,1,1,5)};
 ~rotate1[30]=\filter-> {arg in; GVerb.ar(in,roomsize:LFSaw.kr([0.5,0.25]).range(80,10),revtime:2,maxroomsize:85,add:in)};
 ~rotate1[31]=\filter-> {arg in; in+(GrayNoise.ar(LFNoise0.kr(0.125).range(0.01,0.5)*SinOsc.kr(10))*Decay.kr(Impulse.kr([0.125,0.3]),4))};
-~rotate1[32]=\filter->{arg in; FreeVerb.ar(in,room:0.2,damp:1)};
+~rotate1[32]=\filter->{arg in; FreeVerb.ar(in,room:0.2,damp:1,add:in)};
 ~rotare1[33]=\filter-> {arg in; LPF.ar(in,6000)};
 )
 
+
+(
+
+~glitch1.play;
+~glitch1.fadeTime=4;
+~glitch1.quant=1;
+~glitch1.clock=TempoClock(120/60).permanent_(true);
+~glitch1[0]=Pbind(\instrument, \glitch,
+	\dur, Pseq([1,Rest(1),0.25, 2, Rest(1)],inf),
+	\legato, Pseq([0.5,1],inf),
+	\freq, 85,
+	\amp, 0.5,
+	\n, Pseq([0,1,2,3],inf),
+	\pos, Prand([0,-1,1],inf),
+);
+~glitch1[30]=\filter-> {arg in; in+ ~rotate.ar};
+
+)
 	
