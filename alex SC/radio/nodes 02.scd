@@ -62,7 +62,7 @@ p=ProxySpace.push(s);
 ~bum2.quant=1;
 ~bum2.clock=TempoClock(60/60).permanent_(true);
 ~bum2[0]=Pbind(\instrument, \bum,
-	\dur,0.1,
+	\dur,Pseq([1,Rest(0.25)],inf),
 	\legato, 0.5,
 	\octave,Pseq([Pseq([2,3],4),[2,1],3],inf),
 	\degree, [8,4],

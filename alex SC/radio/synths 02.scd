@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s);
 (
 
 
@@ -7,10 +7,10 @@ ProxySynthDef(\bum, {
 	var sig, env,fenv, rqenv;
 
 	env=EnvGen.kr(Env([0,1,0],[0.1,0.9],[\welch,\welch]),gate, timeScale:sustain,doneAction:2);
-	fenv=EnvGen.kr(Env([freq,freq*4], [sustain*0.004], \welch),gate,timeScale:sustain);
+	fenv=EnvGen.kr(Env([freq,freq*12], [sustain*0.001], \welch),gate,timeScale:sustain);
 	rqenv=EnvGen.kr(Env([0.001,0.1,1], [0.04,0.96]),gate,timeScale:sustain);
 
-	sig=BPF.ar(GrayNoise.ar(1),fenv,rqenv);
+	sig=BPF.ar(GrayNoise.ar(0.2),fenv,rqenv)*3;
 	sig=sig*env*amp;}).add;
 
 
