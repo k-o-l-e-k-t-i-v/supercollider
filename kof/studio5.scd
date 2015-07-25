@@ -6,80 +6,76 @@
 );
 
 
-
-// lalala synth ///////////////////////////////////////
+// brown synth ///////////////////////////////////////
 
 (
-~lalala.quant=1;
-~lalala.fadeTime=0.02;
-~lalala={
-    var sig = Dust.ar(1);
-  sig = DelayN.ar(sig,1,1) + ~lalala.ar;
-  Mix.ar(sig) * 0.9995;
+~brown.quant=1;
+~brown.fadeTime=16.02;
+~brown={
+    var sig = Dust.ar(4320!2);
+    sig = [] ++ LPF.ar(sig,120) ++ HPF.ar(sig,18000) ++ BPF.ar(sig,1800,0.2);
+    sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1) * LFPulse.ar(LFDNoise1.ar(1!4)*111);
+    sig = GVerb.ar(sig,[20,21,42,44])/4+sig;
+    sig = CompanderD.ar(sig,4/3,1/2,1/2);
+    Mix.ar(sig) * 0.000025;
 };
-e.addMix(~lalala,postVol:true);
-~lalala.play;
+e.addMix(~brown,postVol:true);
+~brown.play;
 );
-~lalala.stop(7);
-~lalala.clear;
+~brown.stop(7);
+~brown.clear;
 
-// random synth ///////////////////////////////////////
+
+// click synth ///////////////////////////////////////
 
 (
-    ~random.quant=1;
-    ~random.fadeTime=4.02;
-    ~random={
-        var sig = [] ++ LFSaw.ar(4320/[1,2,4,8]+(1..8)+SinOsc.ar(11/(1..8)).range(-4,4))++WhiteNoise.ar(1)++LFSaw.ar(90)++BrownNoise.ar(1);
-        sig = LPF.ar(sig.scramble,800+LFSaw.ar(1/4).exprange(0.001,8000));
-        sig = Select.ar(LFSaw.ar(1/5).exprange(0.001,sig.size+2),sig);
-        sig = [] ++ WhiteNoise.ar(1)++SinOsc.ar(14000) ++ LFSaw.ar(44);
-        sig = sig * EnvGen.ar(Env([0,1,0],[0.002,[0.5,4,0.1]/32],[3,-3]),CoinGate.kr(0.025,Impulse.kr(1,(0..15)/16)));
-        sig = BPF.ar(sig,[80,8000,500,400]);
-        sig = GVerb.ar(sig,[20,21])/4 + sig;
-        sig = CompanderD.ar(sig,4/3,1/2,1/2);
-        Mix.ar(sig) * 0.5;
-    };
-    e.addMix(~random,postVol:true);
-    ~random.play;
+~click.quant=1;
+~click.fadeTime=4.02;
+~click={
+    var sig = Decay.ar(Impulse.ar(1/8/[2,4,3],(0..3)/4),[0.1,0.5,1,8]);
+    sig = SinOsc.ar(2000*[1,1.5,2,4]+((1..8)/10)+SinOsc.kr(11).range(-4,40),mul:0.2) * sig * LFPulse.ar(16/(1..8));
+    sig = CombN.ar(sig,1/4,1/8,1/4);
+  Mix.ar(sig) * 0.5;
+};
+e.addMix(~click,postVol:true);
+~click.play;
 );
-~random.stop(7);
-~random.clear;
+~click.stop(7);
+~click.clear;
 
-
-
-// lala synth ///////////////////////////////////////
+// pulser synth ///////////////////////////////////////
 
 (
-    ~lala.quant=1;
-    ~lala.fadeTime=4.02;
-    ~lala={
-        var sig = SinOsc.ar(4320*1.5/([1,2,4,8]*pi)) * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
-        sig = CombN.ar(sig,1,LFDNoise1.ar(1!4).range(0.02,2),4);
-        sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
-        sig = GVerb.ar(sig,[20,21])/2 + sig;
-        sig = CompanderD.ar(sig,4/3,1/2,1/2);
-        Mix.ar(sig) * 0.0025;
+    ~pulser.quant=1;
+    ~pulser.fadeTime=8.02;
+    ~pulser={
+        var sig = WhiteNoise.ar(1!4);
+        sig = Resonz.ar(sig,60.midicps*2/([1,2,4,8]*pi),0.2) * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
+        Mix.ar(sig) * 0.000545;
     };
-    e.addMix(~lala,postVol:true);
-    ~lala.play;
+    e.addMix(~pulser,postVol:true);
+    ~pulser.play;
 );
-~lala.stop(7);
-~lala.clear;
+~pulser.stop(2);
+~pulser.clear;
 
 
-
-// lalala synth ///////////////////////////////////////
+// flt filter ///////////////////////////////////////
 
 (
-    ~lalala.quant=1;
-    ~lalala.fadeTime=0.02;
-    ~lalala={
-        var sig = LFSaw.ar(50!2);
-        sig = sig;
-        Mix.ar(sig) * 0.5;
+    ~flt.quant=1;
+    ~flt.fadeTime=1;
+    ~flt={
+        var high,mid,low;
+        var sig = e.ar;
+        sig = GVerb.ar(sig,40)/16 + sig;
+        low = CompanderD.ar(LPF.ar(sig,800),4/3,1/2,1/2);
+        mid = CompanderD.ar(BPF.ar(sig,2000,2),4/3,1/2,1/2);
+        high = CompanderD.ar(HPF.ar(sig,4200),4/3,1/2,1/2);
+        sig = CompanderD.ar((high+mid+low).flat,4/3,1/1.1,1/1.1);
+        Splay.ar(sig,0.05,0.25);
     };
-    e.addMix(~lalala,postVol:true);
-    ~lalala.play;
+    ~flt.play;
 );
-~lalala.stop(7);
-~lalala.clear;
+~flt.stop(7);
+~flt.clear;

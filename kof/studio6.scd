@@ -28,3 +28,21 @@ e.addMix(~freq,postVol:true);
 
 ~freq.stop(7);
 ~freq.clear;
+
+
+
+// imp synth ///////////////////////////////////////
+
+(
+~imp.quant=1;
+~imp.fadeTime=0.02;
+~imp={
+  var sig = Impulse.ar([1,1/2,1/4]/8)*80;
+  sig = RLPF.ar(sig,[432]);
+  Mix.ar(sig) * 0.5;
+};
+e.addMix(~imp,postVol:true);
+~imp.play;
+);
+~imp.stop(7);
+~imp.clear;
