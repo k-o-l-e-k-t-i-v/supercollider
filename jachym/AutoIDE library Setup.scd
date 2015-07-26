@@ -45,6 +45,8 @@ AutoIDE.add(\varselect, {var select = Select.ar(\aEnvSel.kr(0),
 );})
 )
 
+AutoIDE.add(\jenv, {~nodeIndex = \set -> Jenv(\namekey, [0.001,1,0.001], [0.85, 0.15], \exp, inf);});
+
 AutoIDE.run;
 
 
