@@ -13,7 +13,7 @@
 ~system_sound.quant=1;
 ~system_sound.fadeTime=0.02;
 ~system_sound={
-  var temp = 3/4 + Duty.kr(Dseq([7.5,0.5],inf),0,Dseq([0,4-(3/4)],inf));
+  var temp = 3/4 + Duty.kr(Dseq([7.5,0.5],inf),0,Dseq([0,1-(3/4)],inf));
   var env = EnvGen.ar(Env([0,1,0],[0.002,0.5],[5,-7]),Impulse.ar(temp,(1..4)/4));
   var env1 = EnvGen.ar(Env([0,1,0],[0.002,0.25],[9,-10]),Impulse.ar(temp,(1..4)/4));
   var env2 = EnvGen.ar(Env([0,1,0],[0.25,0.15],[5,-7]),Impulse.ar(temp,(1..4)/4));
