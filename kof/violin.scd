@@ -18,10 +18,10 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/violin.aif");
   ~violin={
     var mod = [1,-0.5,0.25,-1,0.25,-0.5];
     var spread = 0.0001;
-    var pos = LFDNoise1.kr(1/48/fib(6));
+    var pos = LFNoise2.kr(1/48/fib(6));
 
-    var imp = Impulse.ar(3/4+(LFDNoise1.kr(1/8!6)*0.001),(1..6)/6);
-    var env = EnvGen.ar(Env([0,LFDNoise1.kr(1/8!6),0],[1/75,1/15]*2,[2,-2]),imp);
+    var imp = Impulse.ar(3/4+(LFNoise2.kr(1/8!6)*0.001),(1..6)/6);
+    var env = EnvGen.ar(Env([0,LFNoise2.kr(1/8!6),0],[1/75,1/15]*2,[2,-2]),imp);
     var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod,imp,pos * BufFrames.kr(b.bufnum),1);
 
     sig = sig * (1/(1..6));
