@@ -1,0 +1,184 @@
+##main
+#synth
+snippet ///
+	////////////////////////////////////// ${1:} //
+snippet start
+	(
+		p=ProxySpace.push(s.reboot);
+		e=ProxySubmix.new(\filter);
+	);
+snippet synth
+	// $1 synth ///////////////////////////////////////
+	
+	(
+	~${1:}.quant=1;
+	~$1.fadeTime=0.02;
+	~$1={
+		var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp);
+		var sig = ${2:LFSaw.ar(50!2)};
+		sig = sig${3:} * env;
+		Splay.ar(sig,0.25,0.5);
+	};
+	e.addMix(~$1,postVol:true);
+	~$1.play;
+	);
+	~$1.stop(7);
+	~$1.clear;
+snippet synthm
+	// $1 synth ///////////////////////////////////////
+	
+	(
+	~${1:}.quant=1;
+	~$1.fadeTime=0.02;
+	~$1={
+		var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp);
+		var sig = ${2:LFSaw.ar(50!2)};
+		sig = sig${3:} * env;
+		Mix.ar(sig) * 0.5;
+	};
+	e.addMix(~$1,postVol:true);
+	~$1.play;
+	);
+	~$1.stop(7);
+	~$1.clear;
+snippet filter
+	// $1 filter ///////////////////////////////////////
+	
+	(
+	~${1:}.quant=1;
+	~$1.fadeTime=1;
+	~$1={
+		var high,mid,low;
+		var sig = e.ar;
+		sig = GVerb.ar(sig,40)/16 + sig;
+		low = CompanderD.ar(LPF.ar(sig,800),3/4,1/2,1/2);
+		mid = CompanderD.ar(BPF.ar(sig,2000,2),3/4,1/2,1/2);
+		high = CompanderD.ar(HPF.ar(sig,4200),3/4,1/2,1/2);
+		sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
+		Splay.ar(sig,0.25,${2:0.25});
+	};
+	~$1.play;
+	);
+	~$1.stop(7);
+	~$1.clear;
+snippet filterm
+	// $1 filter ///////////////////////////////////////
+	
+	(
+	~${1:}.quant=1;
+	~$1.fadeTime=1;
+	~$1={
+		var high,mid,low;
+		var sig = e.ar;
+		sig = GVerb.ar(sig,40)/16 + sig;
+		low = CompanderD.ar(LPF.ar(sig,800),3/4,1/2,1/2);
+		mid = CompanderD.ar(BPF.ar(sig,2000,2),3/4,1/2,1/2);
+		high = CompanderD.ar(HPF.ar(sig,4200),3/4,1/2,1/2);
+		sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
+		Mix.ar(sig * ${2:0.25});
+	};
+	~$1.play;
+	);
+	~$1.stop(7);
+	~a$1.clear;
+snippet lpf
+	LPF.ar(sig,${1:800})
+snippet hpf
+	HPF.ar(sig,${1:800})
+snippet bpf
+	BPF.ar(sig,${1:800})
+snippet duty
+	Duty.kr(${1:4},0,Dseq([${2:1,2,1.5,1.25}],inf))
+snippet saws
+	LFSaw.ar(${1:1/4}).exprange(0.001,${2:1})
+snippet decay
+	Decay.ar(Impulse.ar(${1:1/2},(0..3)/4),${2:1})
+snippet env
+	EnvGen.ar(Env([${1:0.001,1,0.001}],[${2:0.002,0.5}],[3,-3]),Impulse.ar(${3:1},${4:(0..3)/4}))
+snippet impulse
+	Impulse.ar(${1:1/2},(0..3)/4)
+snippet gverb
+	GVerb.ar(${1:sig},${2:10},${3:0.1})
+snippet gpl
+	/*
+	* This program is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* This program is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with this program; if not, see <http://www.gnu.org/licenses/>.
+	*
+	* Copyright (C) ${1:Author}, `strftime("%Y")`
+	*/
+	${0}
+	 
+snippet startrec
+	(
+		s.prepareForRecord("/tmp/${1}");
+		s.record;
+		History.clear.start;
+	);
+snippet endrec
+	(
+		History.end;
+		s.stopRecording;
+	);
+snippet playrec
+	s.prepareForRecord("/tmp/${1}");
+	(
+		Dialog.openPanel({ arg path;
+			path.postln;
+			s.record;
+			h=History.new.loadCS(path,forward:true);
+			h.play;
+		},{
+			"cancelled".postln;
+		});
+	)	
+	s.stopRecording;
+snippet sampler
+	b = Buffer.read(s,Platform.resourceDir ++ "/sounds/${2:douce.wav}");
+
+	// player synth ///////////////////////////////////////
+
+	(
+	    ~${1:}.quant=1;
+	    ~$1.fadeTime=2.02;
+	    ~$1={
+	        var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
+	        var spread = 0.0;
+	        var pos = [0,0.5];
+	        var imp = Impulse.ar(1/4,(0..7)/8);
+	        var env = EnvGen.ar(Env([0,1,0],[0.075,TExpRand.ar(0.015,0.75,imp)],[3,-3]),imp);
+	        var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
+	        
+		sig = sig * env;
+	        sig = GVerb.ar(sig,100)/2+sig ;
+	        sig = CompanderD.ar(sig,3/4,1/2,1/2);
+	        Splay.ar(sig.flat,0.5,${3:0.5});
+	    };
+	    ~$1.play;
+	);
+	~$1.stop(7);
+	~$1.clear;
+snippet tick
+	(
+		var tempo = ${2:2/3};
+		var offset = (0..7)/8;
+		t = TempoClock.new(tempo);
+		~tick.quant = 1;
+		~tick = {Mix(Impulse.kr( tempo / 2 , offset ))};
+		
+		offset = (0..7)+0.5/8;
+		~tick2.quant = 1;
+		~tick2 = {Mix(Impulse.kr( tempo / 2 , offset ))};
+		~counter = {PulseCount.kr(~tick.kr)};
+	)
