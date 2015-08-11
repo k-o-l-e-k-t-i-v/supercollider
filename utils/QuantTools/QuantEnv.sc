@@ -1,7 +1,10 @@
 QuantEnv {
-	classvar <version = 0.01;
+	classvar <version = 0.02;
+	classvar >print = true;
+	classvar >plot = true;
+	classvar >plotTime = 4;
 
-	*new{|key, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = #[\sin], offset = 0, repeats = inf|
+	*new{|key, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = \exp, offset = 0, repeats = inf|
 		times = times.asArray.wrapExtend(levels.size - 1);
 		curves = curves.asArray.wrapExtend(levels.size - 1);
 
@@ -45,8 +48,8 @@ QuantEnv {
 		times.size.do({|i| cur = cur.add(curves[i]) });
 		if(quant != dur) { cur = cur.add(\lin) };
 
-		this.print(quant, dur, lev, t, cur);
-		this.plot(key, lev , t , cur, quant);
+		if(print) {this.initPrint(quant, dur, lev, t, cur)};
+		if(plot) {this.initPlot(key, lev , t , cur, quant)};
 
 		pbind = Pbind(
 			\type, \set,
@@ -57,13 +60,21 @@ QuantEnv {
 
 		^pbind;
 	}
-
-	print{|quant, dur, lev, t, cur|
-		"QuantEnv \n\t - quant %\n\t - dur %\n\t - levels %\n\t - times %\n\t - curves %".format(quant, dur, lev.asString, t.asString, cur.asString).postln;
+	/*
+	pattern2array{|pattern|
+	var arr;
+	pattern.do({|i|	arr.add(i) });
+	^arr;
+	}
+	*/
+	initPrint{|quant, dur, lev, t, cur|
+		"QuantEnv (v%) \n\t - quant %\n\t - dur %\n\t - levels %\n\t - times %\n\t - curves %"
+		.format(version, quant, dur, lev.asString, t.asString, cur.asString).postln;
 	}
 
-	plot{|key, val, tim, crv, dur|
+	initPlot{|key, val, tim, crv, dur|
 
+		var activeDoc = Document.current;
 		var rect = Rect(1200, 530, 400, 300);
 		var win = Window(key, rect);
 		var routine;
@@ -86,11 +97,12 @@ QuantEnv {
 		win.alpha_(0.95);
 		win.alwaysOnTop_(true);
 
+		activeDoc.front;
+
 		Routine {
-			var sec = 2;
 			var fps = 12;
-			(sec*fps).do({ |t|
-				win.alpha_(1-(t*1/(sec*fps)));
+			(plotTime*fps).do({ |t|
+				win.alpha_(1-(t*1/(plotTime*fps)));
 				(1/fps).wait;
 			});
 			win.close;
