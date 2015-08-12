@@ -5,7 +5,7 @@ snippet ///
 snippet start
 	(
 		p=ProxySpace.push(s.reboot);
-		e=ProxySubmix.new(\filter);
+	//	e=ProxySubmix.new(\filter);
 	);
 snippet synth
 	// $1 synth ///////////////////////////////////////
@@ -20,7 +20,7 @@ snippet synth
 		sig = sig${3:} * env;
 		Splay.ar(sig,0.25,0.5);
 	};
-	e.addMix(~$1,postVol:true);
+	//      e.addMix(~$1,postVol:true);
 	~$1.play;
 	);
 	~$1.stop(7);
@@ -181,4 +181,5 @@ snippet tick
 		~tick2.quant = 1;
 		~tick2 = {Mix(Impulse.kr( tempo / 2 , offset ))};
 		~counter = {PulseCount.kr(~tick.kr)};
+		~time = {LFSaw.kr(tempo/4).range(0,1)};
 	)

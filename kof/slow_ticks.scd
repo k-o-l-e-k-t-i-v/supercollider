@@ -8,7 +8,7 @@
 
 
 (
-  var tempo = 2/3;
+  var tempo = 8/3;
   var offset = (0..7)/8;
   t = TempoClock.new(tempo);
   ~tick.quant = 1;
@@ -30,10 +30,10 @@
 ~dusts.quant=1;
 ~dusts.fadeTime=4.02;
 ~dusts={
-  var imp = PulseDivider.kr(~tick.kr,16*[1,2,4],~counter.kr);
+    var imp = PulseDivider.kr(~tick.kr,32*fib(8,2,3),~counter.kr);
   var env = EnvGen.ar(Env([0.001,1,0.001],[3.002,3.05],[3,-6]),imp);
-  var sig = Dust.ar(200*env);
-  sig = RLPF.ar(sig*100,[80,800,1200]);
+  var sig = Dust.ar(16000*env);
+  sig = RLPF.ar(sig*20,432*[1,1.5,2,10,20]);
   sig = sig * env;
   sig = Limiter.ar(sig);
   sig = GVerb.ar(HPF.ar(sig,800),80)/2 + LPF.ar(sig,800);
@@ -73,9 +73,9 @@
   var imp = PulseDivider.kr(~tick.kr,fib(8,1,2),~counter.kr);
   var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.35],[3,-6]),imp);
   var sig = WhiteNoise.ar(1!4);
-  sig = HPF.ar(sig,LFNoise2.kr(4!4).range(100,18000));
+  sig = HPF.ar(sig,LFNoise2.kr(4!4).range(1000,18000));
   sig = sig * env;
-  sig = GVerb.ar(HPF.ar(sig,800),80)/2 + LPF.ar(sig,800);
+  sig = GVerb.ar(HPF.ar(sig,800),80,spread:90,drylevel:0.9)/2 + LPF.ar(sig,800);
   Splay.ar(sig.flat,0.25,0.5);
 };
 ~hh.play;
