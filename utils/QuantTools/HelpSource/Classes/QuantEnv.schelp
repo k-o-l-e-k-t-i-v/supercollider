@@ -1,0 +1,78 @@
+TITLE:: QuantEnv
+summary:: NamedControl controling by envelope curve.
+categories:: Libraries>KolektivUtils
+related:: Classes/Env
+
+DESCRIPTION::
+Tool based on envelope curve for continouisly controling some of \namedControl in NodeProxy. This curve is retrigger by beat quant.
+
+CLASSMETHODS::
+
+METHOD:: new
+Print to console all stored keys and preview of saved code. Also is possible use keyboard F1, when AutoIDE is runnig (only on Win).
+
+ARGUMENT:: key
+Name of used NamedControl key to control (Symbol)
+
+ARGUMENT:: quant
+Trigger quant. When modular TempoClock.beats % quant = 0, than this QuantEnv is restart. When is sum of times array plus offset is longer than this quant value, is multiplication by two (int)
+
+ARGUMENT:: levels
+Array of values for controled NamedControl.
+
+ARGUMENT:: times
+Array of time.
+
+ARGUMENT:: curves
+Array of curvature.
+
+ARGUMENT:: offset
+Offset start of times array by some time.
+
+ARGUMENT:: repeats
+Number of time to loop. For endless loop, use inf. For using in some other pattern, use int number. After end of loop, stay valid for key a value of last level.
+
+METHOD:: print
+Boolean, true for printing after evaluation to console
+
+METHOD:: plot
+Boolean, true for making view with curve of envelope
+
+METHOD:: plotTime
+Time in sec for fadeing out of view with curve
+
+EXAMPLES::
+
+code::
+p = ProxySpace.push(s).makeTempoClock;
+p.clock.tempo_(120/60);
+
+~test.play.quant_(2);
+~test[0] = { SinOsc.ar([120,80]) * \key_amp.kr(0) };
+~test[1] = QuantEnv(\key_amp, 1, [0.2,1,0.0], [0.05, 0.95], \exp, 0, inf);
+~test[1] = QuantEnv(\key_amp, 1, [0.0,1], 1, \sin, 0, 4);
+~test[1] = QuantEnv(\key_amp, 10, [1,0], 10, \sin, 0, 1);
+~test[1] = QuantEnv(\key_amp, 3, [0.0,1,0.3,0.0], [1.55, 0.15], [\sin, \lin], 0, 4);
+~test[1] = QuantEnv(\key_amp, 4, [0.5,0.1,1,0.0], [3.05, 0.95, 7], [\lin, \step, \exp], 5, 2);
+
+(
+~test[1] = Pseq([
+	QuantEnv(\key_amp, 0.5, [0.0,1,0.2], [0.15, 0.35], \exp, 0, 3),
+	QuantEnv(\key_amp, 1, [0.2,1,0.6,0.0], [1.05, 0.5, 0.45], \exp, 0, 1)
+], 4);
+)
+
+(
+~test[1] = Pswitch([
+	QuantEnv(\key_amp, 1, [0.0,1,0.0], [0.05, 0.45], \exp, 0, 3),
+	QuantEnv(\key_amp, 0.25, [0.0,0.5,0.0], [0.15, 0.05], \exp, 0, 8),
+	QuantEnv(\key_amp, 1, [0.0,0.6,0.2,1,0.0], [0.85,1.1, 4.75, 1.15], \exp, 0, 1)
+], Pseq([0,1,0,1,0,2], 2));
+)
+
+~test.stop(4);
+
+QuantEnv.print_(false); // switch off printing to console, default true
+QuantEnv.plot_(false); // switch off display of envelope, default true
+QuantEnv.plotTime_(10); // set duration of display fadeing off, default 4 sec
+::

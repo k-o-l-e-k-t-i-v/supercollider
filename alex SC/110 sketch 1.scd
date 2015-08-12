@@ -49,14 +49,14 @@ p=ProxySpace.push(s);
 	env=EnvGen.kr(Env([0,1,0.2,0],[0.01,0.198,0.01],\welch),\trig.tr);
 	sig=LFSaw.ar(\freq.kr+[1,2,3,5,8,13].reciprocal).lag(0.001)*env;
 };
-~y[1]=\set-> Pbind(\args, [\trig], \dur, Pseq([0.4,0.4,1],inf), \trig, 1);
+~y[1]=\set-> Pbind(\args, [\trig], \dur, 0.4, \trig, 1);
 ~y[2]=\set-> Pbind(\args, [\freq], \dur, 0.2,\freq,
 	Pswitch([Pseq([45,65,700,78,45,45,85],1),
-		Pseq([65,65,600,780,45,45,85],1)],Pseq([0,0,1],inf)));
+		Pseq([65,65,600,780,45,45,85],1)],Pseq([0,0,1,0,0,1,1],inf)));
 
 ~y[30]=\filter-> {arg in; CombN.ar(in,2,2,4)};
-~y[31]=\filter->{arg in; GVerb.ar(in,40,1,add:in,mul:0.5)};
+~y[31]=\filter->{arg in; GVerb.ar(in,SinOsc.kr(1/0.4).range(40,200),1,add:in,mul:0.5)+(GrayNoise.ar(0.2)*Decay.ar(Impulse.ar([1/0.4,1/4]),0.2))};
 ~y[32]=\filter->{arg in; LPF.ar(in,\lpf.kr)};
-~y[33]=\set-> Pbind(\args, [\lpf], \dur, Pseq([10,10,40],inf), \lpf, Pseq([75,200,1000],inf));
-~y[34]=\filter-> {arg in; Limiter.ar(Compander.ar(in),1).clip(-0.7,0.7)}
+~y[33]=\set-> Pbind(\args, [\lpf], \dur, Pseq([10,10,40],inf), \lpf, Pseq([85,200,1000],inf));
+~y[34]=\filter-> {arg in; Limiter.ar(Compander.ar(in),0.7).clip(-0.7,0.7)}
 )
