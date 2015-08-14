@@ -170,15 +170,15 @@ snippet sampler
 	~$1.clear;
 snippet tick
 	(
-		var tempo = ${2:2/3};
-		var offset = (0..7)/8;
-		t = TempoClock.new(tempo);
+		~tempo = ${2:2/3};
+		~offset = (0..7)/8;
+		t = TempoClock.new(~tempo);
 		~tick.quant = 1;
-		~tick = {Mix(Impulse.kr( tempo / 2 , offset ))};
+		~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
 		
-		offset = (0..7)+0.5/8;
+		~offset = (0..7)+0.5/8;
 		~tick2.quant = 1;
-		~tick2 = {Mix(Impulse.kr( tempo / 2 , offset ))};
+		~tick2 = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
 		~counter = {PulseCount.kr(~tick.kr)};
-		~time = {LFSaw.kr(tempo/4).range(0,1)};
+		~time = {LFSaw.kr(~tempo/4).range(0,1)};
 	)
