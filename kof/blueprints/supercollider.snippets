@@ -5,7 +5,6 @@ snippet ///
 snippet start
 	(
 		p=ProxySpace.push(s.reboot);
-	//	e=ProxySubmix.new(\filter);
 	);
 snippet synth
 	// $1 synth ///////////////////////////////////////
@@ -18,9 +17,8 @@ snippet synth
 		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp);
 		var sig = ${2:LFSaw.ar(50!2)};
 		sig = sig${3:} * env;
-		Splay.ar(sig,0.25,0.5);
+		Splay.ar(sig,0.75,0.5);
 	};
-	//      e.addMix(~$1,postVol:true);
 	~$1.play;
 	);
 	~$1.stop(7);
@@ -38,7 +36,6 @@ snippet synthm
 		sig = sig${3:} * env;
 		Mix.ar(sig) * 0.5;
 	};
-	e.addMix(~$1,postVol:true);
 	~$1.play;
 	);
 	~$1.stop(7);
@@ -51,13 +48,14 @@ snippet filter
 	~$1.fadeTime=1;
 	~$1={
 		var high,mid,low;
-		var sig = e.ar;
+		var sig = ${2:0};
+		
 		sig = GVerb.ar(sig,40)/16 + sig;
-		low = CompanderD.ar(LPF.ar(sig,800),3/4,1/2,1/2);
-		mid = CompanderD.ar(BPF.ar(sig,2000,2),3/4,1/2,1/2);
-		high = CompanderD.ar(HPF.ar(sig,4200),3/4,1/2,1/2);
+		low = CompanderD.ar(LPF.ar(sig,600),3/4,1/2,1/2);
+		mid = CompanderD.ar(BPF.ar(sig,800,2),3/4,1/2,1/2);
+		high = CompanderD.ar(HPF.ar(sig,900),3/4,1/2,1/2);
 		sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
-		Splay.ar(sig,0.25,${2:0.25});
+		Splay.ar(sig,0.75,${3:0.25});
 	};
 	~$1.play;
 	);
@@ -71,13 +69,14 @@ snippet filterm
 	~$1.fadeTime=1;
 	~$1={
 		var high,mid,low;
-		var sig = e.ar;
+		var sig = ${2:0};
+		
 		sig = GVerb.ar(sig,40)/16 + sig;
-		low = CompanderD.ar(LPF.ar(sig,800),3/4,1/2,1/2);
-		mid = CompanderD.ar(BPF.ar(sig,2000,2),3/4,1/2,1/2);
-		high = CompanderD.ar(HPF.ar(sig,4200),3/4,1/2,1/2);
+		low = CompanderD.ar(LPF.ar(sig,600),3/4,1/2,1/2);
+		mid = CompanderD.ar(BPF.ar(sig,800,2),3/4,1/2,1/2);
+		high = CompanderD.ar(HPF.ar(sig,900),3/4,1/2,1/2);
 		sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
-		Mix.ar(sig * ${2:0.25});
+		Mix.ar(sig * ${3:0.25});
 	};
 	~$1.play;
 	);
@@ -92,7 +91,7 @@ snippet bpf
 snippet duty
 	Duty.kr(${1:4},0,Dseq([${2:1,2,1.5,1.25}],inf))
 snippet saws
-	LFSaw.ar(${1:1/4}).exprange(0.001,${2:1})
+	LFSaw.ar(${1:~time}).exprange(0.001,${2:1})
 snippet decay
 	Decay.ar(Impulse.ar(${1:1/2},(0..3)/4),${2:1})
 snippet env
