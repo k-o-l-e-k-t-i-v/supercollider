@@ -1,0 +1,25 @@
+TITLE:: Kolektiv
+summary:: Kolektiv live coding shared document.
+categories:: Libraries>KolektivUtils
+related:: Classes/Document
+
+DESCRIPTION::
+Running connected OpenVPN is necessary.
+
+CLASSMETHODS::
+
+METHOD:: directConnect
+This method is for directly connection between specifict computers.
+
+ARGUMENT:: userName
+Your name (Symbol)
+
+ARGUMENT:: targetIPs
+IP of other players as array of strings (arrString)
+
+
+EXAMPLES::
+
+code::
+Kolektiv.directConnect(\myUserName, ["10.8.0.14", "10.8.0.16"]);
+::
