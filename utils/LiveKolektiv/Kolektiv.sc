@@ -9,9 +9,9 @@ Kolektiv {
 	*directConnect{|userName, targetIPs| ^super.new.init(userName, targetIPs); }
 
 	init{ |userName, targetIP|
-		"Kolektiv shared document [ver %] - check if you using port 57120".format(version);
-
 		Server.local.waitForBoot({
+			"Kolektiv shared document [ver %] - check if you using port 57120".format(version).postln;
+
 			name = userName;
 			sendEvents = ();
 
@@ -66,7 +66,7 @@ Kolektiv {
 			var sender = msg[1];
 			var code = msg[2];
 
-			("\nReciveMsg : %, %".format(msgType, sender)).warn;
+			("ReciveMsg : % connected, refresh doc and synth".format(sender)).warn;
 
 		}, '/user/join', targetNet );
 
