@@ -4,18 +4,18 @@ categories:: Libraries>KolektivUtils
 related:: Classes/Document
 
 DESCRIPTION::
-Running connected OpenVPN is necessary.
+Running connected OpenVPN is well advised, but the class should work on any local network as well.
 
 CLASSMETHODS::
 
 METHOD:: directConnect
-This method is for directly connection between specifict computers.
+This method is for calling a direct connection between specified clients.
 
 ARGUMENT:: userName
 Your name (Symbol)
 
 ARGUMENT:: targetIPs
-IP of other players as array of strings (arrString)
+An array of Strings, representing IP addresses of each players on the network (arrString)
 
 
 EXAMPLES::

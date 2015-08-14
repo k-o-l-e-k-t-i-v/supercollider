@@ -50,7 +50,7 @@ snippet filter
 		var high,mid,low;
 		var sig = ${2:0};
 		
-		sig = GVerb.ar(sig,40)/16 + sig;
+		sig = GVerb.ar(LPF.ar(sig,5000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[4,90])/8 + sig;
 		low = CompanderD.ar(LPF.ar(sig,600),3/4,1/2,1/2);
 		mid = CompanderD.ar(BPF.ar(sig,800,2),3/4,1/2,1/2);
 		high = CompanderD.ar(HPF.ar(sig,900),3/4,1/2,1/2);
