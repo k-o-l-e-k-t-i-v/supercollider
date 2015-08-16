@@ -1,5 +1,5 @@
 (
-p=ProxySpace.push(s);.reboot);
+p=ProxySpace.push(s.reboot);
 );
 
 /////////////////////////////////////////////////////
