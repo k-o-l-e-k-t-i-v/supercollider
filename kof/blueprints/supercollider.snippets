@@ -13,7 +13,7 @@ snippet synth
 	~${1:}.quant=1;
 	~$1.fadeTime=0.02;
 	~$1={
-		//         |   |   |   |   |   |   |   |  
+		//         |     |     |     |     |     |     |     |  
 		var pat = [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0];
 		var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
