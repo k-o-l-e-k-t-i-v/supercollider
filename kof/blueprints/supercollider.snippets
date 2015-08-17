@@ -4,7 +4,7 @@ snippet ///
 	////////////////////////////////////// ${1:} //
 snippet start
 	(
-		p=ProxySpace.push(s.reboot);
+		p=ProxySpace.push(s.reboot,clock:TempoClock.default);
 	);
 snippet synth
 	// $1 synth ///////////////////////////////////////
@@ -13,8 +13,11 @@ snippet synth
 	~${1:}.quant=1;
 	~$1.fadeTime=0.02;
 	~$1={
+		//         |   |   |   |   |   |   |   |  
+		var pat = [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0];
 		var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
-		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp);
+		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp * hit);
 		var sig = ${2:LFSaw.ar(50!2)};
 		sig = sig${3:} * env;
 		Splay.ar(sig,0.75,0.5);
@@ -30,8 +33,11 @@ snippet synthm
 	~${1:}.quant=1;
 	~$1.fadeTime=0.02;
 	~$1={
+		//         |   |   |   |   |   |   |   |  
+		var pat = [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0];
 		var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
-		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp);
+		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp * hit);
 		var sig = ${2:LFSaw.ar(50!2)};
 		sig = sig${3:} * env;
 		Mix.ar(sig) * 0.5;
