@@ -39,8 +39,8 @@
             var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0];
             var imp = PulseDivider.kr(~tick.kr,fib(4),~counter.kr);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-            var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3]),imp * hit);
-            var sig = SinOsc.ar(90+(env**20*90*[1,2,1.5,4]));
+            var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp * hit);
+            var sig = SinOsc.ar(70+(env**20*90*[1,2,1.5,4]));
             sig = sig * env;
             Splay.ar(sig,0.75,0.5);
         };
@@ -75,16 +75,16 @@
         ~saw={
             //         |       |       |       |       |  
             var pat = [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0];
-            var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+            var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
             var mod = Select.kr(PulseCount.kr(imp[0])/(8*8)+1%4,[1,2,1.5,1.25]);
             var freq = Select.kr(PulseCount.kr(hit)%8,90*8/mod/[1,4,1,1.5,1,2,1,1.25]);
-            var env = EnvGen.ar(Env([0.001,1,0.001],[~tempo/2,0.5],[3,-3]),imp * hit);
+            var env = EnvGen.ar(Env([0.001,1,0.001],[~tempo/fib(4),0.5],[3,-3]),imp * hit);
             var sig = Formant.ar(freq+SinOsc.ar(1/~tempo/fib(4)),freq/2,[freq/2,freq*8,freq*4,freq]);
             sig = Resonz.ar(sig,freq+(env**10*100),0.2)*2;
             sig = HPF.ar(sig,100);
             sig = sig * env;
-            Splay.ar(sig.flat,0.75,0.15);
+            Splay.ar(sig.flat,0.75,0.05);
         };
         ~saw.play;
     );
@@ -100,11 +100,11 @@
             var sig = ~saw + ~hh + ~bang;
 
             sig = GVerb.ar(LPF.ar(sig,3000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[20,90])/16 + sig;
-            low = CompanderD.ar(LPF.ar(sig,180),3/4,1/3,1/2);
+            low = CompanderD.ar(LPF.ar(sig,180),3/4,1/2,1/2);
             mid = CompanderD.ar(BPF.ar(sig,900,2),3/4,1/2,1/2);
-            high = CompanderD.ar(HPF.ar(sig,3000),3/4,1/3,1/2);
+            high = CompanderD.ar(HPF.ar(sig,3000),3/4,1/2,1/2);
             sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
-            Splay.ar(sig,0.75,0.35);
+            Splay.ar(sig,0.75,0.25);
         };
         ~filter.play;
     );
