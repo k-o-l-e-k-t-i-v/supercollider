@@ -59,7 +59,7 @@
             var imp = PulseDivider.kr(~tick.kr,fib(4),~counter.kr);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
             var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,[0.05,0.25]],[3,-3]),imp * hit);
-            var sig = RHPF.ar(WhiteNoise.ar(LFNoise2.kr(1/4!4)*2),[2000,12000,8000,800]);
+            var sig = RHPF.ar(WhiteNoise.ar(LFNoise2.kr(1/4!4)),[2000,12000,8000,800]);
             sig = sig * env;
             Splay.ar(sig,0.75,0.35);
         };
