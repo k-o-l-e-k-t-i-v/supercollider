@@ -81,7 +81,8 @@
             var freq = Select.kr(PulseCount.kr(hit)%8,70*[4,8,8*1.5,16]/mod/[1,4,1,1.5,1,2,1,1.25]);
             var env = EnvGen.ar(Env([0.001,1,0.001],[~tempo/fib(4),0.5],[3,-3]),imp * hit);
             var sig = Formant.ar(freq+SinOsc.ar(1/~tempo/fib(4)).range(-2,2),freq/2,[freq/2,freq*8,freq*4,freq]);
-            sig = Resonz.ar(sig,freq+(env**0.1*freq/2),LFNoise2.kr(1/~tempo/4/fib(4)).range(0.01,0.9) )*2;
+            var knee = LFNoise2.kr(1/~tempo/8).range(0.1,20);
+            sig = Resonz.ar(sig,freq+(env**knee*freq/2),LFNoise2.kr(1/~tempo/4/fib(4)).range(0.01,0.9) )*2;
             sig = HPF.ar(sig,70);
             sig = sig * env;
             Splay.ar(sig.flat,0.75,0.035);
