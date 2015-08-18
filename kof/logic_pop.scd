@@ -78,11 +78,11 @@
             var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
             var mod = Select.kr(PulseCount.kr(imp[0])/(8*8)+1%4,[1,2,1.5,1.25]);
-            var freq = Select.kr(PulseCount.kr(hit)%8,90*8/mod/[1,4,1,1.5,1,2,1,1.25]);
+            var freq = Select.kr(PulseCount.kr(hit)%8,70*[4,8,8*1.5,16]/mod/[1,4,1,1.5,1,2,1,1.25]);
             var env = EnvGen.ar(Env([0.001,1,0.001],[~tempo/fib(4),0.5],[3,-3]),imp * hit);
             var sig = Formant.ar(freq+SinOsc.ar(1/~tempo/fib(4)),freq/2,[freq/2,freq*8,freq*4,freq]);
             sig = Resonz.ar(sig,freq+(env**10*100),0.2)*2;
-            sig = HPF.ar(sig,100);
+            sig = HPF.ar(sig,70);
             sig = sig * env;
             Splay.ar(sig.flat,0.75,0.05);
         };
