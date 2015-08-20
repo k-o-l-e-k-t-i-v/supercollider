@@ -26,6 +26,11 @@ Kolektiv {
 		super.new.initHistory;
 	}
 
+	cmdPeriod{
+
+		CmdPeriod.add(Kolektiv);
+	}
+
 	print {
 
 		// CHECKPRINT
@@ -42,29 +47,36 @@ Kolektiv {
 
 	init { |userName|
 
-		"Kolektiv shared document [ver %]".format(ver).postln;
+		CmdPeriod.add({
 
-		Server.local.waitForBoot({
-			name = userName;
-			net = Dictionary.new;
+			"Kolektiv shared document [ver %]".format(ver).postln;
 
-			if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.6", NetAddr.langPort)) };
-			if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.10", NetAddr.langPort)) };
-			if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.16", NetAddr.langPort)) };
-			if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.14", NetAddr.langPort)) };
+			Server.local.waitForBoot({
+				name = userName;
+				net = Dictionary.new;
 
-			sendEvents = ();
 
-			isOpenDoc = false;
 
-			net.keys.do({|target|
-				target.postln;
-				this.initReceiveMsg(target, net.at(target));
-				// this.initSendMsg(net.at(target));
+				if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.6", NetAddr.langPort)) };
+				if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.10", NetAddr.langPort)) };
+				if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.16", NetAddr.langPort)) };
+				if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.14", NetAddr.langPort)) };
+
+				sendEvents = ();
+
+				isOpenDoc = false;
+
+				net.keys.do({|target|
+					// target.postln;
+					this.initReceiveMsg(target, net.at(target));
+					// this.initSendMsg(net.at(target));
+				});
+
+				sendEvents.join;
 			});
-
-			sendEvents.join;
 		});
+
+		CmdPeriod.run;
 	}
 
 	initSendMsg { |targetNet|
