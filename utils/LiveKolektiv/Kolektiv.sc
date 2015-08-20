@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.03;
+	classvar ver = 0.04;
 
 	classvar name;
 	classvar net;
@@ -14,10 +14,10 @@ Kolektiv {
 
 	*print { super.new.print; }
 
-	*connect { |ip| super.new.tryConnect(ip); }
+	// *connect { |ip| super.new.tryConnect(ip); }
 
-	*document {
-		super.new.initDocument(false);
+	*start {
+		// super.new.initDocument(false);
 		super.new.initHistory;
 	}
 
@@ -33,7 +33,11 @@ Kolektiv {
 		net.keys.do({|key|
 			"Others || name: %, ip : % ".format(key, net.at(key)).postln;
 		});
-
+		OSCdef.allFuncProxies.do({|aaa|
+			aaa.do({|bbb|
+				bbb.postln;
+			});
+		});
 	}
 
 	init { |userName|
@@ -44,47 +48,28 @@ Kolektiv {
 			name = userName;
 			net = Dictionary.new;
 
+			if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.6", NetAddr.langPort)) };
+			if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.10", NetAddr.langPort)) };
+			if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.16", NetAddr.langPort)) };
+			if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.14", NetAddr.langPort)) };
+
 			sendEvents = ();
 
 			isOpenDoc = false;
+
+			net.keys.do({|target|
+				target.postln;
+				this.initReceiveMsg(target, net.at(target));
+				// this.initSendMsg(net.at(target));
+			});
+
+			sendEvents.join;
 		});
-	}
-
-	tryConnect { |ip|
-
-		var tempNet = NetAddr(ip.asString, NetAddr.langPort);
-		tempNet.sendMsg('/user/join', name.asSymbol);
-		tempNet.sendMsg('/user/reconnect', name.asSymbol);
-
-		"Waiting for confirm of connection from ip % ...".format(ip).warn;
-
-		OSCdef.newMatching(\answerMsg_join, {|msg, time, addr, recvPort|
-			tempNet.sendMsg('/user/join', name.asSymbol);
-			this.initNet(msg, addr);
-		}, '/user/join', tempNet).oneShot;
-
-	}
-
-	initNet	{ |msg, addr|
-
-		var msgType = msg[0];
-		var sender = msg[1];
-		var ip = addr.ip;
-
-		net.put(sender.asSymbol, NetAddr(ip.asString, NetAddr.langPort) );
-
-		net.keys.do({|target|
-			this.initReceiveMsg(target, net.at(target));
-			this.initSendMsg(net.at(target));
-		});
-
-		"Open connection with ip % |%|".format(ip, sender).warn;
-
 	}
 
 	initSendMsg { |targetNet|
 
-		sendEvents.join = { |event, userName| targetNet.sendMsg('/user/join', userName);};
+		sendEvents.join = { |event, userName| targetNet.sendMsg('/user/join', userName); };
 
 		sendEvents.change = { |event, cursorIndex, deleteIndex, changedTxt, docTxt|
 			targetNet.sendMsg('/code/change', name, cursorIndex, deleteIndex, changedTxt, docTxt);
@@ -96,7 +81,7 @@ Kolektiv {
 
 	initReceiveMsg { |targetName, targetNet|
 
-		OSCdef.newMatching("reciveMsg_reconnect-%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching("\\reciveMsg_reconnect_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
 			// "Open connection with ip % |%|".format(targetNet.ip, targetName).warn;
 			sendEvents.join(name);
 		}, '/user/reconnect', targetNet);
@@ -180,13 +165,19 @@ Kolektiv {
 		History.start;
 
 		History.forwardFunc = { |code|
-			if(doc.isFront)
-			{
-				sendEvents.execute(code);
-			}
+			"code %".format(code).postln;
+			// if(doc.isFront)
+			// {
+			// sendEvents.execute(code);
+			net.keys.do({|target|
+				// net.at(target).postln;
+				net.at(target).sendMsg('/code/execute', name, code.asString; );
+			});
+			// }
 		};
 
 	}
 
+	// isOtherMsg { |sender| if(sender.asString != name.asString) {^true}{^false}; }
 }
 
