@@ -11,7 +11,7 @@ Kolektiv {
 	*new{ |userName| ^super.new.init(userName); }
 
 	*free {
-		"Player % leave session".format(sender).warn;
+		"Player % leave session".format(name).warn;
 
 		OSCdef.freeAll;
 		CmdPeriod.removeAll;
@@ -60,7 +60,6 @@ Kolektiv {
 
 				this.initHistory;
 
-				});
 			});
 		});
 
