@@ -1,7 +1,7 @@
 QuantEnv {
 	classvar <version = 0.02;
 	classvar >print = true;
-	classvar >plot = true;
+	classvar >plot = false;
 	classvar >plotTime = 4;
 
 	*new{|key, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = \exp, offset = 0, repeats = inf|
