@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.04;
+	classvar ver = 0.05;
 
 	classvar name;
 	classvar net;
@@ -14,23 +14,6 @@ Kolektiv {
 
 	*print { super.new.print; }
 
-	// *connect { |ip| super.new.tryConnect(ip); }
-
-	*start {
-		// super.new.initDocument(false);
-		super.new.initHistory;
-	}
-
-	*sharedDocument {
-		super.new.initDocument(true);
-		super.new.initHistory;
-	}
-
-	cmdPeriod{
-
-		CmdPeriod.add(Kolektiv);
-	}
-
 	print {
 
 		// CHECKPRINT
@@ -38,11 +21,7 @@ Kolektiv {
 		net.keys.do({|key|
 			"Others || name: %, ip : % ".format(key, net.at(key)).postln;
 		});
-		OSCdef.allFuncProxies.do({|aaa|
-			aaa.do({|bbb|
-				bbb.postln;
-			});
-		});
+		OSCdef.allFuncProxies.do({|temp| temp.do({|osc|	osc.postln;	});	});
 	}
 
 	init { |userName|
@@ -52,10 +31,9 @@ Kolektiv {
 			"Kolektiv shared document [ver %]".format(ver).postln;
 
 			Server.local.waitForBoot({
+
 				name = userName;
 				net = Dictionary.new;
-
-
 
 				if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.6", NetAddr.langPort)) };
 				if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.10", NetAddr.langPort)) };
@@ -66,37 +44,26 @@ Kolektiv {
 
 				isOpenDoc = false;
 
-				net.keys.do({|target|
-					// target.postln;
-					this.initReceiveMsg(target, net.at(target));
-					// this.initSendMsg(net.at(target));
-				});
+				net.keys.do({|target| this.initReceiveMsg(target, net.at(target)); });
 
-				sendEvents.join;
+				this.initHistory;
 			});
 		});
 
 		CmdPeriod.run;
 	}
 
+	/*
 	initSendMsg { |targetNet|
+	sendEvents.change = { |event, cursorIndex, deleteIndex, changedTxt, docTxt|
+	targetNet.sendMsg('/code/change', name, cursorIndex, deleteIndex, changedTxt, docTxt);
+	};
 
-		sendEvents.join = { |event, userName| targetNet.sendMsg('/user/join', userName); };
-
-		sendEvents.change = { |event, cursorIndex, deleteIndex, changedTxt, docTxt|
-			targetNet.sendMsg('/code/change', name, cursorIndex, deleteIndex, changedTxt, docTxt);
-		};
-
-		sendEvents.execute = {|event, code|	targetNet.sendMsg('/code/execute', name, code);	};
-
+	sendEvents.execute = {|event, code|	targetNet.sendMsg('/code/execute', name, code);	};
 	}
+	*/
 
 	initReceiveMsg { |targetName, targetNet|
-
-		OSCdef.newMatching("\\reciveMsg_reconnect_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
-			// "Open connection with ip % |%|".format(targetNet.ip, targetName).warn;
-			sendEvents.join(name);
-		}, '/user/reconnect', targetNet);
 
 		OSCdef.newMatching("\\reciveMsg_change_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
 
@@ -168,7 +135,6 @@ Kolektiv {
 		};
 
 		doc.onClose = { isOpenDoc = false };
-
 	}
 
 	initHistory {
@@ -177,19 +143,10 @@ Kolektiv {
 		History.start;
 
 		History.forwardFunc = { |code|
-			"code %".format(code).postln;
-			// if(doc.isFront)
-			// {
-			// sendEvents.execute(code);
 			net.keys.do({|target|
-				// net.at(target).postln;
 				net.at(target).sendMsg('/code/execute', name, code.asString; );
 			});
-			// }
 		};
-
 	}
-
-	// isOtherMsg { |sender| if(sender.asString != name.asString) {^true}{^false}; }
 }
 
