@@ -13,11 +13,12 @@ Kolektiv {
 	*free {
 		"Player % leave session".format(name).warn;
 
-		OSCdef.freeAll;
-		CmdPeriod.removeAll;
-		History.end;
-		net = nil;
-		name = nil;
+		CmdPeriod.remove({
+			OSCdef.freeAll;
+			History.end;
+			net = nil;
+			name = nil;
+		});
 	}
 	*version { super.new.print; ^ver; }
 
@@ -38,6 +39,9 @@ Kolektiv {
 		CmdPeriod.add({
 
 			"Kolektiv shared document [ver %]".format(ver).postln;
+
+			Server.local.options.memSize = 65536*4;
+			Server.internal.options.memSize = 65536*4;
 
 			Server.local.waitForBoot({
 
