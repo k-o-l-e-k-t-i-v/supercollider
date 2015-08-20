@@ -10,6 +10,15 @@ Kolektiv {
 
 	*new{ |userName| ^super.new.init(userName); }
 
+	*free {
+		"Player % leave session".format(sender).warn;
+
+		OSCdef.freeAll;
+		CmdPeriod.removeAll;
+		History.end;
+		net = nil;
+		name = nil;
+	}
 	*version { super.new.print; ^ver; }
 
 	*print { super.new.print; }
@@ -44,9 +53,14 @@ Kolektiv {
 
 				isOpenDoc = false;
 
-				net.keys.do({|target| this.initReceiveMsg(target, net.at(target)); });
+				net.keys.do({|target|
+					this.initReceiveMsg(target, net.at(target));
+					net.at(target).sendMsg('/user/join', name.asSymbol);
+				});
 
 				this.initHistory;
+
+				});
 			});
 		});
 
@@ -64,6 +78,12 @@ Kolektiv {
 	*/
 
 	initReceiveMsg { |targetName, targetNet|
+
+		OSCdef.newMatching("\\reciveMsg_join_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+			var msgType = msg[0];
+			var sender = msg[1];
+			"Player % has joined to session".format(sender).warn;
+		}, '/user/join', targetNet).oneShot;
 
 		OSCdef.newMatching("\\reciveMsg_change_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
 
