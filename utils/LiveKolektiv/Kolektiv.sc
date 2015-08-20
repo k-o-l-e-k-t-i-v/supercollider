@@ -18,6 +18,7 @@ Kolektiv {
 			History.end;
 			net = nil;
 			name = nil;
+			Server.freeAll;
 		});
 	}
 	*version { super.new.print; ^ver; }
@@ -48,10 +49,10 @@ Kolektiv {
 				name = userName;
 				net = Dictionary.new;
 
-				if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.6", NetAddr.langPort)) };
-				if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.10", NetAddr.langPort)) };
-				if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.16", NetAddr.langPort)) };
-				if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.14", NetAddr.langPort)) };
+				if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.2", NetAddr.langPort)) };
+				if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.3", NetAddr.langPort)) };
+				if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.6", NetAddr.langPort)) };
+				if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.4", NetAddr.langPort)) };
 
 				sendEvents = ();
 
