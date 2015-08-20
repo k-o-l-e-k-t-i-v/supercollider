@@ -1,90 +1,108 @@
 Kolektiv {
-	classvar <version = 0.02;
+	classvar ver = 0.03;
 
 	classvar name;
-	var net;
-	var doc;
-	var sendEvents;
+	classvar net;
+	classvar doc;
+	classvar sendEvents;
 
-	*directConnect{|userName, targetIPs| ^super.new.init(userName, targetIPs, false); }
+	classvar isOpenDoc;
 
-	init{ |userName, targetIP, broadcastBool|
-		"Kolektiv shared document [ver %]".format(version).postln;
+	*new{ |userName| ^super.new.init(userName); }
 
-		Server.local.waitForBoot({
-			name = userName;
+	*version { super.new.print; ^ver; }
 
-			net = List.newClear;
-			if(targetIP.notNil) {
-				targetIP.do({ |ip|
-					net.add(
-						NetAddr(ip.asString, NetAddr.langPort)
-					);
-				});
-			};
+	*print { super.new.print; }
 
-			sendEvents = ();
+	*connect { |ip| super.new.tryConnect(ip); }
 
-			this.print;
-
-			net.do({|target|
-				this.initReceiveMsg(target);
-				this.initSendMsg(target);
-			});
-
-			sendEvents.join(name);
-			this.initDocument;
-			this.initHistory;
-		});
+	*document {
+		super.new.initDocument(false);
+		super.new.initHistory;
 	}
 
-	initDocument{
-		doc = Document.new("Kolektiv sharedDoc");
-
-		doc.textChangedAction = {arg ...args;
-
-			var cursorIndex = args[1];
-			var deleteIndex = args[2];
-			var changedTxt = args[3];
-
-			sendEvents.change(cursorIndex, deleteIndex, changedTxt, doc.text);
-		};
-	}
-
-	initHistory{
-		History.clear;
-		History.start;
-
-		History.forwardFunc = { |code|
-			net.do({|target| sendEvents.execute(code);	});
-		};
+	*sharedDocument {
+		super.new.initDocument(true);
+		super.new.initHistory;
 	}
 
 	print {
+
 		// CHECKPRINT
 		"NAME || %".format(name).postln;
-		"Other || IP : % ".format(net.asArray).postln;
+		net.keys.do({|key|
+			"Others || name: %, ip : % ".format(key, net.at(key)).postln;
+		});
+
 	}
 
-	initSendMsg{|targetNet|
-		sendEvents.join = { |event, userName| targetNet.sendMsg('/user/join', userName); };
+	init { |userName|
+
+		"Kolektiv shared document [ver %]".format(ver).postln;
+
+		Server.local.waitForBoot({
+			name = userName;
+			net = Dictionary.new;
+
+			sendEvents = ();
+
+			isOpenDoc = false;
+		});
+	}
+
+	tryConnect { |ip|
+
+		var tempNet = NetAddr(ip.asString, NetAddr.langPort);
+		tempNet.sendMsg('/user/join', name.asSymbol);
+		tempNet.sendMsg('/user/reconnect', name.asSymbol);
+
+		"Waiting for confirm of connection from ip % ...".format(ip).warn;
+
+		OSCdef.newMatching(\answerMsg_join, {|msg, time, addr, recvPort|
+			tempNet.sendMsg('/user/join', name.asSymbol);
+			this.initNet(msg, addr);
+		}, '/user/join', tempNet).oneShot;
+
+	}
+
+	initNet	{ |msg, addr|
+
+		var msgType = msg[0];
+		var sender = msg[1];
+		var ip = addr.ip;
+
+		net.put(sender.asSymbol, NetAddr(ip.asString, NetAddr.langPort) );
+
+		net.keys.do({|target|
+			this.initReceiveMsg(target, net.at(target));
+			this.initSendMsg(net.at(target));
+		});
+
+		"Open connection with ip % |%|".format(ip, sender).warn;
+
+	}
+
+	initSendMsg { |targetNet|
+
+		sendEvents.join = { |event, userName| targetNet.sendMsg('/user/join', userName);};
 
 		sendEvents.change = { |event, cursorIndex, deleteIndex, changedTxt, docTxt|
 			targetNet.sendMsg('/code/change', name, cursorIndex, deleteIndex, changedTxt, docTxt);
 		};
 
 		sendEvents.execute = {|event, code|	targetNet.sendMsg('/code/execute', name, code);	};
+
 	}
 
-	initReceiveMsg{|targetNet|
-		OSCdef.newMatching(\reciveMsg_join, {|msg, time, addr, recvPort|
-			var msgType = msg[0];
-			var sender = msg[1];
-			"\n - ReciveMsg : %, %".format(msgType, sender).postln;
+	initReceiveMsg { |targetName, targetNet|
 
-		}, '/user/join', targetNet );
+		OSCdef.newMatching("reciveMsg_reconnect-%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+			// "Open connection with ip % |%|".format(targetNet.ip, targetName).warn;
+			sendEvents.join(name);
+		}, '/user/reconnect', targetNet);
 
-		OSCdef.newMatching(\reciveMsg_change, {|msg, time, addr, recvPort|
+		OSCdef.newMatching("\\reciveMsg_change_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+
 			var msgType = msg[0];
 			var sender = msg[1];
 			var insertCursorIndex = msg[2];
@@ -94,11 +112,8 @@ Kolektiv {
 
 			var currentCursorIndex = doc.selectionStart;
 
-			// "ReciveMsg % from % : %, %, %, \n".format(msgType, sender, insertCursorIndex, deleteIndex, changedTxt).postln;
-
 			doc.text = code.asString;
 
-			// set cursor to back correct position
 			if (deleteIndex <= 0)
 			{
 				if(currentCursorIndex >= insertCursorIndex)
@@ -118,16 +133,60 @@ Kolektiv {
 
 		}, '/code/change', targetNet);
 
-		OSCdef.newMatching(\reciveMsg_execute, {|msg, time, addr, recvPort|
+		OSCdef.newMatching("\\reciveMsg_execute_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
 			var code = msg[2];
 
-			"\n\t - ReciveMsg : %, %, \n\t|%|".format(msgType, sender,  code).postln;
+			"\n\nCodeExecute from %\n%".format(sender,  code).postln;
 
 			thisProcess.interpreter.interpret(code.asString);
-
 		}, '/code/execute', targetNet);
+
 	}
+
+	initDocument { |isShared|
+
+		if(isOpenDoc != true)
+		{
+			if(isShared)
+			{
+				doc = Document.new("Kolektiv sharedDoc");
+
+				doc.textChangedAction = {arg ...args;
+
+					var cursorIndex = args[1];
+					var deleteIndex = args[2];
+					var changedTxt = args[3];
+
+					sendEvents.change(cursorIndex, deleteIndex, changedTxt, doc.text);
+				};
+			} {
+				doc = Document.new("KolektivDoc %".format(name));
+			};
+
+			isOpenDoc = true;
+		} {
+			"KolektivDoc has opened already".postln;
+		};
+
+		doc.onClose = { isOpenDoc = false };
+
+	}
+
+	initHistory {
+
+		History.clear;
+		History.start;
+
+		History.forwardFunc = { |code|
+			if(doc.isFront)
+			{
+				sendEvents.execute(code);
+			}
+		};
+
+	}
+
 }
 

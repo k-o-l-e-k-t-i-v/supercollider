@@ -8,18 +8,36 @@ Running connected OpenVPN is well advised, but the class should work on any loca
 
 CLASSMETHODS::
 
-METHOD:: directConnect
-This method is for calling a direct connection between specified clients.
+METHOD:: new
+Create new Kolektiv object with your name
 
 ARGUMENT:: userName
 Your name (Symbol)
 
-ARGUMENT:: targetIPs
-An array of Strings, representing IP addresses of each players on the network (arrString)
+METHOD:: connect
+This method is for calling a direct connection between specified clients.
 
+ARGUMENT:: ip
+Strings, representing IP address of target player on the network (String)
+
+METHOD:: document
+New document for divide writting of code
+
+METHOD:: sharedDocument
+New document for shared writting of code
+
+METHOD:: print
+Inforamtion about connected players
 
 EXAMPLES::
 
 code::
-Kolektiv.directConnect(\myUserName, ["10.8.0.14", "10.8.0.16"]);
+Kolektiv(\joach);
+
+Kolektiv.connect("10.8.0.14");
+Kolektiv.connect("10.8.0.6");
+Kolektiv.print;
+
+Kolektiv.document;
+Kolektiv.sharedDocument;
 ::
