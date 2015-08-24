@@ -4,20 +4,21 @@ snippet ///
 	////////////////////////////////////// ${1:} //
 snippet start
 	(
-		p=ProxySpace.push(s.reboot,clock:TempoClock.default);
+		p=ProxySpace.push(s.boot);
+		p.makeTempoClock;
 	);
 snippet synth
 	// $1 synth ///////////////////////////////////////
 	
 	(
-	~${1:}.quant=1;
-	~$1.fadeTime=0.02;
+	~${1:}.quant=2;
+	~$1.fadeTime=0.2;
 	~$1={
 		//         |       |       |       |       |  
 		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),imp * hit);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
 		var sig = ${2:SinOsc.ar(50!2)};
 		sig = sig${3:} * env;
 		Splay.ar(sig,0.75,0.5);
@@ -176,8 +177,8 @@ snippet sampler
 	~$1.clear;
 snippet tick
 	(
-		~tempo = ${2:4/3};
-		~tempo.quant = 1;
+		p.clock.tempo_(60/60);
+		
 		~offset = (0..7)/8;
 		
 		~tick.quant = 1;
