@@ -1,15 +1,15 @@
 AutoIDE.prStore(\ndswitch,{(
 ~test[1] = Pswitch(
 [
-QuantEnv(\amp, 1, [0,1,0], [0.05, 0.45], \exp, 0, 3),		
-QuantEnv(\amp, 1, [0,1,0.2,0.8,0], [0.95, 0.05, 0.45, 0.45], \exp, 0, 1),		
+QuantEnv(\amp, 1, [0,1,0], [0.05, 0.45], \exp, 0, 3),
+QuantEnv(\amp, 1, [0,1,0.2,0.8,0], [0.95, 0.05, 0.45, 0.45], \exp, 0, 1),
 ], Pseq([0,0,1], inf)
 ))});
 AutoIDE.prStore(\ndswitch,{(
 ~nodeIndex = \set-> Pswitch(
 [
-QuantEnv(\amp, 1, [0,1,0], [0.05, 0.45], \exp, 0, 7),		
-QuantEnv(\amp, 1, [0,1,0], [0.95, 0.05], \exp, 0, 1),		
+QuantEnv(\amp, 1, [0,1,0], [0.05, 0.45], \exp, 0, 7),
+QuantEnv(\amp, 1, [0,1,0], [0.95, 0.05], \exp, 0, 1),
 ], Pseq([0,1], inf)
 ))});
 AutoIDE.prStore(\setfreq,{~nodeName.set(\freq, 80);});
@@ -61,4 +61,4 @@ AutoIDE.prStore(\envg,{EnvGen.ar( Env( [0,1,0], [0.15,0.85]), \aTrig.tr )});
 AutoIDE.prStore(\varfill,{var num = 8;
 var osc = Mix.fill(num, {|i| SinOsc.ar(60,0.05*i,1/num)});});
 AutoIDE.prStore(\varaenv,{var aEnv = EnvGen.ar(Env([0,1,0], [0.95,0.05], [\sin, \welch]), \aTrig.tr);});
-AutoIDE.prStore(\qenv,{~nodeIndex = QuantEnv(\controlName, 1, [0,1,0], [0.05, 0.95], \exp, 0, inf);});
+AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1, [0,1,0], [0.05, 0.95], \exp, 0, inf);});
