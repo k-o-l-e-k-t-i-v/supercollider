@@ -162,13 +162,14 @@ snippet sampler
 	        var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
 	        var spread = 0.0;
 	        var pos = [0,0.5];
-	        var imp = Impulse.ar(1/4,(0..7)/8);
-	        var env = EnvGen.ar(Env([0,1,0],[0.075,TExpRand.ar(0.015,0.75,imp)],[3,-3]),imp);
+		//         |       |       |       |       |  
+	        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
+	        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+	        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
 	        var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
 	        
 		sig = sig * env;
-	        sig = GVerb.ar(sig,100)/2+sig ;
-	        sig = CompanderD.ar(sig,3/4,1/2,1/2);
 	        Splay.ar(sig.flat,0.5,${3:0.5});
 	    };
 	    ~$1.play;
