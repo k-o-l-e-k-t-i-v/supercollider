@@ -15,7 +15,7 @@
 
   ~counter = {PulseCount.kr(~tick.kr)};
   ~time = {LFSaw.kr(~tempo/4).range(0,1)};
-  b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
+  b = Buffer.read(s,Platform.resourceDir ++ "\/sounds\/beat.wav");
 )
 
 
@@ -28,7 +28,7 @@
     var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
     var spread = 0.0;
     var pos = [0,0.5];
-    //         |       |       |       |       |  
+    //         |       |       |       |       |
     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
     var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
