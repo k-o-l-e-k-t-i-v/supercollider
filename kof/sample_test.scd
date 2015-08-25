@@ -30,7 +30,7 @@
     var pos = [0,0.5];
     //         |       |       |       |       |  
     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
-    var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
+    var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
     var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
     var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
