@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.05;
+	classvar ver = 0.06;
 
 	classvar name;
 	classvar net;
@@ -87,6 +87,7 @@ Kolektiv {
 			var msgType = msg[0];
 			var sender = msg[1];
 			"Player % has joined to session".format(sender).warn;
+
 		}, '/user/join', targetNet).oneShot;
 
 		OSCdef.newMatching("\\reciveMsg_change_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
@@ -125,10 +126,11 @@ Kolektiv {
 			var msgType = msg[0];
 			var sender = msg[1];
 			var code = msg[2];
+			if(code.asString.find("Kolektiv").isNil) {
 
-			"\n\nCodeExecute from %\n%".format(sender,  code).postln;
-
-			thisProcess.interpreter.interpret(code.asString);
+				"\n\nCodeExecute from %\n%".format(sender,  code).postln;
+				thisProcess.interpreter.interpret(code.asString);
+			};
 		}, '/code/execute', targetNet);
 
 	}
