@@ -1,5 +1,5 @@
 QuantEnv {
-	classvar <version = 0.03;
+	classvar <version = 0.031;
 	classvar >print = true;
 	classvar >plot = false;
 	classvar >plotTime = 4;
@@ -13,14 +13,13 @@ QuantEnv {
 	}
 
 	init{|key, quant , levels , times , curves , offset , repeats |
-		var pbind, pbind_rest2quant;
+		var pbind;
 		var lev, t, cur;
 		var dur;
-		var node;
 		var beat2quant = this.time2quant(quant).floor;
 		// "beat2quant : %".format(beat2quant).postln;
 
-		dur = offset + beat2quant;
+		dur = offset;
 		times.size.do({|i| dur = dur + times[i] });
 
 		t = t.add(beat2quant);
@@ -29,7 +28,7 @@ QuantEnv {
 		if(quant != dur) {
 			while ( {quant-dur < 0} , {quant = quant * 2});
 			if(quant != dur) {
-				t = t.add((quant-dur))
+				t = t.add((quant-dur-beat2quant))
 			};
 		};
 
@@ -56,12 +55,15 @@ QuantEnv {
 
 		if(print) {this.initPrint(quant, dur, lev, t, cur)};
 
+		"clock.timeToNextBeat(quant) : %".format(this.time2quant(quant)).postln;
+
 		pbind = Pbind(
 			\type, \set,
 			\args, [key.asSymbol],
 			\dur, 1/Server.local.options.blockSize,
-			key.asSymbol, Pn(Penv(lev, t, cur), repeats) ,
+			key.asSymbol, Pn(Penv(lev, t, cur), repeats)
 		);
+
 		^pbind;
 	}
 
@@ -71,4 +73,4 @@ QuantEnv {
 		"QuantEnv (v%) \n\t - quant %\n\t - dur %\n\t - levels %\n\t - times %\n\t - curves %"
 		.format(version, quant, dur, lev.asString, t.asString, cur.asString).postln;
 	}
-	}
+}
