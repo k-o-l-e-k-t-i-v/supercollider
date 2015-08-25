@@ -15,13 +15,13 @@
 
   ~counter = {PulseCount.kr(~tick.kr)};
   ~time = {LFSaw.kr(~tempo/4).range(0,1)};
+  b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
 )
 
 
 // player synth ///////////////////////////////////////
 
 (
-  b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
   ~test.quant=1;
   ~test.fadeTime=2.02;
   ~test={
