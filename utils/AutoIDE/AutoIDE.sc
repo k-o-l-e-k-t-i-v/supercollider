@@ -117,6 +117,7 @@ AutoIDE
 		if(script.beginsWith("\n")) { script = script[1..(script.size)] }; // remove first symbol newline \n
 		if(script.beginsWith(" ")) { script = script[1..(script.size)] }; // remove first " "
 		script = script.replace("\t", ""); // remove all symbol indent \t
+		script = script.replace("\r", ""); // remove all symbol carriage return \r
 		^script;
 	}
 
