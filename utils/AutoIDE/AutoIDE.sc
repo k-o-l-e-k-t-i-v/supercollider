@@ -1,6 +1,6 @@
 AutoIDE
 {
-	classvar <version = 0.12;
+	classvar <version = 0.13;
 	classvar path;
 	classvar dict;
 	classvar doc;
@@ -31,6 +31,7 @@ AutoIDE
 			var script = super.new.getCode(key).asString;
 			script = script.replace("\t", ""); // remove all symbol indent \t
 			script = script.replace("\n", ""); // remove all symbol newline \n
+			script = script.replace("\r", ""); // remove all symbol carriage return \r
 			if (script.size > 65) {script = script[0..40] ++ " .... " ++ script[(script.size-15)..script.size] };
 			txt = txt + ("\n\t-> [" + key + "||" + script + "]");
 		})
