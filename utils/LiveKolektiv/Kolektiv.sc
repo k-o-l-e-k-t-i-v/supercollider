@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.06;
+	classvar ver = 0.061;
 
 	classvar name;
 	classvar net;
@@ -12,63 +12,61 @@ Kolektiv {
 
 	*free {
 		"Player % leave session".format(name).warn;
-
-		CmdPeriod.remove({
-			OSCdef.freeAll;
-			History.end;
-			net = nil;
-			name = nil;
-			Server.freeAll;
-		});
+		OSCdef.freeAll;
+		History.end;
 	}
+
 	*version { super.new.print; ^ver; }
 
 	*print { super.new.print; }
 
+	init { |userName|
+
+		History.started.if(
+			{
+				"Kolektiv document already running".postln;
+
+			}, {
+
+
+				"Kolektiv shared document [ver %]".format(ver).postln;
+
+				Server.local.options.memSize = 65536*4;
+				Server.internal.options.memSize = 65536*4;
+
+				Server.local.waitForBoot({
+
+					name = userName;
+					net = Dictionary.new;
+
+					if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.2", NetAddr.langPort)) };
+					if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.3", NetAddr.langPort)) };
+					if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.6", NetAddr.langPort)) };
+					if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.4", NetAddr.langPort)) };
+
+					sendEvents = ();
+
+					isOpenDoc = false;
+
+					net.keys.do({|target|
+						this.initReceiveMsg(target, net.at(target));
+						net.at(target).sendMsg('/user/join', name.asSymbol);
+					});
+
+					this.initHistory;
+				});
+			};
+		);
+	}
+
 	print {
 
 		// CHECKPRINT
-		"NAME || %".format(name).postln;
+		"n\NAME || %".format(name).postln;
 		net.keys.do({|key|
 			"Others || name: %, ip : % ".format(key, net.at(key)).postln;
 		});
 		OSCdef.allFuncProxies.do({|temp| temp.do({|osc|	osc.postln;	});	});
-	}
-
-	init { |userName|
-
-		CmdPeriod.add({
-
-			"Kolektiv shared document [ver %]".format(ver).postln;
-
-			Server.local.options.memSize = 65536*4;
-			Server.internal.options.memSize = 65536*4;
-
-			Server.local.waitForBoot({
-
-				name = userName;
-				net = Dictionary.new;
-
-				if(name.asString != "kof") { net.put(\kof,  NetAddr("10.8.0.2", NetAddr.langPort)) };
-				if(name.asString != "joach") { net.put(\joach,  NetAddr("10.8.0.3", NetAddr.langPort)) };
-				if(name.asString != "alex") { net.put(\alex,  NetAddr("10.8.0.6", NetAddr.langPort)) };
-				if(name.asString != "tester") { net.put(\tester,  NetAddr("10.8.0.4", NetAddr.langPort)) };
-
-				sendEvents = ();
-
-				isOpenDoc = false;
-
-				net.keys.do({|target|
-					this.initReceiveMsg(target, net.at(target));
-					net.at(target).sendMsg('/user/join', name.asSymbol);
-				});
-
-				this.initHistory;
-
-			});
-		});
-
-		CmdPeriod.run;
 	}
 
 	/*
@@ -88,7 +86,16 @@ Kolektiv {
 			var sender = msg[1];
 			"Player % has joined to session".format(sender).warn;
 
-		}, '/user/join', targetNet).oneShot;
+			net.at(sender).sendMsg('/user/alive', name.asSymbol);
+
+		}, '/user/join', targetNet).oneShot.permanent_(true);
+
+		OSCdef.newMatching("\\reciveMsg_alive_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+			var msgType = msg[0];
+			var sender = msg[1];
+			"Player % is also prepared".format(sender).warn;
+
+		}, '/user/alive', targetNet).oneShot.permanent_(true);
 
 		OSCdef.newMatching("\\reciveMsg_change_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
 
@@ -120,19 +127,20 @@ Kolektiv {
 				};
 			};
 
-		}, '/code/change', targetNet);
+		}, '/code/change', targetNet).permanent_(true);
 
 		OSCdef.newMatching("\\reciveMsg_execute_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
 			var code = msg[2];
-			if(code.asString.find("Kolektiv").isNil) {
-
-				"\n\nCodeExecute from %\n%".format(sender,  code).postln;
-				thisProcess.interpreter.interpret(code.asString);
+			if(code.asString.find("Kolektiv").isNil)
+			{
+				{
+					"\n\nCodeExecute from %\n%".format(sender,  code).postln;
+					thisProcess.interpreter.interpret(code.asString);
+				};
 			};
-		}, '/code/execute', targetNet);
-
+		}, '/code/execute', targetNet).permanent_(true);
 	}
 
 	initDocument { |isShared|
@@ -165,9 +173,7 @@ Kolektiv {
 
 	initHistory {
 
-		History.clear;
 		History.start;
-
 		History.forwardFunc = { |code|
 			net.keys.do({|target|
 				net.at(target).sendMsg('/code/execute', name, code.asString; );
@@ -175,4 +181,3 @@ Kolektiv {
 		};
 	}
 }
-
