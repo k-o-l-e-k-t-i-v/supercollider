@@ -15,7 +15,7 @@ snippet synth
 	~$1.fadeTime=0.2;
 	~$1={
 		//         |       |       |       |       |  
-		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
+		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
 		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
@@ -156,14 +156,14 @@ snippet sampler
 	// player synth ///////////////////////////////////////
 
 	(
-	    ~${1:}.quant=1;
+	    ~${1:}.quant=2;
 	    ~$1.fadeTime=2.02;
 	    ~$1={
 	        var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
 	        var spread = 0.0;
 	        var pos = [0,0.5];
-		//         |       |       |       |       |  
-	        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
+	        //         |       |       |       |       |  
+	        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
 	        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
 	        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
 		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
