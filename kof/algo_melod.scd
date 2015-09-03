@@ -7,8 +7,10 @@
     p.makeTempoClock;
 )
 (
-    p.clock.tempo_(120/60);
+    p.clock.tempo_(60/60*6);
 )
+
+~pos={0};//LFSaw.ar(1/60).range(0,8)};
 
 ~kick.clear
 
@@ -29,19 +31,19 @@
     ~snth={
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
-        var imp = DelayN.kr(PulseDivider.kr(~tick.kr,[1,2,4,8]*2,~counter.kr),TExpRand.kr(0.001,0.015,~tick.kr));
+        var imp = PulseDivider.kr(~tick.kr,8,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var mod = Select.kr(PulseCount.kr(hit)/8%4,[1,2,1.5,1.25]*pi);
-        var mod2 = Select.kr(PulseCount.kr(hit)/32%4,[1,2,4,8]);
-        var len = 0.5*(1..4);
+        var mod = Select.kr(PulseCount.kr(hit)%16,(1..16).scramble);
+        var mod2 = Select.kr(PulseCount.kr(hit)/16%4,[1,2,4,8]);
+        var len = 4;
         var env = EnvGen.ar(Env([0.00001,1,0.00001],[0.002,len],[3,-3],curve:'exp'),imp * hit);
-        var freq = 8000/(mod*mod2)/([1,1.5,2,1]) + SinOsc.ar(1/[1,2,3,4]).range(-4,4);
-        var sig = SinOsc.ar(freq);
+        var freq = (mod)*800+~pos.kr;
+        var sig = SinOsc.ar(50+(env**80*800));
         // sig = sig ** LFNoise2.kr(~tempo!4).range(1,8);
         SendTrig.ar(K2A.ar(hit*imp),0,freq);
         sig = sig * LFNoise2.kr(~tempo!4).range(0.1,1);
         sig = sig * env;
-        Splay.ar(sig.flat,0.75,0.55);
+        Splay.ar(sig.flat,0.75,0.25);
     };
     ~snth.play;
 
@@ -51,7 +53,7 @@
     ~fil.fadeTime=1;
     ~fil={
         var high,mid,low;
-        var sig = ~snth + ~kick;
+        var sig = ~snth.ar;
         //sig = Greyhole.ar(sig,~tempo/4); 
         sig = GVerb.ar(LPF.ar(sig,5000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[40,90])/16 + sig;
         low = CompanderD.ar(LPF.ar(sig,600),3/4,1/2,1/2);
@@ -72,7 +74,7 @@
     ~kick={
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+        var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
         var sig = SinOsc.ar(50 + (env**4*40) + ~snth.ar.range(-10,10));
