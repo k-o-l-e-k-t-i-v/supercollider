@@ -9,9 +9,7 @@ QuantEnv {
 	var <beat2quant, <basicDur, <totalDur, <numLoop;
 	var pbind;
 
-	var arrLevels, arrTimes, arrCurves;
-
-	*new {|key = \amp, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = #[-2,2], offset = 0, repeats = inf|
+		*new {|key = \amp, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = #[-2,2], offset = 0, repeats = inf|
 
 		^super.newCopyArgs(key, quant , levels , times , curves , offset , repeats).init;
 	}
@@ -38,7 +36,7 @@ QuantEnv {
 		win.alpha_(0.85);
 		win.alwaysOnTop_(true);
 		win.name_(super.copy.key);
-		win.onClose = ({ QuantEnv_WIP.win_(nil); });
+		win.onClose = ({ QuantEnv.win_(nil); });
 
 		Plotter(parent: win)
 		.value_([env.asMultichannelSignal(2000).flop])
@@ -53,11 +51,6 @@ QuantEnv {
 	}
 
 	init{
-		var dur = offset;
-
-		arrLevels = List.newClear;
-		arrTimes = List.newClear;
-		arrCurves = List.newClear;
 
 		win.isNil.if({ win = Window(key, Rect(1200, 750, 400, 200)); });
 

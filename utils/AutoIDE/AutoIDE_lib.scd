@@ -8,6 +8,7 @@ AutoIDE.prStore(\ndlimiter,{~nodeIndex = \filter -> {|in| Limiter.ar(in, 0.95) }
 AutoIDE.prStore(\ndscope,{~nodeName.scope;});
 AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(60, 4), \gverb_time.kr(4, 1)) };});
 AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1, [0,1,0], [0.05, 0.95], \exp, 0, inf);});
+AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1, [0,1,0], [0.05, 0.95], [2,-2], 0, inf).print.plot.play;});
 AutoIDE.prStore(\ndsin,{(
 	~nodeName[0] = {
 		var osc = SinOsc.ar(( \freq.kr(60) + \fplus.kr(0) ), mul: 1, add: 0);
@@ -29,12 +30,6 @@ AutoIDE.prStore(\pbtrig,{~nodeIndex = \set -> Pbind(\args, [\aTrig], \aTrig, 1, 
 AutoIDE.prStore(\pbpan,{~nodeIndex = \set -> Pbind(\args, [\pan], \pan, Pseq([-0.7,0.7], inf), \dur, 0.5);});
 AutoIDE.prStore(\setpan,{~nodeName.set(\pan, 0);});
 AutoIDE.prStore(\ndfverb,{~nodeIndex = \filter -> {|in| FreeVerb.ar(in, \fverb_mix.kr(0), \fverb_room.kr(0.5)) };});
-AutoIDE.prStore(\varselect,{var select = Select.ar(\sel.kr(0),
-[
-	EnvGen.ar(Env([0,1,0], [0.05,0.45], [\sin, \welch]), \aTrig.tr),
-	EnvGen.ar(Env([0,0.8,0.2,1,0], [0.2,0.05,0.2,0.05], [\sin, \lin]), \aTrig.tr);
-]
-);});
 AutoIDE.prStore(\varselect,{var select = Select.ar(\sel.kr(0),
 	[
 		SinOsc.ar(( \freq.kr(60) + \fplus.kr(0) ), mul: 1, add: 0),
