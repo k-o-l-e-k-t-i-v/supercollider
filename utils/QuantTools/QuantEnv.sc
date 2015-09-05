@@ -1,8 +1,6 @@
 QuantEnv {
 	classvar version = 0.06;
 	classvar >win = nil;
-	classvar <>openWin = false;
-classvar <>plotter;
 
 	var <>key;
 	var <>quant, <>levels, <>times, <>curves, <>offset, <>repeats;
@@ -32,46 +30,29 @@ classvar <>plotter;
 	}
 
 	plot{
-		var env;
+		var env = Env(super.copy.printLevels.flat, super.copy.printTimes.flat, super.copy.printCurves.flat);
 
-		(openWin == false).if({
-			env = Env(super.copy.printLevels.flat, super.copy.printTimes.flat, super.copy.printCurves.flat);
-			/*
-			win.front;
-			win.alpha_(0.85);
-			win.alwaysOnTop_(true);
-			win.name_(super.copy.key);
-			win.onClose = ({ QuantEnv.win_(nil); });
-			*/
-			// Plotter(parent: win)
-			plotter = Plotter()
-			.value_([env.asMultichannelSignal(2000).flop])
-			.setProperties(
-				\fontColor, Color.new255(160,160,160),
-				\plotColor, Color.new255(255,255,255),
-				\backgroundColor, Color.new255(30,30,30),
-			)
-			.plotMode_(\linear)
-			// .specs_(ControlSpec(0,val.max))
-			.domainSpecs_(ControlSpec(0,super.copy.quant))
-			.parent.alwaysOnTop_(true).front.alpha_(0.85).name_(super.copy.key)
-			.bounds_(Rect(1200, 750, 400, 300))
-			.onClose = ({ QuantEnv.openWin_(false); });
+		win.front;
+		win.alpha_(0.85);
+		win.alwaysOnTop_(true);
+		win.name_(super.copy.key);
+		win.onClose = ({ QuantEnv.win_(nil); });
 
-			openWin = true;
-		},{
-			env = Env(super.copy.printLevels.flat, super.copy.printTimes.flat, super.copy.printCurves.flat);
-			// plotter.value_([env.asMultichannelSignal(2000).flop])
-			"problem s refresh Plotter".postln;
-		}
-		);
+		Plotter(parent: win)
+		.value_([env.asMultichannelSignal(2000).flop])
+		.setProperties(
+			\fontColor, Color.new255(160,160,160),
+			\plotColor, Color.new255(255,255,255),
+			\backgroundColor, Color.new255(30,30,30),
+		)
+		.plotMode_(\linear)
+		// .specs_(ControlSpec(0,val.max))
+		.domainSpecs_(ControlSpec(0,super.copy.quant));
 	}
 
 	init{
 
-
-		// win.isNil.if({"jsem tu".postln;});
-		// win.isNil.if({ win = Window(key, Rect(1200, 750, 400, 200)); });
+		win.isNil.if({ win = Window(key, Rect(1200, 750, 400, 200)); });
 
 		beat2quant = this.time2quant(quant).floor;
 
@@ -112,8 +93,6 @@ classvar <>plotter;
 		syncBeat_levels = syncBeat_levels.insert(0,levels[0]);
 		syncBeat_times = syncBeat_times.insert(0, beat2quant);
 		syncBeat_curves = syncBeat_curves.insert(0,0);
-
-
 	}
 
 	insert{|array, value, action|
