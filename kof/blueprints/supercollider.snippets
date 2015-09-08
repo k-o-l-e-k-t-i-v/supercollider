@@ -57,9 +57,9 @@ snippet filter
 		var high,mid,low;
 		var sig = ${2:0};
 		
-		sig = GVerb.ar(LPF.ar(sig,5000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[4,90])/8 + sig;
-		low = CompanderD.ar(LPF.ar(sig,600),3/4,1/2,1/2);
-		mid = CompanderD.ar(BPF.ar(sig,800,2),3/4,1/2,1/2);
+		sig = GVerb.ar(LPF.ar(sig,5000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[40,90])/8 + sig;
+		low = CompanderD.ar(LPF.ar(sig,400),3/4,1/2,1/2);
+		mid = CompanderD.ar(BPF.ar(sig,600,2),3/4,1/2,1/2);
 		high = CompanderD.ar(HPF.ar(sig,900),3/4,1/2,1/2);
 		sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
 		Splay.ar(sig,0.75,${3:0.25});
@@ -102,11 +102,11 @@ snippet saws
 snippet decay
 	Decay.ar(Impulse.ar(${1:1/2},(0..3)/4),${2:1})
 snippet env
-	EnvGen.ar(Env([${1:0.001,1,0.001}],[${2:0.002,0.5}],[3,-3]),Impulse.ar(${3:1},${4:(0..3)/4}))
+	EnvGen.ar(Env([${1:0.001,1,0.001}],[${2:0.002,0.5}],[3,-3]),Impulse.ar(${3:~tempo/4}))
 snippet impulse
 	Impulse.ar(${1:1/2},(0..3)/4)
 snippet gverb
-	GVerb.ar(${1:sig},${2:10},${3:0.1})
+	GVerb.ar(${1:sig},${2:10},${3:spread:45})
 snippet gpl
 	/*
 	* This program is free software; you can redistribute it and/or modify
@@ -186,5 +186,4 @@ snippet tick
 		~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
 		
 		~counter = {PulseCount.kr(~tick.kr)};
-		~time = {LFSaw.kr(~tempo/4).range(0,1)};
-	)
+	);
