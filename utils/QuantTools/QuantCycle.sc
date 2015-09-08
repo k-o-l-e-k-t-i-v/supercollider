@@ -1,9 +1,10 @@
 QuantCycle{
-	classvar version = 0.063;
+	classvar version = 0.064;
 
 	var <>index, <>key, <>quant, <>levels, <>times, <>curves, <>offset, <>repeats;
 	var <beat2quant, <basicDur, <totalDur, <numLoop;
 	var <syncBeat_levels, <syncBeat_times, <syncBeat_curves;
+	var <>isPloted;
 
 	*new {|index = 0, key = \amp, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = #[-2,2], offset = 0, repeats = 1|
 		^super.newCopyArgs(index, key, quant, levels, times, curves, offset, repeats).init;
@@ -20,8 +21,9 @@ QuantCycle{
 		txt = txt + "\n\t\t - curves %".format(super.copy.curves);
 		txt = txt + "\n\t\t - offset %".format(super.copy.offset);
 		txt = txt + "\n\t\t - repeats %".format(super.copy.repeats);
+		txt = txt + "\n\t\t - plot %".format(super.copy.isPloted);
 
-				^txt;
+		^txt;
 	}
 
 	asPbind{|syncPbind|
@@ -42,6 +44,8 @@ QuantCycle{
 	}
 
 	init{
+		isPloted = false;
+
 		beat2quant = this.time2quant(quant).floor;
 
 		this.initLevels;
@@ -81,7 +85,7 @@ QuantCycle{
 		syncBeat_levels = syncBeat_levels.insert(0,levels[0]);
 		syncBeat_times = syncBeat_times.insert(0, beat2quant);
 		syncBeat_curves = syncBeat_curves.insert(0,0);
-			}
+	}
 
 	insert{|array, value, action|
 		var tempList;
