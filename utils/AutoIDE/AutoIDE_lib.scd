@@ -7,8 +7,13 @@ AutoIDE.prStore(\setgverb,{~nodeName.set(\gverb_size, 60);
 AutoIDE.prStore(\ndlimiter,{~nodeIndex = \filter -> {|in| Limiter.ar(in, 0.95) };});
 AutoIDE.prStore(\ndscope,{~nodeName.scope;});
 AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(60, 4), \gverb_time.kr(4, 1)) };});
-AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1, [0,1,0], [0.05, 0.95], \exp, 0, inf);});
-AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1, [0,1,0], [0.05, 0.95], [2,-2], 0, inf).print.plot.play;});
+AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1).phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1).play;});
+AutoIDE.prStore(\qenv,{(
+~nodeIndex = \set -> QuantEnv(\amp, 1)
+.phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1)
+.phase(2, [0,1,0], [0.35, 0.65], [2,-2], 0, 1)
+.play([1,2]);
+)});
 AutoIDE.prStore(\ndsin,{(
 	~nodeName[0] = {
 		var osc = SinOsc.ar(( \freq.kr(60) + \fplus.kr(0) ), mul: 1, add: 0);
