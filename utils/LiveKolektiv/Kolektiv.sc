@@ -27,6 +27,7 @@ Kolektiv {
 		var path = dir +/+ file;
 
 		History.saveCS(path);
+		History.saveCS("C:\/KolektivHistory_temp.scd");
 	}
 
 	*historyReplay {
