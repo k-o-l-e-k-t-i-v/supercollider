@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.063;
+	classvar ver = 0.064;
 
 	classvar name;
 	classvar net;
@@ -22,7 +22,11 @@ Kolektiv {
 	*print { super.new.print; }
 
 	*historySave {
-		History.saveCS("C:\/KolektivHistory_temp.scd");
+		var dir = Kolektiv.filenameSymbol.asString.dirname +/+ "History";
+		var file = "KolektivHistory_%.scd".format(Date.localtime.stamp);
+		var path = dir +/+ file;
+
+		History.saveCS(path);
 	}
 
 	*historyReplay {
