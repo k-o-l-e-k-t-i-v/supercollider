@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.062;
+	classvar ver = 0.063;
 
 	classvar name;
 	classvar net;
@@ -14,11 +14,22 @@ Kolektiv {
 		"You leaving Kolektiv session".format(name).warn;
 		OSCdef.freeAll;
 		History.end;
+		History.clear;
 	}
 
 	*version { super.new.print; ^ver; }
 
 	*print { super.new.print; }
+
+	*historySave {
+		History.saveCS("C:\/KolektivHistory_temp.scd");
+	}
+
+	*historyReplay {
+		History.clear;
+		History.loadCS("C:\/KolektivHistory_temp.scd");
+		History.play;
+	}
 
 	init { |userName|
 
