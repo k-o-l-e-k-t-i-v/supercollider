@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.062;
+	classvar ver = 0.064;
 
 	classvar name;
 	classvar net;
@@ -14,11 +14,27 @@ Kolektiv {
 		"You leaving Kolektiv session".format(name).warn;
 		OSCdef.freeAll;
 		History.end;
+		History.clear;
 	}
 
 	*version { super.new.print; ^ver; }
 
 	*print { super.new.print; }
+
+	*historySave {
+		var dir = Kolektiv.filenameSymbol.asString.dirname +/+ "History";
+		var file = "KolektivHistory_%.scd".format(Date.localtime.stamp);
+		var path = dir +/+ file;
+
+		History.saveCS(path);
+		History.saveCS("C:\/KolektivHistory_temp.scd");
+	}
+
+	*historyReplay {
+		History.clear;
+		History.loadCS("C:\/KolektivHistory_temp.scd");
+		History.play;
+	}
 
 	init { |userName|
 
