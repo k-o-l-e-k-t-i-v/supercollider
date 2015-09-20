@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.072;
+	classvar ver = 0.073;
 	classvar doc;
 	classvar isOpenDoc;
 
@@ -35,23 +35,28 @@ Kolektiv {
 		})
 	}
 
+	*players { instance.events.join; }
+
 	*version { instance.print; ^ver; }
 
 	*print { instance.isNil.if( { "You arn not log in to Kolektiv session".postln; },{	instance.print; })
 	}
 
 	*historySave {
-		var dir = Kolektiv.filenameSymbol.asString.dirname +/+ "History";
+		var dir = Kolektiv.filenameSymbol.asString.dirname + "\/History";
 		var file = "KolektivHistory_%.scd".format(Date.localtime.stamp);
-		var path = dir +/+ file;
+		var fileTemp = "KolektivHistory_temp.scd";
+		// var path = "%\/%".format(dir, file);
 
-		History.saveCS(path);
-		History.saveCS("C:\/KolektivHistory_temp.scd");
+		History.saveCS("%\/%".format(dir, file));
+		History.saveCS("%\/%".format(dir, fileTemp));
 	}
 
 	*historyReplay {
+		var dir = Kolektiv.filenameSymbol.asString.dirname + "\/History";
+		var fileTemp = "KolektivHistory_temp.scd";
 		History.clear;
-		History.loadCS("C:\/KolektivHistory_temp.scd");
+		History.loadCS("%\/%".format(dir, fileTemp));
 		History.play;
 	}
 
