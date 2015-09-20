@@ -43,20 +43,19 @@ Kolektiv {
 	}
 
 	*historySave {
-		var dir = Kolektiv.filenameSymbol.asString.dirname + "\/History";
+		var dir = (Kolektiv.filenameSymbol.asString.dirname +/+ "History").standardizePath;
 		var file = "KolektivHistory_%.scd".format(Date.localtime.stamp);
 		var fileTemp = "KolektivHistory_temp.scd";
-		// var path = "%\/%".format(dir, file);
-
-		History.saveCS("%\/%".format(dir, file));
-		History.saveCS("%\/%".format(dir, fileTemp));
+		History.end;
+		History.saveCS(dir +/+ file);
+		History.saveCS(dir +/+ fileTemp);
 	}
 
 	*historyReplay {
-		var dir = Kolektiv.filenameSymbol.asString.dirname + "\/History";
+		var dir = (Kolektiv.filenameSymbol.asString.dirname +/+ "History").standardizePath;
 		var fileTemp = "KolektivHistory_temp.scd";
 		History.clear;
-		History.loadCS("%\/%".format(dir, fileTemp));
+		History.loadCS(dir +/+ fileTemp);
 		History.play;
 	}
 
