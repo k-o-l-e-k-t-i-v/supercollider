@@ -1,5 +1,5 @@
 Kolektiv {
-	classvar ver = 0.073;
+	classvar ver = 0.074;
 	classvar doc;
 	classvar isOpenDoc;
 
@@ -75,9 +75,9 @@ Kolektiv {
 
 				Server.local.waitForBoot({
 
-					clock = TempoBusClock.new;
-					clock.permanent = true;
-					clock.tempo = 120/60;
+					// clock = TempoBusClock.new;
+					// clock.permanent = true;
+					// clock.tempo = 120/60;
 
 					net = Dictionary.new;
 					group = Dictionary.new;
@@ -104,15 +104,12 @@ Kolektiv {
 
 					isOpenDoc = false;
 
-					net.keys.do({|target|
-						this.initReceiveMsg(target, net.at(target));
-					});
-
 					this.initHistory;
+					this.initReceiveMsg;
 					this.initSendMsg;
 
 					events.join;
-					events.clockTime(clock.beats);
+					// events.clockTime(clock.beats);
 					// ShutDown.add({ this.free; });
 				}
 				);
@@ -128,9 +125,9 @@ Kolektiv {
 		"\nNAME || %".format(name).postln;
 		// "Proxy : %".format(proxyspace).postln;
 		// "Clock : %".format(clock).postln;
-		"Tempo : %".format(clock.tempo).postln;
-		"Beats : %".format(clock.beats).postln;
-		events.clockTime(clock.beats);
+		// "Tempo : %".format(clock.tempo).postln;
+		// "Beats : %".format(clock.beats).postln;
+		// events.clockTime(clock.beats);
 		net.keys.do({|key|
 			"Others || name: %, ip : % ".format(key, net.at(key)).postln;
 		});
@@ -174,59 +171,62 @@ Kolektiv {
 		};
 	}
 
-	initReceiveMsg { |targetName, targetNet|
+	initReceiveMsg {
 
-		OSCdef.newMatching("\\reciveMsg_join_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching(\msg_join, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
 			"Player % has joined to session".format(sender).warn;
 
-			events.alive(sender.asSymbol, clock.beats);
+			events.alive(sender.asSymbol);
+			// events.alive(sender.asSymbol, clock.beats);
 
-		}, '/user/join', targetNet).permanent_(true);
+		}, '/user/join', nil).permanent_(true);
 
-		OSCdef.newMatching("\\reciveMsg_alive_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching(\msg_alive, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
-			var senderClock = msg[2];
+			// var senderClock = msg[2];
 			"Player % is also prepared".format(sender).warn;
-			clock.beats_(senderClock);
+			// clock.beats_(senderClock);
 
-		}, '/user/alive', targetNet).permanent_(true);
+		}, '/user/alive', nil).permanent_(true);
 
-		OSCdef.newMatching("\\reciveMsg_exit_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching(\msg_exit, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
 			"Player % exit session".format(sender).warn;
 
-		}, '/user/exit', targetNet).permanent_(true);
+		}, '/user/exit', nil).permanent_(true);
 
-		OSCdef.newMatching("\\reciveMsg_clockLatency_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
-			var msgType = msg[0];
-			var sender = msg[1];
-			var senderClock = msg[2].asFloat;
-			"Player % check letency [%]".format(sender, (clock.beats.asFloat - senderClock)).postln;
+		/*
+		OSCdef.newMatching(\msg_clockLatency, {|msg, time, addr, recvPort|
+		var msgType = msg[0];
+		var sender = msg[1];
+		var senderClock = msg[2].asFloat;
+		"Player % check letency [%]".format(sender, (clock.beats.asFloat - senderClock)).postln;
 
-			events.clockTimeAnswer(sender, clock.beats);
-		}, '/clock/latency', targetNet).permanent_(true);
+		events.clockTimeAnswer(sender, clock.beats);
+		}, '/clock/latency', nil).permanent_(true);
 
-		OSCdef.newMatching("\\reciveMsg_clockLatencyAnswer_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
-			var msgType = msg[0];
-			var sender = msg[1];
-			var senderClock = msg[2].asFloat;
-			"Answer on latency check from % : %".format(sender, (clock.beats.asFloat - senderClock)).postln;
+		OSCdef.newMatching(\msg_clockLatencyAnswer, {|msg, time, addr, recvPort|
+		var msgType = msg[0];
+		var sender = msg[1];
+		var senderClock = msg[2].asFloat;
+		"Answer on latency check from % : %".format(sender, (clock.beats.asFloat - senderClock)).postln;
 
-		}, '/clock/latencyAnswer', targetNet).permanent_(true);
+		}, '/clock/latencyAnswer', nil).permanent_(true);
+		*/
 
-		OSCdef.newMatching("\\reciveMsg_kill_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching(\msg_kill, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
 			"Player % call cmdPeriod".format(sender).warn;
 			isMyCmdPeriod = false;
 			CmdPeriod.run;
-		}, '/code/cmdPeriod', targetNet).permanent_(true);
+		}, '/code/cmdPeriod', nil).permanent_(true);
 
-		OSCdef.newMatching("\\reciveMsg_change_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching(\msg_change, {|msg, time, addr, recvPort|
 
 			var msgType = msg[0];
 			var sender = msg[1];
@@ -250,9 +250,9 @@ Kolektiv {
 				{ doc.selectRange(currentCursorIndex); };
 			};
 
-		}, '/code/change', targetNet).permanent_(true);
+		}, '/code/change', nil).permanent_(true);
 
-		OSCdef.newMatching("\\reciveMsg_execute_%".format(targetName).asSymbol, {|msg, time, addr, recvPort|
+		OSCdef.newMatching(\msg_execute, {|msg, time, addr, recvPort|
 			var msgType = msg[0];
 			var sender = msg[1];
 			var code = msg[2];
@@ -264,7 +264,7 @@ Kolektiv {
 				thisProcess.interpreter.interpret(code.asString);
 				History.enter(code.asString, sender.asSymbol);
 			};
-		}, '/code/execute', targetNet).permanent_(true);
+		}, '/code/execute', nil).permanent_(true);
 	}
 	putNodeToGroup{
 		Server.local.nextNodeID.postln;
