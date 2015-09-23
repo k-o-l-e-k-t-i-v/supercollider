@@ -1,5 +1,6 @@
 Kolektiv {
-	classvar ver = 0.074;
+	classvar ver = 0.075;
+	classvar serverMemory = 5529600;
 	classvar doc;
 	classvar isOpenDoc;
 
@@ -52,12 +53,14 @@ Kolektiv {
 	}
 
 	*historyReplay {
-		var dir = (Kolektiv.filenameSymbol.asString.dirname +/+ "History").standardizePath;
-		var fileTemp = "KolektivHistory_temp.scd";
-		History.clear;
-		History.loadCS(dir +/+ fileTemp);
-		History.play;
+		Server.local.options.memSize = serverMemory;
+		Server.internal.options.memSize = serverMemory;
+		Server.local.waitForBoot({
+			File.openDialog (nil, { |path|	History.clear.loadCS(path).play; });
+		});
 	}
+
+	*historyRestart { History.end.clear.start; }
 
 	init {
 		instance.isNil.if({
@@ -70,8 +73,8 @@ Kolektiv {
 			}, {
 				"Kolektiv shared document [ver %]".format(ver).postln;
 
-				Server.local.options.memSize = 65536*80;
-				Server.internal.options.memSize = 65536*80;
+				Server.local.options.memSize = serverMemory;
+				Server.internal.options.memSize = serverMemory;
 
 				Server.local.waitForBoot({
 
