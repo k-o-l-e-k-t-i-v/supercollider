@@ -1,5 +1,7 @@
 
 
+Kolektiv(\kof)
+
 (
   p=ProxySpace.push(s.boot);
   p.makeTempoClock;
@@ -31,7 +33,7 @@ s.scope;
   var z2 = Buffer.alloc(s, 512);
   var sig = AudioIn.ar([0,1]);
   
-  var chain1 = FFT(z1,BPF.ar(sig,100,2));
+  var chain1 = FFT(z1,LPF.ar(sig,150,2));
   var chain2 = FFT(z2,BPF.ar(sig,10000,2));
   
   var imp1 = PulseDivider.kr(Onsets.kr(chain1, 0.5 , \rcomplex), 2);
@@ -40,7 +42,7 @@ s.scope;
   var env1 = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp1);
   var env2 = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.15],[3,-3],curve:'exp'),imp2);
 
-  sig1 = SinOsc.ar(50+(env1**10*150)) + Pulse.ar(50+(env1*50)); 
+  sig1 = SinOsc.ar(50+(env1**10*150)); 
   sig1 = env1 * sig1;
 
   sig2 = WhiteNoise.ar(1); 
