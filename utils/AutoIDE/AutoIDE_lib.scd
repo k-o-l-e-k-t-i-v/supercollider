@@ -7,7 +7,7 @@ AutoIDE.prStore(\setgverb,{~nodeName.set(\gverb_size, 60);
 AutoIDE.prStore(\ndlimiter,{~nodeIndex = \filter -> {|in| Limiter.ar(in, 0.95) };});
 AutoIDE.prStore(\ndscope,{~nodeName.scope;});
 AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(60, 4), \gverb_time.kr(4, 1)) };});
-AutoIDE.prStore(\qenv,{~nodeIndex = \set -> QuantEnv(\controlName, 1).phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1).play;});
+AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(12), \gverb_time.kr(1), 0.9, mul:\mulgverb.kr(1), add:(1-\mulgverb.kr(1))) };});
 AutoIDE.prStore(\qenv,{(
 ~nodeIndex = \set -> QuantEnv(\amp, 1)
 .phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1)
