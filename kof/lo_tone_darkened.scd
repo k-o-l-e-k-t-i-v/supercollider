@@ -97,9 +97,9 @@
   var sig = ~ss + ~kick + ~high;
   
   sig = GVerb.ar(LPF.ar(sig,16000)+HPF.ar(sig,250),200,[3,4,5,6]*8,spread:[90,95])/4 + sig;
-  low = CompanderD.ar(LPF.ar(sig,LFNoise1.kr(1/4).range(100,400)),3/4,1/2,1/2);
-  mid = CompanderD.ar(BPF.ar(sig,LFNoise1.kr(1/4).range(200,800),2),3/4,1/2,1/2);
-  high = CompanderD.ar(HPF.ar(sig,LFNoise1.kr(1/4).range(1000,4000)),3/4,1/2,1/2);
+  low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/4!2).range(100,400)),3/4,1/2,1/2);
+  mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/4!2).range(200,800),2),3/4,1/2,1/2);
+  high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/4!2).range(1000,4000)),3/4,1/2,1/2);
   sig = CompanderD.ar((high+mid+low).flat,3/4,1/2,1/2);
   Splay.ar(sig,0.75,0.25);
 };
