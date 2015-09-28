@@ -6,8 +6,7 @@ AutoIDE.prStore(\setgverb,{~nodeName.set(\gverb_size, 60);
 ~nodeName.set(\gverb_time, 4);});
 AutoIDE.prStore(\ndlimiter,{~nodeIndex = \filter -> {|in| Limiter.ar(in, 0.95) };});
 AutoIDE.prStore(\ndscope,{~nodeName.scope;});
-AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(60, 4), \gverb_time.kr(4, 1)) };});
-AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(12), \gverb_time.kr(1), 0.9, mul:\mulgverb.kr(1), add:(1-\mulgverb.kr(1))) };});
+AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(12), \gverb_time.kr(1), 0.9, mul:\mulgverb.kr(1)) };});
 AutoIDE.prStore(\qenv,{(
 ~nodeIndex = \set -> QuantEnv(\amp, 1)
 .phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1)
@@ -29,7 +28,7 @@ AutoIDE.prStore(\varaenv,{var aEnv = EnvGen.ar(Env([0,1,0], [0.95,0.05], [\sin, 
 AutoIDE.prStore(\varfill,{var num = 8;
 var osc = Mix.fill(num, {|i| SinOsc.ar(60,0.05*i,1/num)});});
 AutoIDE.prStore(\proxy,{p = ProxySpace.push(s).makeTempoClock;
-p.clock.tempo_(160/60);});
+p.clock.tempo_(240/60);});
 AutoIDE.prStore(\envg,{EnvGen.ar( Env( [0,1,0], [0.15,0.85]), \aTrig.tr )});
 AutoIDE.prStore(\pbtrig,{~nodeIndex = \set -> Pbind(\args, [\aTrig], \aTrig, 1, \dur, 1);});
 AutoIDE.prStore(\pbpan,{~nodeIndex = \set -> Pbind(\args, [\pan], \pan, Pseq([-0.7,0.7], inf), \dur, 0.5);});
@@ -41,6 +40,11 @@ AutoIDE.prStore(\varselect,{var select = Select.ar(\sel.kr(0),
 		LFSaw.ar(( \freq.kr(60) + \fplus.kr(0) ), mul: 1, add: 0),
 	]
 );});
+AutoIDE.prStore(\kolektiv,{Kolektiv(\joach);
+	Kolektiv.print;
+	Kolektiv.historySave;
+	Kolektiv.free;
+});
 AutoIDE.prStore(\setamp,{~nodeName.set(\amp, 0.3);});
 AutoIDE.prStore(\pbfreq,{~nodeIndex = \set -> Pbind(\args, [\freq], \octave, 3, \degree, Pseq([3,4,3,7], inf), \dur, 4);});
 AutoIDE.prStore(\ndswitch,{(
