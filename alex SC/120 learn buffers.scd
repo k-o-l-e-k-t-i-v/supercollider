@@ -21,6 +21,8 @@ p=ProxySpace.push(s);
 //numSamples=numFrames * numChannels;
 
 g=Buffer.read(s,Platform.resourceDir ++"\/sounds/Anyways.wav");
+r=Buffer.read(s,"C:/Program Files/SuperCollider-3.7alpha1/sounds/AyyWhereAllMyLadiesAt.wav");
+
 f=Buffer.read(s,"C:/Program Files/SuperCollider-3.7alpha1/sounds/beat.wav");
 f.play;
 f.zero;
@@ -38,17 +40,14 @@ f=Buffer.read(s,"C:/Program Files/SuperCollider-3.7alpha1/sounds/beat.wav",22345
 ~beat[0]={
 	var sig, env;
 	sig=PlayBuf.ar(g.numChannels,g.bufnum,BufRateScale.kr(g.bufnum),trigger:\trig.tr);
-	sig=PitchShift.ar(sig,0.01,\f2.kr,timeDispersion:1);
+	sig=PitchShift.ar(sig,0.01,\f2.kr,timeDispersion:4);
 };
 )
 ~beat[1]=\set-> Pbind(\args, [\trig], \dur, 2, \trig, 1);
 ~beat[2]=\set->Pbind(\args, [\f2], \dur,3, \f2, Pseq([0.2,6,4,0.1],inf));
 ~beat[3]=\set->Pbind(\args, [\length], \dur,3, \length, Pseq([0.2,1,0.5,0.1],inf));
 
-
 ~beat[20]=\filter-> {arg in; GVerb.ar(in,40,10,add:in)};
-
-
 
 
 ~beattwo[1]={ PitchShift.ar(~beat.ar,0.01,0.1,timeDispersion:1)};
@@ -60,8 +59,19 @@ f=Buffer.read(s,"C:/Program Files/SuperCollider-3.7alpha1/sounds/beat.wav",22345
 ///play with f2 and duration!
 
 
+~guy.play( vol:1.5, fadeTime:2);
+(
+~guy[0]={
+	var sig, env;
+	sig=PlayBuf.ar(r.numChannels,r.bufnum,BufRateScale.kr(r.bufnum),trigger:\trig.tr);
+	sig=PitchShift.ar(sig,0.002,\f2.kr,0.7,1);
+};
+)
+~guy[1]=\set-> Pbind(\args, [\trig], \dur, 8, \trig, 1);
+~guy[2]=\set->Pbind(\args, [\f2], \dur,3, \f2, Pseq([0.1,0.8],inf));
+~guy[3]=\set->Pbind(\args, [\length], \dur,3, \length, Pseq([0.2,1,0.5,0.1],inf));
 
-
+~guy[20]=\filter-> {arg in; GVerb.ar(in,40,10,add:in)};
 
 
 ~f.play(vol:2, fadeTime:1);
