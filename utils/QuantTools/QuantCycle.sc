@@ -1,5 +1,5 @@
 QuantCycle{
-	classvar version = 0.064;
+	classvar version = 0.065;
 
 	var <>index, <>key, <>quant, <>levels, <>times, <>curves, <>offset, <>repeats;
 	var <beat2quant, <basicDur, <totalDur, <numLoop;

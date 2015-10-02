@@ -1,5 +1,5 @@
 QuantEnv {
-	classvar version = 0.064;
+	classvar version = 0.065;
 	var <>key, <>quant;
 	var <>cycles;
 	var <>index;

@@ -1,5 +1,5 @@
 QuantPlot{
-	classvar version = 0.064;
+	classvar version = 0.065;
 	classvar >win = nil;
 	classvar ghraps;
 	classvar resolution = 5000;
