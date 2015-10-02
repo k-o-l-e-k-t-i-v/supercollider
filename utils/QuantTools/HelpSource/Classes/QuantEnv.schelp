@@ -32,13 +32,15 @@ Offset start of times array by some time.
 ARGUMENT:: repeats
 Number of time to loop. For endless loop, use inf. For using in some other pattern, use int number. After end of loop, stay valid for key a value of last level.
 
+INSTANCEMETHODS::
+
 METHOD:: print
 Boolean, true for printing after evaluation to console
 
 METHOD:: plot
 Boolean, true for making view with curve of envelope
 
-METHOD:: plotTime
+METHOD:: play
 Time in sec for fadeing out of view with curve
 
 EXAMPLES::
