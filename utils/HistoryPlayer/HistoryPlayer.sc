@@ -1,13 +1,14 @@
 HistoryPlayer{
 	classvar version = 0.01;
 	var win;
-	var buttons, activeButton;
+	var buttons;
 	var texts;
 	var sliders;
 
 	var currentHistory, pathHistory;
 	var lines, currentLine;
 	var startTime, endTime, currentTime;
+	var isPlaying;
 
 	*new {
 		^super.new.initPlayer();
@@ -22,46 +23,74 @@ HistoryPlayer{
 
 	lineCode {|lineMsg| currentHistory.notNil.if({ ^lineMsg[2];	});	}
 
-	initData{|index|
-		startTime = this.lineTime(lines[0]);
-		endTime = this.lineTime(lines[lines.size-1]);
+	currentIndex { |time|
+		currentHistory.notNil.if({
+			var i = 0;
+			var answ = lines.size-1;
+			answ = block {|break|
+				lines.do {|oneLine, i|
+					var tempTime = this.lineTime(oneLine);
+					(time <= tempTime).if({ break.value(i); }, { i = i + 1; });
+				};
+			};
+			answ.isInteger.if({^answ}, {^(lines.size-1)});
+		});
+	}
 
-		texts.at(\historyPath).string_("openPath : %".format(pathHistory));
-		texts.at(\historyLinesCount).string_("lines : %".format(currentHistory.lines.size));
-		texts.at(\historyStartTime).string_("StartTime : %".format(startTime));
-		texts.at(\historyEndTime).string_("EndTime : %".format(endTime));
+	initData{
+		currentHistory.notNil.if({
 
-		texts.at(\currentHistoryLine).string_("HistoryLine : %".format(index));
-		texts.at(\currentHistoryTime).string_("HistoryTime : %".format(this.lineTime(lines[index])));
-		texts.at(\currentHistoryPlayer).string_("HistoryPlayer : %".format(this.linePlayer(lines[index])));
+			startTime = this.lineTime(lines[0]);
+			endTime = this.lineTime(lines[lines.size-1]);
 
-		texts.at(\codeLine).string_(this.lineCode(lines[index]));
-		"currentTime : %".format(currentTime).postln;
-		"HistoryTime : %".format(this.lineTime(lines[index])).postln;
+			texts.at(\historyPath).string_("openPath : %".format(pathHistory));
+			texts.at(\historyLinesCount).string_("lines : %".format(currentHistory.lines.size-1));
+			texts.at(\historyStartTime).string_("StartTime : %".format(startTime));
+			texts.at(\historyEndTime).string_("EndTime : %".format(endTime));
+		});
+
+	}
+
+	refreshData {|index|
+		currentHistory.notNil.if({
+
+			texts.at(\currentTime).string_("CurrentTime : %".format(currentTime));
+			sliders.at(\timeSlider).valueAction_(currentTime/endTime);
+
+			texts.at(\currentHistoryLine).string_("HistoryLine : %".format((index)));
+			texts.at(\currentHistoryTime).string_("HistoryTime : %".format(this.lineTime(lines[index])));
+			texts.at(\currentHistoryPlayer).string_("HistoryPlayer : %".format(this.linePlayer(lines[index])));
+
+			texts.at(\codeLine).string_(this.lineCode(lines[index]));
+
+		});
 	}
 
 	play {
 		currentHistory.notNil.if({
 
 			var playClock;
-			// currentHistory.play(verbose:false);
-			currentHistory.play(verbose:true);
+			var txtTime;
+			currentHistory.play(verbose:false);
+			// currentHistory.play(verbose:true);
 			// History.play(posledni prehrany line, prvni prehrany line)
-
+			this.initData;
+			isPlaying = true;
 			currentTime = 0;
 			playClock = {
-				currentTime = currentTime + 0.1;
-				texts.at(\currentTime).string_("CurrentTime : %".format(currentTime));
-				sliders.at(\timeSlider).valueAction_(currentTime/endTime);
-				// var selLine = ((lines.size-1) * slider.value);
-				// this.initData(selLine);
+				currentLine = this.currentIndex(currentTime);
+				// currentLine.postln;
+				this.refreshData(currentLine);
 
 				(currentTime > endTime).if({
 					buttons.at(\stop).valueAction_(1);
+					isPlaying = false;
 					nil; //loopEnd
-				},{ 0.1; } //loopTime
+				},{
+					currentTime = currentTime + 0.25;
+					0.25; //loopTime
+				}
 				);
-
 			};
 			AppClock.play(playClock);
 		});
@@ -98,8 +127,8 @@ HistoryPlayer{
 				currentHistory = nil;
 				lines = nil;
 				currentLine = 0;
-				activeButton = nil;
 				pathHistory = "";
+				isPlaying = false;
 
 				// VIEWS //////////////////////////////////
 
@@ -202,16 +231,18 @@ HistoryPlayer{
 				// SLIDER //////////////////////////////////
 
 				sliders.put(\timeSlider, Slider(timeView, Rect( 10, 40, (timeView.bounds.width - 20), 10))
-					// .setColors(colFront, colActive)
+/*
 					.action_({|slider|
-						currentHistory.notNil.if({
-							var selLine = ((lines.size-1) * slider.value).ceil;
-							// var selLine = ((lines.size) * slider.value).floor;
-							// selLine.postln;
-							this.initData(selLine);
-
+						isPlaying.not.if({
+							currentHistory.notNil.if({
+								var selLine = endTime * slider.value;
+								// var selLine = ((lines.size) * slider.value).floor;
+								// selLine.postln;
+								this.refreshData(selLine);
+							});
 						});
 					});
+*/
 				);
 
 				// BUTTONS //////////////////////////////////
@@ -268,7 +299,7 @@ HistoryPlayer{
 								lines = currentHistory.lines.reverse;
 								buttons.do({|colection| colection.value = 0;});
 
-								this.initData(currentHistory.lines.size-1);
+								this.initData(0);
 
 								AppClock.sched(0.05, {butt.value = 0};);
 							}, {
@@ -289,6 +320,7 @@ HistoryPlayer{
 					.action_({ |butt|
 						if(butt.value == 1) {
 							"this.close;".postln ;
+							this.stop;
 							win.close;
 							butt.value = 1;
 						};
