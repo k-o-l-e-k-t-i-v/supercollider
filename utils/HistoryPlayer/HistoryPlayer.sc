@@ -6,7 +6,7 @@ HistoryPlayer{
 	var sliders;
 
 	var currentHistory, pathHistory;
-	var lines;
+	var lines, currentLine;
 	var startTime, endTime, currentTime;
 
 	*new {
@@ -31,17 +31,21 @@ HistoryPlayer{
 		texts.at(\historyStartTime).string_("StartTime : %".format(startTime));
 		texts.at(\historyEndTime).string_("EndTime : %".format(endTime));
 
+		texts.at(\currentHistoryLine).string_("HistoryLine : %".format(index));
 		texts.at(\currentHistoryTime).string_("HistoryTime : %".format(this.lineTime(lines[index])));
 		texts.at(\currentHistoryPlayer).string_("HistoryPlayer : %".format(this.linePlayer(lines[index])));
 
 		texts.at(\codeLine).string_(this.lineCode(lines[index]));
+		"currentTime : %".format(currentTime).postln;
+		"HistoryTime : %".format(this.lineTime(lines[index])).postln;
 	}
 
 	play {
 		currentHistory.notNil.if({
 
 			var playClock;
-			currentHistory.play(verbose:false);
+			// currentHistory.play(verbose:false);
+			currentHistory.play(verbose:true);
 			// History.play(posledni prehrany line, prvni prehrany line)
 
 			currentTime = 0;
@@ -49,6 +53,9 @@ HistoryPlayer{
 				currentTime = currentTime + 0.1;
 				texts.at(\currentTime).string_("CurrentTime : %".format(currentTime));
 				sliders.at(\timeSlider).valueAction_(currentTime/endTime);
+				// var selLine = ((lines.size-1) * slider.value);
+				// this.initData(selLine);
+
 				(currentTime > endTime).if({
 					buttons.at(\stop).valueAction_(1);
 					nil; //loopEnd
@@ -66,11 +73,8 @@ HistoryPlayer{
 			currentHistory.stop;
 			currentTime = endTime - 0.1;
 			sliders.at(\timeSlider).valueAction_(0);
-			currentTime = 0;
-			texts.at(\currentTime).string_("CurrentTime : %".format(currentTime));
 			Server.local.freeAll;
 		});
-
 	}
 
 	initPlayer{
@@ -93,6 +97,7 @@ HistoryPlayer{
 				sliders = Dictionary.new;
 				currentHistory = nil;
 				lines = nil;
+				currentLine = 0;
 				activeButton = nil;
 				pathHistory = "";
 
@@ -166,13 +171,19 @@ HistoryPlayer{
 					.stringColor_(colFront)
 				);
 
-				texts.put(\currentHistoryTime, StaticText( historyView, Rect( 150, 30, (historyView.bounds.width - 20), 20))
+				texts.put(\currentHistoryLine, StaticText( historyView, Rect( 150, 30, (historyView.bounds.width - 20), 20))
+					.string_("HistoryLine : nil")
+					.font_(fontBig)
+					.stringColor_(colFront)
+				);
+
+				texts.put(\currentHistoryTime, StaticText( historyView, Rect( 150, 50, (historyView.bounds.width - 20), 20))
 					.string_("HistoryTime : nil")
 					.font_(fontBig)
 					.stringColor_(colFront)
 				);
 
-				texts.put(\currentHistoryPlayer, StaticText( historyView, Rect( 150, 50, (historyView.bounds.width - 20), 20))
+				texts.put(\currentHistoryPlayer, StaticText( historyView, Rect( 150, 70, (historyView.bounds.width - 20), 20))
 					.string_("HistoryPlayer : nil")
 					.font_(fontBig)
 					.stringColor_(colFront)
@@ -194,7 +205,9 @@ HistoryPlayer{
 					// .setColors(colFront, colActive)
 					.action_({|slider|
 						currentHistory.notNil.if({
-							var selLine = ((lines.size-1) * slider.value).asInteger;
+							var selLine = ((lines.size-1) * slider.value).ceil;
+							// var selLine = ((lines.size) * slider.value).floor;
+							// selLine.postln;
 							this.initData(selLine);
 
 						});
