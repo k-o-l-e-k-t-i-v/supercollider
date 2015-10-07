@@ -6,7 +6,8 @@ HistoryPlayer{
 	var sliders;
 
 	var currentHistory, pathHistory;
-	var startTime, endTime;
+	var lines;
+	var startTime, endTime, currentTime;
 
 	*new {
 		^super.new.initPlayer();
@@ -22,26 +23,55 @@ HistoryPlayer{
 	lineCode {|lineMsg| currentHistory.notNil.if({ ^lineMsg[2];	});	}
 
 	initData{|index|
-		// currentHistory.lines[0].postln;
-		endTime = this.lineTime(currentHistory.lines[0]);
-		startTime = this.lineTime(currentHistory.lines[currentHistory.lines.size-1]);
+		startTime = this.lineTime(lines[0]);
+		endTime = this.lineTime(lines[lines.size-1]);
 
 		texts.at(\historyPath).string_("openPath : %".format(pathHistory));
 		texts.at(\historyLinesCount).string_("lines : %".format(currentHistory.lines.size));
 		texts.at(\historyStartTime).string_("StartTime : %".format(startTime));
 		texts.at(\historyEndTime).string_("EndTime : %".format(endTime));
 
-		texts.at(\codeLine).string_(this.lineCode(currentHistory.lines[index]));
+		texts.at(\currentHistoryTime).string_("HistoryTime : %".format(this.lineTime(lines[index])));
+		texts.at(\currentHistoryPlayer).string_("HistoryPlayer : %".format(this.linePlayer(lines[index])));
+
+		texts.at(\codeLine).string_(this.lineCode(lines[index]));
 	}
 
-	play { currentHistory.notNil.if({
-		currentHistory.play;
-		// History.play(posledni prehrany line, prvni prehrany line)
-	});
+	play {
+		currentHistory.notNil.if({
+
+			var playClock;
+			currentHistory.play(verbose:false);
+			// History.play(posledni prehrany line, prvni prehrany line)
+
+			currentTime = 0;
+			playClock = {
+				currentTime = currentTime + 0.1;
+				texts.at(\currentTime).string_("CurrentTime : %".format(currentTime));
+				sliders.at(\timeSlider).valueAction_(currentTime/endTime);
+				(currentTime > endTime).if({
+					buttons.at(\stop).valueAction_(1);
+					nil; //loopEnd
+				},{ 0.1; } //loopTime
+				);
+
+			};
+			AppClock.play(playClock);
+		});
 
 	}
 
-	stop { currentHistory.notNil.if({ currentHistory.stop; }); }
+	stop {
+		currentHistory.notNil.if({
+			currentHistory.stop;
+			currentTime = endTime - 0.1;
+			sliders.at(\timeSlider).valueAction_(0);
+			currentTime = 0;
+			texts.at(\currentTime).string_("CurrentTime : %".format(currentTime));
+			Server.local.freeAll;
+		});
+
+	}
 
 	initPlayer{
 		Server.local.waitForBoot({
@@ -62,6 +92,7 @@ HistoryPlayer{
 				texts = Dictionary.new;
 				sliders = Dictionary.new;
 				currentHistory = nil;
+				lines = nil;
 				activeButton = nil;
 				pathHistory = "";
 
@@ -79,7 +110,7 @@ HistoryPlayer{
 				// .background_(colBack)
 				;
 
-				timeView = UserView(win, Rect( 10, (win.bounds.height - 220), (win.bounds.width - 20), 30))
+				timeView = UserView(win, Rect( 10, (win.bounds.height - 250), (win.bounds.width - 20), 60))
 				.background_(colBack)
 				.drawFunc = {
 					Pen.strokeColor = colFront;
@@ -129,6 +160,24 @@ HistoryPlayer{
 					.stringColor_(colFront)
 				);
 
+				texts.put(\currentTime, StaticText( timeView, Rect( 10, 10, (historyView.bounds.width - 20), 20))
+					.string_("CurrentTime : nil")
+					.font_(fontBig)
+					.stringColor_(colFront)
+				);
+
+				texts.put(\currentHistoryTime, StaticText( historyView, Rect( 150, 30, (historyView.bounds.width - 20), 20))
+					.string_("HistoryTime : nil")
+					.font_(fontBig)
+					.stringColor_(colFront)
+				);
+
+				texts.put(\currentHistoryPlayer, StaticText( historyView, Rect( 150, 50, (historyView.bounds.width - 20), 20))
+					.string_("HistoryPlayer : nil")
+					.font_(fontBig)
+					.stringColor_(colFront)
+				);
+
 				texts.put(\codeLine, TextView(codeView, Rect( 0, 0, codeView.bounds.width, codeView.bounds.height))
 					.font_(fontSmall)
 					// .stringColor_(colFront)
@@ -141,14 +190,13 @@ HistoryPlayer{
 
 				// SLIDER //////////////////////////////////
 
-				sliders.put(\timeSlider, Slider(timeView, Rect( 10, 10, (timeView.bounds.width - 20), 10))
+				sliders.put(\timeSlider, Slider(timeView, Rect( 10, 40, (timeView.bounds.width - 20), 10))
 					// .setColors(colFront, colActive)
 					.action_({|slider|
 						currentHistory.notNil.if({
-							var selLine = ((currentHistory.lines.size-1) - ((currentHistory.lines.size-1) * slider.value)).asInteger;
-
-							selLine.postln;
+							var selLine = ((lines.size-1) * slider.value).asInteger;
 							this.initData(selLine);
+
 						});
 					});
 				);
@@ -167,7 +215,6 @@ HistoryPlayer{
 							butt.value = 1;
 							"this.play;".postln;
 							this.play;
-							activeButton = \play;
 						};
 						if(butt.value == 0) { "this.free;".postln };
 					});
@@ -187,7 +234,6 @@ HistoryPlayer{
 							AppClock.sched(0.05, {butt.value = 0};);
 							"this.stop;".postln;
 							this.stop;
-							activeButton = \stop;
 						};
 						if(butt.value == 0) { "this.free;".postln };
 					});
@@ -206,6 +252,7 @@ HistoryPlayer{
 								butt.value = 1;
 								pathHistory = path;
 								currentHistory = History.clear.loadCS(path);
+								lines = currentHistory.lines.reverse;
 								buttons.do({|colection| colection.value = 0;});
 
 								this.initData(currentHistory.lines.size-1);
