@@ -26,6 +26,34 @@ snippet synth
 	};
 	~$1.play;
 	);
+	~$1.stop(4);
+	~$1.clear;
+	~$1.pause;
+	~$1.resume;
+snippet switch
+	// $1 synth ///////////////////////////////////////
+	
+	(
+	~$1.ar(2);
+	~${1:}.quant=2;
+	~$1.fadeTime=0.2;
+	~$1={
+		//         |       |       |       |       |  
+		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
+		var sig = [
+		${2:SinOsc.ar(50!2),}
+		];
+		sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
+		sig = sig${3:} * env;
+		Splay.ar(sig,0.75,0.5);
+	};
+	~$1.play;
+	);
+	~$1.stop(4);
+	~$1.clear;
 	~$1.pause;
 	~$1.resume;
 snippet synthm
@@ -99,7 +127,7 @@ snippet bpf
 snippet duty
 	Duty.kr(${1:4},0,Dseq([${2:1,2,1.5,1.25}],inf))
 snippet saws
-	LFSaw.ar(${1:~time}).exprange(0.001,${2:1})
+	LFSaw.ar(${1:~tempo.kr}).exprange(0.001,${2:1})
 snippet decay
 	Decay.ar(Impulse.ar(${1:1/2},(0..3)/4),${2:1})
 snippet env
