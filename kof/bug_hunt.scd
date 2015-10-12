@@ -27,9 +27,9 @@
                 ~ss={
                     //         |       |       |       |       |  
                     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
-                    var imp = PulseDivider.kr(~tick.kr,8,~counter.kr);
+                    var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
                     var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
-                    var env = EnvGen.ar(Env([0.0001,1,0.0001],[0.002,0.005],[1,-3],curve:'exp'),imp * hit);
+                    var env = EnvGen.ar(Env([0.0001,1,0.0001],[0.002,0.15],[1,-3],curve:'exp'),imp * hit);
                     var sig = LFNoise2.ar(18000/([1,2,4,8]*pi)) ;
                     sig = sig * env;
                     Splay.ar(sig,0.15,0.15);
