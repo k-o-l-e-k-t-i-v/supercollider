@@ -20,11 +20,11 @@
 
 
 
-                ~ss.ar(2);
-                ~ss.quant=2;
-                ~ss.fadeTime=0.2;
-                ~ss.play;
-                ~ss={
+                ~a.ar(2);
+                ~a.quant=2;
+                ~a.fadeTime=0.2;
+                ~a.play;
+                ~a={
                     //         |       |       |       |       |  
                     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
                     var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
