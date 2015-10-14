@@ -300,6 +300,7 @@ HistoryPlayer{
 								buttons.do({|colection| colection.value = 0;});
 
 								this.initData(0);
+								lines.printAll;
 
 								AppClock.sched(0.05, {butt.value = 0};);
 							}, {
