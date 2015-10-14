@@ -1,0 +1,1 @@
+List[ [ 6.0, 'me', "//test end" ], [ 0, 'joach', "Pbind(\\octave, Pstutter(Pseq([10,5]), Pseq([5,4])),  \\sustain, 0.75, \\degree, Pn(Pseries(1,1,5), 3), \\dur, 0.25).play" ] ]
