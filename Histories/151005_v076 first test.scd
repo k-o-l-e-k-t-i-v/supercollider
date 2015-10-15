@@ -2,7 +2,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -16,7 +16,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -30,7 +30,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -44,7 +44,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -63,7 +63,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -77,7 +77,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -91,7 +91,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -115,7 +115,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -134,7 +134,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -173,7 +173,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~ss.quant=2;
 ~ss.fadeTime=8.2;
 ~ss={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/(1..16)%pat.size,pat);
@@ -286,7 +286,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -313,7 +313,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -333,7 +333,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -348,7 +348,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~nn.quant=2;
 ~nn.fadeTime=0.2;
 ~nn={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -363,7 +363,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -398,7 +398,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -422,7 +422,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
     ~kick.quant=2;
     ~kick.fadeTime=0.2;
     ~kick={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0].rotate(3);
         var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -437,7 +437,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
     ~kick.quant=2;
     ~kick.fadeTime=0.2;
     ~kick={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0].rotate(3);
         var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -452,7 +452,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
     ~hiss.quant=2;
     ~hiss.fadeTime=0.2;
     ~hiss={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -468,7 +468,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
     ~kick.quant=2;
     ~kick.fadeTime=0.2;
     ~kick={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0].rotate(3);
         var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -569,7 +569,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
     ~hiss.quant=2;
     ~hiss.fadeTime=0.2;
     ~hiss={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -595,7 +595,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
     ~hiss.quant=2;
     ~hiss.fadeTime=0.2;
     ~hiss={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -625,7 +625,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -646,7 +646,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -668,7 +668,7 @@ List[ [ 2236.8787731, 'kof', "thisProcess.stop;" ], [ 2219.0337524, 'joach', "Ko
 ~slow2.quant=2;
 ~slow2.fadeTime=0.2;
 ~slow2={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,16,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -694,7 +694,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
   ~mld.quant=2;
   ~mld.fadeTime=0.2;
   ~mld={
-    //         |       |       |       |       |  
+    //         |       |       |       |       |
     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
     var imp = PulseDivider.kr(~tick.kr,[16,32,64]/16,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -718,7 +718,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
     ~hiss.quant=2;
     ~hiss.fadeTime=0.2;
     ~hiss={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -739,7 +739,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
     ~kick.quant=2;
     ~kick.fadeTime=0.2;
     ~kick={
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0].rotate(3);
         var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -763,7 +763,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
   ~mld.quant=2;
   ~mld.fadeTime=0.2;
   ~mld={
-    //         |       |       |       |       |  
+    //         |       |       |       |       |
     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
     var imp = PulseDivider.kr(~tick.kr,[16,32,64]/8,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -787,7 +787,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
   ~mld.quant=2;
   ~mld.fadeTime=0.2;
   ~mld={
-    //         |       |       |       |       |  
+    //         |       |       |       |       |
     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
     var imp = PulseDivider.kr(~tick.kr,[16,32,64]/8,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -851,7 +851,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -873,7 +873,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -895,7 +895,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~slow2.quant=2;
 ~slow2.fadeTime=0.2;
 ~slow2={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,16,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -910,7 +910,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~slow.quant=2;
 ~slow.fadeTime=0.2;
 ~slow={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,16,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -925,7 +925,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -946,7 +946,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~nn.quant=2;
 ~nn.fadeTime=0.2;
 ~nn={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -961,7 +961,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~nn.quant=2;
 ~nn.fadeTime=0.2;
 ~nn={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -1024,7 +1024,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~nn.quant=2;
 ~nn.fadeTime=0.2;
 ~nn={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -1039,7 +1039,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -1089,7 +1089,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~nn.quant=2;
 ~nn.fadeTime=0.2;
 ~nn={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
@@ -1104,7 +1104,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -1129,7 +1129,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -1161,7 +1161,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~ss.quant=2;
 ~ss.fadeTime=8.2;
 ~ss={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/(1..16)%pat.size,pat);
@@ -1182,7 +1182,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~ss.quant=2;
 ~ss.fadeTime=8.2;
 ~ss={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/(1..16)%pat.size,pat);
@@ -1212,7 +1212,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~ss.ar(2);
 ~ss.fadeTime=8.2;
 ~ss={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/(1..16)%pat.size,pat);
@@ -1248,7 +1248,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~slow2.quant=2;
 ~slow2.fadeTime=0.2;
 ~slow2={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,64,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -1288,7 +1288,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~ss.quant=2;
 ~ss.fadeTime=4.2;
 ~ss={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/(1..16)%pat.size,pat);
@@ -1319,7 +1319,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~sw.quant=2;
 ~sw.fadeTime=0.2;
 ~sw={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,4,8]%pat.size,pat);
@@ -1353,7 +1353,7 @@ Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 ~kick.quant=2;
 ~kick.fadeTime=0.2;
 ~kick={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -1370,4 +1370,4 @@ var noise = BrownNoise.ar(\\noise.kr(0), (1 - \\noise.kr(0)));
 var sig = osc * noise;
 Pan2.ar( sig * \\amp.kr(0), \\pan.kr(0) );
 };
-)" ], [ 13.4780232, 'joach', "~test.play(vol: 0.0, fadeTime: 8);" ], [ 0, 'joach', "Kolektiv.tempo_(120);" ] ]
+)" ], [ 13.4780232, 'joach', "~test.play(vol: 0.0, fadeTime: 8);" ], [ 0, 'joach', "Kolektiv.tempo_(120); p = ProxySpace.push(s).makeTempoClock; p.clock.tempo_(120);" ] ]
