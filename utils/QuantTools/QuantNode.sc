@@ -36,7 +36,7 @@ QuantNode{
 	}
 	*/
 	phase { |index = 0, levels = #[0,1,0], times = #[0.05,0.95], curves = #[7,-7], offset = 0, repeats = inf, fadeTime = 0|
-
+		var nodeProxy;
 		var bus,ctl;
 		this.node.isNil.if(
 			{
@@ -52,13 +52,20 @@ QuantNode{
 
 			}
 		);
-		ctl = node.controlNames.detect { |x, i| x.postln; i.postln;  }; //x.name == key
+		// ctl = node.controlNames.detect { |x, i| x.postln; i.postln;  }; //x.name == key
 
-		thisProcess.interpreter.cmdLine.postln;
-		 thisProcess.interpreter.getBackTrace.inspect;
+		// "current proxyName %".format(
+		currentEnvironment.arProxyNames({ |px, key|  px.postln; key.do({|aaa| aaa.postln; }); px.isPlaying; });
+
+		// "nodeProxy %".format(super.copy.envirKey).postln;
+
+
+		currentEnvironment[nodeProxy.asSymbol].set(\myfreq, currentEnvironment[nodeProxy.asSymbol].source_(levels));
+		// thisProcess.interpreter.cmdLine.postln;
+		// thisProcess.interpreter.getBackTrace.inspect;
 
 		// thisProcess.interpreter.functionCompileContext.def.sourceCode.postln;
-
+		/*
 		this.node.quant = super.copy.quant;
 		this.node.fadeTime = fadeTime;
 
@@ -75,7 +82,7 @@ QuantNode{
 				doneAction:0
 			)
 		}
-
+		*/
 		^node;
 	}
 
