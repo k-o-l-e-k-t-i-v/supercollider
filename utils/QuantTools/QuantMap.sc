@@ -1,16 +1,19 @@
 QuantMap {
 	classvar objects;
+	classvar currentProxy, currentChOff, currentIndex;
 
 	*initClass{
 		Class.initClassTree(AbstractPlayControl);
 
-		AbstractPlayControl.proxyControlClasses.put(\qmap, SynthDefControl);
-		AbstractPlayControl.buildMethods.put(\qmap,
+		AbstractPlayControl.proxyControlClasses.put(\map, SynthDefControl);
+		AbstractPlayControl.buildMethods.put(\map,
 			#{ arg func, proxy, channelOffset=0, index;
-				var qNode = func.value();
+				var qNode;
 				// var ok, ugen;
-				"initClass - qNode %".format(qNode).postln;
-
+				"proxy ID %".format(proxy.asNodeID).postln;
+				// "proxy CODE %".format(proxy.asCode).postln;
+				"proxy Target %".format(proxy.asTarget).postln;
+				// "server nextID %".format(Server.local.nextNodeID).postln;
 				/*
 				if(proxy.isNeutral) {
 				ugen = func.value(Silent.ar);
@@ -19,9 +22,13 @@ QuantMap {
 				};
 				*/
 				// QuantNode.new(func, proxy, channelOffset, index);
+
 				QuantMap.new(proxy, channelOffset, index);
-				QuantMap.add(proxy, channelOffset, index, qNode);
-				QuantMap.find(qNode);
+				qNode = func.value(); // function call QuantNode.new() /////////////
+				"initClass - qNode %".format(qNode).postln;
+
+				// QuantMap.add(proxy, channelOffset, index, qNode);
+				QuantMap.findProxy(qNode);
 				{ | out |
 
 					// "out : %".format(out).postln;
@@ -39,39 +46,46 @@ QuantMap {
 	}
 
 	init {|proxy, channelOffset, index|
-		"initControl - jsem tu".postln;
+
 		objects.isNil.if(
 			{
 				objects = MultiLevelIdentityDictionary.new;
-				"initControl - sources.isNil -> true".postln;
-				"initControl - proxy.envirKey: %".format(proxy.envirKey).postln;
+				// "initControl - sources.isNil -> true".postln;
+				// "initControl - proxy.envirKey: %".format(proxy.envirKey).postln;
 			},
 			{
-				"initControl - sources.isNil -> false".postln;
+				// "initControl - sources.isNil -> false".postln;
 			}
-		)
+		);
+		currentProxy = proxy;
+		currentChOff = channelOffset;
+		currentIndex = index;
 	}
 
-	*add {|proxy, channelOffset, index, qNode|
-		objects.put(proxy.envirKey.asSymbol, index, qNode);
+	*add {|qNode|
+		var oldNode = objects.at(currentProxy.envirKey.asSymbol, currentIndex);
+		objects.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);
+		^oldNode;
 	}
 
-	*find {|qNode|
-		var kde;
+	*findProxy {|qNode|
+		var proxy, index;
 		objects.notNil.if({
-			kde = block {|break|
+			proxy = block {|break|
 				objects.leafDo ({|path, item|
-					var proxy = path[0];
+					var tempProxy = path[0];
 					var index = path[1];
-					(qNode == item).if({ break.value(path) });
+					(qNode == item).if({ break.value(tempProxy) });
 				});
+				break.value(nil);
 			};
-			"MAP.path %".format(kde.value).postln;
+			"MAP.findProxy: %".format(proxy).postln;
 		},
 		{
-			"MAP isNil %".format(kde.value).postln;
+			"MAP.objects isNil %".format(proxy).postln;
 		}
 		);
+		^proxy;
 	}
 
 	*print {
@@ -80,7 +94,7 @@ QuantMap {
 			{|path, item|
 				var node = path[0];
 				var index = path[1];
-				"\t[%] item : %".format(index,item).postln;
+				"\t[%] item : % (%)".format(index,item, item.key).postln;
 			},
 			{},
 			{|node| node.notEmpty.if({"-----------".postln;})},

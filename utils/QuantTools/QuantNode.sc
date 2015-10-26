@@ -2,37 +2,91 @@ QuantNode {
 	var instance;
 	// var proxy, index, channelOffset;
 	var <>key, <>quant;
-	var <>node, bus;
+	var <>node, group, bus;
 
 	*new {|key, quant| ^super.new.init(key, quant);	}
 
 	init{|key, quant|
+		var oldNode;
+		"init QuantNode instance.isNil %".format(instance.isNil).postln;
 		instance.isNil.if(
 			{
+
+				// oldNode = QuantMap.findProxy(instance);
+
+
+				"init QuantNode - new".postln;
 				instance = this;
 				instance.key = key;
-				instance.quant = quant
+				instance.quant = quant;
+				node = NodeProxy.control(Server.local, 1);
 			},
-			{
-
-			}
 		);
+		oldNode = QuantMap.add(instance);
+		"oldNode : %".format(oldNode).postln;
+		oldNode.notNil.if
+		(
+			{ "oldNode nodeID: %".format(oldNode.node.asNodeID).postln; },
+			{ "oldNode not exist".postln; }
+		);
+		// "init QuantNode - old [instance: %]".format(oldNode.nodeID).postln;
+
 		this.print;
 
 		^instance;
 	}
 
-
 	print{
 		"init QuantNode".postln;
-		"\t - key : %".format(instance.key).postln;
-		"\t - quant : %".format(instance.quant).postln;
-
-
+		"\t - key : %".format(key).postln;
+		"\t - quant : %".format(quant).postln;
+		"\t - node : %".format(node).postln;
+		"\t - bus : %".format(bus).postln;
 
 		^nil;
 	}
 
+	env { |levels = #[0,1,0], times = #[0.05,0.95], curves = #[2,-2]|
+		// ^currentEnvironment.at(proxy.value.asSymbol);
+		var proxy = currentEnvironment.at(QuantMap.findProxy(instance).asSymbol);
+		"init QuantEnv".postln;
+		"\t - proxyID %".format(proxy.asNodeID).postln;
+		"\t - group %".format(proxy.group).postln;
+
+		levels = levels.add(levels[levels.size-1]);
+		times = times.add(quant - times.sum);
+		// times = times.insert(0, 0);
+		times = times.add(0);
+		// "levels %".format(levels).postln;
+		// "times %".format(times).postln;
+
+		node.group = proxy.group;
+		node.quant = quant;
+
+		// node.group = proxy.bus;
+		node[0] = {
+			DemandEnvGen.kr(
+				Dseq(levels, inf),
+				Dseq(times, inf),
+				1, 5, 1, 1,
+				doneAction:0
+			)
+		};
+		/*
+		node[0] = {
+		EnvGen.kr(
+		Env(levels,times),
+		gate:\trigEnv.tr,
+		timeScale: (1/currentEnvironment.clock.tempo)
+		);
+		};
+		node[1] = \set -> Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \dur, times.sum);
+		// .play(currentEnvironment.clock,quant:times.sum);
+		*/
+		proxy.set(key.asSymbol, node);
+
+		"\t - node.CODE %".format(node.asCode).postln;
+	}
 
 	map2 {|func, proxy, channelOffset, index|
 		var key = \amp;
