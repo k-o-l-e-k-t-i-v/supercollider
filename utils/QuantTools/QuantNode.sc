@@ -1,50 +1,35 @@
 QuantNode {
-	var <>quant;
+	var instance;
+	// var proxy, index, channelOffset;
+	var <>key, <>quant;
 	var <>node, bus;
 
-	*initClass{
-		Class.initClassTree(AbstractPlayControl);
+	*new {|key, quant| ^super.new.init(key, quant);	}
 
-		AbstractPlayControl.proxyControlClasses.put(\qenv, SynthDefControl);
-		AbstractPlayControl.buildMethods.put(\qenv,
-			#{ arg func, proxy, channelOffset=0, index;
-				// var ok, ugen;
+	init{|key, quant|
+		instance.isNil.if(
+			{
+				instance = this;
+				instance.key = key;
+				instance.quant = quant
+			},
+			{
 
-				/*
-				if(proxy.isNeutral) {
-				ugen = func.value(Silent.ar);
-				ok = proxy.initBus(ugen.rate, ugen.numChannels + channelOffset);
-				if(ok.not) { Error("NodeProxy input: wrong rate/numChannels").throw }
-				};
-				*/
-				QuantNode.new(func, proxy, channelOffset, index);
+			}
+		);
+		this.print;
 
-				{ | out |
-
-					// "out : %".format(out).postln;
-					// var e = EnvGate.new * Control.names(["wet"++(index ? 0)]).kr(1.0);
-					// if(proxy.rate === 'audio') {
-					// XOut.ar(out, e, SynthDef.wrap(func, nil, [In.ar(out, proxy.numChannels)]))
-					// } {
-					// XOut.kr(out, e, SynthDef.wrap(func, nil, [In.kr(out, proxy.numChannels)]))};
-				}.buildForProxy( proxy, channelOffset, index );
-		});
+		^instance;
 	}
 
-	*new {| func, proxy, channelOffset = 0, index |
-		// ^super.new.print(func, proxy, channelOffset, index ).map(proxy, \amp, func);
-		^super.new.map2(func, proxy, channelOffset, index);
-		// ^nil;
-	}
 
-	print{ | func, proxy, channelOffset, index |
-		"print - jsem tu".postln;
-		"initClass - jsem tu".postln;
-		"func : %".format(func).postln;
-		"proxy : %".format(proxy).postln;
-		"channelOffset : %".format(channelOffset).postln;
-		"index : %".format(index).postln;
-		"nodeMap : %".format(proxy.nodeMap).postln;
+	print{
+		"init QuantNode".postln;
+		"\t - key : %".format(instance.key).postln;
+		"\t - quant : %".format(instance.quant).postln;
+
+
+
 		^nil;
 	}
 
@@ -64,23 +49,23 @@ QuantNode {
 		// node.fadeTime = fadeTime;
 		/*
 		node.source_({
-			// var Detec
-			// Pbind.free;
-			// EnvGen.free;
-			var sig;
-			Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \bus, 0, \dur, 4).play(currentEnvironment.clock,quant:4);
-			sig = EnvGen.kr(
-				Env(levels,times),
-				gate:\trigEnv.tr,
-				timeScale: (1/currentEnvironment.clock.tempo)
-			);
+		// var Detec
+		// Pbind.free;
+		// EnvGen.free;
+		var sig;
+		Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \bus, 0, \dur, 4).play(currentEnvironment.clock,quant:4);
+		sig = EnvGen.kr(
+		Env(levels,times),
+		gate:\trigEnv.tr,
+		timeScale: (1/currentEnvironment.clock.tempo)
+		);
 		});
 		*/
 		// pnm.put(key, node);
-		proxy.set(\amp, NodeProxy.control(Server.local, 1).source_(func));
+		// proxy.set(\amp, NodeProxy.control(Server.local, 1).source_(func));
 
 		this.print(func, proxy, channelOffset, index);
-		// ^node;
+		^nil;
 	}
 
 
