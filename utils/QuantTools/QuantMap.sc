@@ -8,11 +8,12 @@ QuantMap {
 		AbstractPlayControl.proxyControlClasses.put(\map, SynthDefControl);
 		AbstractPlayControl.buildMethods.put(\map,
 			#{ arg func, proxy, channelOffset=0, index;
+				var oldNode;
 				var qNode;
 				// var ok, ugen;
-				"proxy ID %".format(proxy.asNodeID).postln;
+				// "proxy ID %".format(proxy.asNodeID).postln;
 				// "proxy CODE %".format(proxy.asCode).postln;
-				"proxy Target %".format(proxy.asTarget).postln;
+				// "proxy Target %".format(proxy.asTarget).postln;
 				// "server nextID %".format(Server.local.nextNodeID).postln;
 				/*
 				if(proxy.isNeutral) {
@@ -24,11 +25,17 @@ QuantMap {
 				// QuantNode.new(func, proxy, channelOffset, index);
 
 				QuantMap.new(proxy, channelOffset, index);
+				// "currentProxy %[%]".format(super.currentProxy, super.currentIndex).postln;
+
+				oldNode = QuantMap.getNode(proxy, index);
+				oldNode.notNil.if({	oldNode.node.release(fadeTime:4); });
+
 				qNode = func.value(); // function call QuantNode.new() /////////////
+				oldNode.notNil.if({ qNode.getOldNode(oldNode) });
 				"initClass - qNode %".format(qNode).postln;
 
 				// QuantMap.add(proxy, channelOffset, index, qNode);
-				QuantMap.findProxy(qNode);
+				// QuantMap.findProxy(qNode);
 				{ | out |
 
 					// "out : %".format(out).postln;
@@ -63,9 +70,9 @@ QuantMap {
 	}
 
 	*add {|qNode|
-		var oldNode = objects.at(currentProxy.envirKey.asSymbol, currentIndex);
+		// var oldNode = objects.at(currentProxy.envirKey.asSymbol, currentIndex);
 		objects.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);
-		^oldNode;
+		// ^oldNode;
 	}
 
 	*findProxy {|qNode|
@@ -87,6 +94,10 @@ QuantMap {
 		);
 		^proxy;
 	}
+
+	*getNode {|proxy, index| ^objects.at(proxy.envirKey.asSymbol, index)}
+
+	*currentNode { ^objects.at(currentProxy.envirKey.asSymbol, currentIndex)}
 
 	*print {
 		objects.sortedTreeDo(

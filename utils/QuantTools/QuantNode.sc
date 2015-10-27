@@ -2,46 +2,64 @@ QuantNode {
 	var instance;
 	// var proxy, index, channelOffset;
 	var <>key, <>quant;
-	var <>node, group, bus;
+	var <>node, prewNode;
+	var group, bus;
 
 	*new {|key, quant| ^super.new.init(key, quant);	}
 
 	init{|key, quant|
-		var oldNode;
-		"init QuantNode instance.isNil %".format(instance.isNil).postln;
-		instance.isNil.if(
+		// var oldNode;
+
+
+
+		// oldNode = QuantMap.findProxy(instance);
+
+
+		"init QuantNode - new".postln;
+		instance = this;
+		instance.key = key;
+		instance.quant = quant;
+
+
+		prewNode = QuantMap.currentNode;
+		prewNode.isNil.if(
+			{ node = NodeProxy.control(Server.local, 1); },
 			{
-
-				// oldNode = QuantMap.findProxy(instance);
-
-
-				"init QuantNode - new".postln;
-				instance = this;
-				instance.key = key;
-				instance.quant = quant;
 				node = NodeProxy.control(Server.local, 1);
-			},
+				// node.copyState(prewNode);
+				node = prewNode.copy;
+				node.nodeMap = prewNode.nodeMap.copy;
+
+			}
 		);
+		"init QuantNode prewNode %".format(prewNode).postln;
+
+		QuantMap.add(instance);
+		/*
 		oldNode = QuantMap.add(instance);
 		"oldNode : %".format(oldNode).postln;
 		oldNode.notNil.if
 		(
-			{ "oldNode nodeID: %".format(oldNode.node.asNodeID).postln; },
-			{ "oldNode not exist".postln; }
+		{ "oldNode nodeID: %".format(oldNode.node.asNodeID).postln; },
+		{ "oldNode not exist".postln; }
 		);
 		// "init QuantNode - old [instance: %]".format(oldNode.nodeID).postln;
-
-		this.print;
+		*/
+		this.print(instance);
+		this.print(prewNode);
 
 		^instance;
 	}
 
-	print{
+
+
+	print{|qNode|
 		"init QuantNode".postln;
-		"\t - key : %".format(key).postln;
-		"\t - quant : %".format(quant).postln;
-		"\t - node : %".format(node).postln;
-		"\t - bus : %".format(bus).postln;
+		"\t - key : %".format(qNode.key).postln;
+		"\t - quant : %".format(qNode.quant).postln;
+		"\t - node : %".format(qNode.node).postln;
+		"\t - prewNode : %".format(qNode.prewNode).postln;
+		// "\t - bus : %".format(bus).postln;
 
 		^nil;
 	}
@@ -50,19 +68,18 @@ QuantNode {
 		// ^currentEnvironment.at(proxy.value.asSymbol);
 		var proxy = currentEnvironment.at(QuantMap.findProxy(instance).asSymbol);
 		"init QuantEnv".postln;
-		"\t - proxyID %".format(proxy.asNodeID).postln;
-		"\t - group %".format(proxy.group).postln;
+		// "\t - proxyID %".format(proxy.asNodeID).postln;
+		// "\t - group %".format(proxy.group).postln;
 
 		levels = levels.add(levels[levels.size-1]);
 		times = times.add(quant - times.sum);
-		// times = times.insert(0, 0);
 		times = times.add(0);
 		// "levels %".format(levels).postln;
 		// "times %".format(times).postln;
 
 		node.group = proxy.group;
 		node.quant = quant;
-
+		node.fadeTime = 8;
 		// node.group = proxy.bus;
 		node[0] = {
 			DemandEnvGen.kr(
@@ -83,9 +100,24 @@ QuantNode {
 		node[1] = \set -> Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \dur, times.sum);
 		// .play(currentEnvironment.clock,quant:times.sum);
 		*/
-		proxy.set(key.asSymbol, node);
+		TempoClock.default.sched(this.time2quant(quant), { proxy.set(key.asSymbol, node); nil;});
 
-		"\t - node.CODE %".format(node.asCode).postln;
+		// "\t - node.CODE %".format(node.asCode).postln;
+	}
+
+	time2quant{|quant|
+		if(currentEnvironment === topEnvironment)
+		{ ^TempoClock.default.timeToNextBeat(quant); }
+		{ ^currentEnvironment.at(\tempo).clock.timeToNextBeat(quant); };
+
+		/* // if pro pripad kdy neni nastaveno clock pro proxyspace - chyba
+		if(currentEnvironment.at(\tempo).notNil)
+		{^currentEnvironment.at(\tempo).clock.timeToNextBeat(quant);}
+		{
+		"hodiny".warn;
+		^TempoClock.default.timeToNextBeat(quant);
+		}
+		*/
 	}
 
 	map2 {|func, proxy, channelOffset, index|
