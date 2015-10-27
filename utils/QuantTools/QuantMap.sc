@@ -1,5 +1,5 @@
 QuantMap {
-	classvar objects;
+	classvar map;
 	classvar currentProxy, currentChOff, currentIndex;
 
 	*initClass{
@@ -8,36 +8,26 @@ QuantMap {
 		AbstractPlayControl.proxyControlClasses.put(\map, SynthDefControl);
 		AbstractPlayControl.buildMethods.put(\map,
 			#{ arg func, proxy, channelOffset=0, index;
-				var oldNode;
-				var qNode;
-				// var ok, ugen;
-				// "proxy ID %".format(proxy.asNodeID).postln;
-				// "proxy CODE %".format(proxy.asCode).postln;
-				// "proxy Target %".format(proxy.asTarget).postln;
-				// "server nextID %".format(Server.local.nextNodeID).postln;
+				var oldNode, newNode;
 				/*
+				// var ok, ugen;
 				if(proxy.isNeutral) {
 				ugen = func.value(Silent.ar);
 				ok = proxy.initBus(ugen.rate, ugen.numChannels + channelOffset);
 				if(ok.not) { Error("NodeProxy input: wrong rate/numChannels").throw }
 				};
 				*/
-				// QuantNode.new(func, proxy, channelOffset, index);
 
 				QuantMap.new(proxy, channelOffset, index);
-				// "currentProxy %[%]".format(super.currentProxy, super.currentIndex).postln;
 
-				oldNode = QuantMap.getNode(proxy, index);
-				oldNode.notNil.if({	oldNode.node.release(fadeTime:4); });
+				newNode = func.value(); // function call QuantNode.new() /////////////
+				oldNode = newNode.prewNode;
+				oldNode.notNil.if({ oldNode.node.release(fadeTime:4); });
 
-				qNode = func.value(); // function call QuantNode.new() /////////////
-				oldNode.notNil.if({ qNode.getOldNode(oldNode) });
-				"initClass - qNode %".format(qNode).postln;
+				newNode.print;
+				oldNode.notNil.if({ oldNode.print; });
 
-				// QuantMap.add(proxy, channelOffset, index, qNode);
-				// QuantMap.findProxy(qNode);
 				{ | out |
-
 					// "out : %".format(out).postln;
 					// var e = EnvGate.new * Control.names(["wet"++(index ? 0)]).kr(1.0);
 					// if(proxy.rate === 'audio') {
@@ -54,32 +44,22 @@ QuantMap {
 
 	init {|proxy, channelOffset, index|
 
-		objects.isNil.if(
-			{
-				objects = MultiLevelIdentityDictionary.new;
-				// "initControl - sources.isNil -> true".postln;
-				// "initControl - proxy.envirKey: %".format(proxy.envirKey).postln;
-			},
-			{
-				// "initControl - sources.isNil -> false".postln;
-			}
-		);
+		map.isNil.if({ map = MultiLevelIdentityDictionary.new; });
+
 		currentProxy = proxy;
 		currentChOff = channelOffset;
 		currentIndex = index;
+
+		"\ncurrentProxy %[%]\n".format(currentProxy.envirKey, currentIndex).postln;
 	}
 
-	*add {|qNode|
-		// var oldNode = objects.at(currentProxy.envirKey.asSymbol, currentIndex);
-		objects.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);
-		// ^oldNode;
-	}
+	*add {|qNode| map.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);	}
 
 	*findProxy {|qNode|
 		var proxy, index;
-		objects.notNil.if({
+		map.notNil.if({
 			proxy = block {|break|
-				objects.leafDo ({|path, item|
+				map.leafDo ({|path, item|
 					var tempProxy = path[0];
 					var index = path[1];
 					(qNode == item).if({ break.value(tempProxy) });
@@ -88,19 +68,17 @@ QuantMap {
 			};
 			"MAP.findProxy: %".format(proxy).postln;
 		},
-		{
-			"MAP.objects isNil %".format(proxy).postln;
-		}
+		{ "MAP isNil %".format(proxy).postln; }
 		);
 		^proxy;
 	}
 
-	*getNode {|proxy, index| ^objects.at(proxy.envirKey.asSymbol, index)}
+	*getNode {|proxy, index| ^map.at(proxy.envirKey.asSymbol, index)}
 
-	*currentNode { ^objects.at(currentProxy.envirKey.asSymbol, currentIndex)}
+	*currentNode { ^map.at(currentProxy.envirKey.asSymbol, currentIndex)}
 
 	*print {
-		objects.sortedTreeDo(
+		map.sortedTreeDo(
 			{|node| node.notEmpty.if({"\nproxy ~%".format(node[0]).postln;});	},
 			{|path, item|
 				var node = path[0];
