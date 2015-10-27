@@ -22,7 +22,7 @@ QuantMap {
 
 				newNode = func.value(); // function call QuantNode.new() /////////////
 				oldNode = newNode.prewNode;
-				oldNode.notNil.if({ oldNode.node.release(fadeTime:4); });
+				oldNode.notNil.if({ oldNode.node.release(fadeTime:(oldNode.fadeTime*2)); });
 
 				newNode.print;
 				oldNode.notNil.if({ oldNode.print; });

@@ -1,6 +1,6 @@
 QuantNode {
 	var instance;
-	var <>key, <>quant, <>fadeTime;
+	var <>key, <>quant;
 	var >levels, >times, >curves;
 	var <node, <prewNode;
 	var group, bus;
@@ -10,15 +10,23 @@ QuantNode {
 	init{|key, quant, fadeTime|
 
 		// "init QuantNode - new".postln;
-		instance = this;
+
 		this.key = key;
 		this.quant = quant;
-		this.fadeTime = fadeTime;
+		// this.fadeTime = fadeTime;
 
-		prewNode = QuantMap.currentNode;
-		prewNode.isNil.if(
-			{ node = NodeProxy.control(Server.local, 1); },
+		instance = QuantMap.currentNode;
+
+		instance.isNil.if(
 			{
+				instance = this;
+				node = NodeProxy.control(Server.local, 1);
+				// node.fadeTime = fadeTime;
+			},
+			{
+				node = instance.node;
+
+				/*
 				var proxy = currentEnvironment.at(QuantMap.findProxy(this).asSymbol);
 
 				node = NodeProxy.control(Server.local, 1);
@@ -34,13 +42,16 @@ QuantNode {
 
 				"init PrewNode copyState %".format(prewNode.node[0].def.code).postln;
 				"init QuantNode copyState %".format(node[0].def.code).postln;
+				*/
+				"\nprew QuantNode".postln;
 				this.print;
 			}
 		);
 
+		node.fadeTime = fadeTime;
+		node.quant = quant;
+
 		QuantMap.add(instance);
-
-
 		^instance;
 	}
 
@@ -70,8 +81,8 @@ QuantNode {
 		this.times = times;
 
 		node.group = proxy.group;
-		node.quant = quant;
-		node.fadeTime = fadeTime;
+
+		// node.fadeTime = fadeTime;
 
 		node[0] = {
 			DemandEnvGen.kr(
