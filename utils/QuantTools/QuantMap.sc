@@ -1,6 +1,6 @@
 QuantMap {
 	classvar map;
-	classvar currentProxy, currentChOff, currentIndex;
+	classvar <currentProxy, currentChOff, currentIndex;
 
 	*initClass{
 		Class.initClassTree(AbstractPlayControl);
@@ -57,18 +57,19 @@ QuantMap {
 
 	*findProxy {|qNode|
 		var proxy, index;
-		map.notNil.if({
-			proxy = block {|break|
-				map.leafDo ({|path, item|
-					var tempProxy = path[0];
-					var index = path[1];
-					(qNode == item).if({ break.value(tempProxy) });
-				});
-				break.value(nil);
-			};
-			"MAP.findProxy: %".format(proxy).postln;
-		},
-		{ "MAP isNil %".format(proxy).postln; }
+		map.notNil.if(
+			{
+				proxy = block {|break|
+					map.leafDo ({|path, item|
+						var tempProxy = path[0];
+						var index = path[1];
+						(qNode == item).if({ break.value(tempProxy) });
+					});
+					break.value(nil);
+				};
+				// "MAP.findProxy: %".format(proxy).postln;
+			},
+			{ "MAP isNil %".format(proxy).postln; }
 		);
 		^proxy;
 	}
