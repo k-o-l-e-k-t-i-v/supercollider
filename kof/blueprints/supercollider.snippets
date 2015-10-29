@@ -30,6 +30,23 @@ snippet synth
 	~$1.clear;
 	~$1.pause;
 	~$1.resume;
+snippet simple
+	// $1 synth ///////////////////////////////////////
+	
+	(
+	~$1.ar(2);
+	~${1:}.quant=2;
+	~$1.fadeTime=4;
+	~$1={
+		var sig = ${2:SinOsc.ar(50!2)};
+		Splay.ar(sig,0.5,0.25);
+	};
+	~$1.play;
+	);
+	~$1.stop(4);
+	~$1.clear;
+	~$1.pause;
+	~$1.resume;
 snippet switch
 	// $1 synth ///////////////////////////////////////
 	
