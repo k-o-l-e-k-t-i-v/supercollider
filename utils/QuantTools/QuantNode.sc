@@ -70,20 +70,40 @@ QuantNode {
 		};
 
 
-		/*
-		node[0] = {
-		EnvGen.kr(
-		Env(levels,times),
-		gate:\trigEnv.tr,
-		timeScale: (1/currentEnvironment.clock.tempo)
-		);
-		};
-		node[1] = \set -> Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \dur, times.sum);
-		// .play(currentEnvironment.clock,quant:times.sum);
-		*/
 		TempoClock.default.sched(this.time2quant(node.quant), { proxy.set(key.asSymbol, node); nil;});
 
 		// "\t - node.CODE %".format(node.asCode).postln;
+	}
+
+	env2 { |levels = #[0,1,0], times = #[0.05,0.95], curves = #[5,-5]|
+
+		var proxy = currentEnvironment.at(QuantMap.findProxy(this).asSymbol);
+		var bind;
+		levels = levels.add(levels[levels.size-1]);
+		times = times.add(node.quant - times.sum);
+		bind = Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \dur, times.sum);
+		bind.play(quant: node.quant);
+
+		this.levels = levels;
+		this.times = times;
+
+		node.group = proxy.group;
+
+		TempoClock.default.sched(this.time2quant(node.quant), {
+			node[0] = {
+				EnvGen.kr(
+					Env(levels,times,curves),
+					gate:\trigEnv.tr,
+					timeScale: (1/currentEnvironment.clock.tempo)
+				);
+			};
+			node[1] = \set -> bind;
+			// .play(currentEnvironment.clock,quant:times.sum);
+
+			proxy.set(key.asSymbol, node);
+			nil;
+		});
+
 	}
 
 	time2quant{|quant|
