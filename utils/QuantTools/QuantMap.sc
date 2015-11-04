@@ -23,6 +23,7 @@ QuantMap {
 				newNode = func.value(); // function call QuantNode.new() /////////////
 				oldNode = newNode.prewNode;
 				oldNode.notNil.if({ oldNode.node.release(fadeTime:(oldNode.fadeTime*2)); });
+				// TempoClock.default.sched(oldNode.node.quant, { oldNode.stop; nil;});
 
 				newNode.print;
 				oldNode.notNil.if({ oldNode.print; });
