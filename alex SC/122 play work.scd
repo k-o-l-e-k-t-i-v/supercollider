@@ -1,7 +1,7 @@
 p=ProxySpace.push(s);
 
-
-~t.play(fadeTime:10, vol:0.2).quant_(2);
+~t.clear;
+~t.play(fadeTime:10, vol:0.8).quant_(2);
 ~t.clock=TempoClock(126/60).permanent_(true);
 (
 ~t[0]={
@@ -20,9 +20,9 @@ p=ProxySpace.push(s);
 ~t[31]=nil;
 
 
-
+~f.clear;
 ~f=NodeProxy.new(s, \audio, 2);
-~f.play(fadeTime:2, vol:0.2);
+~f.play(fadeTime:2, vol:0.8);
 ~f.quant_(2);
 ~f.clock=TempoClock(148/60).permanent_(true);
 (~f[0]={
@@ -58,7 +58,109 @@ p=ProxySpace.push(s);
 };
 )
 ~g[1]=\set-> Pbind(\args, [\trig], \dur, Pseq([Pn(1,2),Pn(0.25,2),Rest(0.25),Pn(1,2),Rest(1)],inf), \trig, 1);
-~g[2]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,[3,1,2],\degree, Pseq([Pn([2,6],4),Pn([5,7,3],4)],inf));
+~g[2]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,[3,2,1],\degree, Pseq([Pn([4,8],4),Pn([5,7,3],4)],inf));
 
 ~g[30]=\filter->{arg in; CombN.ar(in,2,1,4)};
-~g[31]= \filter-> {arg in; Limiter.ar(in+ FreeVerb.ar(in,room:[1,0.7],mul:0.4),0.5)};
+~g[31]= \filter-> {arg in; Limiter.ar(in+ FreeVerb.ar(in,room:[1,0.7],mul:0.8),0.35)};
+~g[32]=\filter-> {arg in; LPF.ar(in,\lpf.kr(4800))};
+
+
+
+
+~h.clear;
+~h=NodeProxy.new(s, \audio, 2,2);
+~h.mold(2);
+~h.play(fadeTime:2, vol:0.3);
+~h.quant_(2);
+~h.clock=TempoClock(126/60).permanent_(true);
+(~h[0]={
+
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env.perc(releaseTime:0.08),\trig.tr);
+	sig=HPF.ar(WhiteNoise.ar(0.5!2),\freq.kr)*env;
+
+};
+)
+~h[1]=\set-> Pbind(\args, [\trig], \dur,Pseq([Pn(0.2,4),Rest(0.8)],inf), \trig, 1);
+~h[2]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,[10,9],\degree, Pseq([Pn([8,9],5),[2,4]],inf));
+
+~h[30]=\filter->{arg in; Pan2.ar(Mix.ar(in),\pos.kr)};
+~h[31]=\set-> Pbind(\args, [\pos], \dur, Pseq([Pn(0.2,4),Rest(0.8)],inf), \pos, Pseq([0],inf));
+~h[32]=\filter-> {arg in; GVerb.ar(in,100,20,mul:0.8,add:in)};
+
+~h[34]=\filter-> {arg in; LPF.ar(in, \lpf.kr(8000))};
+
+
+
+~n.clear;
+~n=NodeProxy.new(s, \audio, 2,2);
+~n.mold(2);
+~n.play(fadeTime:2, vol:0.3);
+~n.quant_(2);
+~n.clock=TempoClock(126/60).permanent_(true);
+(~n[0]={
+
+	var sig;
+	sig=LFPulse.ar([1,2,3,5,8]/4)*BPF.ar(BrownNoise.ar([0.3,0.5]),\freq.kr);
+
+};
+)
+~n[1]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,Pseq([[5,9], [4,7], [2,8], [7,3]],inf),\degree, Pseq([Pn([8,9],5),[2,4]],inf));
+~n[30]=\filter-> {arg in; GVerb.ar(in,400,20)};
+
+
+
+
+
+
+
+
+~m.clear;
+~m=NodeProxy.new(s, \audio, 2,2);
+~m.mold(2);
+~m.play(fadeTime:10, vol:0.3);
+~m.quant_(2);
+~m.clock=TempoClock(126/60).permanent_(true);
+(~m[0]={
+
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env.perc(releaseTime:6),\trig.tr);
+	sig=LFPulse.ar(\freq.kr+[1,3,5,8,13,21].reciprocal)*LFSaw.ar([2,1,0.5,0.25,3])+FreeVerb.ar(CombN.ar(Impulse.ar([2,0.125],[0,0.1,0.2]),1,0.1),room:2);
+	sig=sig+(SinOsc.ar(\freq.kr+[1,3,5].reciprocal+[400,800])*Decay2.kr(Impulse.kr([2,0.25,1,0.125,0.5]),decayTime:0.2));
+	sig*env;
+};
+)
+~m[1]=\set-> Pbind(\args, [\trig], \dur,5, \trig, 1);
+~m[2]=\set-> Pbind(\args, [\freq], \dur, 20, \octave,Pseq([[2,1],[3,1],[4,2]],inf),\degree, Pseq([Pn([8,9],3),[2,4]],inf));
+~m[30]=\filter-> {arg in; GVerb.ar(in,40,[5,4],SinOsc.kr([0.25,0.5]).range(0.1,1),add:in.lag(0.01))};
+~m[31]=\filter-> {arg in; LPF.ar(in, \lpf.kr(1500))};
+
+
+
+
+~b.clear;
+~b.play(fadeTime:2, vol:0.8).quant_(2);
+~b.clock=TempoClock(128/60).permanent_(true);
+(
+~b[0]={
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env(times:[0.01,0.1],curve:[\welch, \welch]),\trig.tr);
+	fenv=EnvGen.kr(Env([\freq.kr,\freq.kr*2,\freq.kr],[40,0.01],curve:[\welch, \welch]),\trig.tr);
+	sig= LFSaw.ar(fenv!2,mul:0.4).lag([0.001,0.002])+SinOsc.ar(fenv!2+80,mul:0.6);
+	sig=sig+(LFSaw.kr([2,5,2/5])*BrownNoise.ar(0.4));
+	sig=sig*env;};
+)
+~b[1]=\set-> Pbind(\args, [\trig], \dur, Pseq([Pn(0.6,3),Rest(0.6),Pn(0.4,2)],inf), \trig, 1);
+~b[2]=\set-> Pbind(\args, [\freq], \dur, 1, \octave, [1,2] , \degree, [2,4,8,6]);
+
+~b[30]=\filter-> {arg in; GVerb.ar(in,[90,40,80],[20,50,10],SinOsc.kr([0.125,0.025]).range(0.1,1),mul:[0.2,0.4])};
+~b[31]=\filter-> {arg in; LPF.ar(in, \lpf.kr(1000))};
+~b[32]=\set-> Pbind(\args, [\lpf], \dur, 10, \lpf, Pseq([Pseq([150,250,350,500,700,1500],1),2500],1));
+
+
+
+
+
