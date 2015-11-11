@@ -30,7 +30,7 @@ b = Buffer.read(s,"/home/kof/marimba.wav");
     ~marimba={
         var mod = 1;
         var spread = 0.0;
-        var pos = (1..4)/16 + LFSaw.ar(1/16);
+        var pos = (1..4)/16 + LFSaw.ar(1/1600);
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
@@ -68,7 +68,7 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
 
         sig = sig * env;
         //sig = CompanderD.ar(sig,3/4,1/2,1/2);
-        Splay.ar(sig[0]!2,0.05,0.5);
+        Splay.ar(sig[0]!2,0.05,0.15);
     };
     ~smp.play;
 );
@@ -85,17 +85,18 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
     ~kick={
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
+        var imp = PulseDivider.kr(~tick.kr,16,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = SinOsc.ar(50+(env**100*100));
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,5.5],[3,-3],curve:'exp'),imp * hit);
+        var sig = SinOsc.ar(50+(env**10*100));
         sig = sig * env;
-        Splay.ar(sig,0.75,0.75);
+        Splay.ar(sig,0.75,0.95);
     };
     ~kick.play;
 );
 ~kick.pause;
 ~kick.resume;
+~kick.stop;
 
 // ff filter ///////////////////////////////////////
 
@@ -126,11 +127,11 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
     ~ticka.fadeTime=0.2;
     ~ticka={
         //         |       |       |       |       |  
-        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
-        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = LFNoise2.ar(500);
+        var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
+        var sig = LFNoise2.ar(15000);
         sig = sig * env;
         Splay.ar(sig,0.75,0.5);
     };
@@ -148,22 +149,29 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
     ~voice.fadeTime=4.2;
     ~voice={
         //         |       |       |       |       |  
-        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0].rotate(3);
+        var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = AudioIn.ar([0,1])*2;
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
+        var sig = AudioIn.ar([0,1])*1;
         //sig = Normalizer.ar(sig);
-        sig = CompanderD.ar(sig,3/4,1/2,1/2);
-        //sig = PitchShift.ar(sig,0.025,0.95+(1..4).reciprocal,0.001,0.1);
+        sig = CompanderD.ar(sig,3/4,1/3,1/2);
+        sig = PitchShift.ar(sig,0.025,[1,1,1.25,0.5,4],0.001,0.1);
         sig = Limiter.ar(sig);
-        //sig = CombN.ar(sig,1/4,1/4,8)+sig;
-        //sig = Greyhole.ar(sig);
+        sig = CombN.ar(sig,1,1/[1,2,4,8,16],64)+sig;
+        sig = LPF.ar(sig,[5000,2500,1500,10000]);
+        // sig = Greyhole.ar(sig)/4+sig;
         sig = sig * env;
-        Splay.ar(sig,0.75,0.5);
+        Splay.ar(sig,0.25,0.895);
     };
     ~voice.play;
 );
 ~voice.stop(4);
 ~voice.pause;
 ~voice.resume;
+
+
+(
+  p=ProxySpace.push(s.reboot);
+  p.makeTempoClock;
+);

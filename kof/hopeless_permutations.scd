@@ -25,7 +25,7 @@
   sig = CombN.ar(sig,1,1.001,4)/4+sig;
   sig = AllpassN.ar(sig,1.1,[2,2.01],4)/4 + sig;
   sig = CompanderD.ar(sig,3/4,1/2,1/2);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.5,0.05);
 };
 ~one.play;
 ~reb={loop{~one.rebuild;16.wait;}}.fork;

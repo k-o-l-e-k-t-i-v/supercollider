@@ -13,7 +13,7 @@
   sig = sig * LFTri.ar(1/4/[1,2,3,4]).exprange(0.001,1);
   sig = AllpassN.ar(sig,[1/4,1/4.1],1,4.1)+sig;
   sig = CompanderD.ar(sig,3/4,1/3,1/2);
-  Splay.ar(sig,0.65,0.25);
+  Splay.ar(sig,0.65,0.15);
 };
 ~two.play;
 );
