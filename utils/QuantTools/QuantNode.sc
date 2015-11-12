@@ -17,7 +17,7 @@ QuantNode {
 		instance.isNil.if(
 			{
 				var defValue = QuantMap.currentProxy.getDefaultVal(key.asSymbol);
-				"% defValue: %".format(QuantMap.currentProxy.envirKey, defValue).postln;
+				// "% defValue: %".format(QuantMap.currentProxy.envirKey, defValue).postln;
 
 				instance = this;
 				node = NodeProxy.control(Server.local, 1);
@@ -51,43 +51,29 @@ QuantNode {
 		^nil;
 	}
 
-	stop { "clock STOP".warn; clock.clear; }
+	stop { clock.clear; }
 
-	env3 { |env|
+	env { |env|
 		var proxy = currentEnvironment.at(QuantMap.findProxy(this).asSymbol);
-
 		var synthDef, synth;
-		// var time2quant = TempoClock.default.timeToNextBeat(node.quant);
-		// var node = NodeProxy.new(s, \control, 1);
-		// var node = NodeProxy.control(s, 1);
-		// var node = NodeProxy.for(c);
 
 		node.group = proxy.group;
-		// node.fadeTime = 16;
-		// c = node.bus;
-		// c.postln;
-		// proxy.bus.postln;
+
 		synthDef = SynthDef(
 			"qNode [ %, q%, c% ]".format(key, node.quant, node.index),
 			{
 				Out.kr(node.index, EnvGen.kr(env, doneAction:2))
 			}
 		).add;
-		/*
-		node.source = { EnvGen.kr(env, doneAction:2) };
-		synthDef = node.nameDef("quantFnc [ % ]".format(key.asSymbol), 0);
-		*/
 
-		clock.clear;// DOPLNIT STOP
+
+		this.stop;
+
 		"time2quant [%]".format(this.time2quant(node.quant)).postln;
 
 		// t = TempoClock.default.sched(time2quant, {
 		clock.sched(this.time2quant(node.quant), {
 
-			// node.send;
-
-			// synth = synthDef.play(node.nodeID, addAction:\addToTail);
-			// synth.group = node.group;
 			node.source = synthDef;
 			// "objects[index].synthDef.func: %".format(node.objects[0].synthDef.func).postln;
 			// "\ntick quant [%]".format(node.quant).postln;
@@ -96,16 +82,9 @@ QuantNode {
 			// "\t-cBusChannels [%]".format(node.numChannels).postln;
 			// "\t-nodeID [%]".format(node.nodeID).postln;
 			// "\t-envDuration [%]".format(env.duration).postln;
-			/*
-			{
-				node.scope;
-				// synth.scope;
-				// { w = env.plot(); },
 
-			}.defer();
-*/
 			proxy.set(key.asSymbol, node);
-			// s.queryAllNodes(true);
+
 			node.quant;
 		});
 
@@ -117,66 +96,6 @@ QuantNode {
 		{ ^currentEnvironment.at(\tempo).clock.timeToNextBeat(quant); };
 	}
 
-/*
-	env { |levels = #[0,1,0], times = #[0.05,0.95], curves = #[5,-5]|
-
-		var proxy = currentEnvironment.at(QuantMap.findProxy(this).asSymbol);
-
-		levels = levels.add(levels[levels.size-1]);
-		times = times.add(node.quant - times.sum);
-		times = times.add(0);
-
-		this.levels = levels;
-		this.times = times;
-
-		node.group = proxy.group;
-
-		node[0] = {
-			DemandEnvGen.kr(
-				Dseq(levels, inf),
-				Dseq(times, inf),
-				1, 5, 1, 1,
-				doneAction:0
-			)
-		};
-
-
-		TempoClock.default.sched(this.time2quant(node.quant), { proxy.set(key.asSymbol, node); nil;});
-
-		// "\t - node.CODE %".format(node.asCode).postln;
-	}
-
-	env2 { |levels = #[0,1,0], times = #[0.05,0.95], curves = #[5,-5]|
-
-		var proxy = currentEnvironment.at(QuantMap.findProxy(this).asSymbol);
-		var bind;
-		levels = levels.add(levels[levels.size-1]);
-		times = times.add(node.quant - times.sum);
-		bind = Pbind(\type, \set, \args, [\trigEnv], \trigEnv, 1, \dur, times.sum);
-		bind.play(quant: node.quant);
-
-		this.levels = levels;
-		this.times = times;
-
-		node.group = proxy.group;
-
-		TempoClock.default.sched(this.time2quant(node.quant), {
-			node[0] = {
-				EnvGen.kr(
-					Env(levels,times,curves),
-					gate:\trigEnv.tr,
-					timeScale: (1/currentEnvironment.clock.tempo)
-				);
-			};
-			node[1] = \set -> bind;
-			// .play(currentEnvironment.clock,quant:times.sum);
-
-			proxy.set(key.asSymbol, node);
-			nil;
-		});
-
-	}
-*/
 
 
 }
