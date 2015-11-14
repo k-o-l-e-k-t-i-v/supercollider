@@ -1,59 +1,96 @@
 QuantEnv {
-	classvar version = 0.065;
-	var <>key, <>quant;
-	var <>cycles;
-	var <>index;
+	classvar version = 0.10;
+	var <>key, <>quant, <envelope;
+	// var qNode;
 
-	*new {|key = \amp, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = #[2,-2], offset = 0, repeats = inf|
-		^super.newCopyArgs(key, quant).phase(1,levels, times, curves, offset, repeats);
+	*new {|key = \amp, quant = 1, levels = #[0,1,0], times = #[0.05,0.95], curves = #[2,-2]|
+		^super.newCopyArgs(key, quant).init(levels, times, curves).add2Map;
+	}
+
+	init {|levels, times, curves|
+		"\nQuantEnv init".postln;
+
+		envelope = Env(levels, times, curves);
+		// envelope.plot;
+		this.print;
+	}
+
+	add2Map {
+		"\nQuantEnv add2Map".postln;
+		QuantMap.add(\default, \phase1, this); //QuantNode(QuantMap.currentProxy, QuantMap.currentSlot, 1, this));
+		// QuantMap.print;
+	}
+
+	cycle {|stage, phase|
+		"\nQuantEnv cycle [%, %]".format(stage, phase).postln;
+		QuantMap.edit(stage, phase, this);
+	}
+
+	/*
+	env { |env|
+	var proxy = currentEnvironment.at(QuantMap.findProxy(this).asSymbol);
+	var synthDef, synth;
+
+	node.group = proxy.group;
+
+	synthDef = SynthDef(
+	"qNode [ %, q%, c% ]".format(key, node.quant, node.index),
+	{
+	Out.kr(node.index, EnvGen.kr(env, doneAction:2))
+	}
+	).add;
+
+
+	this.stop;
+
+	"time2quant [%]".format(this.time2quant(node.quant)).postln;
+
+	// t = TempoClock.default.sched(time2quant, {
+	clock.sched(this.time2quant(node.quant), {
+
+	node.source = synthDef;
+	// "objects[index].synthDef.func: %".format(node.objects[0].synthDef.func).postln;
+	// "\ntick quant [%]".format(node.quant).postln;
+	// "\t-cBusIndex [%]".format(node.index).postln;
+	// "\t-nodeNameDef [%]".format(synthDef.name).postln;
+	// "\t-cBusChannels [%]".format(node.numChannels).postln;
+	// "\t-nodeID [%]".format(node.nodeID).postln;
+	// "\t-envDuration [%]".format(env.duration).postln;
+
+	proxy.set(key.asSymbol, node);
+
+	node.quant;
+	});
+
 	}
 
 	phase{ | index = 0, levels = #[0,1,0], times = #[0.05,0.95], curves = #[2,-2], offset = 0, repeats = 1 |
 
-		cycles.isNil.if(
-			{ cycles = Dictionary.new },
-			{ this.cycles = super.copy.cycles }
-		);
+	cycles.isNil.if(
+	{ cycles = Dictionary.new },
+	{ this.cycles = super.copy.cycles }
+	);
 
-		this.key = super.copy.key;
-		this.quant = super.copy.quant;
-		this.index = index.copy;
+	this.key = super.copy.key;
+	this.quant = super.copy.quant;
+	this.index = index.copy;
 
-		cycles.add(index -> QuantCycle(index, key, quant, levels, times, curves, offset, repeats));
+	cycles.add(index -> QuantCycle(index, key, quant, levels, times, curves, offset, repeats));
 	}
-
-	plot{ super.copy.cycles.at(super.copy.index).isPloted_(true); ^this;}
-	callPlotter{ QuantPlot().plot(super.copy.key, super.copy.cycles.at(super.copy.index)); }
-
+	*/
 	print{
-		var txt;
-		txt = "\nQuantEnv |%| - (ver%)".format(super.copy.key, version);
-
+		// var txt;
+		"\nQuantEnv |%| - (ver%)".format(super.copy.key, version).postln;
+		"\t-envDuration [%]".format(envelope.duration).postln;
+		"\t-envLevels [%]".format(envelope.levels).postln;
+		"\t-envTimes [%]".format(envelope.times).postln;
+		"\t-envCurves [%]".format(envelope.curves).postln;
+		/*
 		super.copy.cycles.asSortedArray.do({|oneCycle|
-			txt = txt + "\n %".format(oneCycle[1].print);
+		txt = txt + "\n %".format(oneCycle[1].print);
 		});
-
-		txt.postln;
+		*/
+		// txt.postln;
 	}
 
-	play{|which = #[0], repeats = inf|
-
-		var pbinds = List.newClear;
-		var syncPbind = super.copy.cycles.asSortedArray[0][1].asPbind(true);
-
-		this.print;
-		super.copy.cycles.asSortedArray.do({|oneCycle|
-			oneCycle.postln;
-			QuantPlot().plot(super.copy.key, oneCycle[1].index, oneCycle[1]);
-		});
-
-		pbinds.add(super.copy.cycles.asSortedArray[0][1].asPbind(true));
-		super.copy.cycles.asSortedArray.do({|oneCycle|
-			pbinds.add(oneCycle[1].asPbind(false));
-		});
-
-		pbinds = Pswitch(pbinds.asArray, Pseq([0, Pseq(which.asArray,repeats)]));
-
-		^pbinds;
-	}
 }
