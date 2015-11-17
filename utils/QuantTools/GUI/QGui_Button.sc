@@ -1,11 +1,12 @@
-Jbutton : UserView {
+QGui_Button : UserView {
 
-	var parent, rect;
+	var parent;
 	var >name;
 	var iconPath;
 	var frameAlpha;
 	var originX, originY, sizeX, sizeY;
 	var value;
+	var routine;
 
 
 	*new { | parent, bounds |
@@ -16,17 +17,19 @@ Jbutton : UserView {
 	}
 
 	init { |argParent, argBounds|
-		"INIT".postln;
+		// "INIT".postln;
 		parent = argParent;
-		rect = argBounds;
+		// rect = argBounds ?? Rect(0,0,50,50);
 		frameAlpha = 0;
+		name = "QGui_Button";
+		// "Rect %".format(rect).postln;
 
 		this.drawFunc = { this.draw };
 	}
 
 	iconName{|name|
 		iconPath = super.class.filenameSymbol.asString.dirname +/+ name ++ ".png";
-		iconPath.postln;
+		// iconPath.postln;
 	}
 
 	draw {
@@ -36,7 +39,7 @@ Jbutton : UserView {
 		});
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,180,240, frameAlpha);
-		Pen.addRect(Rect(0,0, rect.bounds.width, rect.bounds.height));
+		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
 		Pen.stroke;
 	}
 
@@ -53,7 +56,7 @@ Jbutton : UserView {
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;
 		var newVal;
-		"MouseDown".postln;
+		"MouseClickDown %".format(name).postln;
 		// this allows for user defined mouseDownAction
 		mouseDownAction.value(this, x, y, modifiers, buttonNumber, clickCount);
 
@@ -103,42 +106,26 @@ Jbutton : UserView {
 	frameEnter {
 		var time = 0.45;
 		var frames = 30;
-		Task({
+		routine.stop;
+		routine = Routine({
 			frames.do({|i|
 				frameAlpha = (i+1)/frames * 255;
 				this.refresh;
 				(time/frames).wait;
 			});
 		}).play(AppClock);
-		/*
-		Routine({
-			frames.do({|i|
-				frameAlpha = (i+1)/frames * 255;
-				this.refresh;
-				(time/frames).wait;
-			});
-		}).play(AppClock);
-		*/
 	}
 
 	frameExit {
-		var time = 0.25;
-		var frames = 30;
-		Task({
+		var time = 0.15;
+		var frames = 15;
+		routine.stop;
+		routine = Routine({
 			frames.do({|i|
 				frameAlpha = (frames -(i+1))/frames * 255;
 				this.refresh;
 				(time/frames).wait;
 			});
 		}).play(AppClock)
-		/*
-		Routine({
-			frames.do({|i|
-				frameAlpha = (frames -(i+1))/frames * 255;
-				this.refresh;
-				(time/frames).wait;
-			});
-		}).play(AppClock)
-		*/
 	}
 }
