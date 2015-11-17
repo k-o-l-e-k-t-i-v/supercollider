@@ -1,48 +1,30 @@
 QuantGUI{
-	classvar <version;
-	classvar <qPalette, <fonts;
-	classvar win, canvan;
-	classvar origin;
-	classvar isFullScreen, isMinimize, normalViewRect;
-	classvar mouseClickDown;
+	classvar
+	<version,
+	win, canvan,
+	<qPalette, <fonts,
+	isFullScreen, isMinimize, lastWinBounds, minWinSizeX, minWinSizeY,
+	<mouseClickDown;
+
 	var objects;
 
-	*new{|hasBoard = false| ^super.new.initPalette.initGUI(hasBoard) }
+	*new{ ^super.new.initPalette.initGUI }
 
-	initGUI {|hasBoard|
+	initGUI {
+		version = 0.10;
 
-		version = 0.1;
-
-		normalViewRect = Rect(100,100,900,600);
-
-		hasBoard.not.if(
-			{ win = Window.new(bounds: normalViewRect, resizable:true, border:false).front; },
-			{ win = Window.new("QTools %".format(version), bounds: normalViewRect, border:true).front; }
-		);
-		// win.drawFunc_{this.draw};
-		win.asView
-		.onResize_{super.class.resizeGUI}
-		.onClose_{super.class.closeGUI};
-
+		lastWinBounds = Rect(100,100,900,600);
+		win = Window.new(bounds:lastWinBounds, border:false).front;
 		canvan = QGui_Canvan(win, win.view.bounds);
 
 		isFullScreen = false;
 		isMinimize = false;
+		minWinSizeX = 600;
+		minWinSizeY = 400;
 
-		win.refresh;
 		// this.initControls();
 	}
-	/*
-	draw {
-	"WIN draw".postln;
-	// win.background = Color.clear;
 
-	Pen.width = 2;
-	Pen.strokeColor = Color.new255(20,180,240);
-	Pen.addRect(win.view.bounds);
-	Pen.stroke;
-	}
-	*/
 	initPalette {
 		qPalette = QPalette.new();
 		qPalette.window = Color.new255(30,30,30); // background
@@ -55,9 +37,9 @@ QuantGUI{
 		qPalette.highlightText = Color.white;
 
 		fonts = Dictionary.new();
-		fonts.put(\fontHeader, Font('Segoe UI', 14, 'true'));
+		fonts.put(\Header, Font('Segoe UI', 14, 'true'));
 		fonts.put(\fontChapter, Font('Segoe UI', 10, 'true'));
-		fonts.put(\fontSmall, Font('Segoe UI', 9, 'true'));
+		fonts.put(\Small, Font('Segoe UI', 9, 'true'));
 		fonts.put(\script, Font('Courier', 11, 'true'));
 	}
 
@@ -86,34 +68,32 @@ QuantGUI{
 		;
 		b.grid = Point(0.2, 0.2);
 		b.gridOn_(true);
-
-
-
 	}
 
-	*closeGUI {
-		"CloseGUI".postln;
-		win.close;
-	}
+	*closeGUI {	"CloseGUI".postln;	win.close;	}
 
 	*maximizeGUI {
 		isFullScreen.not.if(
 			{
 				"MaximizeGUI [fullScreen: %]".format(isFullScreen).postln;
-				normalViewRect = win.bounds;
-				win.bounds_(Rect(0,
-					(Window.screenBounds.height - Window.availableBounds.height),
-					Window.availableBounds.width,
-					Window.availableBounds.height)
+				lastWinBounds = win.bounds;
+				win.bounds_(Rect
+					(
+						0,
+						Window.screenBounds.height - Window.availableBounds.height,
+						Window.availableBounds.width,
+						Window.availableBounds.height
+					)
 				);
 				isFullScreen = true;
 			},
 			{
 				"MaximizeGUI [fullScreen: %]".format(isFullScreen).postln;
-				win.bounds_(normalViewRect);
+				win.bounds_(lastWinBounds);
 				isFullScreen = false;
 			}
 		);
+		canvan.resizeCanvan;
 	}
 
 	*minimizeGUI {
@@ -124,9 +104,36 @@ QuantGUI{
 		)
 	}
 
-	*resizeGUI {
-		"ResizeGUI".postln;
-		"win %".format(win.bounds).postln;
+	*resizeGUI { |x, y, direction = nil|
+		// "ResizeGUI [%,%,%]".format(x, y, direction).postln;
+		(x.notNil && y.notNil && direction.notNil).if({
+			switch ( direction,
+				\right, {
+					var newWidth = win.bounds.width + x - mouseClickDown.x;
+					(newWidth > minWinSizeX).if({
+						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
+					});
+				},
+				\top, {
+					var newHeight = win.bounds.height - y + mouseClickDown.y;
+					(newHeight > minWinSizeY).if({
+						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
+					});
+				},
+				\bottom, {
+					var newHeight = win.bounds.height + y - mouseClickDown.y;
+					(newHeight > minWinSizeY).if({
+						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
+					});
+				},
+				\left, {
+					var newWidth = win.bounds.width - x + mouseClickDown.x;
+					(newWidth > minWinSizeX).if({
+						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
+					});
+				}
+			);
+		});
 		canvan.resizeCanvan;
 	}
 

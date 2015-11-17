@@ -88,21 +88,21 @@ QGui_Button : UserView {
 	}
 
 	mouseEnter{
-		"MouseEnter %".format(name).postln;
+		// "MouseEnter %".format(name).postln;
 		mouseEnterAction.value(this);
 		this.frameEnter;
 	}
 	mouseLeave{
-		"MouseLeave %".format(name).postln;
+		// "MouseLeave %".format(name).postln;
 		mouseLeaveAction.value(this);
 		this.frameExit;
 	}
-
+	/*
 	mouseOver { |x, y|
-		"MouseOver [%, %]".format(x, y).postln;
-		mouseOverAction.value(this, x, y);
+	"MouseOver [%, %]".format(x, y).postln;
+	mouseOverAction.value(this, x, y);
 	}
-
+	*/
 	frameEnter {
 		var time = 0.45;
 		var frames = 30;

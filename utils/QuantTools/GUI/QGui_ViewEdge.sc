@@ -22,7 +22,6 @@ QGui_ViewEdge : UserView {
 		name = "QGui_ViewEdge";
 		edge = \top; // \top, \bottom, \left, \right
 
-
 		this.drawFunc = { this.draw };
 	}
 
@@ -32,7 +31,6 @@ QGui_ViewEdge : UserView {
 		// var color = colorNormal.blend(colorActive, frameAlpha);
 
 		Pen.width = 2;
-		// Pan.alpha = frameAlpha;
 		Pen.strokeColor = colorActive;
 		switch( edge,
 			\top, { Pen.line(offset@2, (this.bounds.width-offset)@2); },
@@ -72,7 +70,7 @@ QGui_ViewEdge : UserView {
 
 	mouseMove{ arg x, y, modifiers, buttonNumber, clickCount;
 		var newVal;
-		"MouseMove".postln;
+		"MouseMove %".format(name).postln;
 		// this allows for user defined mouseMoveAction
 		mouseMoveAction.value(this, x, y, modifiers, buttonNumber, clickCount);
 
@@ -96,11 +94,6 @@ QGui_ViewEdge : UserView {
 		"MouseLeave %".format(name).postln;
 		mouseLeaveAction.value(this);
 		this.frameExit;
-	}
-
-	mouseOver { |x, y|
-		"MouseOver [%, %]".format(x, y).postln;
-		mouseOverAction.value(this, x, y);
 	}
 
 	frameEnter {

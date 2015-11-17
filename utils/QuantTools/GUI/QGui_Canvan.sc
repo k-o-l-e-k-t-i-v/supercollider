@@ -18,10 +18,9 @@ QGui_Canvan : UserView {
 		frame = argBounds;
 
 		menu = UserView(parent)
-		.name_("header")
+		.name_("HeaderMenu")
 		.mouseMoveAction_{ |view, x, y, modifiers| QuantGUI.moveGUI(x, y) }
 		.mouseDownAction_{ |view, x, y, buttNum| QuantGUI.mouseDown(view, x, y, buttNum); };
-
 
 		menu2 = UserView(parent).name_("header2");
 
@@ -32,14 +31,37 @@ QGui_Canvan : UserView {
 
 		this.initControls;
 		this.drawFunc = { this.draw };
+		this.resizeCanvan;
 	}
 
 	initControls {
 
-		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100));
-		edges.put(\top, QGui_ViewEdge(parent).edge_(\top).offset_(200));
-		edges.put(\right, QGui_ViewEdge(parent).edge_(\right).offset_(100));
-		edges.put(\bottom, QGui_ViewEdge(parent).edge_(\bottom).offset_(200));
+		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100)
+			.name_("QGui_WinEdge_left")
+			.mouseMoveAction_{ |view, x, y, modifiers|
+				QuantGUI.moveGUI(x, QuantGUI.mouseClickDown.y);
+				QuantGUI.resizeGUI(x, y, \left);
+			}
+			.mouseDownAction_{ |view, x, y, buttNum| QuantGUI.mouseDown(view, x, y, buttNum); }
+		);
+		edges.put(\top, QGui_ViewEdge(parent).edge_(\top).offset_(200)
+			.name_("QGui_WinEdge_top")
+			.mouseMoveAction_{ |view, x, y, modifiers| QuantGUI.resizeGUI(x, y, \top) }
+			.mouseDownAction_{ |view, x, y, buttNum| QuantGUI.mouseDown(view, x, y, buttNum); }
+		);
+		edges.put(\right, QGui_ViewEdge(parent).edge_(\right).offset_(100)
+			.name_("QGui_WinEdge_right")
+			.mouseMoveAction_{ |view, x, y, modifiers| QuantGUI.resizeGUI(x, y, \right) }
+			.mouseDownAction_{ |view, x, y, buttNum| QuantGUI.mouseDown(view, x, y, buttNum); }
+		);
+		edges.put(\bottom, QGui_ViewEdge(parent).edge_(\bottom).offset_(200)
+			.name_("QGui_WinEdge_bottom")
+			.mouseMoveAction_{ |view, x, y, modifiers|
+				QuantGUI.moveGUI(QuantGUI.mouseClickDown.x, y);
+				QuantGUI.resizeGUI(x, y, \bottom);
+			}
+			.mouseDownAction_{ |view, x, y, buttNum| QuantGUI.mouseDown(view, x, y, buttNum); }
+		);
 
 		objects.put(\Button_Exit, QGui_Button(menu)
 			.name_("ButtonExit")
@@ -63,16 +85,16 @@ QGui_Canvan : UserView {
 
 
 		objects.put(\NameTest, StaticText(menu) //Rect((menu.bounds.left + 10),(menu.bounds.top + 10),100,25)
-			.string_("QTools v%".format(QuantGUI.version))
+			.string_("QTools")
 			.align_(\left)
-			.font_(QuantGUI.fonts[\fontHeader])
+			.font_(QuantGUI.fonts[\Header])
 			.palette_(QuantGUI.qPalette);
 		);
 
 		objects.put(\Name, StaticText(menu2)
-			.string_("QTools v%".format(QuantGUI.version))
+			.string_("version %".format(QuantGUI.version))
 			.align_(\right)
-			.font_(QuantGUI.fonts[\fontHeader])
+			.font_(QuantGUI.fonts[\Small])
 			.palette_(QuantGUI.qPalette);
 		);
 		/*
@@ -110,27 +132,11 @@ QGui_Canvan : UserView {
 		// value = val;
 		this.refresh;
 	}
-	/*
-	mouseMoveFunc{|w, x, y, modKey|
-		"MouseMoveFunc % [%, %]".format(w.name, x, y).postln;
-		/*
-		(mouseClickButton == 0).if({
-		origin.x = origin.x + x - mouseClickStartX;
-		origin.y = origin.y + y - mouseClickStartY;
-		w.refresh;
-		});
-		*/
-		// isDrag = true;
-		QuantGUI.moveGUI(x,y);
-	}
-	*/
-	resizeCanvan{
-		"ResizeCanvan".postln;
-		// "parent %".format(parent.bounds).postln;
 
+	resizeCanvan{
+		// "ResizeCanvan".postln;
 		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
 		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
-
 		canvan.bounds_(Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height));
 
 		edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
@@ -141,8 +147,6 @@ QGui_Canvan : UserView {
 		objects[\Button_Exit].bounds_(Rect.offsetCornerRT(menu, 10,10,25,25));
 		objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menu, 40,10,25,25));
 		objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
-
-
 
 		objects[\NameTest].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
 		objects[\Name].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
