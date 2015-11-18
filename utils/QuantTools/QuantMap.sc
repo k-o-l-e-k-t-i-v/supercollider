@@ -37,15 +37,20 @@ QuantMap {
 	*new { ^super.new.init(); }
 
 	init {
-		"\nQuantMap init".postln;
-
-		map.isNil.if(
-			{ map = MultiLevelIdentityDictionary.new; },
-			{
-				"\nQuantMap map exist".postln;
-				super.class.print;
-			}
-		);
+		Server.local.waitForBoot({
+			"\nQuantMap init".postln;
+			map.isNil.if(
+				{
+					CmdPeriod.add(this);
+					map = MultiLevelIdentityDictionary.new;
+					super.class.addStage(\default)
+				},
+				{
+					"\nQuantMap map exist".postln;
+					super.class.print;
+				}
+			);
+		});
 		/*
 		currentProxy = proxy;
 		currentChOff = channelOffset;
@@ -53,6 +58,15 @@ QuantMap {
 
 		"currentProxyCall %[%]\n".format(currentProxy.envirKey, currentSlot).postln;
 		*/
+	}
+
+	cmdPeriod{
+		"QuantMap cmdPeriod".postln;
+		Task({
+			Server.local.sync;
+			map.at(\stage).do({|stage| stage.put(\group, Group.new(nil, \addToHead)) });
+		}).play;
+		super.class.print;
 	}
 
 	*currentCall { |proxy, channelOffset = 0, slot|
@@ -65,11 +79,22 @@ QuantMap {
 
 	*addStage {|stageName|
 		// var group = Group.new(RootNode(Server.local).nodeID, \addToHead);
-		var group = Group.new(nil, \addToHead);
+		Server.local.serverRunning.if(
+			{
+				var group = map.at(\stage, stageName.asSymbol, \group);
+				group.isNil.if({ group = Group.new(nil, \addToHead); });
 
-		map.put(\stage, stageName.asSymbol, \nodeCurr, \nil);
-		map.put(\stage, stageName.asSymbol, \nodePrew, \nil);
-		map.put(\stage, stageName.asSymbol, \group, group);
+				map.put(\stage, stageName.asSymbol, \nodeCurr, \nil);
+				map.put(\stage, stageName.asSymbol, \nodePrew, \nil);
+				map.put(\stage, stageName.asSymbol, \group, group);
+			},
+			{ "QuantMap method [*addStage]: server not running ...".warn; }
+		)
+	}
+
+	*removeStage{|stageName|
+		var group = map.at(\stage, stageName.asSymbol, \group);
+		group.postln;
 	}
 
 	*add {|stage, phase, qObject|
@@ -123,7 +148,7 @@ QuantMap {
 		);
 	}
 
-	*print { "\nQuantMap print".postln; this.textMap.postln; }
+	*print { "\nQuantMap".postln; this.textMap.postln; }
 
 	*textMap {
 
@@ -137,7 +162,10 @@ QuantMap {
 						var numTabs = root.size - 1;
 						var slot = root.last;
 						numTabs.do({tabs = tabs ++ "\t";});
-						txt = txt ++ "\n" ++  tabs  ++ "| " ++ slot ++ " | ";
+						txt.notEmpty.if(
+							{ txt = txt ++ "\n" ++  tabs  ++ "| " ++ slot ++ " |"; },
+							{ txt = txt ++ tabs ++ "| " ++ slot ++ " |"; }
+						);
 						tabs = "";
 					},
 					{}
