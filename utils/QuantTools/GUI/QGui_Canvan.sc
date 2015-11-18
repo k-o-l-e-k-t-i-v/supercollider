@@ -1,7 +1,7 @@
 QGui_Canvan : UserView {
 
 	var parent, frame;
-	var menu, menu2, canvan;
+	var menu, menu2, canvan, menuMap;
 	var edges;
 	var objects;
 
@@ -25,6 +25,13 @@ QGui_Canvan : UserView {
 		menu2 = UserView(parent).name_("header2");
 
 		canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QuantGUI.qPalette);
+
+		menuMap = ScrollView(parent)
+		.autohidesScrollers_(true)
+		.palette_(QuantGUI.qPalette)
+		.visible_(false);
+
+
 
 		objects = Dictionary.new();
 		edges = Dictionary.new();
@@ -66,37 +73,60 @@ QGui_Canvan : UserView {
 		objects.put(\Button_Exit, QGui_Button(menu)
 			.name_("ButtonExit")
 			.iconName("ButtonExitGUI")
-			.mouseOverAction_{ |view, x, y| "MouseEnterAction % [%, %]".format(view, x, y).postln; }
 			.action_{|button| QuantGUI.closeGUI; }
 		);
 		objects.put(\Button_Maximize, QGui_Button(menu)
 			.name_("ButtonMaximize")
 			.iconName("ButtonMaximizeGUI")
-			.mouseOverAction_{ |view, x, y| "MouseEnterAction % [%, %]".format(view, x, y).postln; }
-			.action_{|button| QuantGUI.maximizeGUI; }
+			.action_{|button|
+				QuantGUI.maximizeGUI;
+				(button.value == 1).if({ button.value_(0); });
+			}
 		);
 		objects.put(\Button_Minimize, QGui_Button(menu)
 			.name_("ButtonMinimize")
 			.iconName("ButtonMinimizeGUI")
-			.mouseOverAction_{ |view, x, y| "MouseEnterAction % [%, %]".format(view, x, y).postln; }
-			.action_{|button| QuantGUI.minimizeGUI; }
+			.action_{|button|
+				QuantGUI.minimizeGUI;
+				(button.value == 1).if({ button.valueAction_(0); });
+			}
 		);
 
-
+		objects.put(\Button_Map, QGui_Button(menu2)
+			.name_("ButtonMap")
+			.iconName("IconMap2")
+			.action_{|button|
+				"MapPressed %".format(button.value).postln;
+				(button.value == 1).if(
+					{ menuMap.visible_(true) },
+					{ menuMap.visible_(false) }
+				)
+			}
+		);
 
 		objects.put(\NameTest, StaticText(menu) //Rect((menu.bounds.left + 10),(menu.bounds.top + 10),100,25)
 			.string_("QTools")
 			.align_(\left)
 			.font_(QuantGUI.fonts[\Header])
-			.palette_(QuantGUI.qPalette);
+			.stringColor_(Color.new255(20,180,240))
+			// .palette_(QuantGUI.qPalette);
 		);
 
 		objects.put(\Name, StaticText(menu2)
 			.string_("version %".format(QuantGUI.version))
 			.align_(\right)
 			.font_(QuantGUI.fonts[\Small])
-			.palette_(QuantGUI.qPalette);
+			.stringColor_(Color.new255(20,180,240))
+			// .palette_(QuantGUI.qPalette);
 		);
+
+		objects.put(\MapText, StaticText(menuMap)
+			.string_(QuantMap.textMap)
+			.align_(\topLeft)
+			.font_(QuantGUI.fonts[\Small])
+			.palette_(QuantGUI.qPalette)
+		);
+
 		/*
 		objects.put(\testNode, QGui_Node(canvan, Rect(10,10,(canvan.bounds.width-30), 200))
 		.name("testNode")
@@ -138,6 +168,8 @@ QGui_Canvan : UserView {
 		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
 		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
 		canvan.bounds_(Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height));
+		menuMap.bounds_(Rect.offsetEdgeLeft(parent, 5,235,50,300));
+
 
 		edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
 		edges[\top].bounds_(Rect.offsetEdgeTop(parent, 0,50,50,15));
@@ -148,9 +180,12 @@ QGui_Canvan : UserView {
 		objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menu, 40,10,25,25));
 		objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
 
+		objects[\Button_Map].bounds_(Rect.offsetCornerLB(menu2, 10,10,25,25));
+
 		objects[\NameTest].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
 		objects[\Name].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
 
+		objects[\MapText].bounds_(Rect.offsetCornerLT(menuMap, 20,10,270,800));
 	}
 
 }

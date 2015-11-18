@@ -11,24 +11,25 @@ QuantGUI{
 	*new{ ^super.new.initPalette.initGUI }
 
 	initGUI {
-		version = 0.10;
+		Server.local.waitForBoot({
+			version = 0.11;
+			this.initMap;
 
-		lastWinBounds = Rect(100,100,900,600);
-		win = Window.new(bounds:lastWinBounds, border:false).front;
-		canvan = QGui_Canvan(win, win.view.bounds);
+			lastWinBounds = Rect(100,100,900,600);
+			win = Window.new(bounds:lastWinBounds, border:false).front;
+			canvan = QGui_Canvan(win, win.view.bounds);
 
-		isFullScreen = false;
-		isMinimize = false;
-		minWinSizeX = 600;
-		minWinSizeY = 400;
-
-		// this.initControls();
+			isFullScreen = false;
+			isMinimize = false;
+			minWinSizeX = 600;
+			minWinSizeY = 400;
+		});
 	}
 
 	initPalette {
 		qPalette = QPalette.new();
 		qPalette.window = Color.new255(30,30,30); // background
-		qPalette.windowText = Color.new255(20,180,240);
+		qPalette.windowText = Color.white;
 		qPalette.button = Color.new255(30,30,30);
 		qPalette.buttonText = Color.white;
 		qPalette.base = Color.new255(30,30,30);
@@ -38,36 +39,15 @@ QuantGUI{
 
 		fonts = Dictionary.new();
 		fonts.put(\Header, Font('Segoe UI', 14, 'true'));
-		fonts.put(\fontChapter, Font('Segoe UI', 10, 'true'));
-		fonts.put(\Small, Font('Segoe UI', 9, 'true'));
+		// fonts.put(\fontChapter, Font('Segoe UI', 10, 'true'));
+		fonts.put(\Small, Font('Segoe UI', 10, \false, usePointSize: \true ));
 		fonts.put(\script, Font('Courier', 11, 'true'));
 	}
 
-	initControls {
-		var v, b, t ;
-
-
-		v = ListView(canvan,Rect(10,10,220,70))
-		.items_([ "SinOsc", "Saw", "LFSaw", "WhiteNoise", "PinkNoise", "BrownNoise", "Osc" ])
-		.palette_(qPalette)
-		.action_({ arg sbs;
-			[sbs.value, v.items[sbs.value]].postln; // .value returns the integer
-		});
-
-
-		b = EnvelopeView(canvan, Rect(0, 300, 230, 80))
-		.drawLines_(true)
-		//     .selectionColor_(Color.red)
-		.drawRects_(true)
-		.resize_(5)
-		.step_(0.05)
-		.action_({arg b; [b.index, b.value].postln})
-		.thumbSize_(5)
-		.value_([[0.0, 0.1, 0.5, 1.0],[0.1,1.0,0.8,0.0]])
-		.palette_(qPalette)
-		;
-		b.grid = Point(0.2, 0.2);
-		b.gridOn_(true);
+	initMap {
+		QuantMap.new();
+		QuantMap.addStage(\default);
+		QuantMap.addStage(\test);
 	}
 
 	*closeGUI {	"CloseGUI".postln;	win.close;	}
@@ -149,4 +129,38 @@ QuantGUI{
 		mouseClickDown = x@y;
 	}
 
+
+
+
+
+
+	////////////////////////////////////////
+	/*
+	initControls {
+	var v, b, t ;
+
+
+	v = ListView(canvan,Rect(10,10,220,70))
+	.items_([ "SinOsc", "Saw", "LFSaw", "WhiteNoise", "PinkNoise", "BrownNoise", "Osc" ])
+	.palette_(qPalette)
+	.action_({ arg sbs;
+	[sbs.value, v.items[sbs.value]].postln; // .value returns the integer
+	});
+
+
+	b = EnvelopeView(canvan, Rect(0, 300, 230, 80))
+	.drawLines_(true)
+	//     .selectionColor_(Color.red)
+	.drawRects_(true)
+	.resize_(5)
+	.step_(0.05)
+	.action_({arg b; [b.index, b.value].postln})
+	.thumbSize_(5)
+	.value_([[0.0, 0.1, 0.5, 1.0],[0.1,1.0,0.8,0.0]])
+	.palette_(qPalette)
+	;
+	b.grid = Point(0.2, 0.2);
+	b.gridOn_(true);
+	}
+	*/
 }

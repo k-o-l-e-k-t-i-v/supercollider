@@ -4,9 +4,9 @@ QGui_Button : UserView {
 	var >name;
 	var iconPath;
 	var frameAlpha;
-	var originX, originY, sizeX, sizeY;
-	var value;
+	var <value;
 	var routine;
+	// var originX, originY, sizeX, sizeY;
 
 
 	*new { | parent, bounds |
@@ -22,6 +22,7 @@ QGui_Button : UserView {
 		// rect = argBounds ?? Rect(0,0,50,50);
 		frameAlpha = 0;
 		name = "QGui_Button";
+		value = 0;
 		// "Rect %".format(rect).postln;
 
 		this.drawFunc = { this.draw };
@@ -33,6 +34,10 @@ QGui_Button : UserView {
 	}
 
 	draw {
+		(value == 1).if(
+			{ this.background = Color.new255(50,60,70) }, // Color.new255(60,90,100)
+			{ this.background = Color.clear }
+		);
 		iconPath.notNil.if({
 			var img = Image.new(iconPath);
 			this.backgroundImage_(img);
@@ -45,46 +50,38 @@ QGui_Button : UserView {
 
 	// (5) define typical widget methods  (only those you need or adjust as needed)
 	valueAction_{ |val| // most widgets have this
-		this.value = val;
+		// (value == 0).if( {value = 1}, {value = 0} );
+		this.value_(val);
 		this.doAction;
 	}
 	value_{ |val|       // in many widgets, you can change the
 		// value and refresh the view , but not do the action.
+
 		value = val;
 		this.refresh;
 	}
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;
-		var newVal;
-		"MouseClickDown %".format(name).postln;
+		// var newVal;
+
 		// this allows for user defined mouseDownAction
 		mouseDownAction.value(this, x, y, modifiers, buttonNumber, clickCount);
-
+		/*
 		// set the value and do the action
 		([256, 0].includes(modifiers)).if{ // restrict to no modifier
 
-			newVal= x.linlin(0,this.bounds.width,0,1);
-			// translates the relative mouse position in pixels to a value between 0 and 1
+		newVal= x.linlin(0,this.bounds.width,0,1);
+		// translates the relative mouse position in pixels to a value between 0 and 1
 
-			if (newVal != value) {this.valueAction_(newVal)}; // only do something if the value changed
+		if (newVal != value) {this.valueAction_(newVal)}; // only do something if the value changed
 		};
-	}
+		*/
 
-	mouseMove{ arg x, y, modifiers, buttonNumber, clickCount;
-		var newVal;
-		"MouseMove".postln;
-		// this allows for user defined mouseMoveAction
-		mouseMoveAction.value(this, x, y, modifiers, buttonNumber, clickCount);
+		(value == 0).if( {this.valueAction_(1);}, {this.valueAction_(0);} );
+		// this.valueAction_(nil);
 
-		// set the value and do the action
-		([256, 0].includes(modifiers)).if{ // restrict to no modifier
-
-			newVal= x.linlin(0,this.bounds.width,0,1);
-			// translates the  relative mouse position in pixels to a value between 0 and 1
-
-			if (newVal != value) {this.valueAction_(newVal)}; // only do something if the value changed
-		};
-
+		// this.doAction;
+		"MouseClickDown % [value %]".format(name, value).postln;
 	}
 
 	mouseEnter{
@@ -92,17 +89,13 @@ QGui_Button : UserView {
 		mouseEnterAction.value(this);
 		this.frameEnter;
 	}
+
 	mouseLeave{
 		// "MouseLeave %".format(name).postln;
 		mouseLeaveAction.value(this);
 		this.frameExit;
 	}
-	/*
-	mouseOver { |x, y|
-	"MouseOver [%, %]".format(x, y).postln;
-	mouseOverAction.value(this, x, y);
-	}
-	*/
+
 	frameEnter {
 		var time = 0.45;
 		var frames = 30;

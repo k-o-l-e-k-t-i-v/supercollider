@@ -1,9 +1,7 @@
 QuantMap {
-	classvar version = 0.10;
+	classvar version = 0.11;
 	classvar map;
 	classvar <currentProxy, currentChOff, <currentSlot;
-
-
 
 	*initClass{
 		Class.initClassTree(AbstractPlayControl);
@@ -13,7 +11,8 @@ QuantMap {
 			#{ arg func, proxy, channelOffset=0, index;
 				var oldNode, newNode;
 
-				QuantMap.new(proxy, channelOffset, index);
+				QuantMap.new();
+				QuantMap.currentCall(proxy, channelOffset, index);
 
 				func.value(); // function call QuantNode.new() /////////////
 				// newNode = func.value(); // function call QuantNode.new() /////////////
@@ -35,11 +34,9 @@ QuantMap {
 		});
 	}
 
-	*new {|proxy, channelOffset = 0, slot|
-		^super.new.init(proxy, channelOffset, slot);
-	}
+	*new { ^super.new.init(); }
 
-	init {|proxy, channelOffset, slot|
+	init {
 		"\nQuantMap init".postln;
 
 		map.isNil.if(
@@ -49,12 +46,30 @@ QuantMap {
 				super.class.print;
 			}
 		);
-
+		/*
 		currentProxy = proxy;
 		currentChOff = channelOffset;
 		currentSlot = slot;
 
 		"currentProxyCall %[%]\n".format(currentProxy.envirKey, currentSlot).postln;
+		*/
+	}
+
+	*currentCall { |proxy, channelOffset = 0, slot|
+		currentProxy = proxy;
+		currentChOff = channelOffset;
+		currentSlot = slot;
+
+		"currentProxyCall %[%]\n".format(currentProxy.envirKey, currentSlot).postln;
+	}
+
+	*addStage {|stageName|
+		// var group = Group.new(RootNode(Server.local).nodeID, \addToHead);
+		var group = Group.new(nil, \addToHead);
+
+		map.put(\stage, stageName.asSymbol, \nodeCurr, \nil);
+		map.put(\stage, stageName.asSymbol, \nodePrew, \nil);
+		map.put(\stage, stageName.asSymbol, \group, group);
 	}
 
 	*add {|stage, phase, qObject|
@@ -108,23 +123,44 @@ QuantMap {
 		);
 	}
 
-	*print {
-		"\nQuantMap print".postln;
+	*print { "\nQuantMap print".postln; this.textMap.postln; }
+
+	*textMap {
+
+		var txt = "";
+		var tabs = "";
+
 		map.sortedTreeDo(
-			{|stage| stage.notEmpty.if({"\nstage ~%".format(stage).postln;}); },
+			{|root, stageName, aaa|
+				root.notEmpty.if(
+					{
+						var numTabs = root.size - 1;
+						var slot = root.last;
+						numTabs.do({tabs = tabs ++ "\t";});
+						txt = txt ++ "\n" ++  tabs  ++ "| " ++ slot ++ " | ";
+						tabs = "";
+					},
+					{}
+				);
+			},
 			{|stage, qNode|
-				// var proxy = path[0];
-				// var slot = path[1];
-				// stage.postln;
-				// qNode.postln;
-				qNode.print;
-				// "\t[%] item : % (%)".format(slot, item, item.key).postln;
-				// "\t[%] item : % (%)".format(slot, item, item.key).postln;
+				var numTabs = stage.size - 1;
+				var slot = stage.last;
+
+				numTabs.do({tabs = tabs ++ "\t";});
+				txt = txt ++ "\n" ++ tabs ++ "- " ++ slot ++ " : " ++ qNode;
+				tabs = "";
 			},
 			{},
-			{|node| node.notEmpty.if({"-----------".postln;})},
+			{|root, aaa|
+				var numTabs = root.size - 1;
+				numTabs.do({tabs = tabs ++ "\t";});
+				root.notEmpty.if({ txt = txt ++ "\n" ++ tabs ++ "- - -"; });
+				tabs = "";
+			},
 			{}
 		);
+		^txt;
 	}
 
 	// *add {|qNode| map.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);	}

@@ -54,7 +54,7 @@ QGui_ViewEdge : UserView {
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;
 		var newVal;
-		"MouseClickDown %".format(name).postln;
+		// "MouseClickDown %".format(name).postln;
 		// this allows for user defined mouseDownAction
 		mouseDownAction.value(this, x, y, modifiers, buttonNumber, clickCount);
 
@@ -70,7 +70,7 @@ QGui_ViewEdge : UserView {
 
 	mouseMove{ arg x, y, modifiers, buttonNumber, clickCount;
 		var newVal;
-		"MouseMove %".format(name).postln;
+		// "MouseMove %".format(name).postln;
 		// this allows for user defined mouseMoveAction
 		mouseMoveAction.value(this, x, y, modifiers, buttonNumber, clickCount);
 
@@ -86,12 +86,12 @@ QGui_ViewEdge : UserView {
 	}
 
 	mouseEnter{
-		"MouseEnter %".format(name).postln;
+		// "MouseEnter %".format(name).postln;
 		mouseEnterAction.value(this);
 		this.frameEnter;
 	}
 	mouseLeave{
-		"MouseLeave %".format(name).postln;
+		// "MouseLeave %".format(name).postln;
 		mouseLeaveAction.value(this);
 		this.frameExit;
 	}
