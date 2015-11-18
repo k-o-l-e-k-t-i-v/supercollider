@@ -11,9 +11,12 @@ QuantGUI{
 	*new{ ^super.new.initPalette.initGUI }
 
 	initGUI {
-		Server.local.waitForBoot({
+		Task({
 			version = 0.11;
-			this.initMap;
+			QuantMap.new();
+			Server.local.bootSync; // wait for boot in QuantMap init
+
+			this.initMapTest;
 
 			lastWinBounds = Rect(100,100,900,600);
 			win = Window.new(bounds:lastWinBounds, border:false).front;
@@ -23,7 +26,7 @@ QuantGUI{
 			isMinimize = false;
 			minWinSizeX = 600;
 			minWinSizeY = 400;
-		});
+		}).play(AppClock);
 	}
 
 	initPalette {
@@ -44,11 +47,20 @@ QuantGUI{
 		fonts.put(\script, Font('Courier', 11, 'true'));
 	}
 
-	initMap {
-		QuantMap.new();
+	initMapTest{
 		QuantMap.addStage(\default);
 		QuantMap.addStage(\test);
 	}
+
+	// ACTIONS ///////////////////////////////
+
+	*getMapText { ^QuantMap.textMap; }
+
+	*addStage { QuantMap.addStage(\pokusGui); }
+
+	*removeStage { QuantMap.removeStage(\pokusGui) }
+
+	// WIN ///////////////////////////////
 
 	*closeGUI {	"CloseGUI".postln;	win.close;	}
 

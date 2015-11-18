@@ -31,8 +31,6 @@ QGui_Canvan : UserView {
 		.palette_(QuantGUI.qPalette)
 		.visible_(false);
 
-
-
 		objects = Dictionary.new();
 		edges = Dictionary.new();
 
@@ -43,6 +41,7 @@ QGui_Canvan : UserView {
 
 	initControls {
 
+		// EDGES ///////////////////////////////
 		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100)
 			.name_("QGui_WinEdge_left")
 			.mouseMoveAction_{ |view, x, y, modifiers|
@@ -70,6 +69,7 @@ QGui_Canvan : UserView {
 			.mouseDownAction_{ |view, x, y, buttNum| QuantGUI.mouseDown(view, x, y, buttNum); }
 		);
 
+		// WIN ///////////////////////////////
 		objects.put(\Button_Exit, QGui_Button(menu)
 			.name_("ButtonExit")
 			.iconName("ButtonExitGUI")
@@ -92,19 +92,48 @@ QGui_Canvan : UserView {
 			}
 		);
 
+		// MAP ///////////////////////////////
 		objects.put(\Button_Map, QGui_Button(menu2)
 			.name_("ButtonMap")
 			.iconName("IconMap2")
 			.action_{|button|
 				"MapPressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{ menuMap.visible_(true) },
+					{
+						objects[\MapText].string_(QuantGUI.getMapText);
+						menuMap.visible_(true)
+					},
 					{ menuMap.visible_(false) }
 				)
 			}
 		);
+		objects.put(\MapText, StaticText(menuMap)
+			// .string_("map")
+			.align_(\topLeft)
+			.font_(QuantGUI.fonts[\Small])
+			.palette_(QuantGUI.qPalette)
+		);
 
-		objects.put(\NameTest, StaticText(menu) //Rect((menu.bounds.left + 10),(menu.bounds.top + 10),100,25)
+		objects.put(\ButtonAddStage, Button.new(menuMap)
+			.string_("Add")
+			.action_{|button|
+				QuantGUI.addStage;
+				objects[\MapText].string_(QuantGUI.getMapText);
+
+			};
+		);
+		objects.put(\ButtonRemoveStage, Button.new(menuMap)
+			.string_("Remove")
+			.action_{|button|
+				QuantGUI.removeStage;
+				objects[\MapText].string_(QuantGUI.getMapText);
+
+			};
+		);
+
+
+		// REST ///////////////////////////////
+		objects.put(\Logo, StaticText(menu)
 			.string_("QTools")
 			.align_(\left)
 			.font_(QuantGUI.fonts[\Header])
@@ -112,7 +141,7 @@ QGui_Canvan : UserView {
 			// .palette_(QuantGUI.qPalette);
 		);
 
-		objects.put(\Name, StaticText(menu2)
+		objects.put(\Version, StaticText(menu2)
 			.string_("version %".format(QuantGUI.version))
 			.align_(\right)
 			.font_(QuantGUI.fonts[\Small])
@@ -120,12 +149,7 @@ QGui_Canvan : UserView {
 			// .palette_(QuantGUI.qPalette);
 		);
 
-		objects.put(\MapText, StaticText(menuMap)
-			.string_(QuantMap.textMap)
-			.align_(\topLeft)
-			.font_(QuantGUI.fonts[\Small])
-			.palette_(QuantGUI.qPalette)
-		);
+
 
 		/*
 		objects.put(\testNode, QGui_Node(canvan, Rect(10,10,(canvan.bounds.width-30), 200))
@@ -181,11 +205,13 @@ QGui_Canvan : UserView {
 		objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
 
 		objects[\Button_Map].bounds_(Rect.offsetCornerLB(menu2, 10,10,25,25));
+		objects[\ButtonAddStage].bounds_(Rect.offsetCornerLT(menuMap, 20,10,45,15));
+		objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerLT(menuMap, 70,10,45,15));
+		objects[\MapText].bounds_(Rect.offsetCornerLT(menuMap, 20,40,270,800));
 
-		objects[\NameTest].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
-		objects[\Name].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
+		objects[\Logo].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
+		objects[\Version].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
 
-		objects[\MapText].bounds_(Rect.offsetCornerLT(menuMap, 20,10,270,800));
 	}
 
 }

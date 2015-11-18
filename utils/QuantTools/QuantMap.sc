@@ -43,7 +43,7 @@ QuantMap {
 				{
 					CmdPeriod.add(this);
 					map = MultiLevelIdentityDictionary.new;
-					super.class.addStage(\default)
+					super.class.addStage(\default);
 				},
 				{
 					"\nQuantMap map exist".postln;
@@ -51,6 +51,7 @@ QuantMap {
 				}
 			);
 		});
+
 		/*
 		currentProxy = proxy;
 		currentChOff = channelOffset;
@@ -61,12 +62,12 @@ QuantMap {
 	}
 
 	cmdPeriod{
-		"QuantMap cmdPeriod".postln;
+		// "QuantMap cmdPeriod".postln;
 		Task({
 			Server.local.sync;
 			map.at(\stage).do({|stage| stage.put(\group, Group.new(nil, \addToHead)) });
+			Server.local.sync;
 		}).play;
-		super.class.print;
 	}
 
 	*currentCall { |proxy, channelOffset = 0, slot|
@@ -93,8 +94,10 @@ QuantMap {
 	}
 
 	*removeStage{|stageName|
-		var group = map.at(\stage, stageName.asSymbol, \group);
-		group.postln;
+		var nodeCurr = map.at(\stage, stageName.asSymbol, \nodeCurr).free;
+		var nodePrew = map.at(\stage, stageName.asSymbol, \nodePrew).free;
+		var group = map.at(\stage, stageName.asSymbol, \group).free;
+		map.removeEmptyAt(\stage, stageName.asSymbol);
 	}
 
 	*add {|stage, phase, qObject|
