@@ -44,6 +44,7 @@ QuantMap {
 					CmdPeriod.add(this);
 					map = MultiLevelIdentityDictionary.new;
 					super.class.addStage(\default);
+					super.class.currentStage_(\default);
 				},
 				{
 					"\nQuantMap map exist".postln;
@@ -78,6 +79,8 @@ QuantMap {
 		"currentProxyCall %[%]\n".format(currentProxy.envirKey, currentSlot).postln;
 	}
 
+	//GUI///////////////////////////////////////////
+
 	*addStage {|stageName|
 		// var group = Group.new(RootNode(Server.local).nodeID, \addToHead);
 		Server.local.serverRunning.if(
@@ -99,6 +102,37 @@ QuantMap {
 		var group = map.at(\stage, stageName.asSymbol, \group).free;
 		map.removeEmptyAt(\stage, stageName.asSymbol);
 	}
+
+	*stages {
+		var stages = List.newClear();
+		map.at(\stage).asAssociations.do({|associations|
+			associations.do{|oneAssoc| stages.add(oneAssoc.key) }
+		});
+		// "Stages: %".format(stages.asArray).postln;
+		^stages.asArray;
+	}
+
+	*stageExist {|stageName|
+		^block{|break|
+			map.at(\stage).asAssociations.do({|associations|
+				associations.do{|oneAssoc|
+					(oneAssoc.key.asSymbol == stageName.asSymbol).if({break.value(true)})
+				}
+			});
+			break.value(false);
+		};
+	}
+
+	*currentStage_ {|stageName|
+		this.stageExist(stageName).if(
+			{ map.put(\currentStage, stageName.asSymbol) },
+			{ "QuantMap method [*currentStage_]: stage doesnt exist ...".warn; }
+		);
+	}
+
+	*currentStage { ^map.at(\currentStage) }
+
+	////////////////////////////////////////////////
 
 	*add {|stage, phase, qObject|
 		"\nQuantMap add [stage: %]".format(stage).postln;

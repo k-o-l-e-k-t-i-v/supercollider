@@ -1,9 +1,9 @@
-QGui_PanelStages : UserView {
+QGui_Stage : UserView {
 
 	var parent, bounds;
 	var objects;
 	var >name;
-	var <visible, value;
+	var <visible;
 	var mapTextView;
 
 	*new { | parent, bounds |
@@ -19,18 +19,15 @@ QGui_PanelStages : UserView {
 
 		objects = Dictionary.new();
 		visible = false;
-
+/*
 		mapTextView = ScrollView(this)
 		.autohidesScrollers_(true)
 		.palette_(QuantGUI.qPalette);
-
-		this.initControl;
-		this.refreshObjects;
+*/
+		// this.initControl;
+		// this.refreshObjects;
 		this.drawFunc = { this.draw };
-		this.resizeMenu;
-
-		"QGui_PanelStages [stages: %]".format(QuantGUI.getStages).postln;
-		"QGui_PanelStages [currentStages: %]".format(QuantGUI.getCurrentStage).postln;
+		// this.resizeMenu;
 	}
 
 	initControl {
@@ -72,36 +69,4 @@ QGui_PanelStages : UserView {
 		this.refreshObjects;
 		this.refresh;
 	}
-
-	resizeMenu{
-		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
-
-		objects[\ButtonAddStage].bounds_(Rect.offsetCornerLT(this.bounds, 20,10,45,15));
-		objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerLT(this.bounds, 70,10,45,15));
-		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,400));
-
-		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 20,40,270,800));
-	}
-
-	refreshObjects{
-		objects[\MapText].string_(QuantGUI.getMapText);
-
-		mapTextView.visible = visible;
-		objects[\ButtonAddStage].visible = visible;
-		objects[\ButtonRemoveStage].visible = visible;
-		objects[\MapText].visible = visible;
-	}
-
-	/*
-	// (5) define typical widget methods  (only those you need or adjust as needed)
-	valueAction_{ |val| // most widgets have this
-	this.value = val;
-	this.doAction;
-	}
-	value_{ |val|       // in many widgets, you can change the
-	// value and refresh the view , but not do the action.
-	value = val;
-	this.refresh;
-	}
-	*/
 }

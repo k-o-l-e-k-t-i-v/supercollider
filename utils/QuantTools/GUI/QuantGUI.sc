@@ -60,6 +60,10 @@ QuantGUI{
 
 	*removeStage { QuantMap.removeStage(\pokusGui) }
 
+	*getStages { ^QuantMap.stages }
+
+	*getCurrentStage { ^QuantMap.currentStage }
+
 	// WIN ///////////////////////////////
 
 	// *winGUI { ^win }
