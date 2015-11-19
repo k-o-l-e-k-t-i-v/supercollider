@@ -18,7 +18,7 @@ QuantGUI{
 
 			this.initMapTest;
 
-			lastWinBounds = Rect(100,100,900,600);
+			lastWinBounds = Rect(100,100,800,600);
 			win = Window.new(bounds:lastWinBounds, border:false).front;
 			canvan = QGui_Canvan(win, win.view.bounds);
 
@@ -61,6 +61,8 @@ QuantGUI{
 	*removeStage { QuantMap.removeStage(\pokusGui) }
 
 	// WIN ///////////////////////////////
+
+	// *winGUI { ^win }
 
 	*closeGUI {	"CloseGUI".postln;	win.close;	}
 

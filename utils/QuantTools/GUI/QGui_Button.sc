@@ -62,26 +62,9 @@ QGui_Button : UserView {
 	}
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;
-		// var newVal;
-
-		// this allows for user defined mouseDownAction
+		// "MouseClickDown % [value %]".format(name, value).postln;
 		mouseDownAction.value(this, x, y, modifiers, buttonNumber, clickCount);
-		/*
-		// set the value and do the action
-		([256, 0].includes(modifiers)).if{ // restrict to no modifier
-
-		newVal= x.linlin(0,this.bounds.width,0,1);
-		// translates the relative mouse position in pixels to a value between 0 and 1
-
-		if (newVal != value) {this.valueAction_(newVal)}; // only do something if the value changed
-		};
-		*/
-
 		(value == 0).if( {this.valueAction_(1);}, {this.valueAction_(0);} );
-		// this.valueAction_(nil);
-
-		// this.doAction;
-		"MouseClickDown % [value %]".format(name, value).postln;
 	}
 
 	mouseEnter{

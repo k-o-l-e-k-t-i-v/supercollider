@@ -1,7 +1,7 @@
 QGui_Canvan : UserView {
 
-	var parent, frame;
-	var menu, menu2, canvan, menuMap;
+	var parent, bounds;
+	var menu, menu2, canvan, menuStages;
 	var edges;
 	var objects;
 
@@ -15,7 +15,7 @@ QGui_Canvan : UserView {
 	init { |argParent, argBounds|
 		"INIT Canvan".postln;
 		parent = argParent;
-		frame = argBounds;
+		bounds = argBounds;
 
 		menu = UserView(parent)
 		.name_("HeaderMenu")
@@ -26,10 +26,9 @@ QGui_Canvan : UserView {
 
 		canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QuantGUI.qPalette);
 
-		menuMap = ScrollView(parent)
-		.autohidesScrollers_(true)
-		.palette_(QuantGUI.qPalette)
-		.visible_(false);
+		menuStages = QGui_PanelStages(parent).name_("panelStages");
+		// menuNodes =
+		// menuTimeline =
 
 		objects = Dictionary.new();
 		edges = Dictionary.new();
@@ -99,37 +98,40 @@ QGui_Canvan : UserView {
 			.action_{|button|
 				"MapPressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{
-						objects[\MapText].string_(QuantGUI.getMapText);
-						menuMap.visible_(true)
-					},
-					{ menuMap.visible_(false) }
+					{ menuStages.visible_(true)	},
+					{ menuStages.visible_(false) }
 				)
 			}
 		);
-		objects.put(\MapText, StaticText(menuMap)
-			// .string_("map")
-			.align_(\topLeft)
-			.font_(QuantGUI.fonts[\Small])
-			.palette_(QuantGUI.qPalette)
-		);
-
-		objects.put(\ButtonAddStage, Button.new(menuMap)
-			.string_("Add")
+		objects.put(\Button_Node, QGui_Button(menu2)
+			.name_("ButtonNode")
+			.iconName("IconNode")
 			.action_{|button|
-				QuantGUI.addStage;
-				objects[\MapText].string_(QuantGUI.getMapText);
-
-			};
+				"MapPressed %".format(button.value).postln;
+				(button.value == 1).if(
+					{
+						// menuStages.refresh;
+						// menuStages.visible_(true);
+					},
+					// { menuStages.visible_(false) }
+				)
+			}
 		);
-		objects.put(\ButtonRemoveStage, Button.new(menuMap)
-			.string_("Remove")
+		objects.put(\Button_Time, QGui_Button(menu2)
+			.name_("ButtonTime")
+			.iconName("IconTime")
 			.action_{|button|
-				QuantGUI.removeStage;
-				objects[\MapText].string_(QuantGUI.getMapText);
-
-			};
+				"MapPressed %".format(button.value).postln;
+				(button.value == 1).if(
+					{
+						// menuStages.refresh;
+						// menuStages.visible_(true);
+					},
+					// { menuStages.visible_(false) }
+				)
+			}
 		);
+
 
 
 		// REST ///////////////////////////////
@@ -172,7 +174,7 @@ QGui_Canvan : UserView {
 
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,180,240);
-		Pen.addRect(Rect(0,0, frame.width, frame.height));
+		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
 		Pen.stroke;
 	}
 
@@ -188,12 +190,12 @@ QGui_Canvan : UserView {
 	}
 
 	resizeCanvan{
-		// "ResizeCanvan".postln;
+		// "QGui_Canvan resizeCanvan".postln;
 		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
 		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
 		canvan.bounds_(Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height));
-		menuMap.bounds_(Rect.offsetEdgeLeft(parent, 5,235,50,300));
 
+		menuStages.resizeMenu;
 
 		edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
 		edges[\top].bounds_(Rect.offsetEdgeTop(parent, 0,50,50,15));
@@ -205,9 +207,8 @@ QGui_Canvan : UserView {
 		objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
 
 		objects[\Button_Map].bounds_(Rect.offsetCornerLB(menu2, 10,10,25,25));
-		objects[\ButtonAddStage].bounds_(Rect.offsetCornerLT(menuMap, 20,10,45,15));
-		objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerLT(menuMap, 70,10,45,15));
-		objects[\MapText].bounds_(Rect.offsetCornerLT(menuMap, 20,40,270,800));
+		objects[\Button_Node].bounds_(Rect.offsetCornerLB(menu2, 40,10,25,25));
+		objects[\Button_Time].bounds_(Rect.offsetCornerLB(menu2, 70,10,25,25));
 
 		objects[\Logo].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
 		objects[\Version].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));

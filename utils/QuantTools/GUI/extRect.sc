@@ -50,7 +50,8 @@
 			Window, { parentRect = parent.view.bounds },
 			TopView, { parentRect = parent.bounds },
 			UserView, { parentRect = Rect(0,0,parent.bounds.width, parent.bounds.height) },
-			ScrollView, { parentRect = parent.innerBounds }
+			ScrollView, { parentRect = parent.innerBounds },
+			Rect, { parentRect = Rect(0,0,parent.bounds.width, parent.bounds.height) }
 		);
 		parentRect.isNil.if(
 			{
