@@ -62,11 +62,9 @@ QuantGUI{
 
 	*getStages { ^QuantMap.stages }
 
-	*getCurrentStage { ^QuantMap.currentStage }
+	*getCurrentStage { ^QuantMap.stageCurrent }
 
 	// WIN ///////////////////////////////
-
-	// *winGUI { ^win }
 
 	*closeGUI {	"CloseGUI".postln;	win.close;	}
 

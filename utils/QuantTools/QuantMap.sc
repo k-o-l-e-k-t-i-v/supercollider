@@ -12,12 +12,13 @@ QuantMap {
 				var oldNode, newNode;
 
 				QuantMap.new();
-				QuantMap.currentCall(proxy, channelOffset, index);
+				QuantMap.lastCodeExecution(proxy, channelOffset, index);
 
-				func.value(); // function call QuantNode.new() /////////////
-				// newNode = func.value(); // function call QuantNode.new() /////////////
-				// oldNode = newNode.prewNode;
-				// oldNode.notNil.if({ oldNode.node.release(fadeTime:(oldNode.fadeTime*2)); });
+				"func: %".format(func.def.sourceCode).postln;
+				// func.value(); // function call QuantNode.new() /////////////
+				newNode = func.value(); // function call QuantNode.new() /////////////
+				oldNode = newNode.prewNode;
+				oldNode.notNil.if({ oldNode.node.release(fadeTime:(oldNode.fadeTime*2)); });
 
 
 				// newNode.print;
@@ -52,14 +53,6 @@ QuantMap {
 				}
 			);
 		});
-
-		/*
-		currentProxy = proxy;
-		currentChOff = channelOffset;
-		currentSlot = slot;
-
-		"currentProxyCall %[%]\n".format(currentProxy.envirKey, currentSlot).postln;
-		*/
 	}
 
 	cmdPeriod{
@@ -71,36 +64,36 @@ QuantMap {
 		}).play;
 	}
 
-	*currentCall { |proxy, channelOffset = 0, slot|
+	*lastCodeExecution { |proxy, channelOffset = 0, slot|
 		currentProxy = proxy;
 		currentChOff = channelOffset;
 		currentSlot = slot;
 
-		"currentProxyCall %[%]\n".format(currentProxy.envirKey, currentSlot).postln;
+		"\nlastCodeExecution: %[%]".format(currentProxy.envirKey, currentSlot).postln;
 	}
 
-	//GUI///////////////////////////////////////////
+	//STAGES///////////////////////////////////////////
 
-	*addStage {|stageName|
+	*addStage {|stage|
 		// var group = Group.new(RootNode(Server.local).nodeID, \addToHead);
 		Server.local.serverRunning.if(
 			{
-				var group = map.at(\stage, stageName.asSymbol, \group);
+				var group = map.at(\stage, stage.asSymbol, \group);
 				group.isNil.if({ group = Group.new(nil, \addToHead); });
 
-				map.put(\stage, stageName.asSymbol, \nodeCurr, \nil);
-				map.put(\stage, stageName.asSymbol, \nodePrew, \nil);
-				map.put(\stage, stageName.asSymbol, \group, group);
+				map.put(\stage, stage.asSymbol, \nodeCurr, \nil);
+				map.put(\stage, stage.asSymbol, \nodePrew, \nil);
+				map.put(\stage, stage.asSymbol, \group, group);
 			},
-			{ "QuantMap method [*addStage]: server not running ...".warn; }
+			{ this.prWarnings(\notRunServer, thisMethod).warn }
 		)
 	}
 
-	*removeStage{|stageName|
-		var nodeCurr = map.at(\stage, stageName.asSymbol, \nodeCurr).free;
-		var nodePrew = map.at(\stage, stageName.asSymbol, \nodePrew).free;
-		var group = map.at(\stage, stageName.asSymbol, \group).free;
-		map.removeEmptyAt(\stage, stageName.asSymbol);
+	*removeStage{|stage|
+		var nodeCurr = map.at(\stage, stage.asSymbol, \nodeCurr).free;
+		var nodePrew = map.at(\stage, stage.asSymbol, \nodePrew).free;
+		var group = map.at(\stage, stage.asSymbol, \group).free;
+		map.removeEmptyAt(\stage, stage.asSymbol);
 	}
 
 	*stages {
@@ -108,29 +101,47 @@ QuantMap {
 		map.at(\stage).asAssociations.do({|associations|
 			associations.do{|oneAssoc| stages.add(oneAssoc.key) }
 		});
-		// "Stages: %".format(stages.asArray).postln;
 		^stages.asArray;
 	}
 
-	*stageExist {|stageName|
+	*stageExist {|stage|
 		^block{|break|
 			map.at(\stage).asAssociations.do({|associations|
 				associations.do{|oneAssoc|
-					(oneAssoc.key.asSymbol == stageName.asSymbol).if({break.value(true)})
+					(oneAssoc.key.asSymbol == stage.asSymbol).if({break.value(true)})
 				}
 			});
 			break.value(false);
 		};
 	}
 
-	*currentStage_ {|stageName|
+	*stageCurrent_ {|stageName|
 		this.stageExist(stageName).if(
-			{ map.put(\currentStage, stageName.asSymbol) },
-			{ "QuantMap method [*currentStage_]: stage doesnt exist ...".warn; }
+			{ map.put(\stageCurrent, stageName.asSymbol) },
+			{ this.prWarnings(\notExistStage, thisMethod).warn }
 		);
 	}
 
-	*currentStage { ^map.at(\currentStage) }
+	*stageCurrent {
+		map.notNil.if(
+			{ ^map.at(\stageCurrent) },
+			{ this.prWarnings(\notInitMap, thisMethod).warn }
+		);
+	}
+
+	//NODES///////////////////////////////////////////
+
+	*addNode {|stage, name|
+
+	}
+
+	*copyNode {|stage, name|
+
+	}
+
+	*releaseNode{|stage, name|
+
+	}
 
 	////////////////////////////////////////////////
 
@@ -185,7 +196,13 @@ QuantMap {
 		);
 	}
 
-	*print { "\nQuantMap".postln; this.textMap.postln; }
+	*print {
+		map.notNil.if(
+			{ "\nQuantMap".postln; this.textMap.postln },
+			{ this.prWarnings(\notInitMap, thisMethod).warn }
+		)
+
+	}
 
 	*textMap {
 
@@ -227,6 +244,20 @@ QuantMap {
 		);
 		^txt;
 	}
+
+	*prWarnings { |type, method|
+		var answ;
+		var msg = case
+		{ type == \notRunServer } { "server not running ..." }
+		{ type == \notInitMap } { "map doesnt created ..." }
+		{ type == \notExistStage } { "stage doesnt exist ..." }
+
+		{ true }{ "msgType [%] doesnt define in prWarnings".format(type) };
+
+		answ = "QuantMap method [*%]: %".format(method.name, msg);
+		^answ;
+	}
+
 
 	// *add {|qNode| map.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);	}
 	/*
