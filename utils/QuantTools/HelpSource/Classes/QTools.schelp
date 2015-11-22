@@ -1,47 +1,45 @@
-TITLE:: QuantEnv
+TITLE:: QTools
 summary:: NamedControl controling by envelope curve.
 categories:: Libraries>KolektivUtils
 related:: Classes/Env
 
 DESCRIPTION::
-Tool based on envelope curve for continouisly controling some of \namedControl in NodeProxy. This curve is retrigger by beat quant.
+Qtools je ekvivalentem QGui. Oba pouzivaji QuantMap jako misto pro ukladani informaci. Dalsi mozny vstup pres symbol = \map ->
 
 CLASSMETHODS::
 
-METHOD:: new
-Print to console all stored keys and preview of saved code. Also is possible use keyboard F1, when AutoIDE is runnig (only on Win).
+METHOD:: gui
+Spusti GUI
 
-ARGUMENT:: key
-Name of used NamedControl key to control (Symbol)
+METHOD:: print
+Tiskne mapu do konzole
 
-ARGUMENT:: quant
-Trigger quant. When modular TempoClock.beats % quant = 0, than this QuantEnv is restart. When is sum of times array plus offset is longer than this quant value, is multiplication by two (int)
 
-ARGUMENT:: levels
-Array of values for controled NamedControl.
+METHOD:: addStage
+prida node do QuantMap
+ARGUMENT:: name
+jmeno stage
 
-ARGUMENT:: times
-Array of time.
 
-ARGUMENT:: curves
-Array of curvature.
+METHOD:: removeStage
+odstrani stage z QuantMap. odebre vsechny nody uvnitr
+ARGUMENT:: name
+jmeno stage
 
-ARGUMENT:: offset
-Offset start of times array by some time.
 
-ARGUMENT:: repeats
-Number of time to loop. For endless loop, use inf. For using in some other pattern, use int number. After end of loop, stay valid for key a value of last level.
+METHOD:: currentStage
+zmeni stage pro zapisovani bez upresneni. standart \default
+ARGUMENT:: name
+jmeno stage
+
+
+METHOD:: addNode
+prida node do QuantMap
+ARGUMENT:: name
+jmeno stage. kdyz nil, prida do currentStage
 
 INSTANCEMETHODS::
 
-METHOD:: print
-Boolean, true for printing after evaluation to console
-
-METHOD:: plot
-Boolean, true for making view with curve of envelope
-
-METHOD:: play
-Time in sec for fadeing out of view with curve
 
 EXAMPLES::
 

@@ -28,13 +28,13 @@ QGui_Node : UserView {
 	initControl {
 		objects.put(\sourceCode, TextView(parent ,Rect.newSides((frame.left + 5),(frame.top + 5), 400, (frame.bottom - 5)))
 			.focus(true)
-			.palette_(QuantGUI.qPalette)
-			.font_(QuantGUI.fonts[\script])
+			.palette_(QGui.qPalette)
+			.font_(QGui.fonts[\script])
 		);
 
 		objects.put(\timeline, ScrollView(parent, Rect.newSides((frame.left + 405),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
 			.autohidesScrollers_(true)
-			.palette_(QuantGUI.qPalette)
+			.palette_(QGui.qPalette)
 		);
 
 		objects.put(\cnt1, QGui_Controler(objects[\timeline], Rect(5,5,400,40)).setKey("amp"));

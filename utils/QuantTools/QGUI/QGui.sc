@@ -1,9 +1,10 @@
-QuantGUI{
+QGui {
 	classvar
 	<version,
 	win, canvan,
 	<qPalette, <fonts,
-	isFullScreen, isMinimize, lastWinBounds, minWinSizeX, minWinSizeY,
+	isRunning, isFullScreen, isMinimize,
+	lastWinBounds, minWinSizeX, minWinSizeY,
 	<mouseClickDown;
 
 	var objects;
@@ -11,10 +12,19 @@ QuantGUI{
 	*new{ ^super.new.initPalette.initGUI }
 
 	initGUI {
-		Task({
-			version = 0.11;
-			QuantMap.new();
-			Server.local.bootSync; // wait for boot in QuantMap init
+		// Task({
+		win.isNil.if(
+			{ isRunning = false },
+			{
+				isRunning = true;
+				win.front;
+			}
+		);
+
+		isRunning.not.if({
+			version = QTools.version;
+			// QuantMap.new();
+			// Server.local.bootSync; // wait for boot in QuantMap init
 
 			this.initMapTest;
 
@@ -22,11 +32,13 @@ QuantGUI{
 			win = Window.new(bounds:lastWinBounds, border:false).front;
 			canvan = QGui_Canvan(win, win.view.bounds);
 
+			isRunning = true;
 			isFullScreen = false;
 			isMinimize = false;
 			minWinSizeX = 600;
 			minWinSizeY = 400;
-		}).play(AppClock);
+		})
+		// }).play(AppClock);
 	}
 
 	initPalette {
@@ -56,9 +68,11 @@ QuantGUI{
 
 	*getMapText { ^QuantMap.textMap; }
 
-	*addStage { QuantMap.addStage(\pokusGui); }
+	*addStage { QuantMap.addStage(\pokusGui); canvan.refresh;}
 
-	*removeStage { QuantMap.removeStage(\pokusGui) }
+	*removeStage {|name| QuantMap.removeStage(name); canvan.refresh; }
+
+	*renameStage {|oldName, newName| QuantMap.renameStage(oldName, newName); canvan.refresh; }
 
 	*getStages { ^QuantMap.stages }
 
@@ -66,7 +80,12 @@ QuantGUI{
 
 	// WIN ///////////////////////////////
 
-	*closeGUI {	"CloseGUI".postln;	win.close;	}
+	*closeGUI {
+		"CloseGUI".postln;
+		isRunning = false;
+		win.close;
+		win = nil;
+	}
 
 	*maximizeGUI {
 		isFullScreen.not.if(
@@ -89,7 +108,7 @@ QuantGUI{
 				isFullScreen = false;
 			}
 		);
-		canvan.resizeCanvan;
+		canvan.refresh;
 	}
 
 	*minimizeGUI {
@@ -130,7 +149,7 @@ QuantGUI{
 				}
 			);
 		});
-		canvan.resizeCanvan;
+		canvan.refresh;
 	}
 
 	*moveGUI {|x, y|
@@ -145,7 +164,7 @@ QuantGUI{
 		mouseClickDown = x@y;
 	}
 
-
+	*refresh { canvan.refresh }
 
 
 

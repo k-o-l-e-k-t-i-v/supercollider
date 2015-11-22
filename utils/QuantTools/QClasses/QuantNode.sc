@@ -1,34 +1,40 @@
 QuantNode {
-	classvar version = 0.10;
+	// classvar version = 0.10;
 	// var <>key;
 	// var stage, phase;
 	var <>nodeName;
 	// , <>slot;
-	var <qObjects;
+	var <qControls;
 	// var >levels, >times, >curves;
 	var <node, <prewNode;
 	var group, bus;
 	var clock;
 
-	*new {|proxy, slot, phase, qObject| ^super.new.init(proxy, slot, phase, qObject);	}
+	*new {|proxy| ^super.new.init(proxy);	}
+	// *new {|proxy, slot, phase, qObject| ^super.new.init(proxy, slot, phase, qObject);	}
 	// *new2 {|key, quant, fadeTime| ^super.new.init(key, quant, fadeTime);	}
 
-	init{|proxy, slot, phase, qObject|
+	// init{|proxy, slot, phase, qObject|
+	init{|proxy|
 
 		// this.slot = slot;
-		qObjects.isNil.if(
+		qControls.isNil.if(
 			{
-				qObjects = MultiLevelIdentityDictionary.new();
+				qControls = MultiLevelIdentityDictionary.new();
 				nodeName = proxy.envirKey;
-				group = proxy.group;
+				// group = proxy.group;
 				"\nQuantNode init nodeName[%]".format(nodeName).postln;
 			},
 			{ "QuantNode nodeName % exist".format(nodeName)  }
 		);
-		// qObjects.put(proxy, slot, phase, qObject);
-		this.addObject(slot, phase, qObject);
+
+		// this.addObject(slot, phase, qObject);
 
 		// this.print;
+	}
+
+	release {
+		"\nQuantNode [%] release".format(nodeName).postln;
 	}
 
 	addObject{|slot, phase, qObject|
@@ -41,18 +47,18 @@ QuantNode {
 
 		// "QuantNode addObject nodeName:%".format(nodeName);
 		// "QuantNode addObject proxy.envirKey:%".format(nodeName);
-		// "QuantNode addObject qObjects: %".format(qObjects).postln;
+		// "QuantNode addObject qControls: %".format(qControls).postln;
 		"\nQuantNode addObject [nodeName:%, slot:%, phase:%, qObject:%]".format(nodeName, slot, phase, qObject).postln;
-		qObjects.at(nodeName, slot, phase, \current).notNil.if({
-			qObjects.put(nodeName, slot, phase, \previous, qObjects.at(nodeName, slot, phase, \current));
+		qControls.at(nodeName, slot, phase, \current).notNil.if({
+			qControls.put(nodeName, slot, phase, \previous, qControls.at(nodeName, slot, phase, \current));
 		});
-		qObjects.put(nodeName, slot, phase, \current, qObject);
+		qControls.put(nodeName, slot, phase, \current, qObject);
 	}
 
 	removeObject {|slot, phase, getCurrent|
 		getCurrent.if(
-			{ qObjects.removeEmptyAt(nodeName, slot, phase, \current); },
-			{ qObjects.removeEmptyAt(nodeName, slot, phase, \previous); }
+			{ qControls.removeEmptyAt(nodeName, slot, phase, \current); },
+			{ qControls.removeEmptyAt(nodeName, slot, phase, \previous); }
 		)
 	}
 
@@ -101,7 +107,7 @@ QuantNode {
 		"proxy : %".format(nodeName).postln;
 		// "\t - slot : %".format(slot).postln;
 
-		qObjects.sortedTreeDo(
+		qControls.sortedTreeDo(
 			// {|proxy| proxy.notEmpty.if({"\nproxy ~%".format(proxy).postln;}); },
 			{},
 			{|path, qObject|

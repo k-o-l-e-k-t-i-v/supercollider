@@ -1,4 +1,4 @@
-QGui_PanelNode : UserView {
+QGui_Controler : UserView {
 
 	var parent, frame;
 	var objects;
@@ -26,19 +26,23 @@ QGui_PanelNode : UserView {
 	}
 
 	initControl {
-		objects.put(\sourceCode, TextView(parent ,Rect.newSides((frame.left + 5),(frame.top + 5), 400, (frame.bottom - 5)))
+		objects.put(\controlerCode, TextView(parent ,Rect.newSides((frame.left + 50),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
 			.focus(true)
-			.palette_(QuantGUI.qPalette)
-			.font_(QuantGUI.fonts[\script])
+			.palette_(QGui.qPalette)
+			.font_(QGui.fonts[\script])
 		);
+		/*
 
 		objects.put(\timeline, ScrollView(parent, Rect.newSides((frame.left + 405),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
 			.autohidesScrollers_(true)
-			.palette_(QuantGUI.qPalette)
+			.palette_(QGui.qPalette)
 		);
 
-		objects.put(\cnt1, QGui_Controler(objects[\timeline], Rect(5,5,400,40)).setKey("amp"));
-		objects.put(\cnt2, QGui_Controler(objects[\timeline], Rect(5,50,400,40)).setKey("freq"));
+		*/
+		objects.put(\keyButt, Button(parent, Rect.newSides((frame.left + 5),(frame.top + 5), 50, (frame.bottom - 5)))
+						.font_(QGui.fonts[\script])
+		);
+		// objects.put(\butt2, Button(parent, Rect(5,25,40,20)).string_("\\freq").font_(QGui.fonts[\script]));
 	}
 
 	draw {
@@ -48,6 +52,9 @@ QGui_PanelNode : UserView {
 		Pen.stroke;
 	}
 
+	setKey{|key|
+		objects[\keyButt].string_(key);
+	}
 	// (5) define typical widget methods  (only those you need or adjust as needed)
 	valueAction_{ |val| // most widgets have this
 		this.value = val;

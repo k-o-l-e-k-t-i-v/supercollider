@@ -1,4 +1,4 @@
-QuantGUI()
+s.boot;
 
 p = ProxySpace.push(s).makeTempoClock;
 ~test = NodeProxy.audio(s, 2);
@@ -16,25 +16,10 @@ p = ProxySpace.push(s).makeTempoClock;
 ~test[1] = \map -> { QuantEnv(\amp, 2, [0,1,0], [0.25, 1.75], [5,-2]) };
 ~test[2] = \map -> { QuantEnv(\freq, 8, [180,78,60],[0.05, 1.95]).cycle(\default, \phase2) };
 
+QTools.addNodes(\pokus, ~test)
+QTools.addNodes(\pokus, ~test2)
 
-QuantMap.currentStage_(\test2)
-QuantMap.print;
+QTools.print
+QTools.gui
 
-QuantEnv(\amp, 2, [0,1,0], [0.25, 1.75], [5,-2])
-
-QuantEnv(\amp, 2, [0,1,0], [0.25, 1.75], [5,-2]).
-
-
-// struktura ///////////////////////////////
-
-QuantMap(stage, node) -> QuantNode(proxy, slot, phase) -> QuantEnv(key, quant, env)
-
-
-
-// zapis ///////////////////////////////
-
-~test[1] = \map -> { QuantEnv(key, quant, env).cyklus(stage, phase) }
-
-QuantMap[\key].fadeTime
-
-thisMethod
+QTools.version
