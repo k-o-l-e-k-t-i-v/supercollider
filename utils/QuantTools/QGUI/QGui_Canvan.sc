@@ -1,8 +1,9 @@
 QGui_Canvan : UserView {
+	classvar >thisClassDebugging = false;
 
 	var parent, bounds;
 	var menu, menu2, canvan;
-	var menuStages, menuNodes;
+	var <menuStages, menuNodes;
 	var edges;
 	var objects;
 
@@ -14,9 +15,15 @@ QGui_Canvan : UserView {
 	}
 
 	init { |argParent, argBounds|
-		"INIT Canvan".postln;
+		(QGui.debbuging and: thisClassDebugging).if({
+			"\n% [%, %]".format(thisMethod, argParent, argBounds).postln;
+		});
+
 		parent = argParent;
 		bounds = argBounds;
+
+		objects = Dictionary.new();
+		edges = Dictionary.new();
 
 		menu = UserView(parent)
 		.name_("HeaderMenu")
@@ -24,22 +31,19 @@ QGui_Canvan : UserView {
 		.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); };
 
 		menu2 = UserView(parent).name_("header2");
-
 		canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QGui.qPalette);
-
 		menuStages = QGui_PanelStages(parent).name_("panelStages");
 		menuNodes = QGui_PanelNodes(parent).name_("panelNodes");
 		// menuTimeline =
 
-		objects = Dictionary.new();
-		edges = Dictionary.new();
 
 		this.initControls;
 		this.drawFunc = { this.draw };
-		this.refresh;
+		// this.reCalculate;
 	}
 
 	initControls {
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
 		// EDGES ///////////////////////////////
 		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100)
@@ -97,18 +101,22 @@ QGui_Canvan : UserView {
 			.name_("ButtonMap")
 			.iconName("IconMap2")
 			.action_{|button|
-				"MapPressed %".format(button.value).postln;
+				"\nMapPressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{ menuStages.visible_(true)	},
 					{ menuStages.visible_(false) }
-				)
+				);
+				// menuStages.reCalculate;
+				menuStages.refresh;
+				// QGui.refreshAll;
+				// ("menuStages.visible" + menuStages.visible).postln;
 			}
 		);
 		objects.put(\Button_Node, QGui_Button(menu2)
 			.name_("ButtonNode")
 			.iconName("IconNode")
 			.action_{|button|
-				"NodePressed %".format(button.value).postln;
+				"\nNodePressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{ menuNodes.visible_(true)	},
 					{ menuNodes.visible_(false) }
@@ -119,10 +127,10 @@ QGui_Canvan : UserView {
 			.name_("ButtonTime")
 			.iconName("IconTime")
 			.action_{|button|
-				"MapPressed %".format(button.value).postln;
+				"\nTimePressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{
-						// menuStages.refresh;
+						// menuStages.reCalculate;
 						// menuStages.visible_(true);
 					},
 					// { menuStages.visible_(false) }
@@ -148,11 +156,14 @@ QGui_Canvan : UserView {
 		);
 	}
 
-	refresh{
-		// "QGui_Canvan resizeCanvan".postln;
+	reCalculate{
+		(QGui.debbuging and: thisClassDebugging).if({ ("\nreCalculate\n" ++ thisMethod).postln });
+
 		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
 		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
-		canvan.bounds_(Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height));
+		canvan.bounds_(
+			Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height)
+		);
 
 		edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
 		edges[\top].bounds_(Rect.offsetEdgeTop(parent, 0,50,50,15));
@@ -170,11 +181,13 @@ QGui_Canvan : UserView {
 		objects[\Button_Node].bounds_(Rect.offsetCornerLB(menu2, 40,10,25,25));
 		objects[\Button_Time].bounds_(Rect.offsetCornerLB(menu2, 70,10,25,25));
 
-		menuStages.refresh;
-		// menuNodes.refresh;
+		menuStages.reCalculate;
+		menuNodes.reCalculate;
 	}
 
 	draw {
+		(QGui.debbuging and: thisClassDebugging).if({ ("\nDRAW\n" ++ thisMethod).postln });
+
 		menu.background_(Color.new255(20,20,20));
 		menu2.background_(Color.new255(20,20,20));
 

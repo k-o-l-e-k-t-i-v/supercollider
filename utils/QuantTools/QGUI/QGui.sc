@@ -5,16 +5,20 @@ QGui {
 	<qPalette, <fonts,
 	isRunning, isFullScreen, isMinimize,
 	lastWinBounds, minWinSizeX, minWinSizeY,
-	<mouseClickDown;
+	<mouseClickDown,
+	<>debbuging;
 
 	var objects;
 
 	*new{ ^super.new.initPalette.initGUI }
 
 	initGUI {
-		// Task({
+		this.initDebugging(true);
+
 		win.isNil.if(
-			{ isRunning = false },
+			{
+				isRunning = false;
+			},
 			{
 				isRunning = true;
 				win.front;
@@ -23,8 +27,6 @@ QGui {
 
 		isRunning.not.if({
 			version = QTools.version;
-			// QuantMap.new();
-			// Server.local.bootSync; // wait for boot in QuantMap init
 
 			this.initMapTest;
 
@@ -37,8 +39,21 @@ QGui {
 			isMinimize = false;
 			minWinSizeX = 600;
 			minWinSizeY = 400;
+		});
+
+		super.class.refreshAll;
+	}
+
+	initDebugging{|bool|
+		debbuging = bool;
+		debbuging.if({
+			QGui_Canvan.thisClassDebugging = true;
+
+			QGui_PanelStages.thisClassDebugging = true;
+			QGui_Stage.thisClassDebugging = true;
+
+			QGui_PanelNodes.thisClassDebugging = true;
 		})
-		// }).play(AppClock);
 	}
 
 	initPalette {
@@ -68,17 +83,29 @@ QGui {
 
 	*getMapText { ^QuantMap.textMap; }
 
-	*addStage { QuantMap.addStage(\pokusGui); canvan.refresh;}
+	*addStage {
+		QuantMap.addStage(\pokusGui);
+		canvan.menuStages.addStage(\pokusGui);
+		// canvan.reCalculate;
+		this.refreshAll;
+	}
 
-	*removeStage {|name| QuantMap.removeStage(name); canvan.refresh; }
+	*removeStage {|name|
+		canvan.menuStages.removeStage(name);
+		QuantMap.removeStage(name);
+		// canvan.reCalculate;
+		this.refreshAll;
+	}
 
-	*renameStage {|oldName, newName| QuantMap.renameStage(oldName, newName); canvan.refresh; }
+	*renameStage {|oldName, newName| QuantMap.renameStage(oldName, newName); this.refreshAll; }
 
 	*getStages { ^QuantMap.stages }
 
 	*getCurrentStage { ^QuantMap.stageCurrent }
 
 	// WIN ///////////////////////////////
+
+	*refreshAll { canvan.reCalculate; canvan.refresh; }
 
 	*closeGUI {
 		"CloseGUI".postln;
@@ -108,7 +135,8 @@ QGui {
 				isFullScreen = false;
 			}
 		);
-		canvan.refresh;
+		this.refreshAll;
+		// canvan.refresh;
 	}
 
 	*minimizeGUI {
@@ -149,7 +177,7 @@ QGui {
 				}
 			);
 		});
-		canvan.refresh;
+		this.refreshAll;
 	}
 
 	*moveGUI {|x, y|
@@ -164,7 +192,7 @@ QGui {
 		mouseClickDown = x@y;
 	}
 
-	*refresh { canvan.refresh }
+
 
 
 

@@ -1,10 +1,14 @@
 QGui_PanelStages : UserView {
 
+	classvar >thisClassDebugging = false;
+
 	var parent, bounds;
 	var objects, stages;
 	var >name;
-	var <visible, value;
+	// var <visible, value;
 	var mapTextView;
+
+	var yPositionStage, yPositionStageStart, ySizeStage;
 
 	*new { | parent, bounds |
 		var me = super.new(parent, bounds ?? {this.sizeHint} );
@@ -14,14 +18,21 @@ QGui_PanelStages : UserView {
 	}
 
 	init { |argParent, argBounds|
-		"QGui_PanelStages init".postln;
+
+		(QGui.debbuging and: thisClassDebugging).if({
+			"\n% [%, %]".format(thisMethod, argParent, argBounds).postln;
+		});
+
 		parent = argParent;
 		bounds = argBounds;
 
 		objects = Dictionary.new();
 		stages = Dictionary.new();
 
-		visible = false;
+		this.visible = false;
+
+		yPositionStageStart = 30;
+		ySizeStage = 40;
 
 		mapTextView = ScrollView(this)
 		.hasHorizontalScroller_(false)
@@ -31,15 +42,12 @@ QGui_PanelStages : UserView {
 
 		this.initControl;
 		this.drawFunc = { this.draw };
-		this.refresh;
-
-		"QGui_PanelStages [stages: %]".format(QGui.getStages).postln;
-		"QGui_PanelStages [currentStages: %]".format(QGui.getCurrentStage).postln;
 	}
 
 	initControl {
 
-		// "QGui_PanelStages initControl".postln;
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
 		objects.put(\MapText, StaticText(mapTextView)
 			.align_(\topLeft)
 			.font_(QGui.fonts[\Small])
@@ -51,63 +59,97 @@ QGui_PanelStages : UserView {
 			.action_{|button|
 				QGui.addStage;
 				objects[\MapText].string_(QGui.getMapText);
-				// this.refresh;
+				// this.reCalculate;
 			};
 		);
+
+		QuantMap.stages.do({|stageName, i|
+			this.addStage(stageName);
+		});
 	}
 
+	addStage {|name|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+
+		stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol)
+			// .visible_(this.visible)
+		);
+		this.positionOfStages;
+	}
+
+	removeStage{|name|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+
+		stages.at(name.asSymbol).postln;
+		stages.at(name.asSymbol).visible_(false);
+		// stages.at(name.asSymbol).close;
+		stages.removeAt(name.asSymbol);
+		this.positionOfStages;
+	}
+
+	positionOfStages {
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		stages.do({|oneStage, i|
+			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
+			oneStage.moveTo(yPositionStage);
+		});
+	}
+	/*
 	visible_ {|bool|
-		visible = bool;
-		this.refresh;
-	}
+	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln });
+	visible = bool;
 
-	refresh {
-		"QGui_PanelStages refresh".postln;
+	mapTextView.visible = visible;
+	objects[\ButtonAddStage].visible = visible;
+	objects[\MapText].visible = visible;
+
+	stages.do({|oneStage| oneStage.visible_(visible);  });
+	}
+	*/
+	/*
+	display {|bool|
+	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln });
+	// this.visible = bool;
+
+	// mapTextView.visible = visible;
+	// objects[\ButtonAddStage].visible = visible;
+	// objects[\MapText].visible = visible;
+
+	stages.do({|oneStage| oneStage.visible_(this.visible);  });
+	}
+	*/
+	reCalculate {
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		// ("PANEL.visible" + this + this.visible).postln;
+
+		// mapTextView.visible = this.visible;
+		// objects[\ButtonAddStage].visible = this.visible;
+		// objects[\MapText].visible = this.visible;
+
+
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
 
 		objects[\MapText].string_(QGui.getMapText);
-
-		mapTextView.visible = visible;
-		objects[\ButtonAddStage].visible = visible;
-		objects[\MapText].visible = visible;
 
 		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,10,10,15));
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,300));
 
-		visible.if({
-			stages.do({|oneStage| oneStage.close });
-			stages = Dictionary.new();
+		stages.do({|oneStage|
+			// oneStage.visible_(this.visible);
+			oneStage.reCalculate;
 
-			QuantMap.stages.do({|stageName, i|
-				var yPositionStage;
-				var yPositionStageStart = 30;
-				var ySizeStage = 40;
-
-				// "\nnew %".format(i).postln;
-				yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
-				// yPositionStage.postln;
-
-				stages.put(stageName.asSymbol, QGui_Stage(this)
-					.name_(stageName)
-
-					.bounds_(Rect.offsetEdgeTop(this.bounds, yPositionStage, 10,10, ySizeStage));
-				);
-			});
 		});
-
-		stages.do({|oneStage| oneStage.visible_(visible) });
+		// stages.do({|oneStage| oneStage.reCalculate });
 	}
 
 	draw {
-		"QGui_PanelStages draw".postln;
-		visible.if({
-			stages.do({|oneStage| oneStage.refresh });
-
-			Pen.width = 1;
-			Pen.strokeColor = Color.new255(20,20,20);
-			Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
-			Pen.stroke;
-		});
+		QGui.debbuging.if({	"%".format(thisMethod).postln });
+		// visible.if({
+		Pen.width = 1;
+		Pen.strokeColor = Color.new255(20,20,20);
+		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
+		Pen.stroke;
+		// });
 	}
 }
