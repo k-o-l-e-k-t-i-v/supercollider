@@ -39,7 +39,6 @@ QGui_Canvan : UserView {
 
 		this.initControls;
 		this.drawFunc = { this.draw };
-		// this.reCalculate;
 	}
 
 	initControls {
@@ -106,10 +105,7 @@ QGui_Canvan : UserView {
 					{ menuStages.visible_(true)	},
 					{ menuStages.visible_(false) }
 				);
-				// menuStages.reCalculate;
 				menuStages.refresh;
-				// QGui.refreshAll;
-				// ("menuStages.visible" + menuStages.visible).postln;
 			}
 		);
 		objects.put(\Button_Node, QGui_Button(menu2)
@@ -130,7 +126,7 @@ QGui_Canvan : UserView {
 				"\nTimePressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{
-						// menuStages.reCalculate;
+						// menuStages.recall;
 						// menuStages.visible_(true);
 					},
 					// { menuStages.visible_(false) }
@@ -156,8 +152,8 @@ QGui_Canvan : UserView {
 		);
 	}
 
-	reCalculate{
-		(QGui.debbuging and: thisClassDebugging).if({ ("\nreCalculate\n" ++ thisMethod).postln });
+	recall{
+		(QGui.debbuging and: thisClassDebugging).if({ ("\nrecall\n" ++ thisMethod).postln });
 
 		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
 		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
@@ -181,8 +177,8 @@ QGui_Canvan : UserView {
 		objects[\Button_Node].bounds_(Rect.offsetCornerLB(menu2, 40,10,25,25));
 		objects[\Button_Time].bounds_(Rect.offsetCornerLB(menu2, 70,10,25,25));
 
-		menuStages.reCalculate;
-		menuNodes.reCalculate;
+		menuStages.recall;
+		menuNodes.recall;
 	}
 
 	draw {

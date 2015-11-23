@@ -93,21 +93,27 @@ QuantMap {
 
 	*stages {
 		var stages = List.newClear();
-		map.at(\stage).asAssociations.do({|associations|
-			associations.do{|oneAssoc| stages.add(oneAssoc.key) }
-		});
+		map.at(\stage).notNil.if({
+			map.at(\stage).asAssociations.do({|associations|
+				associations.do{|oneAssoc| stages.add(oneAssoc.key) }
+			});
+		})
 		^stages.asArray;
 	}
 
 	*stageExist {|stage|
-		^block{|break|
-			map.at(\stage).asAssociations.do({|associations|
-				associations.do{|oneAssoc|
-					(oneAssoc.key.asSymbol == stage.asSymbol).if({break.value(true)})
-				}
-			});
-			break.value(false);
-		};
+		this.stages.notEmpty.if({
+			^block{|break|
+				map.at(\stage).asAssociations.do({|associations|
+					associations.do{|oneAssoc|
+						(oneAssoc.key.asSymbol == stage.asSymbol).if({break.value(true)})
+					}
+				});
+				break.value(false);
+			};
+		},
+		{ ^false }
+		)
 	}
 
 	*stageCurrent_ {|stageName|

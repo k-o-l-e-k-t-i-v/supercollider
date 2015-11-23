@@ -4,8 +4,6 @@ QGui_PanelStages : UserView {
 
 	var parent, bounds;
 	var objects, stages;
-	var >name;
-	// var <visible, value;
 	var mapTextView;
 
 	var yPositionStage, yPositionStageStart, ySizeStage;
@@ -57,9 +55,8 @@ QGui_PanelStages : UserView {
 			.string_("Add")
 			.palette_(QGui.qPalette)
 			.action_{|button|
-				QGui.addStage;
+				QGui.addStage(\temp);
 				objects[\MapText].string_(QGui.getMapText);
-				// this.reCalculate;
 			};
 		);
 
@@ -71,18 +68,14 @@ QGui_PanelStages : UserView {
 	addStage {|name|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
 
-		stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol)
-			// .visible_(this.visible)
-		);
+		stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol) );
 		this.positionOfStages;
 	}
 
 	removeStage{|name|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
 
-		stages.at(name.asSymbol).postln;
-		stages.at(name.asSymbol).visible_(false);
-		// stages.at(name.asSymbol).close;
+		stages.at(name.asSymbol).remove;
 		stages.removeAt(name.asSymbol);
 		this.positionOfStages;
 	}
@@ -94,62 +87,26 @@ QGui_PanelStages : UserView {
 			oneStage.moveTo(yPositionStage);
 		});
 	}
-	/*
-	visible_ {|bool|
-	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln });
-	visible = bool;
 
-	mapTextView.visible = visible;
-	objects[\ButtonAddStage].visible = visible;
-	objects[\MapText].visible = visible;
-
-	stages.do({|oneStage| oneStage.visible_(visible);  });
-	}
-	*/
-	/*
-	display {|bool|
-	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln });
-	// this.visible = bool;
-
-	// mapTextView.visible = visible;
-	// objects[\ButtonAddStage].visible = visible;
-	// objects[\MapText].visible = visible;
-
-	stages.do({|oneStage| oneStage.visible_(this.visible);  });
-	}
-	*/
-	reCalculate {
+	recall {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-		// ("PANEL.visible" + this + this.visible).postln;
-
-		// mapTextView.visible = this.visible;
-		// objects[\ButtonAddStage].visible = this.visible;
-		// objects[\MapText].visible = this.visible;
-
-
-		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
 
 		objects[\MapText].string_(QGui.getMapText);
 
+		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
 		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,10,10,15));
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,300));
 
-		stages.do({|oneStage|
-			// oneStage.visible_(this.visible);
-			oneStage.reCalculate;
-
-		});
-		// stages.do({|oneStage| oneStage.reCalculate });
+		stages.do({|oneStage| oneStage.recall });
 	}
 
 	draw {
 		QGui.debbuging.if({	"%".format(thisMethod).postln });
-		// visible.if({
+
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,20,20);
 		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
 		Pen.stroke;
-		// });
 	}
 }

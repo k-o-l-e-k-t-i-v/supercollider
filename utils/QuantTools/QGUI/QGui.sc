@@ -16,9 +16,7 @@ QGui {
 		this.initDebugging(true);
 
 		win.isNil.if(
-			{
-				isRunning = false;
-			},
+			{ isRunning = false },
 			{
 				isRunning = true;
 				win.front;
@@ -28,7 +26,7 @@ QGui {
 		isRunning.not.if({
 			version = QTools.version;
 
-			this.initMapTest;
+			// this.initMapTest;
 
 			lastWinBounds = Rect(100,100,800,600);
 			win = Window.new(bounds:lastWinBounds, border:false).front;
@@ -48,10 +46,8 @@ QGui {
 		debbuging = bool;
 		debbuging.if({
 			QGui_Canvan.thisClassDebugging = true;
-
 			QGui_PanelStages.thisClassDebugging = true;
 			QGui_Stage.thisClassDebugging = true;
-
 			QGui_PanelNodes.thisClassDebugging = true;
 		})
 	}
@@ -83,21 +79,28 @@ QGui {
 
 	*getMapText { ^QuantMap.textMap; }
 
-	*addStage {
-		QuantMap.addStage(\pokusGui);
-		canvan.menuStages.addStage(\pokusGui);
-		// canvan.reCalculate;
-		this.refreshAll;
+	*addStage {|name|
+		QuantMap.stageExist(name.asSymbol).not.if({
+			QuantMap.addStage(name.asSymbol);
+			canvan.menuStages.addStage(name.asSymbol);
+			this.refreshAll;
+		});
 	}
 
 	*removeStage {|name|
 		canvan.menuStages.removeStage(name);
 		QuantMap.removeStage(name);
-		// canvan.reCalculate;
 		this.refreshAll;
 	}
 
-	*renameStage {|oldName, newName| QuantMap.renameStage(oldName, newName); this.refreshAll; }
+	*renameStage {|oldName, newName|
+		QuantMap.stageExist(oldName.asSymbol).if({
+			QuantMap.renameStage(oldName, newName);
+			canvan.menuStages.addStage(newName.asSymbol);
+			canvan.menuStages.removeStage(oldName.asSymbol);
+			this.refreshAll;
+		})
+	}
 
 	*getStages { ^QuantMap.stages }
 
@@ -105,7 +108,7 @@ QGui {
 
 	// WIN ///////////////////////////////
 
-	*refreshAll { canvan.reCalculate; canvan.refresh; }
+	*refreshAll { canvan.recall; canvan.refresh; }
 
 	*closeGUI {
 		"CloseGUI".postln;
@@ -136,7 +139,6 @@ QGui {
 			}
 		);
 		this.refreshAll;
-		// canvan.refresh;
 	}
 
 	*minimizeGUI {

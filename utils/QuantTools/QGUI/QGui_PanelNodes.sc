@@ -27,7 +27,7 @@ QGui_PanelNodes : UserView {
 		this.visible = false;
 
 		this.initControl;
-		// this.reCalculate;
+		// this.recall;
 		this.drawFunc = { this.draw };
 	}
 
@@ -79,10 +79,10 @@ QGui_PanelNodes : UserView {
 		objects[\ButtonAddNode].visible = visible;
 		objects[\ButtonRemoveNode].visible = visible;
 		objects[\sourceCode].visible = visible;
-		// this.reCalculate;
+		// this.recall;
 	}
 */
-	reCalculate{
+	recall{
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
 
