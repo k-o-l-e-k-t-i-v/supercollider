@@ -68,7 +68,14 @@ QGui_PanelStages : UserView {
 	addStage {|name|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
 
-		stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol) );
+		stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol)
+			.mouseDownAction_{ |view, x, y, buttNum|
+				QGui.currentStage_(view.name.asSymbol);
+				stages.do({|oneStage| oneStage.isCurrent = false; oneStage.refresh });
+				view.isCurrent = true;
+				QGui.refreshAll;
+			}
+		);
 		this.positionOfStages;
 	}
 

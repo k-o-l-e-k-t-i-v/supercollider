@@ -46,9 +46,10 @@ QGui {
 		debbuging = bool;
 		debbuging.if({
 			QGui_Canvan.thisClassDebugging = true;
-			QGui_PanelStages.thisClassDebugging = true;
-			QGui_Stage.thisClassDebugging = true;
+			// QGui_PanelStages.thisClassDebugging = true;
+			// QGui_Stage.thisClassDebugging = true;
 			QGui_PanelNodes.thisClassDebugging = true;
+			QGui_Node.thisClassDebugging = true;
 		})
 	}
 
@@ -75,7 +76,7 @@ QGui {
 		QuantMap.addStage(\test);
 	}
 
-	// ACTIONS ///////////////////////////////
+	// STAGES ///////////////////////////////
 
 	*getMapText { ^QuantMap.textMap; }
 
@@ -104,7 +105,21 @@ QGui {
 
 	*getStages { ^QuantMap.stages }
 
-	*getCurrentStage { ^QuantMap.stageCurrent }
+	*currentStage { ^QuantMap.stageCurrent }
+
+	*currentStage_ {|name| QuantMap.stageCurrent_(name.asSymbol) }
+
+	// NODES ///////////////////////////////
+
+	*addNode {|name|
+		// var node = NodeProxy.audio(Server.local, 2);
+		// node.key(name.asSymbol);
+		QuantMap.addNode( QuantMap.stageCurrent, name.asSymbol);
+		canvan.menuNodes.addNode(name.asSymbol);
+		this.refreshAll;
+	}
+
+	*getNodes { ^QuantMap.nodes }
 
 	// WIN ///////////////////////////////
 

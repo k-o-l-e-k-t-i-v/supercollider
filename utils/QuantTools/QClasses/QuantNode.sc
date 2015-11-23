@@ -3,7 +3,7 @@ QuantNode {
 	// var <>key;
 	// var stage, phase;
 	var <>nodeName;
-	// , <>slot;
+	// var <>proxyName, <>slot;
 	var <qControls;
 	// var >levels, >times, >curves;
 	var <node, <prewNode;
@@ -21,7 +21,7 @@ QuantNode {
 		qControls.isNil.if(
 			{
 				qControls = MultiLevelIdentityDictionary.new();
-				nodeName = proxy.envirKey;
+				nodeName = ( proxy.envirKey ? proxy.asSymbol) ;
 				// group = proxy.group;
 				"\nQuantNode init nodeName[%]".format(nodeName).postln;
 			},

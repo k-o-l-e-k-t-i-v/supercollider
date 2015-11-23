@@ -3,7 +3,7 @@ QGui_Canvan : UserView {
 
 	var parent, bounds;
 	var menu, menu2, canvan;
-	var <menuStages, menuNodes;
+	var <menuStages, <menuNodes;
 	var edges;
 	var objects;
 

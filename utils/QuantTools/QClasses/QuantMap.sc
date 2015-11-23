@@ -145,9 +145,9 @@ QuantMap {
 	//NODES///////////////////////////////////////////
 
 	*addNode {|stage, node|
-		var newNode = QuantNode(node);
+		var newNode = QuantNode(node.asSymbol);
 
-		this.nodeExist(stage, node).not.if(
+		this.nodeExist(stage.asSymbol, node.asSymbol).not.if(
 			{
 				map.put(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodeCurr, newNode);
 				map.put(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodePrew, \nil);
@@ -166,6 +166,17 @@ QuantMap {
 
 	*releaseNode{|stage, name|
 
+	}
+
+	*nodes{|stage|
+		var nodes = List.newClear();
+		map.at(\stage, stage.asSymbol, \nodes).notNil.if({
+			map.at(\stage, stage.asSymbol, \nodes).asAssociations.do({|associations|
+				associations.do{|oneAssoc| nodes.add(oneAssoc.key) }
+			});
+		});
+		nodes.postln;
+		^nodes.asArray;
 	}
 
 	*nodeExist {|stage, node|
