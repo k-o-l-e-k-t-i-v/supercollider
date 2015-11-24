@@ -2,7 +2,7 @@ QGui {
 	classvar
 	<version,
 	win, canvan,
-	<qPalette, <fonts,
+	<qPalette, <fonts, <syntax,
 	isRunning, isFullScreen, isMinimize,
 	lastWinBounds, minWinSizeX, minWinSizeY,
 	<mouseClickDown,
@@ -69,8 +69,15 @@ QGui {
 		// fonts.put(\fontChapter, Font('Segoe UI', 10, 'true'));
 		fonts.put(\Small, Font('Segoe UI', 10, \false, usePointSize: \true ));
 		// fonts.put(\script, Font('Courier', 11, 'true'));
-		fonts.put(\script, Font('Courier', 11));
-	}
+		fonts.put(\script, Font('Courier',8,usePointSize:true));
+
+		syntax = Dictionary.new();
+		syntax.put(\text, Color.new255(100,100,100));
+		syntax.put(\var, Color.new255(255,255,255));
+		syntax.put(\varName, Color.new255(250,220,100));
+		syntax.put(\class, Color.new255(180,180,180));
+		syntax.put(\nameControl, Color.new255(20,180,240));
+			}
 
 	initMapTest{
 		QuantMap.addStage(\default);
@@ -115,13 +122,16 @@ QGui {
 	// NODES ///////////////////////////////
 
 	*addNode {|name|
+		var proxy;
 		var currStage = QuantMap.stageCurrent;
 		var node = NodeProxy.audio(Server.local, 2);
-		node[0] = {SinOsc.ar(120!2, mul:Saw.kr(1,0.25,0.4))};
-		"this.getStageGroup(currStage): %".format(this.getStageGroup(currStage)).postln;
+
+		// "this.getStageGroup(currStage): %".format(this.getStageGroup(currStage)).postln;
 
 		// currentEnvironment.put(name.asSymbol, node);
 		name.asSymbol.envirPut(node);
+		proxy = name.asSymbol.envirGet;
+		proxy.source_{SinOsc.ar(120!2, mul:Saw.kr(1,0.25,0.4))};
 
 		QuantMap.addNode( currStage, name.asSymbol.envirGet);
 		name.asSymbol.envirGet.play(group: this.getStageGroup(currStage));

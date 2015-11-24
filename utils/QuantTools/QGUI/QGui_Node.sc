@@ -31,6 +31,7 @@ QGui_Node : UserView {
 		proxy = nodeName.asSymbol.envirGet;
 		"proxy : %".format(proxy).postln;
 		"proxyControl : %".format(proxy.controlKeys).postln;
+		"proxySource : %".format(proxy.source.def.sourceCode).postln;
 
 		positionY = 0;
 
@@ -39,26 +40,30 @@ QGui_Node : UserView {
 	}
 
 	initControl {
+		// QGui.syntax.at(\nameControl).postln;
 		objects.put(\sourceCode, TextView(this)
 			.focus(true)
 			.palette_(QGui.qPalette)
 			.font_(QGui.fonts[\script])
 			.string_(proxy.source.asCompileString)
+			.stringColor_(Color.new255(100,100,100))
 			.tabWidth_(25)
-			// .enterInterpretsSelection_(true)
 			.keyDownAction_{ |view, char, modifiers, unicode, keycode, key|
 				// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln
+
+				this.colorizeSyntax(view, proxy.source, \var, Color.new255(255,255,255));
+				this.colorizeSyntax(view, proxy.source, \varName, Color.new255(250,220,100));
+				this.colorizeSyntax(view, proxy.source, \class, Color.new255(180,180,180));
+				this.colorizeSyntax(view, proxy.source, \nameControl, Color.new255(20,180,240));
+
 				// Ctrl + Enter -> unicode 10
 				(unicode == 10).if({
 					"FIRE %".format(view.string).postln;
 					QGui.editNode(this.name, 0, view.string);
 				});
 			}
-			.action_{|text|
-				// "ENTER \sourceCode %".format(text).postln;
-
-			};
 		);
+
 
 		objects.put(\nodeName, TextField(this)
 			.align_(\left)
@@ -87,13 +92,76 @@ QGui_Node : UserView {
 		*/
 	}
 
+	colorizeSyntax{	|textView, function, type, color|
+		var string, keys;
+
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
+		// textView.stringColor_(Color.new255(100,100,100));
+
+		string = function.asCompileString;
+		keys = case
+		{type.asSymbol == \var} { \var }
+		{type.asSymbol == \varName} { function.def.varNames }
+		{type.asSymbol == \class} { function.def.selectors }
+		{type.asSymbol == \nameControl} { function.def.constants };
+
+		keys.do({|oneKey|
+			var positions = string.findAll(oneKey.asString);
+			positions.do({|onePosition|
+				case
+				{type.asSymbol == \var}
+				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
+
+				{type.asSymbol == \varName}
+				{
+					(string[onePosition-1] == $\ ).if({
+						textView.setStringColor(color, onePosition, oneKey.asString.size)
+					})
+				}
+
+				{type.asSymbol == \class}
+				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
+
+				{type.asSymbol == \nameControl}
+				{
+					oneKey.isKindOf(Symbol).if({
+						(string[onePosition-1] != $\ ).if({
+							textView.setStringColor(color, onePosition-1, oneKey.asString.size+1)
+						})
+					},
+					{ textView.setStringColor(Color.red, onePosition, oneKey.asString.size)}
+					);
+				};
+			});
+		});
+	}
+
 	moveTo{|y|
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, y).postln; });
 		positionY = y;
 	}
 
 	recall {
+
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
 		objects[\nodeName].string = this.name;
+		objects[\sourceCode].string = proxy.source.asCompileString;
+
+		QGui.syntax.at(\varName).postln;
+
+		this.colorizeSyntax(objects[\sourceCode], proxy.source, \var, Color.new255(255,255,255));
+		this.colorizeSyntax(objects[\sourceCode], proxy.source, \varName, Color.new255(250,220,100));
+		this.colorizeSyntax(objects[\sourceCode], proxy.source, \class, Color.new255(180,180,180));
+		this.colorizeSyntax(objects[\sourceCode], proxy.source, \nameControl, Color.new255(20,180,240));
+		/*
+		syntax.put(\text, Color.new255(100,100,100));
+		syntax.put(\var, Color.new255(255,255,255));
+		syntax.put(\varName, Color.new255(250,220,100));
+		syntax.put(\class, Color.new255(180,180,180));
+		syntax.put(\nameControl, Color.new255(20,180,240));
+		*/
 
 		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionY, 5, 5, 200));
 		objects[\nodeName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
