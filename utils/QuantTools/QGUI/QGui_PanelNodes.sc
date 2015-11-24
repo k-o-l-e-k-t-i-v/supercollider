@@ -81,7 +81,8 @@ QGui_PanelNodes : UserView {
 	recall{
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		this.bounds_(Rect.offsetEdgeLeft(parent, 315,50,50,300));
+		// this.bounds_(Rect.offsetEdgeLeft(parent, 315,50,50,600));
+		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
 		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,10,10,15));
 
 		nodes.do({|oneNode| oneNode.recall });
@@ -89,7 +90,7 @@ QGui_PanelNodes : UserView {
 
 	draw {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-		// visible.if({
+		this.background_(Color.new255(30,30,30));
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,20,20);
 		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));

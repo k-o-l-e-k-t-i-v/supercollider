@@ -137,9 +137,19 @@ QuantMap {
 
 		map.put(\stage, newName.asSymbol, \group, group);
 		map.removeEmptyAt(\stage, oldName.asSymbol);
-		"rename stage [%,%]".format(oldName, newName).postln;
+		"QuantMap renameStage [%,%]".format(oldName, newName).postln;
 		// map.put(\stage, newName.asSymbol, \nodes, nodeCurr.envirKey.asSymbol, \nodePrew, oldNode);
 		// map.put(\stage, newName.asSymbol, \nodes, nodePrew.envirKey.asSymbol, \nodeCurr, newNode);
+	}
+
+	*stageGroup {|stageName|
+		this.stageExist(stageName).if(
+			{ ^map.at(\stage, stageName.asSymbol, \group) },
+			{
+				this.prWarnings(\notExistStage, thisMethod).warn;
+				^nil;
+			}
+		);
 	}
 
 	//NODES///////////////////////////////////////////

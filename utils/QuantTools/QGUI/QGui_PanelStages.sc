@@ -101,6 +101,7 @@ QGui_PanelStages : UserView {
 		objects[\MapText].string_(QGui.getMapText);
 
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
+		// this.bounds_(Rect.offsetCornerLT(parent, 10,10,300,1300));
 		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,10,10,15));
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,300));
@@ -110,7 +111,7 @@ QGui_PanelStages : UserView {
 
 	draw {
 		QGui.debbuging.if({	"%".format(thisMethod).postln });
-
+		this.background_(Color.new255(30,30,30));
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,20,20);
 		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));

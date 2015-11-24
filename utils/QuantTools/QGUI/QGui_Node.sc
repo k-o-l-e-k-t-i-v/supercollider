@@ -3,6 +3,7 @@ QGui_Node : UserView {
 	classvar >thisClassDebugging = false;
 
 	var parent, bounds;
+	var proxy;
 	var objects;
 	var positionY;
 
@@ -26,6 +27,10 @@ QGui_Node : UserView {
 		bounds = argBounds;
 
 		this.name = nodeName;
+		// proxy = currentEnvironment[nodeName.asSymbol];
+		proxy = nodeName.asSymbol.envirGet;
+		"proxy : %".format(proxy).postln;
+		"proxyControl : %".format(proxy.controlKeys).postln;
 
 		positionY = 0;
 
@@ -38,6 +43,21 @@ QGui_Node : UserView {
 			.focus(true)
 			.palette_(QGui.qPalette)
 			.font_(QGui.fonts[\script])
+			.string_(proxy.source.asCompileString)
+			.tabWidth_(25)
+			// .enterInterpretsSelection_(true)
+			.keyDownAction_{ |view, char, modifiers, unicode, keycode, key|
+				// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln
+				// Ctrl + Enter -> unicode 10
+				(unicode == 10).if({
+					"FIRE %".format(view.string).postln;
+					QGui.editNode(this.name, 0, view.string);
+				});
+			}
+			.action_{|text|
+				// "ENTER \sourceCode %".format(text).postln;
+
+			};
 		);
 
 		objects.put(\nodeName, TextField(this)
@@ -46,7 +66,7 @@ QGui_Node : UserView {
 			.palette_(QGui.qPalette)
 			.background_(Color.clear)
 			.action_{|text|
-
+				// "ENTER \nodeName %".format(text).postln;
 			}
 		);
 
@@ -77,7 +97,7 @@ QGui_Node : UserView {
 
 		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionY, 5, 5, 200));
 		objects[\nodeName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
-		objects[\sourceCode].bounds_(Rect.offsetEdgeTop(this.bounds, 35,5,5,100));
+		objects[\sourceCode].bounds_(Rect.offsetCornerLT(this.bounds, 5,30,600,100));
 	}
 
 	draw {

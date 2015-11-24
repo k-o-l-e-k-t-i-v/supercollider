@@ -21,7 +21,7 @@ QuantNode {
 		qControls.isNil.if(
 			{
 				qControls = MultiLevelIdentityDictionary.new();
-				nodeName = ( proxy.envirKey ? proxy.asSymbol) ;
+				nodeName = proxy.envirKey;
 				// group = proxy.group;
 				"\nQuantNode init nodeName[%]".format(nodeName).postln;
 			},

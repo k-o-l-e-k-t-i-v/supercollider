@@ -32,6 +32,7 @@ QGui_Canvan : UserView {
 
 		menu2 = UserView(parent).name_("header2");
 		canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QGui.qPalette);
+
 		menuStages = QGui_PanelStages(parent).name_("panelStages");
 		menuNodes = QGui_PanelNodes(parent).name_("panelNodes");
 		// menuTimeline =
@@ -157,6 +158,7 @@ QGui_Canvan : UserView {
 
 		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
 		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
+
 		canvan.bounds_(
 			Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height)
 		);
