@@ -112,14 +112,16 @@ QGui {
 	// NODES ///////////////////////////////
 
 	*addNode {|name|
-		// var node = NodeProxy.audio(Server.local, 2);
-		// node.key(name.asSymbol);
-		QuantMap.addNode( QuantMap.stageCurrent, name.asSymbol);
+		var node = NodeProxy.audio(Server.local, 2);
+		currentEnvironment.put(name.asSymbol, node);
+		// currentEnvironment[name.asSymbol].envirKey.postln
+
+		QuantMap.addNode( QuantMap.stageCurrent, currentEnvironment[name.asSymbol]);
 		canvan.menuNodes.addNode(name.asSymbol);
 		this.refreshAll;
 	}
 
-	*getNodes { ^QuantMap.nodes }
+	*getNodes {|stage| ^QuantMap.nodes(stage.asSymbol) }
 
 	// WIN ///////////////////////////////
 

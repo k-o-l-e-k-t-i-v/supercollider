@@ -27,9 +27,9 @@ QGui_PanelNodes : UserView {
 		this.visible = false;
 
 		yPositionNodeStart = 30;
-		ySizeNode = 100;
+		ySizeNode = 200;
 
-		"nodes : %".format(QGui.getNodes).postln;
+		"nodes : %".format(QGui.getNodes(QuantMap.stageCurrent)).postln;
 
 		this.initControl;
 		this.drawFunc = { this.draw };
@@ -47,6 +47,10 @@ QGui_PanelNodes : UserView {
 				// objects[\MapText].string_(QGui.getMapText);
 			};
 		);
+
+		QGui.getNodes(QGui.currentStage).do({|nodeName, i|
+			this.addNode(nodeName);
+		});
 
 		/*
 		objects.put(\timeline, ScrollView(parent, Rect.newSides((frame.left + 405),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
