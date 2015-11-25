@@ -114,7 +114,7 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat2.wav");
         var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
 
         sig = sig * env;
-        Splay.ar(sig.flat,0.5,~n3*2);
+        Splay.ar(sig.flat,0.5,~n3);
     };
     ~three.play;
 );
