@@ -49,8 +49,8 @@ QGui_Canvan : UserView {
 		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100)
 			.name_("QGui_WinEdge_left")
 			.mouseMoveAction_{ |view, x, y, modifiers|
-				QGui.moveGUI(x, QGui.mouseClickDown.y);
-				QGui.resizeGUI(x, y, \left);
+					QGui.moveGUI(x, QGui.mouseClickDown.y);
+					QGui.resizeGUI(x, y, \left);
 			}
 			.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); }
 		);
@@ -77,11 +77,14 @@ QGui_Canvan : UserView {
 		objects.put(\Button_Exit, QGui_Button(menu)
 			.name_("ButtonExit")
 			.iconName("ButtonExitGUI")
+			.colorFrame_(Color.clear)
 			.action_{|button| QGui.closeGUI; }
 		);
+
 		objects.put(\Button_Maximize, QGui_Button(menu)
 			.name_("ButtonMaximize")
 			.iconName("ButtonMaximizeGUI")
+			.colorFrame_(Color.clear)
 			.action_{|button|
 				QGui.maximizeGUI;
 				(button.value == 1).if({ button.value_(0); });
@@ -90,6 +93,7 @@ QGui_Canvan : UserView {
 		objects.put(\Button_Minimize, QGui_Button(menu)
 			.name_("ButtonMinimize")
 			.iconName("ButtonMinimizeGUI")
+			.colorFrame_(Color.clear)
 			.action_{|button|
 				QGui.minimizeGUI;
 				(button.value == 1).if({ button.valueAction_(0); });
@@ -97,9 +101,11 @@ QGui_Canvan : UserView {
 		);
 
 		// MAP ///////////////////////////////
+
 		objects.put(\Button_Map, QGui_Button(menu2)
 			.name_("ButtonMap")
 			.iconName("IconMap2")
+			.colorFrame_(Color.clear)
 			.action_{|button|
 				"\nMapPressed %".format(button.value).postln;
 				(button.value == 1).if(
@@ -112,6 +118,7 @@ QGui_Canvan : UserView {
 		objects.put(\Button_Node, QGui_Button(menu2)
 			.name_("ButtonNode")
 			.iconName("IconNode")
+			.colorFrame_(Color.clear)
 			.action_{|button|
 				"\nNodePressed %".format(button.value).postln;
 				(button.value == 1).if(
@@ -123,6 +130,7 @@ QGui_Canvan : UserView {
 		objects.put(\Button_Time, QGui_Button(menu2)
 			.name_("ButtonTime")
 			.iconName("IconTime")
+			.colorFrame_(Color.clear)
 			.action_{|button|
 				"\nTimePressed %".format(button.value).postln;
 				(button.value == 1).if(

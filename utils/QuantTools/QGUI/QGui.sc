@@ -3,7 +3,7 @@ QGui {
 	<version,
 	win, canvan,
 	<qPalette, <fonts, <syntax,
-	isRunning, isFullScreen, isMinimize,
+	isRunning, <isFullScreen, <isMinimize,
 	lastWinBounds, minWinSizeX, minWinSizeY,
 	<mouseClickDown,
 	<>debbuging;
@@ -77,7 +77,7 @@ QGui {
 		syntax.put(\varName, Color.new255(250,220,100));
 		syntax.put(\class, Color.new255(180,180,180));
 		syntax.put(\nameControl, Color.new255(20,180,240));
-			}
+	}
 
 	initMapTest{
 		QuantMap.addStage(\default);
@@ -193,42 +193,46 @@ QGui {
 
 	*resizeGUI { |x, y, direction = nil|
 		// "ResizeGUI [%,%,%]".format(x, y, direction).postln;
-		(x.notNil && y.notNil && direction.notNil).if({
-			switch ( direction,
-				\right, {
-					var newWidth = win.bounds.width + x - mouseClickDown.x;
-					(newWidth > minWinSizeX).if({
-						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
-					});
-				},
-				\top, {
-					var newHeight = win.bounds.height - y + mouseClickDown.y;
-					(newHeight > minWinSizeY).if({
-						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
-					});
-				},
-				\bottom, {
-					var newHeight = win.bounds.height + y - mouseClickDown.y;
-					(newHeight > minWinSizeY).if({
-						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
-					});
-				},
-				\left, {
-					var newWidth = win.bounds.width - x + mouseClickDown.x;
-					(newWidth > minWinSizeX).if({
-						win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
-					});
-				}
-			);
+		isFullScreen.not.if({
+			(x.notNil && y.notNil && direction.notNil).if({
+				switch ( direction,
+					\right, {
+						var newWidth = win.bounds.width + x - mouseClickDown.x;
+						(newWidth > minWinSizeX).if({
+							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
+						});
+					},
+					\top, {
+						var newHeight = win.bounds.height - y + mouseClickDown.y;
+						(newHeight > minWinSizeY).if({
+							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
+						});
+					},
+					\bottom, {
+						var newHeight = win.bounds.height + y - mouseClickDown.y;
+						(newHeight > minWinSizeY).if({
+							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
+						});
+					},
+					\left, {
+						var newWidth = win.bounds.width - x + mouseClickDown.x;
+						(newWidth > minWinSizeX).if({
+							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
+						});
+					}
+				);
+			});
+			this.refreshAll;
 		});
-		this.refreshAll;
 	}
 
 	*moveGUI {|x, y|
-		var newX = win.bounds.origin.x + x - mouseClickDown.x;
-		var newY = win.bounds.origin.y - y + mouseClickDown.y;
-		// "MoveGUI [%,%]".format(x, y).postln;
-		win.bounds_(Rect(newX, newY, win.bounds.width, win.bounds.height));
+		isFullScreen.not.if({
+			var newX = win.bounds.origin.x + x - mouseClickDown.x;
+			var newY = win.bounds.origin.y - y + mouseClickDown.y;
+			// "MoveGUI [%,%]".format(x, y).postln;
+			win.bounds_(Rect(newX, newY, win.bounds.width, win.bounds.height));
+		});
 	}
 
 	*mouseDown { |w, x, y, buttNum|

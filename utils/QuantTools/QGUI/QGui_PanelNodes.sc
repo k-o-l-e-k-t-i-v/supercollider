@@ -26,7 +26,7 @@ QGui_PanelNodes : UserView {
 
 		this.visible = false;
 
-		yPositionNodeStart = 30;
+		yPositionNodeStart = 25;
 		ySizeNode = 200;
 
 		"nodes : %".format(QGui.getNodes(QuantMap.stageCurrent)).postln;
@@ -38,6 +38,18 @@ QGui_PanelNodes : UserView {
 	initControl {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
+		objects.put(\ButtonAddNode, QGui_Button.new(this)
+			.string_("Add")
+			.colorFrame_(Color.new255(120,120,120))
+			.keepingState_(false)
+			.action_{|button|
+				QGui.addNode(\newNode);
+				this.refresh;
+				// QGui.addStage;
+				// objects[\MapText].string_(QGui.getMapText);
+			};
+		);
+		/*
 		objects.put(\ButtonAddNode, Button.new(this)
 			.string_("Add")
 			.palette_(QGui.qPalette)
@@ -47,7 +59,7 @@ QGui_PanelNodes : UserView {
 				// objects[\MapText].string_(QGui.getMapText);
 			};
 		);
-
+*/
 		QGui.getNodes(QGui.currentStage).do({|nodeName, i|
 			this.addNode(nodeName);
 		});
@@ -83,7 +95,7 @@ QGui_PanelNodes : UserView {
 
 		// this.bounds_(Rect.offsetEdgeLeft(parent, 315,50,50,600));
 		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
-		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,10,10,15));
+		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 
 		nodes.do({|oneNode| oneNode.recall });
 	}

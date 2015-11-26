@@ -50,6 +50,7 @@ QGui_Stage : UserView {
 		objects.put(\ButtonRemoveStage, QGui_Button(this)
 			.name_("ButtonExit")
 			.iconName("ButtonExitGUI")
+			.colorFrameOver_(Color.clear)
 			.action_{|button|
 				QGui.removeStage(this.name);
 				parent.refresh;
@@ -71,7 +72,7 @@ QGui_Stage : UserView {
 
 		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionY, 5, 5, 40));
 		objects[\StageName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
-		objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerRT(this.bounds, 5,5,25,25));
+		objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerRT(this.bounds, 5,5,15,15));
 	}
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;

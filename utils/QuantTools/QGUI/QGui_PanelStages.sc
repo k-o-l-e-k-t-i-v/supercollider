@@ -29,7 +29,7 @@ QGui_PanelStages : UserView {
 
 		this.visible = false;
 
-		yPositionStageStart = 30;
+		yPositionStageStart = 25;
 		ySizeStage = 40;
 
 		mapTextView = ScrollView(this)
@@ -51,12 +51,14 @@ QGui_PanelStages : UserView {
 			.font_(QGui.fonts[\Small])
 			.palette_(QGui.qPalette)
 		);
-		objects.put(\ButtonAddStage, Button.new(this)
+		objects.put(\ButtonAddStage, QGui_Button.new(this)
 			.string_("Add")
-			.palette_(QGui.qPalette)
+			// .palette_(QGui.qPalette)
+			.colorFrame_(Color.new255(120,120,120))
+			.keepingState_(false)
 			.action_{|button|
 				QGui.addStage(\temp);
-				objects[\MapText].string_(QGui.getMapText);
+				this.refresh;
 			};
 		);
 
@@ -102,7 +104,7 @@ QGui_PanelStages : UserView {
 
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
 		// this.bounds_(Rect.offsetCornerLT(parent, 10,10,300,1300));
-		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,10,10,15));
+		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,300));
 

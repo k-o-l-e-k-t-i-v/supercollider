@@ -1,14 +1,14 @@
 QGui_Button : UserView {
 
-	var <parent, <bounds;
-	var state;
+	var <parent;
+	var displayState, >keepingState;
 	var <name, string;
 	var colorBackground, colorBackgroundActive;
 	var colorFrame, colorFrameOver, colorFrameActive;
-	var colorString;
+	var colorString, colorStringActive;
 	var stringFont;
 	var iconPath;
-	var iconFrame, iconLight;
+	var iconSymbol, iconFrame, iconLight;
 	var frameAlpha;
 	var <value;
 	var routine;
@@ -23,9 +23,10 @@ QGui_Button : UserView {
 	init { |argParent, argBounds|
 
 		parent = argParent;
-		bounds = argBounds;
+		this.bounds = argBounds;
 
-		this.state_(\off);
+		this.displayState_(\off);
+		keepingState = true;
 
 		frameAlpha = 0;
 		name = "QGui_Button";
@@ -34,19 +35,20 @@ QGui_Button : UserView {
 
 		colorBackground = Color.clear;
 		colorBackgroundActive = Color.new255(50,60,70);
+
 		colorFrame = Color.clear;
 		colorFrameOver = Color.new255(20,180,240);
-		colorFrameActive = Color.new255(50,60,70);
-		colorString = Color.gray;
+		colorFrameActive = colorFrame;
+
+		colorString = Color.white;
+		colorStringActive = colorString;
 
 		value = 0;
 
 		this.drawFunc = { this.draw };
 	}
 
-	bounds_ {|rect| this.bounds = rect}
-
-	name_ {|name| this.name = "QGui_Button [%]".format(name) }
+	name_ {|buttonName| name = "QGui_Button [%]".format(buttonName) }
 
 	string_ {|text| string = text; }
 
@@ -57,56 +59,69 @@ QGui_Button : UserView {
 	colorFrameActive_ {|color| colorFrameActive = color }
 	colorFrameOver_ {|color| colorFrameOver = color }
 
-	font_ {|font| stringFont = font }
+	displayFont_ {|font| stringFont = font }
 
-	state_ {|type|
+	displayState_ {|type|
+
 		case
-		{type.asSymbol == \on} {state = \on}
-		{type.asSymbol == \onOver} {state = \onOver}
-		{type.asSymbol == \off} {state = \off}
-		{type.asSymbol == \offOver} {state = \offOver}
-		{true}{("QGui_Button state_(%) not define, use [\\on, \\over, \\off]".format(type)).warn};
+		{type.asSymbol == \on} {displayState = \on}
+		{type.asSymbol == \onOver} {displayState = \onOver}
+		{type.asSymbol == \off} {displayState = \off}
+		{type.asSymbol == \offOver} {displayState = \offOver}
+		{true}{("QGui_Button displayState_(%) not define, use [\\on, \\over, \\off]".format(type)).warn};
 
-		state.postln;
+		// displayState.postln;
+
 	}
 
 	iconName{|name|
 		iconPath = super.class.filenameSymbol.asString.dirname +/+ name ++ ".png";
+		iconSymbol = Image.new(iconPath);
 		// iconPath.postln;
 	}
 
 	iconPath{|path|
-		iconPath = PathName(path).fullPath;
-		iconPath.postln;
+		// iconPath = PathName(path).fullPath;
+		// iconPath.postln;
 	}
 
 	draw {
-		// colorFrame.postln;
-		// colorFrameActive.postln;
-		// frameAlpha.postln;
 
-		(value == 1).if(
-			{ this.background = colorBackgroundActive },
-			{ this.background = colorBackground }
-		);
+		this.background = case
+		{displayState == \on} { colorBackgroundActive }
+		{displayState == \onOver} { colorBackgroundActive }
+		{displayState == \off} { colorBackground }
+		{displayState == \offOver} { colorBackground };
+
 		iconPath.notNil.if({
-			var img = Image.new(iconPath);
-			this.backgroundImage_(img);
+			iconSymbol.drawInRect(
+				Rect(0,0,this.bounds.width,this.bounds.height),
+				Rect(0,0,iconSymbol.width, iconSymbol.height),
+				'sourceOver',
+				1
+			);
 		});
+
 		Pen.width = 1;
+
 		Pen.strokeColor = case
-		{state == \on} { colorFrameActive.blend(colorFrameOver,frameAlpha) }
-		{state == \onOver} { colorFrameActive.blend(colorFrameOver,frameAlpha) }
-		{state == \off} { colorFrame.blend(colorFrameOver,frameAlpha) }
-		{state == \offOver} { colorFrame.blend(colorFrameOver,frameAlpha) };
+		{displayState == \on} { colorFrameActive.blend(colorFrameOver,frameAlpha) }
+		{displayState == \onOver} { colorFrameActive.blend(colorFrameOver,frameAlpha) }
+		{displayState == \off} { colorFrame.blend(colorFrameOver,frameAlpha) }
+		{displayState == \offOver} { colorFrame.blend(colorFrameOver,frameAlpha) };
 
 		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
-		// Pen.addRect(this.bounds);
 		Pen.stroke;
 
 		string.notNil.if({
 			Pen.font = stringFont;
-			Pen.stringCenteredIn( string, Rect(0,0, this.bounds.width, this.bounds.height), color:colorString);
+			Pen.stringCenteredIn( string, Rect(0,0, this.bounds.width, this.bounds.height),
+				color:case
+				{displayState == \on} { colorStringActive }
+				{displayState == \onOver} { colorStringActive }
+				{displayState == \off} { colorString }
+				{displayState == \offOver} { colorString };
+			);
 		});
 	}
 
@@ -118,8 +133,13 @@ QGui_Button : UserView {
 	}
 	value_{ |val|       // in many widgets, you can change the
 		// value and refresh the view , but not do the action.
+		keepingState.if({
+			(displayState.asSymbol == \offOver).if(
+				{ this.displayState_(\onOver) },
+				{ this.displayState_( \offOver) }
+			)
+		});
 
-		(state.asSymbol == \offOver).if({ this.state_(\onOver) },{ this.state_( \offOver) });
 		value = val;
 		this.refresh;
 	}
@@ -132,10 +152,11 @@ QGui_Button : UserView {
 
 	mouseEnter{
 		// "MouseEnter %".format(name).postln;
-		this.state_(
+
+		this.displayState_(
 			case
-			{state.asSymbol == \on } {\onOver}
-			{state.asSymbol == \off } {\offOver};
+			{displayState.asSymbol == \on } {\onOver}
+			{displayState.asSymbol == \off } {\offOver};
 		);
 
 		mouseEnterAction.value(this);
@@ -144,10 +165,11 @@ QGui_Button : UserView {
 
 	mouseLeave{
 		// "MouseLeave %".format(name).postln;
-		this.state_(
+
+		this.displayState_(
 			case
-			{state.asSymbol == \onOver } {\on}
-			{state.asSymbol == \offOver } {\off};
+			{displayState.asSymbol == \onOver } {\on}
+			{displayState.asSymbol == \offOver } {\off};
 		);
 
 		mouseLeaveAction.value(this);
@@ -160,7 +182,7 @@ QGui_Button : UserView {
 		routine.stop;
 		routine = Routine({
 			frames.do({|i|
-				frameAlpha = (i+1)/frames ; //* 255
+				frameAlpha = (i+1)/frames ;
 				this.refresh;
 				(time/frames).wait;
 			});
@@ -173,10 +195,12 @@ QGui_Button : UserView {
 		routine.stop;
 		routine = Routine({
 			frames.do({|i|
-				frameAlpha = (frames -(i+1))/frames ; //* 255
+				frameAlpha = (frames -(i+1))/frames ;
 				this.refresh;
 				(time/frames).wait;
 			});
 		}).play(AppClock)
 	}
+
+
 }
