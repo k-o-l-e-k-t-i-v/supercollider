@@ -29,8 +29,6 @@ QGui_PanelNodes : UserView {
 		yPositionNodeStart = 25;
 		ySizeNode = 200;
 
-		"nodes : %".format(QGui.getNodes(QuantMap.stageCurrent)).postln;
-
 		this.initControl;
 		this.drawFunc = { this.draw };
 	}
@@ -42,45 +40,45 @@ QGui_PanelNodes : UserView {
 			.string_("Add")
 			.colorFrame_(Color.new255(120,120,120))
 			.keepingState_(false)
-			.action_{|button|
-				QGui.addNode(\newNode);
-				this.refresh;
-				// QGui.addStage;
-				// objects[\MapText].string_(QGui.getMapText);
-			};
+			.action_{|button| QGui.addNode(\node) };
 		);
-		/*
-		objects.put(\ButtonAddNode, Button.new(this)
-			.string_("Add")
-			.palette_(QGui.qPalette)
-			.action_{|button|
-				QGui.addNode(\newNode);
-				// QGui.addStage;
-				// objects[\MapText].string_(QGui.getMapText);
-			};
-		);
-*/
+
 		QGui.getNodes(QGui.currentStage).do({|nodeName, i|
 			this.addNode(nodeName);
 		});
 
-		/*
-		objects.put(\timeline, ScrollView(parent, Rect.newSides((frame.left + 405),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
-		.autohidesScrollers_(true)
-		.palette_(QGui.qPalette)
-		);
-
-		objects.put(\cnt1, QGui_Controler(objects[\timeline], Rect(5,5,400,40)).setKey("amp"));
-		objects.put(\cnt2, QGui_Controler(objects[\timeline], Rect(5,50,400,40)).setKey("freq"));
-		*/
 	}
 
 	addNode {|name|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
 
+		QGui.getNodes(QGui.currentStage).postln;
 		nodes.put(name.asSymbol, QGui_Node(this, nodeName:name.asSymbol));
+		// "addNodes nodes: %".format(nodes).postln;
 		this.positionOfNodes;
 	}
+
+	removeNode {|name|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+
+		nodes.at(name.asSymbol).remove;
+		nodes.removeAt(name.asSymbol);
+
+		// "removeNodes nodes: %".format(nodes).postln;
+		this.positionOfNodes;
+	}
+
+	renameNode {|oldName, newName|
+
+		nodes.put(newName.asSymbol,nodes.at(oldName.asSymbol));
+		nodes.removeAt(oldName.asSymbol);
+
+		// "renameNode nodes: %".format(nodes).postln;
+
+		this.positionOfNodes;
+		this.refresh;
+	}
+
 
 	positionOfNodes {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
@@ -93,9 +91,10 @@ QGui_PanelNodes : UserView {
 	recall{
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		// this.bounds_(Rect.offsetEdgeLeft(parent, 315,50,50,600));
 		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
 		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
+
+		this.positionOfNodes;
 
 		nodes.do({|oneNode| oneNode.recall });
 	}

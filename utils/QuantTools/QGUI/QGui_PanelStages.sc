@@ -112,7 +112,8 @@ QGui_PanelStages : UserView {
 	}
 
 	draw {
-		QGui.debbuging.if({	"%".format(thisMethod).postln });
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
 		this.background_(Color.new255(30,30,30));
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,20,20);

@@ -26,8 +26,6 @@ QGui {
 		isRunning.not.if({
 			version = QTools.version;
 
-			// this.initMapTest;
-
 			lastWinBounds = Rect(100,100,800,600);
 			win = Window.new(bounds:lastWinBounds, border:false).front;
 			canvan = QGui_Canvan(win, win.view.bounds);
@@ -45,11 +43,12 @@ QGui {
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
-			QGui_Canvan.thisClassDebugging = true;
+			// QGui_Canvan.thisClassDebugging = true;
 			// QGui_PanelStages.thisClassDebugging = true;
 			// QGui_Stage.thisClassDebugging = true;
 			QGui_PanelNodes.thisClassDebugging = true;
 			QGui_Node.thisClassDebugging = true;
+			// QGui_Controler.thisClassDebugging = true;
 		})
 	}
 
@@ -68,7 +67,6 @@ QGui {
 		fonts.put(\Header, Font('Segoe UI', 14, 'true'));
 		// fonts.put(\fontChapter, Font('Segoe UI', 10, 'true'));
 		fonts.put(\Small, Font('Segoe UI', 10, \false, usePointSize: \true ));
-		// fonts.put(\script, Font('Courier', 11, 'true'));
 		fonts.put(\script, Font('Courier',8,usePointSize:true));
 
 		syntax = Dictionary.new();
@@ -79,16 +77,13 @@ QGui {
 		syntax.put(\nameControl, Color.new255(20,180,240));
 	}
 
-	initMapTest{
-		QuantMap.addStage(\default);
-		QuantMap.addStage(\test);
-	}
-
 	// STAGES ///////////////////////////////
 
 	*getMapText { ^QuantMap.textMap; }
 
 	*addStage {|name|
+		name = QuantMap.uniqueName(this.getStages, name.asSymbol);
+		("\nend " + name + this.getStages ).postln;
 		QuantMap.stageExist(name.asSymbol).not.if({
 			QuantMap.addStage(name.asSymbol);
 			canvan.menuStages.addStage(name.asSymbol);
@@ -124,28 +119,48 @@ QGui {
 	*addNode {|name|
 		var proxy;
 		var currStage = QuantMap.stageCurrent;
+		var currGroup = this.getStageGroup(currStage);
 		var node = NodeProxy.audio(Server.local, 2);
+		name = QuantMap.uniqueName(this.getNodes(currStage), name.asSymbol);
 
-		// "this.getStageGroup(currStage): %".format(this.getStageGroup(currStage)).postln;
-
-		// currentEnvironment.put(name.asSymbol, node);
 		name.asSymbol.envirPut(node);
 		proxy = name.asSymbol.envirGet;
-		proxy.source_{SinOsc.ar(120!2, mul:Saw.kr(1,0.25,0.4))};
+		proxy.playN(group:currGroup);
+		proxy.group = currGroup;
+		proxy.fadeTime = 4;
+		proxy[0] = {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}; //.play(currGroup);
 
-		QuantMap.addNode( currStage, name.asSymbol.envirGet);
-		name.asSymbol.envirGet.play(group: this.getStageGroup(currStage));
+		QuantMap.addNode(currStage, proxy);
 
 		canvan.menuNodes.addNode(name.asSymbol);
 		this.refreshAll;
 	}
 
-	*editNode{|name, index, function|
-		function.compile.postln;
-		name.asSymbol.envirGet.source_(function.compile);
+	*editNode{|nodeName, index, function|
+		QuantMap.editNode(QuantMap.stageCurrent, nodeName, index, function);
+		this.refreshAll;
 	}
 
 	*getNodes {|stage| ^QuantMap.nodes(stage.asSymbol) }
+
+	*renameNode{|oldName, newName|
+		var currStage = QuantMap.stageCurrent;
+		QuantMap.renameNode(currStage, oldName, newName);
+		canvan.menuNodes.renameNode(oldName, newName);
+		this.refreshAll;
+	}
+
+	*releaseNode {|name|
+		QuantMap.releaseNode(QuantMap.stageCurrent, name);
+		canvan.menuNodes.removeNode(name);
+		this.refreshAll;
+	}
+
+	// CONTROL ///////////////////////////////
+
+	*addControl{|node, key|
+
+	}
 
 
 	// WIN ///////////////////////////////

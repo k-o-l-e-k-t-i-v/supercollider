@@ -1,6 +1,6 @@
 QTools {
 
-	*version { ^0.12 }
+	*version { ^0.13 }
 
 	*gui{
 		Server.local.waitForBoot({
@@ -27,4 +27,10 @@ QTools {
 	}
 
 	*removeNode {|stage, nodes|  }
+
+	*reset {
+		Server.local.waitForBoot({
+			QuantMap.new();
+		});
+	}
 }

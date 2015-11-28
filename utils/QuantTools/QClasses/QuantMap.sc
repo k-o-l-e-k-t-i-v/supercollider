@@ -98,7 +98,7 @@ QuantMap {
 				associations.do{|oneAssoc| stages.add(oneAssoc.key) }
 			});
 		})
-		^stages.asArray;
+		^stages;
 	}
 
 	*stageExist {|stage|
@@ -154,96 +154,106 @@ QuantMap {
 
 	//NODES///////////////////////////////////////////
 
-	*addNode {|stage, node|
-		var newNode = QuantNode(node.asSymbol);
-
-		this.nodeExist(stage.asSymbol, node.asSymbol).not.if(
+	*addNode {|stageName, nodeProxy|
+		this.nodeExist(stageName.asSymbol, nodeProxy.asSymbol).if(
 			{
-				map.put(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodeCurr, newNode);
-				map.put(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodePrew, \nil);
+				var newNode = QuantNode(nodeProxy);
+				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \nodeCurr, newNode);
+				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \nodePrew, \nil);
 			},
+			{ this.editNode(stageName, nodeProxy) }
+		);
+	}
+
+	*editNode {|stageName, nodeName, index, function|
+		var nodeProxy = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr).proxy;
+		this.nodeExist(stageName.asSymbol, nodeProxy.asSymbol).if(
 			{
-				var oldNode = map.at(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodeCurr);
-				map.put(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodePrew, oldNode);
-				map.put(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodeCurr, newNode);
+				var oldNode = this.copyNode(stageName.asSymbol, nodeName);
+				var newNode = QuantNode(nodeProxy);
+				newNode.proxy.playN(group:this.stageGroup(this.stageCurrent));
+
+				newNode.proxy[index] = thisProcess.interpreter.compile(function);
+
+				map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodePrew, oldNode);
+				map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr, newNode);
 			}
 		);
 	}
 
-	*copyNode {|stage, name|
-
+	*copyNode {|stageName, nodeName|
+		var nodeProxy = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr).proxy.copy;
+		^QuantNode(nodeProxy);
 	}
 
-	*releaseNode{|stage, name|
-
+	*releaseNode {|stageName, nodeName|
+		var node = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr);
+		node.notNil.if({
+			map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr).proxy.release(2);
+			map.removeEmptyAt(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol);
+		});
 	}
 
-	*nodes{|stage|
+	*renameNode {|stageName, oldName, newName|
+		var nodeCurr = map.at(\stage, stageName.asSymbol, \nodes, oldName.asSymbol, \nodeCurr);
+		var nodePrew = map.at(\stage, stageName.asSymbol, \nodes, oldName.asSymbol, \nodePrew);
+
+		nodeCurr.nodeName = newName;
+		newName.asSymbol.envirPut(nodeCurr.proxy.copy);
+		oldName.asSymbol.envirPut(nil);
+
+		map.put(\stage, stageName.asSymbol, \nodes, newName.asSymbol, \nodeCurr, nodeCurr);
+		map.removeEmptyAt(\stage, stageName.asSymbol, \nodes, oldName.asSymbol);
+
+		nodePrew.isNil.postln;
+		nodePrew.isNil.if(
+			{
+				nodePrew.nodeName = newName;
+				map.put(\stage, stageName.asSymbol, \nodes, newName.asSymbol, \nodePrew, nodePrew);
+			},
+			{
+				map.put(\stage, stageName.asSymbol, \nodes, newName.asSymbol, \nodePrew, \nil);
+			}
+		);
+	}
+
+	*nodes{|stageName|
 		var nodes = List.newClear();
-		map.at(\stage, stage.asSymbol, \nodes).notNil.if({
-			map.at(\stage, stage.asSymbol, \nodes).asAssociations.do({|associations|
-				associations.do{|oneAssoc| nodes.add(oneAssoc.key) }
+		map.at(\stage, stageName.asSymbol, \nodes).notNil.if({
+			map.at(\stage, stageName.asSymbol, \nodes).asAssociations.do({|associations|
+				associations.do({|oneAssoc| nodes.add(oneAssoc.key) })
 			});
 		});
-		nodes.postln;
-		^nodes.asArray;
+		^nodes;
 	}
 
-	*nodeExist {|stage, node|
-		map.at(\stage, stage.asSymbol, \nodes, node.envirKey.asSymbol, \nodeCurr).isNil.if({ ^false }, { ^true });
+	*nodeExist {|stageName, nodeProxy|
+		map.at(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \nodeCurr).isNil.if({ ^true }, { ^false });
 	}
-
 
 	////////////////////////////////////////////////
 
-	*add {|stage, phase, qObject|
-		"\nQuantMap add [stage: %]".format(stage).postln;
-		// UPRAVIT MAPU NA -> STAGE / QUANTNODE
-		//                          / GROUP
+	*uniqueName {|inArray, rootName|
+		var library = List.newClear();
+		var newIndex = -1;
+		var answ;
+		inArray.do({|one| library.add(one) }); // PROBLEM S 4-ITERACI ??????
 
-		map.at(stage).isNil.if(
-			{ map.put(stage, QuantNode(currentProxy, currentSlot, phase, qObject)); },
-			{
-				var qNode = map.at(stage);
-				var qObject = qNode.qObjects.at([qNode, currentSlot, \current]);
-				qObject.isNil.if(
-					{
-						// "QuantMap add [map.at(%): %]".format(stage, map.at(stage)).postln;
-						"QuantMap add map.at(%).nodeName : %".format(stage, map.at(stage).nodeName).postln;
-						map.at(stage).addObject(currentSlot, phase, qObject);
-					},
-					{
-						this.edit(stage, phase, qObject);
-					}
-				)
-			}
-		)
-	}
-
-	*edit {|stage, phase, qObject|
-		map.at(stage).isNil.if(
-			{
-				"map stage not found this path [%/%]".format(stage, phase).postln;
-				this.add(stage, phase, qObject);
-			},
-			{
-				var qNode, qObject;
-				qNode = map.at(stage);
-				"QuantMap edit qNode.nodeName : %".format(qNode.nodeName).postln;
-				qObject = qNode.qObjects.at([qNode, currentSlot, phase]);
-				qObject.notNil.if(
-					{
-						"QuantMap edit qObject.key %".format(qObject.key).postln;
-						// qObject.
-					},
-					{
-						"QuantMap edit qObject not exist".postln;
-						map.put(stage, QuantNode(currentProxy, currentSlot, phase, qObject));
-					}
-				);
-				// "map exist at path [%/%]".format(stage, phase).postln;
-			}
+		library.do({|libName|
+			(
+				(PathName(libName.asString).noEndNumbers == rootName.asString) or:
+				(PathName(libName.asString).noEndNumbers.asString == (rootName ++ "_").asString)
+			).if({
+				(PathName(libName.asString).endNumber.asInteger >= newIndex).if({
+					newIndex = PathName(libName.asString).endNumber + 1;
+				});
+			});
+		});
+		(newIndex == -1).if(
+			{ answ = rootName	},
+			{ answ = "%_%".format(rootName, newIndex) }
 		);
+		^answ;
 	}
 
 	*textMap {
@@ -253,7 +263,7 @@ QuantMap {
 				var tabs = "";
 
 				map.sortedTreeDo(
-					{|root, stageName, aaa|
+					{|root, stageName|
 						root.notEmpty.if(
 							{
 								var numTabs = root.size - 1;
@@ -267,16 +277,19 @@ QuantMap {
 							}
 						);
 					},
-					{|stage, qNode|
+					{|stage, item|
 						var numTabs = stage.size - 1;
 						var slot = stage.last;
+						var itemTxt = case
+						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
+						{ true } { itemTxt = item };
 
 						numTabs.do({tabs = tabs ++ "     ";});
-						txt = txt ++ "\n" ++ tabs ++ "- " ++ slot ++ " : " ++ qNode;
+						txt = txt ++ "\n" ++ tabs ++ "- " ++ slot ++ " : " ++ itemTxt;
 						tabs = "";
 					},
 					{},
-					{|root, aaa|
+					{|root|
 						var numTabs = root.size - 1;
 						numTabs.do({tabs = tabs ++ "     ";});
 						root.notEmpty.if({ txt = txt ++ "\n" ++ tabs ++ "- - -"; });
@@ -302,35 +315,4 @@ QuantMap {
 		answ = "QuantMap method [*%]: %".format(method.name, msg);
 		^answ;
 	}
-
-
-
-
-	// *add {|qNode| map.put(currentProxy.envirKey.asSymbol, currentIndex, qNode);	}
-	/*
-	*findProxy {|qNode|
-	var proxy, index;
-	map.notNil.if(
-	{
-	proxy = block {|break|
-	map.leafDo ({|path, item|
-	var tempProxy = path[0];
-	var index = path[1];
-	(qNode == item).if({ break.value(tempProxy) });
-	});
-	break.value(nil);
-	};
-	// "MAP.findProxy: %".format(proxy).postln;
-	},
-	{ "MAP isNil %".format(proxy).postln; }
-	);
-	^proxy;
-	}
-
-	*getNode {|proxy, index| ^map.at(proxy.envirKey.asSymbol, index)}
-
-	*currentNode { ^map.at(currentProxy.envirKey.asSymbol, currentIndex)}
-
-
-	*/
 }

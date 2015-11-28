@@ -1,8 +1,9 @@
 QuantNode {
-	// classvar version = 0.10;
+
 	// var <>key;
 	// var stage, phase;
 	var <>nodeName;
+	var <>proxy;
 	// var <>proxyName, <>slot;
 	var <qControls;
 	// var >levels, >times, >curves;
@@ -15,13 +16,15 @@ QuantNode {
 	// *new2 {|key, quant, fadeTime| ^super.new.init(key, quant, fadeTime);	}
 
 	// init{|proxy, slot, phase, qObject|
-	init{|proxy|
+	init{|nodeProxy|
 
+		proxy = nodeProxy;
+		nodeName = nodeProxy.envirKey;
 		// this.slot = slot;
 		qControls.isNil.if(
 			{
 				qControls = MultiLevelIdentityDictionary.new();
-				nodeName = proxy.envirKey;
+				// nodeName = proxy.envirKey;
 				// group = proxy.group;
 				"\nQuantNode init nodeName[%]".format(nodeName).postln;
 			},
