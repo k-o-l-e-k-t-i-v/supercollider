@@ -4,6 +4,7 @@ QGui_Stage : UserView {
 
 	var parent, bounds;
 	var objects;
+	var <>display;
 	var <>isCurrent;
 	var positionY;
 	var frameAlpha, routine;
@@ -26,11 +27,18 @@ QGui_Stage : UserView {
 
 		objects = Dictionary.new();
 		this.name = stageName;
+		this.setDisplay = parent.display;
+
+		// QTools.print;
+		// QGui.currentStage.asSymbol.postln;
+		// this.name.asSymbol.postln;
 
 		( QGui.currentStage.asSymbol == this.name.asSymbol ).if(
 			{ isCurrent = true },
 			{ isCurrent = false }
 		);
+		// isCurrent.postln;
+
 		positionY = 0;
 		frameAlpha = 0;
 
@@ -48,9 +56,10 @@ QGui_Stage : UserView {
 		);
 
 		objects.put(\ButtonRemoveStage, QGui_Button(this)
-			.name_("ButtonExit")
+			.name_("ButtonRemoveStage")
 			.iconName("ButtonExitGUI")
 			.colorFrameOver_(Color.clear)
+			.keepingState_(false)
 			.action_{|button|
 				QGui.removeStage(this.name);
 				parent.refresh;
@@ -58,6 +67,14 @@ QGui_Stage : UserView {
 		);
 
 		this.drawFunc = { this.draw };
+		this.refresh;
+	}
+
+	setDisplay_ {|bool|
+		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, bool).postln; });
+
+		display = bool;
+		this.visible_(bool);
 	}
 
 	moveTo{|y|
@@ -76,9 +93,8 @@ QGui_Stage : UserView {
 	}
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;
-		(QGui.debbuging and: thisClassDebugging).if({ "% - %".format(thisMethod, this.name).postln; });
-		mouseDownAction.value(this, x, y, modifiers, buttonNumber, clickCount);
-		// (value == 0).if( {this.valueAction_(1);}, {this.valueAction_(0);} );
+		(QGui.debbuging and: thisClassDebugging).if({ "\n>>> % - %".format(thisMethod, this.name).postln; });
+		QGui.currentStage_(this.name);
 	}
 
 	mouseEnter{
@@ -123,6 +139,8 @@ QGui_Stage : UserView {
 
 	draw {
 		// (QGui.debbuging and: thisClassDebugging).if({ "% - %".format(thisMethod, this.name).postln; });
+
+		// ("isCurrent: " + this.name + isCurrent).postln;
 
 		isCurrent.if(
 			{ this.background = Color.new255(50,60,70) }, // Color.new255(60,90,100)

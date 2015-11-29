@@ -107,10 +107,10 @@ QGui_Canvan : UserView {
 			.iconName("IconMap2")
 			.colorFrame_(Color.clear)
 			.action_{|button|
-				"\nMapPressed %".format(button.value).postln;
+				"\n>>>Button_Map pressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{ menuStages.visible_(true)	},
-					{ menuStages.visible_(false) }
+					{ QGui.setDisplayPanel(\panelStages, true)},
+					{ QGui.setDisplayPanel(\panelStages, false)}
 				);
 				menuStages.refresh;
 			}
@@ -120,9 +120,9 @@ QGui_Canvan : UserView {
 			.iconName("IconNode")
 			.colorFrame_(Color.clear)
 			.action_{|button|
-				"\nNodePressed %".format(button.value).postln;
+				"\n>>>Button_Node pressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{ menuNodes.visible_(true)	},
+					{ menuNodes.visible_(true) },
 					{ menuNodes.visible_(false) }
 				)
 			}

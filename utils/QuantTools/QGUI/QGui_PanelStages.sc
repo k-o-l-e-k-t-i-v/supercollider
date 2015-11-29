@@ -3,8 +3,9 @@ QGui_PanelStages : UserView {
 	classvar >thisClassDebugging = false;
 
 	var parent, bounds;
-	var objects, stages;
+	var objects, <>stages;
 	var mapTextView;
+	var <>display;
 
 	var yPositionStage, yPositionStageStart, ySizeStage;
 
@@ -27,7 +28,8 @@ QGui_PanelStages : UserView {
 		objects = Dictionary.new();
 		stages = Dictionary.new();
 
-		this.visible = false;
+		this.name = "QGui_PanelStages";
+		this.setDisplay_(false);
 
 		yPositionStageStart = 25;
 		ySizeStage = 40;
@@ -58,40 +60,54 @@ QGui_PanelStages : UserView {
 			.keepingState_(false)
 			.action_{|button|
 				QGui.addStage(\temp);
-				this.refresh;
+				// this.refresh;
 			};
 		);
-
-		QuantMap.stages.do({|stageName, i|
-			this.addStage(stageName);
-		});
 	}
 
-	addStage {|name|
-		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+	setDisplay_ {|bool|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln; });
+		// this.positionOfStages;
+		display = bool;
+		this.visible_(bool);
 
-		stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol)
-			.mouseDownAction_{ |view, x, y, buttNum|
-				QGui.currentStage_(view.name.asSymbol);
-				stages.do({|oneStage| oneStage.isCurrent = false; oneStage.refresh });
-				view.isCurrent = true;
-				QGui.refreshAll;
-			}
-		);
-		this.positionOfStages;
+		QGui.getStagesGUI.do({|oneStage| oneStage.setDisplay_(bool) });
+	}
+
+	/*
+	addStage {|name|
+	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+	"POZOR".warn;
+	// stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol));
+	this.positionOfStages;
 	}
 
 	removeStage{|name|
+	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+
+	stages.at(name.asSymbol).remove;
+	stages.removeAt(name.asSymbol);
+	this.positionOfStages;
+	}
+	*/
+/*
+	setCurrentStage { |name|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
 
-		stages.at(name.asSymbol).remove;
-		stages.removeAt(name.asSymbol);
-		this.positionOfStages;
+		QGui.getStagesGUI.do({|oneStage|
+			// stages.do({|oneStage|
+			(name.asSymbol == oneStage.name.asSymbol).if(
+				{ oneStage.isCurrent = true; "oneStage.isCurrent = true".warn },
+				{ oneStage.isCurrent = false; "oneStage.isCurrent = false".warn }
+			);
+			oneStage.refresh;
+		});
 	}
-
+*/
 	positionOfStages {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-		stages.do({|oneStage, i|
+
+		QGui.getStagesGUI.do({|oneStage, i|
 			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
 			oneStage.moveTo(yPositionStage);
 		});
@@ -108,7 +124,9 @@ QGui_PanelStages : UserView {
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,300));
 
-		stages.do({|oneStage| oneStage.recall });
+		this.positionOfStages;
+		QGui.getStagesGUI.do({|oneStage| oneStage.recall });
+		// stages.do({|oneStage| oneStage.recall });
 	}
 
 	draw {

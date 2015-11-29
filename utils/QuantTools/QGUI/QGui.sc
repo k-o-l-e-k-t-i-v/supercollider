@@ -1,4 +1,6 @@
 QGui {
+	classvar >thisClassDebugging = false;
+
 	classvar
 	<version,
 	win, canvan,
@@ -15,6 +17,8 @@ QGui {
 	initGUI {
 		this.initDebugging(true);
 
+		(QGui.debbuging and: thisClassDebugging).if({"\n% [debugging: %]".format(thisMethod, debbuging).postln;});
+
 		win.isNil.if(
 			{ isRunning = false },
 			{
@@ -30,6 +34,8 @@ QGui {
 			win = Window.new(bounds:lastWinBounds, border:false).front;
 			canvan = QGui_Canvan(win, win.view.bounds);
 
+			QuantMap.addGui(win, canvan);
+
 			isRunning = true;
 			isFullScreen = false;
 			isMinimize = false;
@@ -43,12 +49,14 @@ QGui {
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
-			// QGui_Canvan.thisClassDebugging = true;
-			// QGui_PanelStages.thisClassDebugging = true;
-			// QGui_Stage.thisClassDebugging = true;
+			QuantMap.thisClassDebugging = true;
+			QGui.thisClassDebugging = true;
+			QGui_Canvan.thisClassDebugging = true;
+			QGui_PanelStages.thisClassDebugging = true;
+			QGui_Stage.thisClassDebugging = true;
 			QGui_PanelNodes.thisClassDebugging = true;
 			QGui_Node.thisClassDebugging = true;
-			// QGui_Controler.thisClassDebugging = true;
+			QGui_Controler.thisClassDebugging = true;
 		})
 	}
 
@@ -77,22 +85,30 @@ QGui {
 		syntax.put(\nameControl, Color.new255(20,180,240));
 	}
 
+	// PANELS ///////////////////////////////
+
+	*setDisplayPanel {|type, bool|
+		case
+		{type.asSymbol == \panelStages}{ QuantMap.panelStages.setDisplay_(bool) }
+		// {type.asSymbol == \panelNodes}{ QuantMap.panelNodes[\xxx].setDisplay_(bool) }
+		;
+		this.refreshAll;
+	}
+
+
 	// STAGES ///////////////////////////////
 
 	*getMapText { ^QuantMap.textMap; }
 
 	*addStage {|name|
 		name = QuantMap.uniqueName(this.getStages, name.asSymbol);
-		("\nend " + name + this.getStages ).postln;
 		QuantMap.stageExist(name.asSymbol).not.if({
 			QuantMap.addStage(name.asSymbol);
-			canvan.menuStages.addStage(name.asSymbol);
 			this.refreshAll;
 		});
 	}
 
 	*removeStage {|name|
-		canvan.menuStages.removeStage(name);
 		QuantMap.removeStage(name);
 		this.refreshAll;
 	}
@@ -100,17 +116,27 @@ QGui {
 	*renameStage {|oldName, newName|
 		QuantMap.stageExist(oldName.asSymbol).if({
 			QuantMap.renameStage(oldName, newName);
-			canvan.menuStages.addStage(newName.asSymbol);
-			canvan.menuStages.removeStage(oldName.asSymbol);
 			this.refreshAll;
 		})
 	}
 
 	*getStages { ^QuantMap.stages }
 
+	*getStagesGUI { ^QuantMap.stagesGUI }
+
 	*currentStage { ^QuantMap.stageCurrent }
 
-	*currentStage_ {|name| QuantMap.stageCurrent_(name.asSymbol) }
+	*currentStage_ {|name|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+
+		QuantMap.stageCurrent_(name.asSymbol);
+		// canvan.menuStages.setCurrentStage(name.asSymbol);
+
+
+		"Current stage nodes: %".format(this.getNodes(this.currentStage)).postln;
+		// this.displayNodes(QuantMap.stageCurrent);
+		this.refreshAll;
+	}
 
 	*getStageGroup {|name| ^QuantMap.stageGroup(name) }
 
@@ -155,7 +181,12 @@ QGui {
 		canvan.menuNodes.removeNode(name);
 		this.refreshAll;
 	}
-
+	/*
+	displayNodes {|stage|
+	(QGui.debbuging and: thisClassDebugging).if({ "% [stage:%, name:%, bool:%]".format(thisMethod, stage, name, bool).postln });
+	// canvan.menuNodes.
+	}
+	*/
 	// CONTROL ///////////////////////////////
 
 	*addControl{|node, key|

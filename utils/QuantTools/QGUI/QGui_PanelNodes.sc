@@ -2,7 +2,7 @@ QGui_PanelNodes : UserView {
 	classvar >thisClassDebugging = false;
 
 	var parent, bounds;
-	var objects, nodes;
+	var objects, <nodes;
 
 	var yPositionNode, yPositionNodeStart, ySizeNode;
 
@@ -52,20 +52,23 @@ QGui_PanelNodes : UserView {
 	addNode {|name|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
 
-		QGui.getNodes(QGui.currentStage).postln;
+		// QGui.getNodes(QGui.currentStage).postln;
 		nodes.put(name.asSymbol, QGui_Node(this, nodeName:name.asSymbol));
+
 		// "addNodes nodes: %".format(nodes).postln;
-		this.positionOfNodes;
+		// this.positionOfNodes;
+		this.refresh;
 	}
 
 	removeNode {|name|
-		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name.name).postln });
 
 		nodes.at(name.asSymbol).remove;
 		nodes.removeAt(name.asSymbol);
 
 		// "removeNodes nodes: %".format(nodes).postln;
-		this.positionOfNodes;
+		// this.positionOfNodes;
+		this.refresh;
 	}
 
 	renameNode {|oldName, newName|
@@ -74,8 +77,7 @@ QGui_PanelNodes : UserView {
 		nodes.removeAt(oldName.asSymbol);
 
 		// "renameNode nodes: %".format(nodes).postln;
-
-		this.positionOfNodes;
+		// this.positionOfNodes;
 		this.refresh;
 	}
 
@@ -83,8 +85,10 @@ QGui_PanelNodes : UserView {
 	positionOfNodes {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 		nodes.do({|oneNode, i|
-			yPositionNode = ((ySizeNode + 5)*i ) + yPositionNodeStart;
-			oneNode.moveTo(yPositionNode);
+			oneNode.display.if({
+				yPositionNode = ((ySizeNode + 5)*i ) + yPositionNodeStart;
+				oneNode.moveTo(yPositionNode);
+			});
 		});
 	}
 
@@ -93,6 +97,15 @@ QGui_PanelNodes : UserView {
 
 		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
 		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
+
+		"Recall panel nodes: %".format(nodes).postln;
+
+		nodes.do({|node| node.setDisplay_(false)});
+
+		QGui.getNodes(QGui.currentStage).do({|nodeName|
+			nodes[nodeName].setDisplay_(true);
+		});
+		// */
 
 		this.positionOfNodes;
 

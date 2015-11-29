@@ -5,6 +5,7 @@ QGui_Node : UserView {
 	var parent, bounds;
 	var proxy;
 	var objects, controls;
+	var <display;
 	var positionNodeY;
 	var yPositionControl, yPositionControlStart, ySizeControl;
 
@@ -27,6 +28,8 @@ QGui_Node : UserView {
 
 		parent = argParent;
 		bounds = argBounds;
+
+		display = false;
 
 		yPositionControlStart = 5;
 		ySizeControl = 50;
@@ -179,6 +182,13 @@ QGui_Node : UserView {
 		positionNodeY = y;
 	}
 
+	setDisplay_ {|bool|
+		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, bool).postln; });
+
+		display = bool;
+		this.visible_(bool);
+	}
+
 	recall {
 
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
@@ -210,10 +220,4 @@ QGui_Node : UserView {
 		Pen.line(0@this.bounds.height, this.bounds.width@this.bounds.height);
 		Pen.stroke;
 	}
-
-	exit{
-	this.visible = false;
-	}
-
-
 }

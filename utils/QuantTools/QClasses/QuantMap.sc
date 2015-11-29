@@ -1,4 +1,6 @@
 QuantMap {
+	classvar >thisClassDebugging = false;
+
 	classvar map;
 	classvar <currentProxy, currentChOff, <currentSlot;
 
@@ -48,15 +50,30 @@ QuantMap {
 	*new { ^super.new.init(); }
 
 	init {
-		"\nQuantMap init".postln;
+
+		// thisClassDebugging = true;
+
 		map.isNil.if(
 			{
+				"\nQuantMap init".postln;
+
 				CmdPeriod.add(this);
 				map = MultiLevelIdentityDictionary.new;
-				super.class.addStage(\default);
-				super.class.stageCurrent_(\default);
+				// map.put(\gui, \win, \nil);
+				// map.put(\gui, \canvan, nil);
+				// map.put(\gui, \panelStages, \nil);
+				// map.put(\gui, \panelNodes, \nil);
+
+				// map.put(\gui, \displayStage, \default);
+				// super.class.addStage(\default);
+				// super.class.stageCurrent_(\default);
+				// map.put(\stage, \default, \gui, \nil);
+
+
 			},
-			// { "\nQuantMap map exist".postln }
+			{
+				// "\nQuantMap map exist".postln
+			}
 		);
 	}
 
@@ -69,16 +86,65 @@ QuantMap {
 		}).play;
 	}
 
+	*addGui{ |win, canvan|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%, %]".format(thisMethod, win, canvan).postln });
+		map.notNil.if(
+			{
+				map.put(\gui, \win, win);
+				map.put(\gui, \canvan, canvan);
+				map.put(\gui, \panelStages, canvan.menuStages);
+				map.put(\gui, \panelNodes, canvan.menuNodes);
+
+				map.put(\gui, \displayStage, \default);
+				this.addStage(\default);
+				this.stageCurrent_(\default);
+
+
+			},
+			{ this.prWarnings(\notInitMap, thisMethod).warn }
+		);
+	}
+
+	*hasGui {
+		map.notNil.if(
+			{ ^map.at(\gui, \canvan).notNil },
+			{ this.prWarnings(\notInitMap, thisMethod).warn }
+		);
+	}
+
+
+	//PANELS///////////////////////////////////////////
+
+	*panelStages{
+		this.hasGui.if(
+			{ ^map.at(\gui, \panelStages) },
+			{ this.prWarnings(\notInitGui, thisMethod).warn	}
+		)
+	}
+
+	*panelNodes{
+		this.hasGui.if(
+			{ ^map.at(\gui, \panelNodes) },
+			{ this.prWarnings(\notInitGui, thisMethod).warn	}
+		)
+	}
+
+
 	//STAGES///////////////////////////////////////////
 
-	*addStage {|stage|
-		// var group = Group.new(RootNode(Server.local).nodeID, \addToHead);
+	*addStage {|stageName|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
+
 		Server.local.serverRunning.if(
 			{
-				var group = map.at(\stage, stage.asSymbol, \group);
-				group.isNil.if({ group = Group.new(nil, \addToHead); });
+				var group = map.at(\stage, stageName.asSymbol, \group);
+				group.isNil.if({ group = Group.new(nil, \addToHead) });
 
-				map.put(\stage, stage.asSymbol, \group, group);
+				map.put(\stage, stageName.asSymbol, \group, group);
+				this.hasGui.if({
+					var panel = map.at(\gui, \canvan).menuStages;
+					map.put(\stage, stageName.asSymbol, \gui, QGui_Stage(panel, stageName:stageName));
+				});
 			},
 			{ this.prWarnings(\notRunServer, thisMethod).warn }
 		)
@@ -88,6 +154,11 @@ QuantMap {
 		var nodeCurr = map.at(\stage, stage.asSymbol, \nodeCurr).free;
 		var nodePrew = map.at(\stage, stage.asSymbol, \nodePrew).free;
 		var group = map.at(\stage, stage.asSymbol, \group).free;
+		this.hasGui.if({
+			var guiStage = map.at(\stage, stage.asSymbol, \gui);
+			guiStage.setDisplay_(false);
+			guiStage.remove;
+		});
 		map.removeEmptyAt(\stage, stage.asSymbol);
 	}
 
@@ -97,6 +168,14 @@ QuantMap {
 			map.at(\stage).asAssociations.do({|associations|
 				associations.do{|oneAssoc| stages.add(oneAssoc.key) }
 			});
+		})
+		^stages;
+	}
+
+	*stagesGUI {
+		var stages = List.newClear();
+		map.at(\stage).notNil.if({
+			map.at(\stage).do({|oneStage| stages.add(oneStage[\gui]) });
 		})
 		^stages;
 	}
@@ -118,14 +197,24 @@ QuantMap {
 
 	*stageCurrent_ {|stageName|
 		this.stageExist(stageName).if(
-			{ map.put(\stageCurrent, stageName.asSymbol) },
+			{
+				map.put(\gui, \displayStage, stageName.asSymbol);
+				this.hasGui.if({
+					this.stagesGUI.do({|oneStage|
+						(oneStage.name.asSymbol == stageName.asSymbol).if(
+							{ oneStage.isCurrent_(true).refresh },
+							{ oneStage.isCurrent_(false).refresh }
+						)
+					})
+				});
+			},
 			{ this.prWarnings(\notExistStage, thisMethod).warn }
 		);
 	}
 
 	*stageCurrent {
 		map.notNil.if(
-			{ ^map.at(\stageCurrent) },
+			{ ^map.at(\gui, \displayStage) },
 			{ this.prWarnings(\notInitMap, thisMethod).warn }
 		);
 	}
@@ -136,6 +225,14 @@ QuantMap {
 		var group = map.at(\stage, oldName.asSymbol, \group);
 
 		map.put(\stage, newName.asSymbol, \group, group);
+		map.put(\stage, newName.asSymbol, \nodeCurr, nodeCurr);
+		map.put(\stage, newName.asSymbol, \nodeCurr, nodePrew);
+
+		this.hasGui.if({
+			var stageGui = map.at(\stage, oldName.asSymbol, \gui);
+			map.put(\stage, newName.asSymbol, \gui, stageGui);
+		});
+
 		map.removeEmptyAt(\stage, oldName.asSymbol);
 		"QuantMap renameStage [%,%]".format(oldName, newName).postln;
 		// map.put(\stage, newName.asSymbol, \nodes, nodeCurr.envirKey.asSymbol, \nodePrew, oldNode);
@@ -282,6 +379,8 @@ QuantMap {
 						var slot = stage.last;
 						var itemTxt = case
 						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
+						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
+						{ item.isKindOf(QGui_Stage) }{ itemTxt = "QGui_Stage [display: %]".format(item.display) }
 						{ true } { itemTxt = item };
 
 						numTabs.do({tabs = tabs ++ "     ";});
@@ -308,6 +407,7 @@ QuantMap {
 		var msg = case
 		{ type == \notRunServer } { "server not running ..." }
 		{ type == \notInitMap } { "map doesnt created ..." }
+		{ type == \notInitGui } { "GUI doesnt created ..." }
 		{ type == \notExistStage } { "stage doesnt exist ..." }
 
 		{ true }{ "msgType [%] doesnt define in prWarnings".format(type) };
