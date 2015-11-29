@@ -122,8 +122,10 @@ QGui_Canvan : UserView {
 			.action_{|button|
 				"\n>>>Button_Node pressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{ menuNodes.visible_(true) },
-					{ menuNodes.visible_(false) }
+					// { menuNodes.visible_(true) },
+					// { menuNodes.visible_(false) }
+					{ QGui.setDisplayPanel(\panelNodes, true)},
+					{ QGui.setDisplayPanel(\panelNodes, false)}
 				)
 			}
 		);

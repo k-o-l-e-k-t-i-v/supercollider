@@ -56,20 +56,8 @@ QuantMap {
 		map.isNil.if(
 			{
 				"\nQuantMap init".postln;
-
 				CmdPeriod.add(this);
 				map = MultiLevelIdentityDictionary.new;
-				// map.put(\gui, \win, \nil);
-				// map.put(\gui, \canvan, nil);
-				// map.put(\gui, \panelStages, \nil);
-				// map.put(\gui, \panelNodes, \nil);
-
-				// map.put(\gui, \displayStage, \default);
-				// super.class.addStage(\default);
-				// super.class.stageCurrent_(\default);
-				// map.put(\stage, \default, \gui, \nil);
-
-
 			},
 			{
 				// "\nQuantMap map exist".postln
@@ -94,12 +82,10 @@ QuantMap {
 				map.put(\gui, \canvan, canvan);
 				map.put(\gui, \panelStages, canvan.menuStages);
 				map.put(\gui, \panelNodes, canvan.menuNodes);
-
 				map.put(\gui, \displayStage, \default);
+
 				this.addStage(\default);
 				this.stageCurrent_(\default);
-
-
 			},
 			{ this.prWarnings(\notInitMap, thisMethod).warn }
 		);
@@ -111,7 +97,6 @@ QuantMap {
 			{ this.prWarnings(\notInitMap, thisMethod).warn }
 		);
 	}
-
 
 	//PANELS///////////////////////////////////////////
 
@@ -128,7 +113,6 @@ QuantMap {
 			{ this.prWarnings(\notInitGui, thisMethod).warn	}
 		)
 	}
-
 
 	//STAGES///////////////////////////////////////////
 
@@ -156,6 +140,8 @@ QuantMap {
 		var group = map.at(\stage, stage.asSymbol, \group).free;
 		this.hasGui.if({
 			var guiStage = map.at(\stage, stage.asSymbol, \gui);
+			var nodeNames = this.nodeNames(stage.asSymbol);
+			nodeNames.do({|oneName| this.releaseNode(stage.asSymbol, oneName.asSymbol) });
 			guiStage.setDisplay_(false);
 			guiStage.remove;
 		});
@@ -223,6 +209,7 @@ QuantMap {
 		var nodeCurr = map.at(\stage, oldName.asSymbol, \nodeCurr);
 		var nodePrew = map.at(\stage, oldName.asSymbol, \nodePrew);
 		var group = map.at(\stage, oldName.asSymbol, \group);
+		// var
 
 		map.put(\stage, newName.asSymbol, \group, group);
 		map.put(\stage, newName.asSymbol, \nodeCurr, nodeCurr);
@@ -257,6 +244,11 @@ QuantMap {
 				var newNode = QuantNode(nodeProxy);
 				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \nodeCurr, newNode);
 				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \nodePrew, \nil);
+
+				this.hasGui.if({
+					var panel = map.at(\gui, \canvan).menuNodes;
+					map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \gui, QGui_Node(panel, nodeProxy:nodeProxy));
+				});
 			},
 			{ this.editNode(stageName, nodeProxy) }
 		);
@@ -287,13 +279,23 @@ QuantMap {
 		var node = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr);
 		node.notNil.if({
 			map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \nodeCurr).proxy.release(2);
+
+			this.hasGui.if({
+				var guiNode = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \gui);
+				guiNode.setDisplay_(false);
+				guiNode.remove;
+			});
+
 			map.removeEmptyAt(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol);
 		});
+
+
 	}
 
 	*renameNode {|stageName, oldName, newName|
 		var nodeCurr = map.at(\stage, stageName.asSymbol, \nodes, oldName.asSymbol, \nodeCurr);
 		var nodePrew = map.at(\stage, stageName.asSymbol, \nodes, oldName.asSymbol, \nodePrew);
+		var nodeGui = map.at(\stage, stageName.asSymbol, \nodes, oldName.asSymbol, \gui);
 
 		nodeCurr.nodeName = newName;
 		newName.asSymbol.envirPut(nodeCurr.proxy.copy);
@@ -312,14 +314,27 @@ QuantMap {
 				map.put(\stage, stageName.asSymbol, \nodes, newName.asSymbol, \nodePrew, \nil);
 			}
 		);
+		this.hasGui.if({
+			nodeGui.name = newName;
+			map.put(\stage, stageName.asSymbol, \nodes, newName.asSymbol, \gui, nodeGui);
+		});
 	}
 
-	*nodes{|stageName|
+	*nodeNames{|stageName|
 		var nodes = List.newClear();
 		map.at(\stage, stageName.asSymbol, \nodes).notNil.if({
 			map.at(\stage, stageName.asSymbol, \nodes).asAssociations.do({|associations|
 				associations.do({|oneAssoc| nodes.add(oneAssoc.key) })
 			});
+		});
+		^nodes;
+	}
+
+	*nodesGUI{|stageName|	// stageName == nil -> scan for all stages
+		var nodes = List.newClear();
+		var stages = stageName ? this.stages;
+		stages.do({|stageName|
+			map.at(\stage, stageName.asSymbol, \nodes).do({|oneNode| nodes.add(oneNode[\gui]) })
 		});
 		^nodes;
 	}
@@ -381,6 +396,8 @@ QuantMap {
 						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
 						{ item.isKindOf(QGui_Stage) }{ itemTxt = "QGui_Stage [display: %]".format(item.display) }
+						{ item.isKindOf(QGui_PanelNodes) }{ itemTxt = "QGui_PanelNodes [display: %]".format(item.display) }
+						{ item.isKindOf(QGui_Node) }{ itemTxt = "QGui_Node [display: %]".format(item.display) }
 						{ true } { itemTxt = item };
 
 						numTabs.do({tabs = tabs ++ "     ";});

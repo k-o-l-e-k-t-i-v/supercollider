@@ -5,22 +5,22 @@ QGui_Node : UserView {
 	var parent, bounds;
 	var proxy;
 	var objects, controls;
-	var <display;
+	var <>display;
 	var positionNodeY;
 	var yPositionControl, yPositionControlStart, ySizeControl;
 
 
-	*new { | parent, bounds, nodeName |
+	*new { | parent, bounds, nodeProxy |
 		var me = super.new(parent, bounds ?? {this.sizeHint} );
 		me.canFocus = true;
-		me.init(parent, bounds, nodeName);
+		me.init(parent, bounds, nodeProxy);
 		^me;
 	}
 
-	init { |argParent, argBounds, nodeName|
+	init { |argParent, argBounds, nodeProxy|
 
 		(QGui.debbuging and: thisClassDebugging).if({
-			"\n% - % [%, %]".format(thisMethod, nodeName, argParent, argBounds).postln;
+			"\n% - % [%, %]".format(thisMethod, nodeProxy.envirKey, argParent, argBounds).postln;
 		});
 
 		objects = Dictionary.new();
@@ -29,15 +29,15 @@ QGui_Node : UserView {
 		parent = argParent;
 		bounds = argBounds;
 
-		display = false;
+		this.setDisplay_(true);
 
 		yPositionControlStart = 5;
 		ySizeControl = 50;
 
-		this.name = nodeName;
+		this.name = nodeProxy.envirKey;
 
 		// ndoeName.asSymbol.envirPut(node);
-		proxy = nodeName.asSymbol.envirGet;
+		proxy = nodeProxy;
 		"proxy : %".format(proxy).postln;
 		"proxyControls : %".format(proxy.controlKeys).postln;
 		"proxySource : %".format(proxy.source.def.sourceCode).postln;
@@ -124,6 +124,15 @@ QGui_Node : UserView {
 		*/
 	}
 
+	setDisplay_ {|bool|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln; });
+
+		display = bool;
+		this.visible_(bool);
+
+		// QGui.getStagesGUI.do({|oneStage| oneStage.setDisplay_(bool) });
+	}
+
 	positionOfCotrolers {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 		controls.do({|oneCnt, i|
@@ -180,13 +189,6 @@ QGui_Node : UserView {
 	moveTo{|y|
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, y).postln; });
 		positionNodeY = y;
-	}
-
-	setDisplay_ {|bool|
-		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, bool).postln; });
-
-		display = bool;
-		this.visible_(bool);
 	}
 
 	recall {

@@ -3,6 +3,7 @@ QGui_PanelNodes : UserView {
 
 	var parent, bounds;
 	var objects, <nodes;
+	var <>display;
 
 	var yPositionNode, yPositionNodeStart, ySizeNode;
 
@@ -24,7 +25,8 @@ QGui_PanelNodes : UserView {
 		objects = Dictionary.new();
 		nodes = Dictionary.new();
 
-		this.visible = false;
+		this.name = "QGui_PanelNodes";
+		this.setDisplay_(false);
 
 		yPositionNodeStart = 25;
 		ySizeNode = 200;
@@ -42,49 +44,23 @@ QGui_PanelNodes : UserView {
 			.keepingState_(false)
 			.action_{|button| QGui.addNode(\node) };
 		);
-
+		/*
 		QGui.getNodes(QGui.currentStage).do({|nodeName, i|
-			this.addNode(nodeName);
+		this.addNode(nodeName);
 		});
-
+		*/
 	}
 
-	addNode {|name|
-		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
+	setDisplay_ {|bool|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln; });
 
-		// QGui.getNodes(QGui.currentStage).postln;
-		nodes.put(name.asSymbol, QGui_Node(this, nodeName:name.asSymbol));
-
-		// "addNodes nodes: %".format(nodes).postln;
-		// this.positionOfNodes;
-		this.refresh;
+		display = bool;
+		this.visible_(bool);
 	}
-
-	removeNode {|name|
-		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name.name).postln });
-
-		nodes.at(name.asSymbol).remove;
-		nodes.removeAt(name.asSymbol);
-
-		// "removeNodes nodes: %".format(nodes).postln;
-		// this.positionOfNodes;
-		this.refresh;
-	}
-
-	renameNode {|oldName, newName|
-
-		nodes.put(newName.asSymbol,nodes.at(oldName.asSymbol));
-		nodes.removeAt(oldName.asSymbol);
-
-		// "renameNode nodes: %".format(nodes).postln;
-		// this.positionOfNodes;
-		this.refresh;
-	}
-
 
 	positionOfNodes {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-		nodes.do({|oneNode, i|
+		QGui.getNodesGUI(QGui.currentStage).do({|oneNode, i|
 			oneNode.display.if({
 				yPositionNode = ((ySizeNode + 5)*i ) + yPositionNodeStart;
 				oneNode.moveTo(yPositionNode);
@@ -98,28 +74,19 @@ QGui_PanelNodes : UserView {
 		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
 		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 
-		"Recall panel nodes: %".format(nodes).postln;
-
-		nodes.do({|node| node.setDisplay_(false)});
-
-		QGui.getNodes(QGui.currentStage).do({|nodeName|
-			nodes[nodeName].setDisplay_(true);
-		});
-		// */
-
+		QGui.getNodesGUI(nil).do({|oneNode| oneNode.setDisplay_(false) });
+		QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.setDisplay_(true) });
 		this.positionOfNodes;
-
-		nodes.do({|oneNode| oneNode.recall });
+		QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.recall });
 	}
 
 	draw {
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		// (QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 		this.background_(Color.new255(30,30,30));
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(20,20,20);
 		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
 		Pen.stroke;
-		// })
 	}
 
 }

@@ -67,43 +67,13 @@ QGui_PanelStages : UserView {
 
 	setDisplay_ {|bool|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, bool).postln; });
-		// this.positionOfStages;
+
 		display = bool;
 		this.visible_(bool);
 
 		QGui.getStagesGUI.do({|oneStage| oneStage.setDisplay_(bool) });
 	}
 
-	/*
-	addStage {|name|
-	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
-	"POZOR".warn;
-	// stages.put(name.asSymbol, QGui_Stage(this, stageName:name.asSymbol));
-	this.positionOfStages;
-	}
-
-	removeStage{|name|
-	(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
-
-	stages.at(name.asSymbol).remove;
-	stages.removeAt(name.asSymbol);
-	this.positionOfStages;
-	}
-	*/
-/*
-	setCurrentStage { |name|
-		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, name).postln });
-
-		QGui.getStagesGUI.do({|oneStage|
-			// stages.do({|oneStage|
-			(name.asSymbol == oneStage.name.asSymbol).if(
-				{ oneStage.isCurrent = true; "oneStage.isCurrent = true".warn },
-				{ oneStage.isCurrent = false; "oneStage.isCurrent = false".warn }
-			);
-			oneStage.refresh;
-		});
-	}
-*/
 	positionOfStages {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
@@ -119,14 +89,12 @@ QGui_PanelStages : UserView {
 		objects[\MapText].string_(QGui.getMapText);
 
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
-		// this.bounds_(Rect.offsetCornerLT(parent, 10,10,300,1300));
 		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
-		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,300));
+		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
 
 		this.positionOfStages;
 		QGui.getStagesGUI.do({|oneStage| oneStage.recall });
-		// stages.do({|oneStage| oneStage.recall });
 	}
 
 	draw {
