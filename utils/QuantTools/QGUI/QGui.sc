@@ -30,7 +30,7 @@ QGui {
 		isRunning.not.if({
 			version = QTools.version;
 
-			lastWinBounds = Rect(50,100,1000,800);
+			lastWinBounds = Rect(50,100,900,800);
 			win = Window.new(bounds:lastWinBounds, border:false).front;
 			canvan = QGui_Canvan(win, win.view.bounds);
 
@@ -144,10 +144,11 @@ QGui {
 
 		name.asSymbol.envirPut(node);
 		proxy = name.asSymbol.envirGet;
-		proxy.playN(vol:0,group:currGroup);
-		proxy.group = currGroup;
+		// proxy.playN(vol:0,group:currGroup);
+		// proxy.group = currGroup;
 		proxy.fadeTime = 4;
-		proxy[0] = {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}; //.play(currGroup);
+		// proxy[0] = {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}; //.play(currGroup);
+		proxy.put(0, {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}, now:false); //.play(currGroup);
 
 		QuantMap.addNode(currStage, proxy);
 		this.refreshAll;

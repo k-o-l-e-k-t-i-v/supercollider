@@ -95,6 +95,7 @@ QGui_Node : UserView {
 			.iconName("ButtonExitGUI")
 			.colorFrameOver_(Color.clear)
 			.action_{|button|
+				"\n>>> QGui_Node release [%]".format(this.name).postln;
 				QGui.releaseNode(this.name);
 				parent.refresh;
 			}
