@@ -21,8 +21,8 @@ snippet synth
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
 		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
 		var sig = ${2:SinOsc.ar(50!2)};
-		sig = sig${3:} * env;
-		Splay.ar(sig,0.75,0.5);
+		sig = sig * env;
+		Splay.ar(sig,0.75,${3:0.5});
 	};
 	~$1.play;
 	);
@@ -39,7 +39,7 @@ snippet simple
 	~$1.fadeTime=4;
 	~$1={
 		var sig = ${2:SinOsc.ar(50!2)};
-		Splay.ar(sig,0.5,0.25);
+		Splay.ar(sig,0.5,${3:0.25});
 	};
 	~$1.play;
 	);
@@ -64,8 +64,8 @@ snippet switch
 		${2:SinOsc.ar(50!2),}
 		];
 		sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
-		sig = sig${3:} * env;
-		Splay.ar(sig,0.75,0.5);
+		sig = sig * env;
+		Splay.ar(sig,0.75,${3:0.5});
 	};
 	~$1.play;
 	);
