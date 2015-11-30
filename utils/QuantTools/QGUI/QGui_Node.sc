@@ -6,7 +6,7 @@ QGui_Node : UserView {
 	var proxy;
 	var objects, controls;
 	var <>display;
-	var positionNodeY;
+	var <positionNodeY;
 	var yPositionControl, yPositionControlStart, ySizeControl;
 
 
@@ -113,16 +113,6 @@ QGui_Node : UserView {
 		});
 
 		this.positionOfCotrolers
-		/*
-
-		objects.put(\timeline, ScrollView(parent, Rect.newSides((frame.left + 405),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
-		.autohidesScrollers_(true)
-		.palette_(QGui.qPalette)
-		);
-
-		objects.put(\cnt1, QGui_Controler(objects[\timeline], Rect(5,5,400,40)).setKey("amp"));
-		objects.put(\cnt2, QGui_Controler(objects[\timeline], Rect(5,50,400,40)).setKey("freq"));
-		*/
 	}
 
 	setDisplay_ {|bool|
@@ -130,9 +120,7 @@ QGui_Node : UserView {
 
 		display = bool;
 		this.visible_(bool);
-
-		// QGui.getStagesGUI.do({|oneStage| oneStage.setDisplay_(bool) });
-	}
+}
 
 	positionOfCotrolers {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
@@ -217,6 +205,8 @@ QGui_Node : UserView {
 	}
 
 	draw {
+		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
 		Pen.width = 1;
 		Pen.strokeColor = Color.new255(120,120,120);
 		Pen.line(0@0, this.bounds.width@0);
