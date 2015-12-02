@@ -1,4 +1,4 @@
-QGui_CodeText : UserView {
+QGui_CodeView : UserView {
 
 	var <parent;
 	var textView, buttonOk, buttonCancle;
@@ -9,7 +9,7 @@ QGui_CodeText : UserView {
 
 
 	var displayState, >keepingState;
-	// var string;
+	var string;
 	var colorPalette;
 	var colorBackground, colorBackgroundActive;
 	var colorFrame, colorFrameOver, colorFrameActive;
@@ -32,7 +32,7 @@ QGui_CodeText : UserView {
 		this.bounds = argBounds;
 
 		this.name = "QGui_CodeView";
-		// string = nil;
+		string = "";
 		stringFont = Font('Courier',8,usePointSize:true);
 
 		colorBackground = Color.clear;
@@ -61,7 +61,7 @@ QGui_CodeText : UserView {
 		.focus(true)
 		.enterInterpretsSelection_(false)
 		.editable_(false)
-		.string_("SinOsc.ar(\\freq.kr(120), mul: 0.2)")
+		.string_(string)
 		.stringColor_(Color.new255(100,100,100))
 		.font_(stringFont)
 		.palette_(colorPalette)
@@ -112,6 +112,8 @@ QGui_CodeText : UserView {
 
 		this.drawFunc = { this.draw };
 	}
+
+	string_{|txt| textView.string = txt.asString }
 
 	displayState_ {|type|
 		case

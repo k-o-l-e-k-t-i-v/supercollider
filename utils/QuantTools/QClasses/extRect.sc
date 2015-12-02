@@ -51,7 +51,6 @@
 			TopView, { parentRect = parent.bounds },
 			UserView, { parentRect = Rect(0,0,parent.bounds.width, parent.bounds.height) },
 			ScrollView, { parentRect = parent.innerBounds },
-			TextView, { parentRect = parent.bounds },
 			Rect, { parentRect = Rect(0,0,parent.bounds.width, parent.bounds.height) }
 		);
 		parentRect.isNil.if(

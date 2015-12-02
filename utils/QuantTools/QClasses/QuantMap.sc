@@ -76,19 +76,16 @@ QuantMap {
 
 	*addGui{ |win, canvan|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%, %]".format(thisMethod, win, canvan).postln });
-		map.notNil.if(
-			{
-				map.put(\gui, \win, win);
-				map.put(\gui, \canvan, canvan);
-				map.put(\gui, \panelStages, canvan.menuStages);
-				map.put(\gui, \panelNodes, canvan.menuNodes);
-				map.put(\gui, \displayStage, \default);
+		map.notNil.if({
+			map.put(\gui, \win, win);
+			map.put(\gui, \canvan, canvan);
+			map.put(\gui, \panelStages, canvan.menuStages);
+			map.put(\gui, \panelNodes, canvan.menuNodes);
+			map.put(\gui, \displayStage, \default);
 
-				this.addStage(\default);
-				this.stageCurrent_(\default);
-			},
-			{ this.prWarnings(\notInitMap, thisMethod).warn }
-		);
+			this.addStage(\default);
+			this.stageCurrent_(\default);
+		},{ this.prWarnings(\notInitMap, thisMethod).warn });
 	}
 
 	*hasGui {
@@ -101,17 +98,15 @@ QuantMap {
 	//PANELS///////////////////////////////////////////
 
 	*panelStages{
-		this.hasGui.if(
-			{ ^map.at(\gui, \panelStages) },
-			{ this.prWarnings(\notInitGui, thisMethod).warn	}
-		)
+		this.hasGui.if({
+			^map.at(\gui, \panelStages)
+		},{ this.prWarnings(\notInitGui, thisMethod).warn })
 	}
 
 	*panelNodes{
-		this.hasGui.if(
-			{ ^map.at(\gui, \panelNodes) },
-			{ this.prWarnings(\notInitGui, thisMethod).warn	}
-		)
+		this.hasGui.if({
+			^map.at(\gui, \panelNodes)
+		},{ this.prWarnings(\notInitGui, thisMethod).warn })
 	}
 
 	//STAGES///////////////////////////////////////////
@@ -119,21 +114,18 @@ QuantMap {
 	*addStage {|stageName|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
 
-		Server.local.serverRunning.if(
-			{
-				var group = map.at(\stage, stageName.asSymbol, \group);
-				group.isNil.if({ group = Group.new(nil, \addToHead) });
-				// group.run;
-				group.register(true);
+		Server.local.serverRunning.if({
+			var group = map.at(\stage, stageName.asSymbol, \group);
+			group.isNil.if({ group = Group.new(nil, \addToHead) });
+			// group.run;
+			group.register(true);
 
-				map.put(\stage, stageName.asSymbol, \group, group);
-				this.hasGui.if({
-					var panel = map.at(\gui, \canvan).menuStages;
-					map.put(\stage, stageName.asSymbol, \gui, QGui_Stage(panel, stageName:stageName));
-				});
-			},
-			{ this.prWarnings(\notRunServer, thisMethod).warn }
-		)
+			map.put(\stage, stageName.asSymbol, \group, group);
+			this.hasGui.if({
+				var panel = map.at(\gui, \canvan).menuStages;
+				map.put(\stage, stageName.asSymbol, \gui, QGui_Stage(panel, stageName:stageName));
+			});
+		},{ this.prWarnings(\notRunServer, thisMethod).warn })
 	}
 
 	*removeStage{|stageName|
@@ -141,21 +133,6 @@ QuantMap {
 
 		this.stageExist(stageName).if({
 			this.nodeNames(stageName).do({|nodeName|
-				/*
-				var nodeCurr = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \curr).free;
-				var nodePrew = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \prew).free;
-				var group = map.at(\stage, stageName.asSymbol, \group).free;
-				this.hasGui.if({
-				var guiStage = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \gui);
-				// var nodeNames = this.nodeNames(stageName.asSymbol);
-				// nodeNames.do({|oneName| this.releaseNode(stageName.asSymbol, oneName.asSymbol) });
-
-				this.releaseNode(stageName, nodeName);
-
-				guiStage.setDisplay_(false);
-				guiStage.remove;
-				});
-				*/
 				this.releaseNode(stageName, nodeName);
 			});
 
@@ -166,11 +143,10 @@ QuantMap {
 			});
 
 			map.removeEmptyAt(\stage, stageName.asSymbol);
-		},
-		{ this.prWarnings(\notExistStage, thisMethod).warn });
+		}, { this.prWarnings(\notExistStage, thisMethod).warn });
 	}
 
-	*stages {
+	*stageNames {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 		map.at(\stage).notNil.if({
 			var stages = List.newClear();
@@ -199,20 +175,23 @@ QuantMap {
 
 	*stageCurrent_ {|stageName|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
-		this.stageExist(stageName).if(
-			{
-				map.put(\gui, \displayStage, stageName.asSymbol);
-				this.hasGui.if({
-					this.stagesGUI.do({|oneStage|
-						(oneStage.name.asSymbol == stageName.asSymbol).if(
-							{ oneStage.isCurrent_(true).refresh },
-							{ oneStage.isCurrent_(false).refresh }
-						)
-					})
+		this.stageExist(stageName).if({
+			map.put(\gui, \displayStage, stageName.asSymbol);
+			this.hasGui.if({
+				this.stagesGUI.do({|oneStage|
+					(oneStage.name.asSymbol == stageName.asSymbol).if(
+						{
+							oneStage.isCurrent_(true).refresh;
+							this.nodesGUI(oneStage.name).do({|oneNode| oneNode.setDisplay_(true) })
+						},
+						{
+							oneStage.isCurrent_(false).refresh;
+							this.nodesGUI(oneStage.name).do({|oneNode| oneNode.setDisplay_(false) })
+						}
+					)
 				});
-			},
-			{ this.prWarnings(\notExistStage, thisMethod).warn }
-		);
+			});
+		},{ this.prWarnings(\notExistStage, thisMethod).warn });
 	}
 
 	*stageCurrent {
@@ -226,85 +205,25 @@ QuantMap {
 	*renameStage {|oldName, newName|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [% -> %]".format(thisMethod, oldName, newName).postln });
 		this.stageExist(oldName).if({
-			var group = map.at(\stage, oldName.asSymbol, \group);
-			map.put(\stage, newName.asSymbol, \group, group);
+			map.put(\stage, newName.asSymbol, \group, this.stageGroup(oldName));
 
 			this.hasGui.if({
-				var oldStageGui, newStageGui;
-				oldStageGui =  map.at(\stage, oldName.asSymbol, \gui);
-				map.put(\stage, newName.asSymbol, \gui, oldStageGui);
-				newStageGui = map.at(\stage, newName.asSymbol, \gui);
-				newStageGui.name = newName.asSymbol;
-				newStageGui.refresh;
-				("oldStageGui.display:" + oldStageGui.display).postln;
-				("newStageGui:" + newStageGui).postln;
-				("newStageGui.display:" + newStageGui.display).postln;
-				newStageGui.setDisplay_(oldStageGui.display);
-				// stageGui.display
-				oldStageGui.setDisplay_(false);
-				oldStageGui.remove;
-			});
-
-			this.nodeNames(oldName).do({|oneNode|
-
-				var nodeCurr = map.at(\stage, oldName.asSymbol, \nodes, oneNode.asSymbol, \curr);
-				var nodePrew = map.at(\stage, oldName.asSymbol, \nodes, oneNode.asSymbol, \prew);
-
-				("NODENAME:" + oneNode).postln;
-				("NODECURR:" + nodeCurr).postln;
-				("NODEPREW:" + nodePrew).postln;
-
-				map.put(\stage, newName.asSymbol, \nodes, oneNode.asSymbol, \curr, nodeCurr);
-				map.put(\stage, newName.asSymbol, \nodes, oneNode.asSymbol, \prew, nodePrew);
-
-				map.at(\stage, newName.asSymbol, \nodes, oneNode.asSymbol, \curr).postln;
-				map.at(\stage, newName.asSymbol, \nodes, oneNode.asSymbol, \prew).postln;
-
-				this.hasGui.if({
-					var nodeGui = map.at(\stage, oldName.asSymbol,  \nodes, oneNode.asSymbol, \gui);
-					map.put(\stage, newName.asSymbol, \nodes, oneNode.asSymbol, \gui, nodeGui);
-					// nodeGui.remove;
+				map.put(\stage, newName.asSymbol, \gui, map.at(\stage, oldName.asSymbol, \gui).name_(newName.asSymbol));
+				this.nodeNames(oldName).do({|oneNode|
+					var node = this.getNode(oldName, oneNode);
+					this.setNode(newName, oneNode, node[\curr], node[\prew], node[\group], node[\gui]);
 				});
-
-				// this.releaseNode(oldName, oneNodeName);
-
-			});
-			// this.removeStage(oldName);
-
-			/*
-
-			var nodeCurr = map.at(\stage, oldName.asSymbol, \curr);
-			var nodePrew = map.at(\stage, oldName.asSymbol, \prew);
-			var group = map.at(\stage, oldName.asSymbol, \group);
-			// var
-
-			map.put(\stage, newName.asSymbol, \group, group);
-			map.put(\stage, newName.asSymbol, \curr, nodeCurr);
-			map.put(\stage, newName.asSymbol, \curr, nodePrew);
-
-			this.hasGui.if({
-			var stageGui = map.at(\stage, oldName.asSymbol, \gui);
-			map.put(\stage, newName.asSymbol, \gui, stageGui);
 			});
 
 			map.removeEmptyAt(\stage, oldName.asSymbol);
-			"QuantMap renameStage [%,%]".format(oldName, newName).postln;
-			// map.put(\stage, newName.asSymbol, \nodes, nodeCurr.envirKey.asSymbol, \prew, oldNode);
-			// map.put(\stage, newName.asSymbol, \nodes, nodePrew.envirKey.asSymbol, \curr, newNode);
-			*/
-		});
+		},{	this.prWarnings(\notExistStage, thisMethod).warn; ^nil;	});
 	}
 
 	*stageGroup {|stageName|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
-
-		this.stageExist(stageName).if(
-			{ ^map.at(\stage, stageName.asSymbol, \group) },
-			{
-				this.prWarnings(\notExistStage, thisMethod).warn;
-				^nil;
-			}
-		);
+		this.stageExist(stageName).if({
+			^map.at(\stage, stageName.asSymbol, \group)
+		},{	this.prWarnings(\notExistStage, thisMethod).warn; ^nil;	});
 	}
 
 	//NODES///////////////////////////////////////////
@@ -363,9 +282,6 @@ QuantMap {
 		this.stageExist(stageName.asSymbol).if({
 			var dictNode = IdentityDictionary.new();
 			var oldNode = this.getNode(stageName.asSymbol, nodeName.asSymbol);
-			oldNode.notNil.if({	oldNode[\curr].nodeName = nodeName });
-			oldNode.notNil.if({ oldNode[\prew].nodeName = nodeName });
-
 			dictNode.put(\curr, currQNode ? oldNode.notNil.if({ oldNode[\curr] }) );
 			dictNode.put(\prew, prewQNode ? oldNode.notNil.if({ oldNode[\prew] }) );
 			dictNode.put(\group, group ? oldNode.notNil.if({ oldNode[\group] }) );
@@ -378,38 +294,15 @@ QuantMap {
 		this.nodeExist(stageName.asSymbol, nodeName.asSymbol).if(
 			{
 				var node = this.getNode(stageName, nodeName);
-				// var nodeProxy = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \curr).proxy;
-				// var oldNode = this.copyNode(stageName.asSymbol, nodeName);
-				// var newNode = QuantNode(node[\proxy]);
-				// var fnc = Interpreter.inte
-				// function.postln;
-				// function.class.postln;
-				// newNode.proxy.playN(group:this.stageGroup(this.stageCurrent));
-				// nodeProxy.put(index, function.value());
-				var editNode = node[\proxy];
-
-			("\nnode[\curr]:"+node[\curr]).postln;
-			("node[\prew]:"+node[\prew]).postln;
-			("node[\group]:"+node[\group]).postln;
-			("node[\gui]:"+node[\gui]).postln;
-
-
-				editNode[index] = thisProcess.interpreter.compile(function);
-
-				this.setNode(stageName, nodeName, QuantNode(editNode), node[\curr]);
-				// map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \prew, oldNode);
-				// map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \curr, newNode);
+				var newNode = QuantNode(node[\proxy].copy);
+				newNode.proxy[index] = thisProcess.interpreter.compile(function);
+				this.setNode(stageName, nodeName, newNode, node[\curr]);
 			}, {
 				this.prWarnings(\notExistNode, thisMethod).warn;
 				^nil;
 		});
 	}
-	/*
-	*copyNode {|stageName, nodeName|
-		var nodeProxy = map.at(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \curr).proxy.copy;
-		^QuantNode(nodeProxy);
-	}
-	*/
+
 	*releaseNode {|stageName, nodeName|
 		this.nodeExist(stageName, nodeName).if({
 			var node = this.getNode(stageName, nodeName);
@@ -426,33 +319,20 @@ QuantMap {
 
 			map.removeEmptyAt(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol);
 			nodeName.asSymbol.envirPut(nil);
-		}, {
-			this.prWarnings(\notExistNode, thisMethod).warn;
-			^nil;
-		});
+		}, { this.prWarnings(\notExistNode, thisMethod).warn; ^nil;	});
 	}
 
 	*renameNode {|stageName, oldName, newName|
 		this.nodeExist(stageName, oldName).if({
 			var node = this.getNode(stageName, oldName);
 
-			("\nnode[\curr]:"+node[\curr]).postln;
-			("node[\prew]:"+node[\prew]).postln;
-			("node[\group]:"+node[\group]).postln;
-			("node[\gui]:"+node[\gui]).postln;
+			node[\curr].nodeName_(newName);
+			node[\prew].notNil.if({	node[\prew].nodeName = newName });
+			node[\gui].notNil.if({ node[\gui].name = newName });
 
-			this.setNode(stageName, newName, currQNode:node[\curr], group:node[\group]);
+			this.setNode(stageName, newName, node[\curr], node[\prew], node[\group], node[\gui]);
 
-			node[\prew].notNil.if({
-				node[\prew].nodeName = newName;
-				this.setNode(stageName, newName, prewQNode:node[\prew]);
-			});
-			node[\gui].notNil.if({
-				node[\gui].name = newName;
-				this.setNode(stageName, newName, guiQNode:node[\gui]);
-			});
-
-			newName.asSymbol.envirPut(node[\curr].proxy.copy);
+			newName.asSymbol.envirPut(node[\proxy].copy);
 			oldName.asSymbol.envirPut(nil);
 
 			map.removeEmptyAt(\stage, stageName.asSymbol, \nodes, oldName.asSymbol);
@@ -472,11 +352,11 @@ QuantMap {
 	}
 
 	*nodesGUI{|stageName|	// stageName == nil -> scan for all stages
-		this.stageExist(stageName).if({
+		this.stageExist(stageName.asSymbol).if({
 			var nodes = List.newClear();
-			var stages = stageName ? this.stages;
-			stages.do({|stageName|
-				map.at(\stage, stageName.asSymbol, \nodes).do({|oneNode| nodes.add(oneNode[\gui]) })
+			var stages = stageName ? this.stageNames;
+			stages.asSymbol.do({|scanStage|
+				map.at(\stage, scanStage.asSymbol, \nodes).do({|oneNode| nodes.add(oneNode[\gui]) })
 			});
 			^nodes;
 		},{ this.prWarnings(\notExistStage, thisMethod).warn; ^nil; });
@@ -546,9 +426,13 @@ QuantMap {
 						var itemTxt = case
 						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
-						{ item.isKindOf(QGui_Stage) }{ itemTxt = "QGui_Stage [display: %]".format(item.display) }
+						{ item.isKindOf(QGui_Stage) }{
+							itemTxt = "QGui_Stage [name: %, display: %, Y: %]".format(item.name, item.display, item.positionY)
+						}
 						{ item.isKindOf(QGui_PanelNodes) }{ itemTxt = "QGui_PanelNodes [display: %]".format(item.display) }
-						{ item.isKindOf(QGui_Node) }{ itemTxt = "QGui_Node [display: %]".format(item.display) }
+						{ item.isKindOf(QGui_Node) }{
+							itemTxt = "QGui_Node [name: %, display: %, Y: %]".format(item.name, item.display, item.positionNodeY)
+						}
 						{ item.isKindOf(Group) }{ itemTxt = "Group % [isPlaying: %]".format(item.nodeID, item.isPlaying) }
 						{ true } { itemTxt = item };
 
