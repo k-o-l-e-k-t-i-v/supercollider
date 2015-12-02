@@ -6,7 +6,7 @@ QGui_Stage : UserView {
 	var objects;
 	var <>display;
 	var <>isCurrent;
-	var <positionY;
+	var positionY;
 	var frameAlpha, routine;
 
 	*new { | parent, bounds, stageName |
@@ -47,11 +47,10 @@ QGui_Stage : UserView {
 			.font_(QGui.fonts[\Small])
 			.palette_(QGui.qPalette)
 			.background_(Color.clear)
-			.string_(this.name)
 			.action_{|text|
 				var oldName = this.name;
-				// this.name = text.string;
-				QGui.renameStage(oldName, text.string.asSymbol);
+				this.name = text.string;
+				QGui.renameStage(oldName, text.string);
 				parent.refresh;
 			}
 		);

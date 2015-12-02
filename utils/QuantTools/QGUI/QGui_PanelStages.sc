@@ -35,7 +35,7 @@ QGui_PanelStages : UserView {
 		ySizeStage = 40;
 
 		mapTextView = ScrollView(this)
-		.hasHorizontalScroller_(true)
+		.hasHorizontalScroller_(false)
 		.hasVerticalScroller_(true)
 		.autohidesScrollers_(true)
 		.palette_(QGui.qPalette);
@@ -80,7 +80,6 @@ QGui_PanelStages : UserView {
 		QGui.getStagesGUI.do({|oneStage, i|
 			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
 			oneStage.moveTo(yPositionStage);
-			oneStage.recall;
 		});
 	}
 
@@ -91,11 +90,11 @@ QGui_PanelStages : UserView {
 
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
 		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
-		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
+		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,280,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
 
 		this.positionOfStages;
-		// QGui.getStagesGUI.do({|oneStage| oneStage.recall });
+		QGui.getStagesGUI.do({|oneStage| oneStage.recall });
 	}
 
 	draw {

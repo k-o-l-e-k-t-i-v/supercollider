@@ -30,7 +30,7 @@ QGui {
 		isRunning.not.if({
 			version = QTools.version;
 
-			lastWinBounds = Rect(50,100,1000,800);
+			lastWinBounds = Rect(50,100,900,800);
 			win = Window.new(bounds:lastWinBounds, border:false).front;
 			canvan = QGui_Canvan(win, win.view.bounds);
 
@@ -49,13 +49,13 @@ QGui {
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
-			// QuantMap.thisClassDebugging = true;
-			// QGui.thisClassDebugging = true;
+			QuantMap.thisClassDebugging = true;
+			QGui.thisClassDebugging = true;
 			// QGui_Canvan.thisClassDebugging = true;
 			// QGui_PanelStages.thisClassDebugging = true;
 			// QGui_Stage.thisClassDebugging = true;
-			// QGui_PanelNodes.thisClassDebugging = true;
-			// QGui_Node.thisClassDebugging = true;
+			QGui_PanelNodes.thisClassDebugging = true;
+			QGui_Node.thisClassDebugging = true;
 			// QGui_Controler.thisClassDebugging = true;
 		})
 	}
@@ -119,7 +119,7 @@ QGui {
 		})
 	}
 
-	*getStages { ^QuantMap.stageNames }
+	*getStages { ^QuantMap.stages }
 
 	*getStagesGUI { ^QuantMap.stagesGUI }
 

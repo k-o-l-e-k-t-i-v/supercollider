@@ -42,11 +42,7 @@ QGui_PanelNodes : UserView {
 			.string_("Add")
 			.colorFrame_(Color.new255(120,120,120))
 			.keepingState_(false)
-			.action_{|button|
-				"\n>>> QGui_PanelNodes button AddNode".postln;
-				QGui.addNode(\node);
-				this.recall;
-			};
+			.action_{|button| QGui.addNode(\node) };
 		);
 		/*
 		QGui.getNodes(QGui.currentStage).do({|nodeName, i|
@@ -67,7 +63,7 @@ QGui_PanelNodes : UserView {
 		QGui.getNodesGUI(QGui.currentStage).do({|oneNode, i|
 			oneNode.display.if({
 				yPositionNode = ((ySizeNode + 5)*i ) + yPositionNodeStart;
-				oneNode.moveTo(yPositionNode).recall;
+				oneNode.moveTo(yPositionNode);
 			});
 		});
 	}
@@ -78,7 +74,10 @@ QGui_PanelNodes : UserView {
 		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
 		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 
+		QGui.getNodesGUI(nil).do({|oneNode| oneNode.setDisplay_(false) });
+		QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.setDisplay_(true) });
 		this.positionOfNodes;
+		QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.recall });
 	}
 
 	draw {
