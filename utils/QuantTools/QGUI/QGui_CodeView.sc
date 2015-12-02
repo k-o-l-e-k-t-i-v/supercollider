@@ -94,16 +94,19 @@ QGui_CodeText : UserView {
 		function.def.selectors.postln;
 		function.def.sourceCode.findAll("SinOsc").postln;
 		function.def.selectors.do({|oneKey|
+			/*
 			var positions = formatedString.findAll(oneKey.asString);
 			oneKey.class.postln;
 			oneKey.code.postln;
 			positions.postln;
 			positions.do({|onePosition|
-				onePosition.postln;
-				// string[]
+			onePosition.postln;
+			// string[]
 			})
+			*/
 		});
-/*
+
+		/*
 		keys = case
 		{type.asSymbol == \var} { \var }
 		{type.asSymbol == \varName} { function.def.varNames }
@@ -111,36 +114,80 @@ QGui_CodeText : UserView {
 		{type.asSymbol == \nameControl} { function.def.constants };
 
 		keys.do({|oneKey|
-			var positions = string.findAll(oneKey.asString);
-			positions.do({|onePosition|
-				case
-				{type.asSymbol == \var}
-				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
+		var positions = string.findAll(oneKey.asString);
+		positions.do({|onePosition|
+		case
+		{type.asSymbol == \var}
+		{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
 
-				{type.asSymbol == \varName}
-				{
-					(string[onePosition-1] == $\ ).if({
-						textView.setStringColor(color, onePosition, oneKey.asString.size)
-					})
-				}
+		{type.asSymbol == \varName}
+		{
+		(string[onePosition-1] == $\ ).if({
+		textView.setStringColor(color, onePosition, oneKey.asString.size)
+		})
+		}
 
-				{type.asSymbol == \class}
-				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
+		{type.asSymbol == \class}
+		{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
 
-				{type.asSymbol == \nameControl}
-				{
-					oneKey.isKindOf(Symbol).if({
-						(string[onePosition-1] != $\ ).if({
-							textView.setStringColor(color, onePosition-1, oneKey.asString.size+1)
-						})
-					},
-					// { textView.setStringColor(Color.red, onePosition, oneKey.asString.size)} //NUMBERS??
-					);
-				};
-			});
+		{type.asSymbol == \nameControl}
+		{
+		oneKey.isKindOf(Symbol).if({
+		(string[onePosition-1] != $\ ).if({
+		textView.setStringColor(color, onePosition-1, oneKey.asString.size+1)
+		})
+		},
+		// { textView.setStringColor(Color.red, onePosition, oneKey.asString.size)} //NUMBERS??
+		);
+		};
 		});
-*/
+		});
+		*/
 	}
+
+	safeTry {|string|
+		var function;
+		var def;
+
+
+		try {
+
+			// protect {
+			function = string.compile;
+			// work with the file here, which might cause an error
+			def = function.def;
+
+			function.isFunction.postln;
+
+			def.sourceCode.postln;
+			("Class" + def.selectors).postln;
+			("Constats" + def.constants).postln;
+			// } {
+			// file.close;
+			// "chyba".warn;
+			// };
+
+
+		}
+		// {|error| \caught.postln; error.dump; };
+
+		{ |error|
+			("typErroru:" + error.species.name).postln;
+
+			switch(error.species.name)
+			{ 'Error' } {"jsem tu Error".postln;}
+			{ 'DoesNotUnderstandError'} {"jsem tu".postln;}
+			// default condition: unhandled exception, rethrow
+			// { error.throw }
+			{ "unknown exception".postln; error.dump; /*error.throw;*/ }
+
+		};
+
+
+
+
+	}
+
 
 	draw {
 		this.background = Color.black;
