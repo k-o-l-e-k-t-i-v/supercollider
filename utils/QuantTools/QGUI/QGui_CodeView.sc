@@ -1,9 +1,15 @@
 QGui_CodeText : UserView {
 
 	var <parent;
-	var textView;
+	var textView, buttonOk, buttonCancle;
+	var isChanged;
+	var lastValidDef;
+
+	var displayError;
+
+
 	var displayState, >keepingState;
-	var string;
+	// var string;
 	var colorPalette;
 	var colorBackground, colorBackgroundActive;
 	var colorFrame, colorFrameOver, colorFrameActive;
@@ -25,8 +31,8 @@ QGui_CodeText : UserView {
 		parent = argParent;
 		this.bounds = argBounds;
 
-		this.name = "QGui_Button";
-		string = nil;
+		this.name = "QGui_CodeView";
+		// string = nil;
 		stringFont = Font('Courier',8,usePointSize:true);
 
 		colorBackground = Color.clear;
@@ -51,149 +57,206 @@ QGui_CodeText : UserView {
 
 		value = 0;
 
-		textView = TextView(this,Rect.offsetRect(this.bounds, 10,10,30,10))
+		textView = TextView(this,Rect.offsetEdgeLeft(this.bounds, 2,2,2,this.bounds.width - 30))
 		.focus(true)
+		.enterInterpretsSelection_(false)
+		.editable_(false)
 		.string_("SinOsc.ar(\\freq.kr(120), mul: 0.2)")
+		.stringColor_(Color.new255(100,100,100))
 		.font_(stringFont)
 		.palette_(colorPalette)
 		.tabWidth_(25)
-		.keyUpAction_{ |view, char, modifiers, unicode, keycode, key|
-			// var newString = view.setString(char, 0, char.size);
-			// newString.postln;
-			"ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln;
-			// view.stringColor_(Color.white);
-			// thisProcess.interpreter
-			// thisProcess.interpreter.compile(view.string)
+		.keyDownAction_{ |view, char, modifiers, unicode, keycode, key|
+			(displayState != \isError).if({this.displayState_(\isChanged)});
+			this.colorizeSyntax(view.string, \var, Color.new255(255,255,255));
+			this.colorizeSyntax(view.string, \varName, Color.new255(250,220,100));
+			this.colorizeSyntax(view.string, \class, Color.new255(180,180,180));
+			this.colorizeSyntax(view.string, \nameControl, Color.new255(20,180,240));
 
-			// view.string.postln;
-			// this.colorizeSyntax(view, "{%}".format(view.string), \nameControl, Color.new255(20,180,240));
-			this.colorizeSyntax(view, view.string, \nameControl, Color.new255(20,180,240));
-			// this.colorizeSyntax(view, proxy.source, \nameControl, Color.new255(20,180,240));
+			this.refresh;
+		}
+		.keyUpAction_{ |view, char, modifiers, unicode, keycode, key|
+			// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln;
+
+
 			// Ctrl + Enter -> unicode 10
 			(unicode == 10).if({
 				"\n>>> FIRE %".format(view.string).postln;
-				// QGui.editNode(this.name, 0, view.string);
+				this.safeTry(view.string);
+				this.colorizeSyntax(view.string, \var, Color.new255(255,255,255));
+				this.colorizeSyntax(view.string, \varName, Color.new255(250,220,100));
+				this.colorizeSyntax(view.string, \class, Color.new255(180,180,180));
+				this.colorizeSyntax(view.string, \nameControl, Color.new255(20,180,240));
 			});
-		}
-		// .keyTyped_
+			this.refresh;
+		};
 
+		buttonOk = QGui_Button(this, Rect.offsetCornerRT(this.bounds, 3,3,26,(this.bounds.height/2)-3))
+		.string_("OK")
+		.colorBackground_(Color.new255(30,30,30))
+		.keepingState_(false);
 
-		.front;
+		buttonCancle = QGui_Button(this, Rect.offsetCornerRB(this.bounds, 3,3,26,(this.bounds.height/2)-3))
+		.string_("X")
+		.colorBackground_(Color.new255(30,30,30))
+		.keepingState_(false);
+
+		this.displayState_(\isCode);
+		lastValidDef = (textView.string).compile.def;
+
+		this.colorizeSyntax(textView.string, \var, Color.new255(255,255,255));
+		this.colorizeSyntax(textView.string, \varName, Color.new255(250,220,100));
+		this.colorizeSyntax(textView.string, \class, Color.new255(180,180,180));
+		this.colorizeSyntax(textView.string, \nameControl, Color.new255(20,180,240));
 
 
 		this.drawFunc = { this.draw };
 	}
 
-	colorizeSyntax{	|textView, string, type, color|
-		// var compileString = string.asCompileString;
-		// var formatedString = "{%}".format(compileString);
-		var function = string.compile;
-		var keys;
-
-		function.def.sourceCode.postln;
-		function.def.selectors.postln;
-		function.def.sourceCode.findAll("SinOsc").postln;
-		function.def.selectors.do({|oneKey|
-			/*
-			var positions = formatedString.findAll(oneKey.asString);
-			oneKey.class.postln;
-			oneKey.code.postln;
-			positions.postln;
-			positions.do({|onePosition|
-			onePosition.postln;
-			// string[]
-			})
-			*/
-		});
-
-		/*
-		keys = case
-		{type.asSymbol == \var} { \var }
-		{type.asSymbol == \varName} { function.def.varNames }
-		{type.asSymbol == \class} { function.def.selectors }
-		{type.asSymbol == \nameControl} { function.def.constants };
-
-		keys.do({|oneKey|
-		var positions = string.findAll(oneKey.asString);
-		positions.do({|onePosition|
+	displayState_ {|type|
 		case
-		{type.asSymbol == \var}
-		{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
-
-		{type.asSymbol == \varName}
-		{
-		(string[onePosition-1] == $\ ).if({
-		textView.setStringColor(color, onePosition, oneKey.asString.size)
-		})
-		}
-
-		{type.asSymbol == \class}
-		{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
-
-		{type.asSymbol == \nameControl}
-		{
-		oneKey.isKindOf(Symbol).if({
-		(string[onePosition-1] != $\ ).if({
-		textView.setStringColor(color, onePosition-1, oneKey.asString.size+1)
-		})
-		},
-		// { textView.setStringColor(Color.red, onePosition, oneKey.asString.size)} //NUMBERS??
-		);
-		};
-		});
-		});
-		*/
+		{type.asSymbol == \isCode} {displayState = \isCode}
+		{type.asSymbol == \isChanged} {displayState = \isChanged}
+		{type.asSymbol == \isError} {displayState = \isError}
+		{type.asSymbol == \isOver} {displayState = \isOver}
+		{true} {("QGui_CodeView displayState_(%) not define, use [\\isCode, \\isChanged, \\isError, \\isOver]".format(type)).warn};
 	}
 
 	safeTry {|string|
-		var function;
-		var def;
-
+		// var function;
 
 		try {
-
-			// protect {
-			function = string.compile;
-			// work with the file here, which might cause an error
-			def = function.def;
-
-			function.isFunction.postln;
-
-			def.sourceCode.postln;
-			("Class" + def.selectors).postln;
-			("Constats" + def.constants).postln;
-			// } {
-			// file.close;
-			// "chyba".warn;
-			// };
-
-
+			// function = string.compile;
+			lastValidDef = string.compile.def;
+			this.displayState_(\isCode);
 		}
-		// {|error| \caught.postln; error.dump; };
-
 		{ |error|
-			("typErroru:" + error.species.name).postln;
-
-			switch(error.species.name)
-			{ 'Error' } {"jsem tu Error".postln;}
-			{ 'DoesNotUnderstandError'} {"jsem tu".postln;}
-			// default condition: unhandled exception, rethrow
-			// { error.throw }
-			{ "unknown exception".postln; error.dump; /*error.throw;*/ }
-
+			this.displayState_(\isError);
 		};
 
-
+		("\nValidCode:" + lastValidDef.sourceCode).postln;
+		("Class" + lastValidDef.selectors).postln;
+		("Constats" + lastValidDef.constants).postln;
+		("VarNames" + lastValidDef.varNames).postln;
+		// ("displayError" + displayError).postln;
 
 
 	}
 
+	colorizeSyntax{	|string, type, color|
+		// var string = def.sourceCode.asString;
+		var keys;
+		keys = case
+		// {type.asSymbol == \var} { \var }
+		{type.asSymbol == \varName} { lastValidDef.varNames }
+		{type.asSymbol == \class} { lastValidDef.selectors }
+		{type.asSymbol == \nameControl} { lastValidDef.constants };
+
+		keys.do({|oneKey|
+			var positions = string.findAll(oneKey.asString);
+
+			positions.do({|onePosition|
+				case
+				{type.asSymbol == \var}
+				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
+
+				{type.asSymbol == \varName}
+				{
+					(string[onePosition-1] == $\ ).if({
+						textView.setStringColor(color, onePosition, oneKey.asString.size)
+					})
+				}
+
+				{type.asSymbol == \class}
+				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
+
+				{type.asSymbol == \nameControl}
+				{
+					oneKey.isKindOf(Symbol).if({
+						(string[onePosition-1] != $\ ).if({
+							textView.setStringColor(color, onePosition-1, oneKey.asString.size+1)
+						})
+					},
+					// { textView.setStringColor(Color.red, onePosition, oneKey.asString.size)} //NUMBERS??
+					);
+				};
+			});
+		});
+
+	}
+
+
+	mouseEnter{
+		// "MouseEnter %".format(name).postln;
+		textView.editable = true;
+
+
+		this.displayState_(
+			case
+			{displayState == \isCode } {\isOver};
+			// {displayState == \off } {\offOver};
+		);
+
+		mouseEnterAction.value(this);
+		this.frameEnter;
+	}
+	mouseLeave{
+		// "MouseLeave %".format(name).postln;
+		textView.editable = false;
+		this.displayState_(
+			case
+			{displayState == \isOver } {\isCode};
+			// {displayState == \offOver } {\off};
+		);
+
+		mouseLeaveAction.value(this);
+		this.frameExit;
+	}
+	frameEnter {
+		var time = 0.45;
+		var frames = 30;
+		routine.stop;
+		routine = Routine({
+			frames.do({|i|
+				frameAlpha = (i+1)/frames ;
+				this.refresh;
+				(time/frames).wait;
+			});
+		}).play(AppClock);
+	}
+
+	frameExit {
+		var time = 0.15;
+		var frames = 15;
+		routine.stop;
+		routine = Routine({
+			frames.do({|i|
+				frameAlpha = (frames -(i+1))/frames ;
+				this.refresh;
+				(time/frames).wait;
+			});
+		}).play(AppClock)
+	}
 
 	draw {
+
 		this.background = Color.black;
-		Pen.width = 1;
-		Pen.strokeColor = Color.red;
-		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
+
+		Pen.width = case
+		{displayState == \isCode} {1}
+		{displayState == \isChanged} {1}
+		{displayState == \isError} {5}
+		{displayState == \isOver} {5}
+		{true}{1};
+
+		Pen.strokeColor = case
+		{displayState == \isCode} {Color.gray}
+		{displayState == \isChanged} {Color.new255(20,180,240)}
+		{displayState == \isError} {Color.red}
+		{displayState == \isOver} {Color.new255(50,60,70)}
+		{true}{Color.white};
+
+		Pen.addRect(Rect.offsetRect(this.bounds, 0,0,0,0));
 		Pen.stroke;
 	}
 }
