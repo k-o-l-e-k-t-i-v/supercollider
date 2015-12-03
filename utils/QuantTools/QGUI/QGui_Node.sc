@@ -50,31 +50,35 @@ QGui_Node : UserView {
 
 	initControl {
 		// QGui.syntax.at(\nameControl).postln;
+		/*
 		objects.put(\sourceCode, TextView(this)
-			.focus(true)
-			.palette_(QGui.qPalette)
-			.font_(QGui.fonts[\script])
-			.string_(proxy.source.asCompileString)
-			.stringColor_(Color.new255(100,100,100))
-			.tabWidth_(25)
-			.keyDownAction_{ |view, char, modifiers, unicode, keycode, key|
-				// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln
+		.focus(true)
+		.palette_(QGui.qPalette)
+		.font_(QGui.fonts[\script])
+		.string_(proxy.source.asCompileString)
+		.stringColor_(Color.new255(100,100,100))
+		.tabWidth_(25)
+		.keyDownAction_{ |view, char, modifiers, unicode, keycode, key|
+		// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln
 
-				/*
-				this.colorizeSyntax(view, proxy.source, \var, Color.new255(255,255,255));
-				this.colorizeSyntax(view, proxy.source, \varName, Color.new255(250,220,100));
-				this.colorizeSyntax(view, proxy.source, \class, Color.new255(180,180,180));
-				*/
-				this.colorizeSyntax(view, proxy.source, \nameControl, Color.new255(20,180,240));
+		/*
+		this.colorizeSyntax(view, proxy.source, \var, Color.new255(255,255,255));
+		this.colorizeSyntax(view, proxy.source, \varName, Color.new255(250,220,100));
+		this.colorizeSyntax(view, proxy.source, \class, Color.new255(180,180,180));
+		*/
+		this.colorizeSyntax(view, proxy.source, \nameControl, Color.new255(20,180,240));
 
-				// Ctrl + Enter -> unicode 10
-				(unicode == 10).if({
-					"\n>>> FIRE %".format(view.string).postln;
-					QGui.editNode(this.name, 0, view.string);
-				});
-			}
+		// Ctrl + Enter -> unicode 10
+		(unicode == 10).if({
+		"\n>>> FIRE %".format(view.string).postln;
+		QGui.editNode(this.name, 0, view.string);
+		});
+		}
 		);
-
+		*/
+		objects.put(\sourceCode, QGui_CodeView(this)
+			.functionString(proxy.source)
+		);
 
 		objects.put(\nodeName, TextField(this)
 			.align_(\left)
@@ -120,7 +124,7 @@ QGui_Node : UserView {
 
 		display = bool;
 		this.visible_(bool);
-}
+	}
 
 	positionOfCotrolers {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
@@ -185,7 +189,7 @@ QGui_Node : UserView {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
 		objects[\nodeName].string = this.name;
-		objects[\sourceCode].string = proxy.source.asCompileString;
+		objects[\sourceCode].functionString(proxy.source);
 
 		/*
 		this.colorizeSyntax(objects[\sourceCode], proxy.source, \var, Color.new255(255,255,255));
@@ -196,10 +200,10 @@ QGui_Node : UserView {
 		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionNodeY, 5, 5, 200));
 		objects[\nodeName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
 		objects[\ButtonReleaseNode].bounds = Rect.offsetCornerLT(this.bounds, 595,5,15,15);
-		objects[\sourceCode].bounds_(Rect.offsetCornerLT(this.bounds, 5,30,600,100));
+		objects[\sourceCode].bounds_(Rect.offsetCornerLT(this.bounds, 5,30,600,100)).resize;
 		objects[\timeline].bounds_(Rect.offsetEdgeRight(this.bounds, 5,5,5,(this.bounds.width - objects[\sourceCode].bounds.width - 20)));
 
-		this.colorizeSyntax(objects[\sourceCode], proxy[0], \nameControl, Color.new255(20,180,240));
+		// this.colorizeSyntax(objects[\sourceCode], proxy[0].functionString, \nameControl, Color.new255(20,180,240));
 
 		controls.do({|oneControl| oneControl.recall; });
 	}

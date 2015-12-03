@@ -1,4 +1,5 @@
 QGui_CodeView : UserView {
+	classvar >thisClassDebugging = false;
 
 	var <parent;
 	var textView, buttonOk, buttonCancle;
@@ -30,6 +31,20 @@ QGui_CodeView : UserView {
 
 		parent = argParent;
 		this.bounds = argBounds;
+		this.onResize = {|view|
+			(QGui.debbuging and: thisClassDebugging).if({("% [node %] onResize".format(parent.name, view.name)).postln;});
+			textView.bounds_(Rect.offsetEdgeLeft(this.bounds, 2,2,2,this.bounds.width - 30));
+			buttonOk.bounds_(Rect.offsetCornerRT(this.bounds, 3,3,26,(this.bounds.height/2)-3));
+			buttonCancle.bounds_(Rect.offsetCornerRB(this.bounds, 3,3,26,(this.bounds.height/2)-3));
+		};
+		this.onMove = {|view|
+			(QGui.debbuging and: thisClassDebugging).if({("% [node %] onMove".format(parent.name, view.name)).postln });
+
+		};
+		this.onClose = {|view|
+			(QGui.debbuging and: thisClassDebugging).if({("% [node %] onClose".format(parent.name, view.name)).postln});
+
+		};
 
 		this.name = "QGui_CodeView";
 		string = "";
@@ -57,7 +72,7 @@ QGui_CodeView : UserView {
 
 		value = 0;
 
-		textView = TextView(this,Rect.offsetEdgeLeft(this.bounds, 2,2,2,this.bounds.width - 30))
+		textView = TextView(this)
 		.focus(true)
 		.enterInterpretsSelection_(false)
 		.editable_(false)
@@ -91,12 +106,13 @@ QGui_CodeView : UserView {
 			this.refresh;
 		};
 
-		buttonOk = QGui_Button(this, Rect.offsetCornerRT(this.bounds, 3,3,26,(this.bounds.height/2)-3))
+		buttonOk = QGui_Button(this)
 		.string_("OK")
 		.colorBackground_(Color.new255(30,30,30))
-		.keepingState_(false);
+		.keepingState_(false)
+		.action_{QGui.refreshAll};
 
-		buttonCancle = QGui_Button(this, Rect.offsetCornerRB(this.bounds, 3,3,26,(this.bounds.height/2)-3))
+		buttonCancle = QGui_Button(this)
 		.string_("X")
 		.colorBackground_(Color.new255(30,30,30))
 		.keepingState_(false);
@@ -104,16 +120,18 @@ QGui_CodeView : UserView {
 		this.displayState_(\isCode);
 		lastValidDef = (textView.string).compile.def;
 
-		this.colorizeSyntax(textView.string, \var, Color.new255(255,255,255));
-		this.colorizeSyntax(textView.string, \varName, Color.new255(250,220,100));
-		this.colorizeSyntax(textView.string, \class, Color.new255(180,180,180));
-		this.colorizeSyntax(textView.string, \nameControl, Color.new255(20,180,240));
-
-
 		this.drawFunc = { this.draw };
 	}
 
-	string_{|txt| textView.string = txt.asString }
+
+	string_{|txt| textView.string = txt }
+
+	functionString{|function|
+		var sourceCode = function.def.sourceCode;
+		this.string_(sourceCode[1..sourceCode.size-2]);
+
+		this.safeTry(string);
+	}
 
 	displayState_ {|type|
 		case
@@ -241,6 +259,13 @@ QGui_CodeView : UserView {
 	}
 
 	draw {
+		(QGui.debbuging and: thisClassDebugging).if({("% [node %] draw".format(parent.name, this.name)).postln });
+
+		this.colorizeSyntax(textView.string, \var, Color.new255(255,255,255));
+		this.colorizeSyntax(textView.string, \varName, Color.new255(250,220,100));
+		this.colorizeSyntax(textView.string, \class, Color.new255(180,180,180));
+		this.colorizeSyntax(textView.string, \nameControl, Color.new255(20,180,240));
+
 
 		this.background = Color.black;
 

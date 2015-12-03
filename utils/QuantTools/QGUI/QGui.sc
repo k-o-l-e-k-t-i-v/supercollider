@@ -54,9 +54,10 @@ QGui {
 			// QGui_Canvan.thisClassDebugging = true;
 			// QGui_PanelStages.thisClassDebugging = true;
 			// QGui_Stage.thisClassDebugging = true;
-			// QGui_PanelNodes.thisClassDebugging = true;
-			// QGui_Node.thisClassDebugging = true;
-			// QGui_Controler.thisClassDebugging = true;
+			QGui_PanelNodes.thisClassDebugging = true;
+			QGui_Node.thisClassDebugging = true;
+			QGui_Controler.thisClassDebugging = true;
+			QGui_CodeView.thisClassDebugging = true;
 		})
 	}
 
