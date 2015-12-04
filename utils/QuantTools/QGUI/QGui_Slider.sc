@@ -4,7 +4,7 @@ QGui_Slider : UserView {
 
 	var parent, bounds;
 	var objects, controls;
-	var value, valueMin, valueMax;
+	var value, valueMin, valueMax, valueRound;
 	var graph, graphValue, graphDensity;
 	var fadeTime, routine;
 
@@ -36,6 +36,7 @@ QGui_Slider : UserView {
 		graphDensity = 0.5;
 
 		fadeTime = 4;
+		valueRound = 0.01;
 
 		this.name = "QGui_Slider";
 
@@ -47,13 +48,17 @@ QGui_Slider : UserView {
 
 		this.addAction(
 			{|view, x, y, modifiers, buttonNumber, clickCount|
-				var xVal = ((x / this.bounds.width) * ( valueMax - valueMin)) + valueMin ;
-				var xValGraph = graph.at(x / this.bounds.width * (graph.size - 1)) ;
+				var targetVal = ((x / this.bounds.width) * ( valueMax - valueMin)) + valueMin ;
 				// "mouseClickTest [%,%,%,%,%,%]".format(view, x, y, modifiers, buttonNumber, clickCount).postln;
-				// ("xVal: " ++ xVal).postln;
-				// ("xValGraph: " ++ xValGraph).postln;
-				(buttonNumber == 0).if({ this.value_(xVal) });
-				(buttonNumber == 1).if({ this.valueFade_(xVal,fadeTime) });
+				routine.stop;
+				(buttonNumber == 0).if({
+					"% [value: %, time: 0]".format(this.name, targetVal.round(valueRound)).postln;
+					this.value_(targetVal);
+				});
+				(buttonNumber == 1).if({
+					"% [value: %, time: %]".format(this.name, targetVal.round(valueRound), fadeTime).postln;
+					this.valueFade_(targetVal,fadeTime);
+				});
 				this.refresh;
 			}, \mouseDownAction
 		);
@@ -74,6 +79,8 @@ QGui_Slider : UserView {
 		this.refresh;
 	}
 
+	segments_ {|count| graph = Interval(0, count, 1); }
+
 	value_ { |val|
 		(val > valueMax).if({ val = valueMax });
 		(val < valueMin).if({ val = valueMin });
@@ -87,7 +94,6 @@ QGui_Slider : UserView {
 		var startVal = value;
 		(targetVal > valueMax).if({ targetVal = valueMax });
 		(targetVal < valueMin).if({ targetVal = valueMin });
-		("targetVal:" + targetVal).postln;
 
 		routine = Routine.new({
 			frames.do({|i|
@@ -97,6 +103,8 @@ QGui_Slider : UserView {
 			});
 		}).play(AppClock);
 	}
+
+	valueRound_ {|decimals| valueRound = decimals; }
 
 	graphDensity_ {|val|
 		(val > 1).if({ val = 1 });
@@ -116,8 +124,6 @@ QGui_Slider : UserView {
 		graph.do({|val, i|
 			var sizeX = this.bounds.width / (graph.size - 1);
 			var posX = sizeX * i;
-			// "grhapValue %".format(graphValue).postln;
-			// "grhap.do [%, %]".format(val, i).postln;
 			Pen.addRect(Rect.offsetEdgeLeft(this.bounds, posX + (sizeX * (1 - graphDensity) / 2), 5,5, sizeX * graphDensity));
 			(posX <= (graphValue * sizeX)).if(
 				{ Pen.fillColor_(Color.new255(20,180,240)) },
@@ -127,7 +133,7 @@ QGui_Slider : UserView {
 		});
 
 		Pen.stringAtPoint(
-			value.round(0.1).asString,
+			value.round(valueRound).asString,
 			20@((this.bounds.height/2)-8),
 			Font('Courier',8,usePointSize:true),
 			Color.white
