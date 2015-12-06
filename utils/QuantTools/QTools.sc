@@ -1,6 +1,6 @@
 QTools {
 
-	*version { ^0.22 }
+	*version { ^0.23 }
 
 	*gui{
 		Server.local.waitForBoot({

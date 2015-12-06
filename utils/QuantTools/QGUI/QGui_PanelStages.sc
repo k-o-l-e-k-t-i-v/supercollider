@@ -41,6 +41,14 @@ QGui_PanelStages : UserView {
 		.palette_(QGui.qPalette);
 
 		this.initControl;
+
+		this.onResize_{
+			(this.name + "resize").warn;
+
+			objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
+			objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
+			mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
+		};
 		this.drawFunc = { this.draw };
 	}
 
@@ -89,11 +97,12 @@ QGui_PanelStages : UserView {
 
 		objects[\MapText].string_(QGui.getMapText);
 
+		/*
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
 		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
-
+		*/
 		this.positionOfStages;
 		// QGui.getStagesGUI.do({|oneStage| oneStage.recall });
 	}
