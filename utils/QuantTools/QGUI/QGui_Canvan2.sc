@@ -14,7 +14,6 @@ QGui_Canvan2 : UserView {
 		// var me = super.newCustom(["", bounds ?? {this.sizeHint}, true, false] );
 		// var screezn
 		var me = super.new( screen,  bounds ?? {this.sizeHint} );
-		// me.window = ;
 		me.canFocus = true;
 		me.init(screen, bounds);
 		me.front;
@@ -26,12 +25,8 @@ QGui_Canvan2 : UserView {
 			"\n% [%]".format(thisMethod, argBounds).postln;
 		});
 
-		// this = argthis;
-		// screen
-
-		// this.window = screen;
 		screen = argParent;
-		screen.background_(Color.clear).front;
+		// screen.background_(Color.clear).front;
 		// .acceptsClickThrough_(true)
 		this.bounds = argBounds;
 		this.alpha = 0.9;
@@ -56,39 +51,21 @@ QGui_Canvan2 : UserView {
 
 		this.initControls;
 
+		this.action = {
+			// edges.doAction;
+			this.resizeCanvan;
+		};
+
 		this.onResize_{
 			"canvanResize".warn;
-
-			menuHead.bounds_(Rect.offsetEdgeTop(this.bounds, 0,0,0,45));
-			menuIcons.bounds_(Rect.offsetEdgeBottom(this.bounds, 0,0,0,45));
-
-			/*
-			edges[\left].bounds_(Rect.offsetEdgeLeft(this.bounds, 0,50,50,15));
-			edges[\top].bounds_(Rect.offsetEdgeTop(this.bounds, 0,50,50,15));
-			edges[\right].bounds_(Rect.offsetEdgeRight(this.bounds, 0,50,50,15));
-			edges[\bottom].bounds_(Rect.offsetEdgeBottom(this.bounds, 0,50,50,15));
-			*/
-			objects[\edgesControl].bounds_(this.bounds);
-
-			objects[\Button_Exit].bounds_(Rect.offsetCornerRT(menuHead, 10,10,25,25));
-			objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menuHead, 40,10,25,25));
-			objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menuHead, 70,10,25,25));
-			objects[\Logo].bounds_(Rect.offsetEdgeLeft(menuHead, 10, 10, 10, 200));
-
-			objects[\Version].bounds_(Rect.offsetEdgeRight(menuIcons, 10,10,10, 200));
-			objects[\Button_Map].bounds_(Rect.offsetCornerLB(menuIcons, 10,10,25,25));
-			objects[\Button_Node].bounds_(Rect.offsetCornerLB(menuIcons, 40,10,25,25));
-			objects[\Button_Time].bounds_(Rect.offsetCornerLB(menuIcons, 70,10,25,25));
-
-			// menuStages.bounds_(Rect.offsetEdgeLeft(this.bounds, 10,50,50,300));
-			// menuNodes.bounds_(Rect.offsetEdgeRight(this.bounds, 10,50,50, this.bounds.width - 325));
-
-			// this.getProperty( \geometry ).postln;
+			this.resizeCanvan;
+			edges.doAction;
 		};
 
 		this.onMove_{
 			"canvanMove".warn;
 			this.getProperty( \geometry ).postln;
+			edges.doAction;
 		};
 
 		this.onClose_{
@@ -96,7 +73,9 @@ QGui_Canvan2 : UserView {
 			screen.close;
 		};
 
-
+		this.doAction;
+		edges.fitManipulators;
+		// this.refresh;
 		// this.drawFunc = { this.draw };
 	}
 
@@ -111,16 +90,31 @@ QGui_Canvan2 : UserView {
 		this.setProperty( \geometry, Rect(canvanOrigin.x, canvanOrigin.y, this.bounds.width, this.bounds.height));
 	}
 
-	resizeCanvan {|x, y, direction = nil|
+	resizeCanvan {
+		menuHead.bounds_(Rect.offsetEdgeTop(this.bounds, 0,0,0,45));
+		menuIcons.bounds_(Rect.offsetEdgeBottom(this.bounds, 0,0,0,45));
+
+
+		objects[\Button_Exit].bounds_(Rect.offsetCornerRT(menuHead, 10,10,25,25));
+		objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menuHead, 40,10,25,25));
+		objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menuHead, 70,10,25,25));
+		objects[\Logo].bounds_(Rect.offsetEdgeLeft(menuHead, 10, 10, 10, 200));
+
+		objects[\Version].bounds_(Rect.offsetEdgeRight(menuIcons, 10,10,10, 200));
+		objects[\Button_Map].bounds_(Rect.offsetCornerLB(menuIcons, 10,10,25,25));
+		objects[\Button_Node].bounds_(Rect.offsetCornerLB(menuIcons, 40,10,25,25));
+		objects[\Button_Time].bounds_(Rect.offsetCornerLB(menuIcons, 70,10,25,25));
 
 	}
 
 
 
 	initControls {
+
+		edges = QGui_ViewEdge(this, screen, [\left, \top, \right, \bottom]);
 		// (QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		objects.put(\edgesControl, QGui_ViewEdge(this, screen, [\left, \top, \right, \bottom]));
+		// objects.put(\edgesControl, QGui_ViewEdge(this, screen, [\left, \top, \right, \bottom]));
 		/*
 		// EDGES ///////////////////////////////
 		edges.put(\left, QGui_ViewEdge(this).edge_(\left).offset_(100)

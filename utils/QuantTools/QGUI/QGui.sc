@@ -4,7 +4,8 @@ QGui {
 
 	classvar
 	<version,
-	win, canvan,
+	win, screen, canvan,
+	edges,
 	<qPalette, <fonts, <syntax,
 	isRunning, <isFullScreen, <isMinimize,
 	lastWinBounds, minWinSizeX, minWinSizeY,
@@ -34,8 +35,17 @@ QGui {
 			// win = Window.new(bounds:lastWinBounds, border:false).front;
 			// canvan = QGui_Canvan(win);
 			win = Window("screen", Window.flipY(Window.availableBounds), false, false);
+			win.background_(Color.clear).front;
+
+			// screen = UserView(win, Rect.offsetRect(win.bounds, 0,0,0,0));
 			canvan = QGui_Canvan2(win, lastWinBounds);
 			canvan.class.postln;
+
+			// QGui_ViewEdge(canvan, win, [\left, \top, \right, \bottom]);
+
+
+
+			// edges.put(\edgesControl, QGui_ViewEdge(canvan, win, [\left, \top, \right, \bottom]));
 			// canvan.moveTo(500,0);
 			// canvan.refresh;
 			// win.asView.onResize_{ canvan.bounds_(win.view.bounds) };
@@ -47,16 +57,19 @@ QGui {
 			isMinimize = false;
 			minWinSizeX = 600;
 			minWinSizeY = 400;
+
+
 		});
 
 		// super.class.refreshAll;
+
 	}
 
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
 			// QuantMap.thisClassDebugging = true;
-			QGui.thisClassDebugging = true;
+			// QGui.thisClassDebugging = true;
 			QGui_Canvan2.thisClassDebugging = true;
 			// QGui_PanelStages.thisClassDebugging = true;
 			// QGui_Stage.thisClassDebugging = true;
