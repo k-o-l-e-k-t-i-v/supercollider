@@ -32,12 +32,6 @@ QGui_PanelNodes : UserView {
 		ySizeNode = 200;
 
 		this.initControl;
-
-		this.onResize_{
-			(this.name + "resize").warn;
-			objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
-		};
-
 		this.drawFunc = { this.draw };
 	}
 
@@ -81,10 +75,9 @@ QGui_PanelNodes : UserView {
 	recall{
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		/*
 		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
 		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
-		*/
+
 		this.positionOfNodes;
 	}
 

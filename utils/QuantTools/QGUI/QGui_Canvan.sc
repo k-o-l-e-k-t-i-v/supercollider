@@ -25,14 +25,13 @@ QGui_Canvan : UserView {
 		objects = Dictionary.new();
 		edges = Dictionary.new();
 
-
 		menu = UserView(parent)
 		.name_("HeaderMenu")
 		.mouseMoveAction_{ |view, x, y, modifiers| QGui.moveGUI(x, y) }
 		.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); };
 
 		menu2 = UserView(parent).name_("header2");
-		// canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QGui.qPalette);
+		canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QGui.qPalette);
 
 		menuStages = QGui_PanelStages(parent).name_("panelStages");
 		menuNodes = QGui_PanelNodes(parent).name_("panelNodes");
@@ -40,34 +39,6 @@ QGui_Canvan : UserView {
 
 
 		this.initControls;
-
-
-		this.onResize_{
-			"canvanResize".warn;
-
-			menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
-			menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
-
-			edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
-			edges[\top].bounds_(Rect.offsetEdgeTop(parent, 0,50,50,15));
-			edges[\right].bounds_(Rect.offsetEdgeRight(parent, 0,50,50,15));
-			edges[\bottom].bounds_(Rect.offsetEdgeBottom(parent, 0,50,50,15));
-
-			objects[\Button_Exit].bounds_(Rect.offsetCornerRT(menu, 10,10,25,25));
-			objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menu, 40,10,25,25));
-			objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
-
-			objects[\Logo].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
-			objects[\Version].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
-
-			objects[\Button_Map].bounds_(Rect.offsetCornerLB(menu2, 10,10,25,25));
-			objects[\Button_Node].bounds_(Rect.offsetCornerLB(menu2, 40,10,25,25));
-			objects[\Button_Time].bounds_(Rect.offsetCornerLB(menu2, 70,10,25,25));
-
-			menuStages.bounds_(Rect.offsetEdgeLeft(this.bounds, 10,50,50,300));
-			menuNodes.bounds_(Rect.offsetEdgeRight(this.bounds, 10,50,50, this.bounds.width - 325));
-		};
-
 		this.drawFunc = { this.draw };
 	}
 
@@ -78,8 +49,8 @@ QGui_Canvan : UserView {
 		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100)
 			.name_("QGui_WinEdge_left")
 			.mouseMoveAction_{ |view, x, y, modifiers|
-				QGui.moveGUI(x, QGui.mouseClickDown.y);
-				QGui.resizeGUI(x, y, \left);
+					QGui.moveGUI(x, QGui.mouseClickDown.y);
+					QGui.resizeGUI(x, y, \left);
 			}
 			.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); }
 		);
@@ -195,6 +166,29 @@ QGui_Canvan : UserView {
 	recall{
 		(QGui.debbuging and: thisClassDebugging).if({ ("\nrecall\n" ++ thisMethod).postln });
 
+		menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
+		menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
+
+		canvan.bounds_(
+			Rect.offsetEdgeTop(parent, 45,0,0, parent.view.bounds.height - menu.bounds.height - menu2.bounds.height)
+		);
+
+		edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
+		edges[\top].bounds_(Rect.offsetEdgeTop(parent, 0,50,50,15));
+		edges[\right].bounds_(Rect.offsetEdgeRight(parent, 0,50,50,15));
+		edges[\bottom].bounds_(Rect.offsetEdgeBottom(parent, 0,50,50,15));
+
+		objects[\Button_Exit].bounds_(Rect.offsetCornerRT(menu, 10,10,25,25));
+		objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menu, 40,10,25,25));
+		objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
+
+		objects[\Logo].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
+		objects[\Version].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
+
+		objects[\Button_Map].bounds_(Rect.offsetCornerLB(menu2, 10,10,25,25));
+		objects[\Button_Node].bounds_(Rect.offsetCornerLB(menu2, 40,10,25,25));
+		objects[\Button_Time].bounds_(Rect.offsetCornerLB(menu2, 70,10,25,25));
+
 		menuStages.recall;
 		menuNodes.recall;
 	}
@@ -202,16 +196,12 @@ QGui_Canvan : UserView {
 	draw {
 		(QGui.debbuging and: thisClassDebugging).if({ ("\nDRAW\n" ++ thisMethod).postln });
 
-		this.background = Color.red;
-
-
-		Pen.width = 1;
-		// Pen.strokeColor = Color.new255(20,180,240);
-		Pen.strokeColor = Color.white;
-		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
-		Pen.stroke;
-
 		menu.background_(Color.new255(20,20,20));
 		menu2.background_(Color.new255(20,20,20));
+
+		Pen.width = 1;
+		Pen.strokeColor = Color.new255(20,180,240);
+		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
+		Pen.stroke;
 	}
 }

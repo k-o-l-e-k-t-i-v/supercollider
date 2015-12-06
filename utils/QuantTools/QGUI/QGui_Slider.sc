@@ -42,7 +42,6 @@ QGui_Slider : UserView {
 
 		this.onResize_{
 			"resize".warn;
-
 			// this.bounds_(Rect.offsetEdgeTop(parent, 10,10,10,55));
 			// this.refresh;
 		};

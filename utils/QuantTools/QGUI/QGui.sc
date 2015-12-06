@@ -1,6 +1,5 @@
 QGui {
 	classvar >thisClassDebugging = false;
-	classvar <>debbuging = true;
 
 	classvar
 	<version,
@@ -8,16 +7,17 @@ QGui {
 	<qPalette, <fonts, <syntax,
 	isRunning, <isFullScreen, <isMinimize,
 	lastWinBounds, minWinSizeX, minWinSizeY,
-	<mouseClickDown;
+	<mouseClickDown,
+	<>debbuging;
 
-	// var objects;
+	var objects;
 
 	*new{ ^super.new.initPalette.initGUI }
 
 	initGUI {
 		this.initDebugging(true);
 
-		// (QGui.debbuging and: thisClassDebugging).if({"\n% [debugging: %]".format(thisMethod, debbuging).postln;});
+		(QGui.debbuging and: thisClassDebugging).if({"\n% [debugging: %]".format(thisMethod, debbuging).postln;});
 
 		win.isNil.if(
 			{ isRunning = false },
@@ -31,15 +31,10 @@ QGui {
 			version = QTools.version;
 
 			lastWinBounds = Rect(50,100,1000,800);
-			// win = Window.new(bounds:lastWinBounds, border:false).front;
-			// canvan = QGui_Canvan(win);
-			canvan = QGui_Canvan2(lastWinBounds);
-			canvan.class.postln;
-			// canvan.moveTo(500,0);
-			// canvan.refresh;
-			// win.asView.onResize_{ canvan.bounds_(win.view.bounds) };
+			win = Window.new(bounds:lastWinBounds, border:false).front;
+			canvan = QGui_Canvan(win, win.view.bounds);
 
-			// QuantMap.addGui(win, canvan);
+			QuantMap.addGui(win, canvan);
 
 			isRunning = true;
 			isFullScreen = false;
@@ -48,21 +43,21 @@ QGui {
 			minWinSizeY = 400;
 		});
 
-		// super.class.refreshAll;
+		super.class.refreshAll;
 	}
 
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
 			// QuantMap.thisClassDebugging = true;
-			QGui.thisClassDebugging = true;
-			QGui_Canvan2.thisClassDebugging = true;
+			// QGui.thisClassDebugging = true;
+			// QGui_Canvan.thisClassDebugging = true;
 			// QGui_PanelStages.thisClassDebugging = true;
 			// QGui_Stage.thisClassDebugging = true;
-			// QGui_PanelNodes.thisClassDebugging = true;
-			// QGui_Node.thisClassDebugging = true;
-			// QGui_Controler.thisClassDebugging = true;
-			// QGui_CodeView.thisClassDebugging = true;
+			QGui_PanelNodes.thisClassDebugging = true;
+			QGui_Node.thisClassDebugging = true;
+			QGui_Controler.thisClassDebugging = true;
+			QGui_CodeView.thisClassDebugging = true;
 		})
 	}
 
@@ -194,16 +189,16 @@ QGui {
 	*closeGUI {
 		"CloseGUI".postln;
 		isRunning = false;
-		canvan.remove;
-		canvan = nil;
+		win.close;
+		win = nil;
 	}
 
 	*maximizeGUI {
 		isFullScreen.not.if(
 			{
 				"MaximizeGUI [fullScreen: %]".format(isFullScreen).postln;
-				lastWinBounds = canvan.bounds;
-				canvan.bounds_(Rect
+				lastWinBounds = win.bounds;
+				win.bounds_(Rect
 					(
 						0,
 						Window.screenBounds.height - Window.availableBounds.height,
@@ -215,18 +210,18 @@ QGui {
 			},
 			{
 				"MaximizeGUI [fullScreen: %]".format(isFullScreen).postln;
-				canvan.bounds_(lastWinBounds);
+				win.bounds_(lastWinBounds);
 				isFullScreen = false;
 			}
 		);
-		// this.refreshAll;
+		this.refreshAll;
 	}
 
 	*minimizeGUI {
 		"MinimizeGUI".postln;
 		isMinimize.not.if(
-			{canvan.minimize; isMinimize = true},
-			{canvan.unminimize; isMinimize = false}
+			{win.minimize; isMinimize = true},
+			{win.unminimize; isMinimize = false}
 		)
 	}
 
@@ -261,19 +256,16 @@ QGui {
 					}
 				);
 			});
-			// this.refreshAll;
+			this.refreshAll;
 		});
 	}
 
 	*moveGUI {|x, y|
 		isFullScreen.not.if({
-			// var newX = canvan.bounds.origin.x + x - mouseClickDown.x;
-			// var newY = canvan.bounds.origin.y - y + mouseClickDown.y;
-			var newX = x - mouseClickDown.x;
-			var newY = y + mouseClickDown.y;
-			"MoveGUI [%,%]".format(x, y).postln;
-			// canvan.setProperty( \geometry, Rect(newX, newY, canvan.bounds.width, canvan.bounds.height));
-			canvan.setProperty( \geometry, Rect(newX, newY, canvan.bounds.width, canvan.bounds.height));
+			var newX = win.bounds.origin.x + x - mouseClickDown.x;
+			var newY = win.bounds.origin.y - y + mouseClickDown.y;
+			// "MoveGUI [%,%]".format(x, y).postln;
+			win.bounds_(Rect(newX, newY, win.bounds.width, win.bounds.height));
 		});
 	}
 

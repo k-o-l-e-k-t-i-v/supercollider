@@ -32,17 +32,17 @@ QGui_CodeView : UserView {
 		parent = argParent;
 		this.bounds = argBounds;
 		this.onResize = {|view|
-			// (QGui.debbuging and: thisClassDebugging).if({("% [node %] onResize".format(parent.name, view.name)).postln;});
+			(QGui.debbuging and: thisClassDebugging).if({("% [node %] onResize".format(parent.name, view.name)).postln;});
 			textView.bounds_(Rect.offsetEdgeLeft(this.bounds, 2,2,2,this.bounds.width - 30));
 			buttonOk.bounds_(Rect.offsetCornerRT(this.bounds, 3,3,26,(this.bounds.height/2)-3));
 			buttonCancle.bounds_(Rect.offsetCornerRB(this.bounds, 3,3,26,(this.bounds.height/2)-3));
 		};
 		this.onMove = {|view|
-			// (QGui.debbuging and: thisClassDebugging).if({("% [node %] onMove".format(parent.name, view.name)).postln });
+			(QGui.debbuging and: thisClassDebugging).if({("% [node %] onMove".format(parent.name, view.name)).postln });
 
 		};
 		this.onClose = {|view|
-			// (QGui.debbuging and: thisClassDebugging).if({("% [node %] onClose".format(parent.name, view.name)).postln});
+			(QGui.debbuging and: thisClassDebugging).if({("% [node %] onClose".format(parent.name, view.name)).postln});
 
 		};
 
@@ -259,7 +259,7 @@ QGui_CodeView : UserView {
 	}
 
 	draw {
-		// (QGui.debbuging and: thisClassDebugging).if({("% [node %] draw".format(parent.name, this.name)).postln });
+		(QGui.debbuging and: thisClassDebugging).if({("% [node %] draw".format(parent.name, this.name)).postln });
 
 		this.colorizeSyntax(textView.string, \var, Color.new255(255,255,255));
 		this.colorizeSyntax(textView.string, \varName, Color.new255(250,220,100));
