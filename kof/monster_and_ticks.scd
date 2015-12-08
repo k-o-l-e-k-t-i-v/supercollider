@@ -30,7 +30,7 @@
     var hit = Select.kr(PulseCount.kr(imp)/fib(8)%pat.size,pat);
     var env = EnvGen.ar(Env([0.001,1,0.001],[0.02,1.5],[3,-3],curve:'exp'),imp * hit);
     var sig = SinOsc.ar(50+(env**50*([]++5000!3++500))) + LFNoise2.ar(1+(env**[1,2,3,4]*150*[1,2,8,4]),mul:0.2);
-    sig = sig;
+    sig = Normalizer.ar(sig);
     sig = sig * env;
     Splay.ar(sig,0.75,0.95);
   };

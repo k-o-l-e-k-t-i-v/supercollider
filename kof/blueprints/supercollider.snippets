@@ -7,6 +7,9 @@ snippet start
 		p=ProxySpace.push(s.boot);
 		p.makeTempoClock;
 	);
+snippet control
+	p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);if(true){snth.stop(${1:10})}};
+	p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
 snippet synth
 	// $1 synth ///////////////////////////////////////
 	
@@ -225,7 +228,7 @@ snippet sampler
 	~$1.clear;
 snippet tick
 	(
-		p.clock.tempo_(60/60);
+		p.clock.tempo_(${1:60}/60);
 		
 		~offset = (0..7)/8;
 		

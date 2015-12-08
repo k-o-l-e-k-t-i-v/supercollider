@@ -12,7 +12,7 @@
   sig = MoogFF.ar(sig,LFNoise2.ar(1/4.01/[1,1.333,1.25,1.5]).range(22.01,16000/4),SinOsc.ar(1/4/[1,2,3,4]).exprange(0.02,3));
   sig = sig * LFTri.ar(1/4/[1,2,3,4]).exprange(0.001,1);
   sig = AllpassN.ar(sig,[1/4,1/4.1],1,4.1)+sig;
-  sig = CompanderD.ar(s`ig,3/4,1/3,1/2);
+  sig = CompanderD.ar(sig,3/4,1/3,1/2);
   Splay.ar(sig,0.65,~n1);
 };
 ~one.play;
