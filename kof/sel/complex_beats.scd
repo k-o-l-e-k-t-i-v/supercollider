@@ -94,7 +94,7 @@ p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);if(true){snth.stop(15)}};
 
 
 
-b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat2.wav");
+b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
 
 // player synth ///////////////////////////////////////
 
@@ -105,16 +105,17 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat2.wav");
     ~three={
         var mod = [1,-1];//[-1,0.25,-0.25,1/8,1/16];
         var spread = 0.0;
-        var pos = 1/(1..16)/MouseX.kr(1,16);
+        var pos = 1/(1..16)*MouseX.kr(1,16);
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(3);
-        var imp = PulseDivider.kr(~tick.kr,(16..1),~counter.kr);
+        var imp = PulseDivider.kr(~tick.kr,(16..2),~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.00001],[0.002,1.5/(1..16)],[3,-3],curve:'exp'),imp * hit);
+        var env = EnvGen.ar(Env([0.001,1,0.00001],[0.002,2.5/(1..16)],[3,-3],curve:'exp'),imp * hit);
         var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
 
         sig = sig * env;
-        Splay.ar(sig.flat,0.5,~n3);
+        sig = CompanderD.ar(sig,3/4,1/2,1/2);
+        Splay.ar(sig.flat,0.75,~n3,SinOsc.ar(4));
     };
     ~three.play;
 );

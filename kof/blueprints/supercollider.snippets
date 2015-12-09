@@ -22,7 +22,7 @@ snippet synth
 		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
+		var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
 		var sig = ${2:SinOsc.ar(50!2)};
 		sig = sig * env;
 		Splay.ar(sig,0.75,${3:0.5});
@@ -62,7 +62,7 @@ snippet switch
 		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
+		var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
 		var sig = [
 		${2:SinOsc.ar(50!2),}
 		];
@@ -104,14 +104,17 @@ snippet filter
 	~$1.fadeTime=1;
 	~$1={
 		var high,mid,low;
-		var sig = ${2:0};
-		
-		sig = GVerb.ar(LPF.ar(sig,5000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[40,90])/8 + sig;
-		low = CompanderD.ar(LPF.ar(sig,400),3/4,1/2,1/2);
-		mid = CompanderD.ar(BPF.ar(sig,600,2),3/4,1/2,1/2);
-		high = CompanderD.ar(HPF.ar(sig,900),3/4,1/2,1/2);
+		var sig = ${2:~one.ar+~two.ar+~three.ar+~four.ar+~six.ar+~seven.ar};
+	
+		sig = Resonz.ar(sig,MouseX.kr(100,10000,(1..8)),MouseY.kr(0.1,1,(1..4)/16))/4;
+		sig = CompanderD.ar(sig,3/4,1/2,1/2);
+		sig = CombN.ar(sig,4,[4,8,16],32)+sig;
+		sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
+		low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/2!2).range(100,800)),3/4,1/2,1/2);
+		mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1/2);
+		high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,10000)),3/4,1/2,1/2);
 		sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
-		Splay.ar(sig,0.75,${3:0.25});
+		Splay.ar(sig,0.75,${3:~n8});
 	};
 	~$1.play;
 	);
