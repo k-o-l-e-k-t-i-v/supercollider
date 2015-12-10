@@ -46,6 +46,13 @@ QGui_Button : UserView {
 		value = 0;
 
 		this.drawFunc = { this.draw };
+
+		this.onClose_{
+			iconSymbol.free;
+			routine.stop;
+			// this.remove;
+			// "jsem".warn;
+		};
 	}
 
 	name_ {|buttonName| name = "QGui_Button [%]".format(buttonName) }
@@ -146,6 +153,7 @@ QGui_Button : UserView {
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;
 		// "MouseClickDown % [value %]".format(name, value).postln;
+		routine.stop;
 		mouseDownAction.value(this, x, y, modifiers, buttonNumber, clickCount);
 		(value == 0).if( {this.valueAction_(1);}, {this.valueAction_(0);} );
 	}

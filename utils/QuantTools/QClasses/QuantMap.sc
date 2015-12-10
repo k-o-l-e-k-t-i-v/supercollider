@@ -74,13 +74,13 @@ QuantMap {
 		}).play;
 	}
 
-	*addGui{ |win, canvan|
-		(QGui.debbuging and: thisClassDebugging).if({ "% [%, %]".format(thisMethod, win, canvan).postln });
+	*addGui{ |canvan|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%, %]".format(thisMethod, canvan).postln });
 		map.notNil.if({
-			map.put(\gui, \win, win);
+			// map.put(\gui, \win, win);
 			map.put(\gui, \canvan, canvan);
-			map.put(\gui, \panelStages, canvan.menuStages);
-			map.put(\gui, \panelNodes, canvan.menuNodes);
+			map.put(\gui, \panelStages, canvan.panelStages);
+			map.put(\gui, \panelNodes, canvan.panelNodes);
 			map.put(\gui, \displayStage, \default);
 
 			this.addStage(\default);
@@ -122,7 +122,7 @@ QuantMap {
 
 			map.put(\stage, stageName.asSymbol, \group, group);
 			this.hasGui.if({
-				var panel = map.at(\gui, \canvan).menuStages;
+				var panel = map.at(\gui, \canvan).panelStages;
 				map.put(\stage, stageName.asSymbol, \gui, QGui_Stage(panel, stageName:stageName));
 			});
 		},{ this.prWarnings(\notRunServer, thisMethod).warn })
@@ -252,7 +252,7 @@ QuantMap {
 				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \curr, newNode);
 
 				this.hasGui.if({
-					var panel = map.at(\gui, \canvan).menuNodes;
+					var panel = map.at(\gui, \canvan).panelNodes;
 					map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \gui, QGui_Node(panel, nodeProxy:nodeProxy));
 				});
 			},
@@ -424,6 +424,8 @@ QuantMap {
 						var numTabs = stage.size - 1;
 						var slot = stage.last;
 						var itemTxt = case
+						{ item.isKindOf(QGui_Canvan) }{ itemTxt = "QGui_Canvan [%]".format(item.bounds) }
+
 						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
 						{ item.isKindOf(QGui_Stage) }{

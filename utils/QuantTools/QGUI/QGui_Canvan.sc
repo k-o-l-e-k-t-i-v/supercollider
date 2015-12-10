@@ -1,137 +1,120 @@
-QGui_Canvan : UserView {
+QGui_Canvan : Window {
+
 	classvar >thisClassDebugging = false;
 
-	var parent, bounds;
-	var menu, menu2, canvan;
-	var <menuStages, <menuNodes;
-	var edges;
-	var objects;
+	var fullscreen, minimize, normalRect,
+	isRunning,
+	objects,
+	<panelStages, <panelNodes;
 
-	*new { | parent, bounds |
-		var me = super.new(parent, bounds ?? {this.sizeHint} );
-		me.canFocus = true;
-		me.init(parent, bounds);
-		^me;
+	*new { | bounds |
+		bounds.isNil.if(
+			{ bounds = Rect(0,0,400,400).center_( Window.availableBounds.center ) },
+			{ bounds = Window.flipY( bounds.asRect )}
+			// { bounds =  bounds.asRect }
+		);
+		^super.new.initWindow("Canvan", bounds, true, false, false ).init;
 	}
 
-	init { |argParent, argBounds|
-		(QGui.debbuging and: thisClassDebugging).if({
-			"\n% [%, %]".format(thisMethod, argParent, argBounds).postln;
-		});
+	init {
+		(QGui.debbuging and: thisClassDebugging).if({"\n% [%]".format(thisMethod, this.bounds).postln	});
 
-		parent = argParent;
-		bounds = argBounds;
 
 		objects = Dictionary.new();
-		edges = Dictionary.new();
+		fullscreen = false;
+		minimize = false;
+		isRunning = true;
 
 
-		menu = UserView(parent)
-		.name_("HeaderMenu")
-		.mouseMoveAction_{ |view, x, y, modifiers| QGui.moveGUI(x, y) }
-		.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); };
 
-		menu2 = UserView(parent).name_("header2");
-		// canvan = ScrollView(parent).autohidesScrollers_(true).palette_(QGui.qPalette);
-
-		menuStages = QGui_PanelStages(parent).name_("panelStages");
-		menuNodes = QGui_PanelNodes(parent).name_("panelNodes");
-		// menuTimeline =
-
+		panelStages = QGui_PanelStages(this).name_("panelStages");
+		panelNodes = QGui_PanelNodes(this).name_("panelNodes");
 
 		this.initControls;
 
+		// this.name = "Canvan";
 
-		this.onResize_{
-			"canvanResize".warn;
 
-			menu.bounds_(Rect.offsetEdgeTop(parent, 0,0,0,45));
-			menu2.bounds_(Rect.offsetEdgeBottom(parent, 0,0,0,45));
-
-			edges[\left].bounds_(Rect.offsetEdgeLeft(parent, 0,50,50,15));
-			edges[\top].bounds_(Rect.offsetEdgeTop(parent, 0,50,50,15));
-			edges[\right].bounds_(Rect.offsetEdgeRight(parent, 0,50,50,15));
-			edges[\bottom].bounds_(Rect.offsetEdgeBottom(parent, 0,50,50,15));
-
-			objects[\Button_Exit].bounds_(Rect.offsetCornerRT(menu, 10,10,25,25));
-			objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(menu, 40,10,25,25));
-			objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(menu, 70,10,25,25));
-
-			objects[\Logo].bounds_(Rect.offsetEdgeLeft(menu, 10, 10, 10, 200));
-			objects[\Version].bounds_(Rect.offsetEdgeRight(menu2, 10,10,10, 200));
-
-			objects[\Button_Map].bounds_(Rect.offsetCornerLB(menu2, 10,10,25,25));
-			objects[\Button_Node].bounds_(Rect.offsetCornerLB(menu2, 40,10,25,25));
-			objects[\Button_Time].bounds_(Rect.offsetCornerLB(menu2, 70,10,25,25));
-
-			menuStages.bounds_(Rect.offsetEdgeLeft(this.bounds, 10,50,50,300));
-			menuNodes.bounds_(Rect.offsetEdgeRight(this.bounds, 10,50,50, this.bounds.width - 325));
+		this.onClose_{
+			"CloseCanvan".postln;
+			isRunning = false;
+			// this.view..remove;
 		};
 
-		this.drawFunc = { this.draw };
+
+		this.addToOnClose({
+			"CloseCanvan".postln;
+			isRunning = false;
+		});
+
+		this.asView.action_{
+			panelStages.doAction;
+		};
+
+		this.asView.onResize_{
+			"ResizeCanvan".postln;
+
+			normalRect = this.bounds;
+
+			objects[\Button_Exit].bounds_(Rect.offsetCornerRT(this.bounds, 10,10,25,25));
+			objects[\Button_Maximize].bounds_(Rect.offsetCornerRT(this.bounds, 40,10,25,25));
+			objects[\Button_Minimize].bounds_(Rect.offsetCornerRT(this.bounds, 70,10,25,25));
+
+			objects[\Logo].bounds_(Rect.offsetCornerLT(this.bounds, 12, 12, 40, 20));
+			objects[\Version].bounds_(Rect.offsetCornerRB(this.bounds, 12,13,60, 20));
+
+			objects[\Button_Map].bounds_(Rect.offsetCornerLB(this.bounds, 10,10,25,25));
+			objects[\Button_Node].bounds_(Rect.offsetCornerLB(this.bounds, 40,10,25,25));
+			objects[\Button_Time].bounds_(Rect.offsetCornerLB(this.bounds, 70,10,25,25));
+
+			panelStages.bounds_(Rect.offsetEdgeLeft(this.bounds, 10,50,50,300));
+			panelNodes.bounds_(Rect.offsetEdgeRight(this.bounds, 10,50,50, this.bounds.width - 325));
+		};
+
+		this.drawFunc_{
+			Pen.fillColor_(Color.new255(20,20,20));
+			Pen.addRect(Rect.offsetEdgeTop(this.bounds, 0,0,0,45));
+			Pen.addRect(Rect.offsetEdgeBottom(this.bounds, 0,0,0,45));
+			Pen.fill;
+			Pen.strokeColor_(Color.new255(60,60,60));
+			Pen.addRect(Rect.offsetRect(this.bounds,0,0,0,0));
+			Pen.stroke;
+		};
+
+		this.asView.doAction;
 	}
 
 	initControls {
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		QGui_ViewControl(this.view, [\left, \top, \right, \bottom]);
 
-		// EDGES ///////////////////////////////
-		edges.put(\left, QGui_ViewEdge(parent).edge_(\left).offset_(100)
-			.name_("QGui_WinEdge_left")
-			.mouseMoveAction_{ |view, x, y, modifiers|
-				QGui.moveGUI(x, QGui.mouseClickDown.y);
-				QGui.resizeGUI(x, y, \left);
-			}
-			.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); }
-		);
-		edges.put(\top, QGui_ViewEdge(parent).edge_(\top).offset_(200)
-			.name_("QGui_WinEdge_top")
-			.mouseMoveAction_{ |view, x, y, modifiers| QGui.resizeGUI(x, y, \top) }
-			.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); }
-		);
-		edges.put(\right, QGui_ViewEdge(parent).edge_(\right).offset_(100)
-			.name_("QGui_WinEdge_right")
-			.mouseMoveAction_{ |view, x, y, modifiers| QGui.resizeGUI(x, y, \right) }
-			.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); }
-		);
-		edges.put(\bottom, QGui_ViewEdge(parent).edge_(\bottom).offset_(200)
-			.name_("QGui_WinEdge_bottom")
-			.mouseMoveAction_{ |view, x, y, modifiers|
-				QGui.moveGUI(QGui.mouseClickDown.x, y);
-				QGui.resizeGUI(x, y, \bottom);
-			}
-			.mouseDownAction_{ |view, x, y, buttNum| QGui.mouseDown(view, x, y, buttNum); }
-		);
-
-		// WIN ///////////////////////////////
-		objects.put(\Button_Exit, QGui_Button(menu)
+		objects.put(\Button_Exit, QGui_Button(this)
 			.name_("ButtonExit")
 			.iconName("ButtonExitGUI")
 			.colorFrame_(Color.clear)
-			.action_{|button| QGui.closeGUI; }
+			.action_{|button| this.close }
 		);
 
-		objects.put(\Button_Maximize, QGui_Button(menu)
+		objects.put(\Button_Maximize, QGui_Button(this)
 			.name_("ButtonMaximize")
 			.iconName("ButtonMaximizeGUI")
 			.colorFrame_(Color.clear)
+			.keepingState_(false)
 			.action_{|button|
-				QGui.maximizeGUI;
-				(button.value == 1).if({ button.value_(0); });
+				(button.value == 1).if(
+					{ this.fullScreen },
+					{ this.endFullScreen }
+				);
 			}
 		);
-		objects.put(\Button_Minimize, QGui_Button(menu)
+		objects.put(\Button_Minimize, QGui_Button(this)
 			.name_("ButtonMinimize")
 			.iconName("ButtonMinimizeGUI")
 			.colorFrame_(Color.clear)
-			.action_{|button|
-				QGui.minimizeGUI;
-				(button.value == 1).if({ button.valueAction_(0); });
-			}
+			.keepingState_(false)
+			.action_{|button| this.minimize	}
 		);
 
-		// MAP ///////////////////////////////
-
-		objects.put(\Button_Map, QGui_Button(menu2)
+		objects.put(\Button_Map, QGui_Button(this)
 			.name_("ButtonMap")
 			.iconName("IconMap2")
 			.colorFrame_(Color.clear)
@@ -141,41 +124,36 @@ QGui_Canvan : UserView {
 					{ QGui.setDisplayPanel(\panelStages, true)},
 					{ QGui.setDisplayPanel(\panelStages, false)}
 				);
-				menuStages.refresh;
+				// menuStages.refresh;
 			}
 		);
-		objects.put(\Button_Node, QGui_Button(menu2)
+		objects.put(\Button_Node, QGui_Button(this)
 			.name_("ButtonNode")
 			.iconName("IconNode")
 			.colorFrame_(Color.clear)
 			.action_{|button|
 				"\n>>>Button_Node pressed %".format(button.value).postln;
 				(button.value == 1).if(
-					// { menuNodes.visible_(true) },
-					// { menuNodes.visible_(false) }
 					{ QGui.setDisplayPanel(\panelNodes, true)},
 					{ QGui.setDisplayPanel(\panelNodes, false)}
 				)
 			}
 		);
-		objects.put(\Button_Time, QGui_Button(menu2)
+		objects.put(\Button_Time, QGui_Button(this)
 			.name_("ButtonTime")
 			.iconName("IconTime")
 			.colorFrame_(Color.clear)
 			.action_{|button|
 				"\nTimePressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{
-						// menuStages.recall;
-						// menuStages.visible_(true);
-					},
-					// { menuStages.visible_(false) }
+					{},{}
 				)
 			}
 		);
 
+
 		// REST ///////////////////////////////
-		objects.put(\Logo, StaticText(menu)
+		objects.put(\Logo, StaticText(this)
 			.string_("QTools")
 			.align_(\left)
 			.font_(QGui.fonts[\Header])
@@ -183,7 +161,7 @@ QGui_Canvan : UserView {
 			// .palette_(QGui.qPalette);
 		);
 
-		objects.put(\Version, StaticText(menu2)
+		objects.put(\Version, StaticText(this)
 			.string_("version %".format(QGui.version))
 			.align_(\right)
 			.font_(QGui.fonts[\Small])
@@ -192,26 +170,5 @@ QGui_Canvan : UserView {
 		);
 	}
 
-	recall{
-		(QGui.debbuging and: thisClassDebugging).if({ ("\nrecall\n" ++ thisMethod).postln });
-
-		menuStages.recall;
-		menuNodes.recall;
-	}
-
-	draw {
-		(QGui.debbuging and: thisClassDebugging).if({ ("\nDRAW\n" ++ thisMethod).postln });
-
-		this.background = Color.red;
-
-
-		Pen.width = 1;
-		// Pen.strokeColor = Color.new255(20,180,240);
-		Pen.strokeColor = Color.white;
-		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
-		Pen.stroke;
-
-		menu.background_(Color.new255(20,20,20));
-		menu2.background_(Color.new255(20,20,20));
-	}
 }
+

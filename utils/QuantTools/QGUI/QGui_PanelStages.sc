@@ -50,11 +50,22 @@ QGui_PanelStages : UserView {
 			mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
 		};
 		this.drawFunc = { this.draw };
+
+		this.action_{
+			(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+			"action".warn;
+			objects[\MapText].string_(QGui.getMapText);
+			this.positionOfStages;
+		};
+
+		// this.doAction;
 	}
 
 	initControl {
 
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
+		QGui_ViewControl(this, [\right]);
 
 		objects.put(\MapText, StaticText(mapTextView)
 			.align_(\topLeft)
@@ -88,14 +99,15 @@ QGui_PanelStages : UserView {
 		QGui.getStagesGUI.do({|oneStage, i|
 			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
 			oneStage.moveTo(yPositionStage);
-			oneStage.recall;
+			/*oneStage.recall;*/
+			oneStage.doAction;
 		});
 	}
 
 	recall {
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		(QGui.debbuging and: thisClassDebugging).if({ ("!!!RECAL" + thisMethod).warn });
 
-		objects[\MapText].string_(QGui.getMapText);
+
 
 		/*
 		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
@@ -103,7 +115,7 @@ QGui_PanelStages : UserView {
 		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
 		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
 		*/
-		this.positionOfStages;
+
 		// QGui.getStagesGUI.do({|oneStage| oneStage.recall });
 	}
 

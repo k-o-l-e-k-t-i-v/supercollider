@@ -4,8 +4,8 @@ QGui {
 
 	classvar
 	<version,
-	win, screen, canvan,
-	edges,
+	canvan,
+	win, // old
 	<qPalette, <fonts, <syntax,
 	isRunning, <isFullScreen, <isMinimize,
 	lastWinBounds, minWinSizeX, minWinSizeY,
@@ -31,26 +31,12 @@ QGui {
 		isRunning.not.if({
 			version = QTools.version;
 
-			lastWinBounds = Rect(50,100,1000,800);
-			// win = Window.new(bounds:lastWinBounds, border:false).front;
-			// canvan = QGui_Canvan(win);
-			win = Window("screen", Window.flipY(Window.availableBounds), false, false);
-			win.background_(Color.clear).front;
+			canvan = QGui_Canvan(Rect(50,100,1000,800));
+			canvan.background_(qPalette.window);
+			canvan.view.decorator = FlowLayout(canvan.bounds);
+			canvan.front;
+			"jsem2".warn;
 
-			// screen = UserView(win, Rect.offsetRect(win.bounds, 0,0,0,0));
-			canvan = QGui_Canvan2(win, lastWinBounds);
-			canvan.class.postln;
-
-			// QGui_ViewEdge(canvan, win, [\left, \top, \right, \bottom]);
-
-
-
-			// edges.put(\edgesControl, QGui_ViewEdge(canvan, win, [\left, \top, \right, \bottom]));
-			// canvan.moveTo(500,0);
-			// canvan.refresh;
-			// win.asView.onResize_{ canvan.bounds_(win.view.bounds) };
-
-			// QuantMap.addGui(win, canvan);
 
 			isRunning = true;
 			isFullScreen = false;
@@ -68,15 +54,15 @@ QGui {
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
-			// QuantMap.thisClassDebugging = true;
-			// QGui.thisClassDebugging = true;
-			QGui_Canvan2.thisClassDebugging = true;
-			// QGui_PanelStages.thisClassDebugging = true;
-			// QGui_Stage.thisClassDebugging = true;
-			// QGui_PanelNodes.thisClassDebugging = true;
-			// QGui_Node.thisClassDebugging = true;
-			// QGui_Controler.thisClassDebugging = true;
-			// QGui_CodeView.thisClassDebugging = true;
+			QuantMap.thisClassDebugging = true;
+			QGui.thisClassDebugging = true;
+			QGui_Canvan.thisClassDebugging = true;
+			QGui_PanelStages.thisClassDebugging = true;
+			QGui_Stage.thisClassDebugging = true;
+			QGui_PanelNodes.thisClassDebugging = true;
+			QGui_Node.thisClassDebugging = true;
+			QGui_Controler.thisClassDebugging = true;
+			QGui_CodeView.thisClassDebugging = true;
 		})
 	}
 
@@ -203,8 +189,8 @@ QGui {
 
 	// WIN ///////////////////////////////
 
-	*refreshAll { canvan.recall; canvan.refresh; }
-
+	*refreshAll { /*canvan.recall;*/ canvan.refresh; }
+/*
 	*closeGUI {
 		"CloseGUI".postln;
 		isRunning = false;
@@ -295,7 +281,7 @@ QGui {
 		"MouseDown [%, %, %, %]".format(w.name, x, y, buttNum).postln;
 		mouseClickDown = x@y;
 	}
-
+*/
 
 
 
