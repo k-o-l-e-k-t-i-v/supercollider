@@ -63,6 +63,7 @@ QuantMap {
 				// "\nQuantMap map exist".postln
 			}
 		);
+		^map;
 	}
 
 	cmdPeriod{
@@ -77,8 +78,8 @@ QuantMap {
 	*addGui{ |canvan|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%, %]".format(thisMethod, canvan).postln });
 		map.notNil.if({
-			// map.put(\gui, \win, win);
 			map.put(\gui, \canvan, canvan);
+			map.put(\gui, \panelMap, canvan.panelMap);
 			map.put(\gui, \panelStages, canvan.panelStages);
 			map.put(\gui, \panelNodes, canvan.panelNodes);
 			map.put(\gui, \displayStage, \default);
@@ -86,6 +87,9 @@ QuantMap {
 			this.addStage(\default);
 			this.stageCurrent_(\default);
 		},{ this.prWarnings(\notInitMap, thisMethod).warn });
+	}
+	*removeGui{
+		map.removeEmptyAt(\gui);
 	}
 
 	*hasGui {
@@ -123,7 +127,11 @@ QuantMap {
 			map.put(\stage, stageName.asSymbol, \group, group);
 			this.hasGui.if({
 				var panel = map.at(\gui, \canvan).panelStages;
-				map.put(\stage, stageName.asSymbol, \gui, QGui_Stage(panel, stageName:stageName));
+				map.put(\stage, stageName.asSymbol, \gui, QGui_Stage(
+					parent: panel,
+					bounds: Rect.offsetEdgeTop(panel.bounds, 5, 5, 5, 40),
+					stageName: stageName
+				));
 			});
 		},{ this.prWarnings(\notRunServer, thisMethod).warn })
 	}
@@ -425,6 +433,8 @@ QuantMap {
 						var slot = stage.last;
 						var itemTxt = case
 						{ item.isKindOf(QGui_Canvan) }{ itemTxt = "QGui_Canvan [%]".format(item.bounds) }
+
+						{ item.isKindOf(QGui_PanelMap) }{ itemTxt = "QGui_PanelMap [display: %, rect: %]".format(item.display, item.bounds) }
 
 						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }

@@ -43,12 +43,19 @@ QGui_PanelStages : UserView {
 		this.initControl;
 
 		this.onResize_{
-			(this.name + "resize").warn;
-
+			// (this.name + "resize").warn;
 			objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 			objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
 			mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
+
+			QGui.getStagesGUI.do({|oneStage|
+				oneStage.bounds_(Rect.offsetEdgeTop(this.bounds, oneStage.positionY, 5, 5, 40))
+				// oneStage.resize;
+			});
+
+			parent.refreshPanels;
 		};
+
 		this.drawFunc = { this.draw };
 
 		this.action_{
@@ -56,16 +63,18 @@ QGui_PanelStages : UserView {
 			"action".warn;
 			objects[\MapText].string_(QGui.getMapText);
 			this.positionOfStages;
+
+			QGui.getStagesGUI.do({|oneStage| oneStage.doAction });
 		};
 
-		// this.doAction;
+		this.doAction;
 	}
 
 	initControl {
 
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		QGui_ViewControl(this, [\right]);
+		QGui_ViewControl(this, [\right]).removeMoveConroler;
 
 		objects.put(\MapText, StaticText(mapTextView)
 			.align_(\topLeft)
@@ -79,7 +88,8 @@ QGui_PanelStages : UserView {
 			.keepingState_(false)
 			.action_{|button|
 				QGui.addStage(\temp);
-				// this.refresh;
+				this.positionOfStages;
+				this.doAction;
 			};
 		);
 	}
@@ -90,7 +100,7 @@ QGui_PanelStages : UserView {
 		display = bool;
 		this.visible_(bool);
 
-		QGui.getStagesGUI.do({|oneStage| oneStage.setDisplay_(bool) });
+		QGui.getStagesGUI.do({|oneStage| oneStage.setDisplay_(bool).doAction });
 	}
 
 	positionOfStages {
@@ -98,29 +108,16 @@ QGui_PanelStages : UserView {
 
 		QGui.getStagesGUI.do({|oneStage, i|
 			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
-			oneStage.moveTo(yPositionStage);
+			yPositionStage.postln;
+			oneStage.moveStage(yPositionStage);
+			// oneStage.resizeTo(this.bounds.width-10, oneStage.height);
 			/*oneStage.recall;*/
 			oneStage.doAction;
 		});
 	}
 
-	recall {
-		(QGui.debbuging and: thisClassDebugging).if({ ("!!!RECAL" + thisMethod).warn });
-
-
-
-		/*
-		this.bounds_(Rect.offsetEdgeLeft(parent, 10,50,50,300));
-		objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
-		objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
-		mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
-		*/
-
-		// QGui.getStagesGUI.do({|oneStage| oneStage.recall });
-	}
-
 	draw {
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		// (QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
 		this.background_(Color.new255(30,30,30));
 		Pen.width = 1;

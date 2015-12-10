@@ -58,54 +58,8 @@ QGui_ViewControl : UserView {
 			{ edgeViews.put(edgeName.asSymbol, UserView(limits).name_(\bottom).alpha_(0) )}
 		});
 
-		moveView.addAction({|man, x, y|
-			// "\n%_ManipulatorEnter [%]".format(man.name, man.bounds).postln;
+		this.addMoveControler;
 
-		}, \mouseEnterAction);
-		moveView.addAction({|man, x, y|
-			// "leaveManipulator %".format(man.name).postln;
-
-		}, \mouseLeaveAction);
-		moveView.addAction({|man, x, y, buttNum|
-			// "mouseDownAction % [%,%]".format(man.name, x, y).postln;
-			manipulatorMouseClick = x@y;
-			screenMouseClick = QtGUI.cursorPosition;
-			originalParentRect = parent.bounds;
-
-		}, \mouseDownAction);
-		moveView.addAction({|man, x, y, buttNum|
-			// "\n%_ManipulatorEnter [%]".format(man.name, man.bounds).postln;
-			var mouse = QtGUI.cursorPosition;
-
-			// (direction.asSymbol == \horizontal).if({ newY = anchorPoint.y });
-			// (direction.asSymbol == \vertical).if({ newX = anchorPoint.x });
-
-			parent.isKindOf(TopView).if(
-				{
-					var canvan = parent.findWindow;
-					canvan.setTopLeftBounds(
-						Rect(
-							originalParentRect.origin.x + mouse.x - manipulatorMouseClick.x - man.bounds.left ,
-							originalParentRect.origin.y + mouse.y - manipulatorMouseClick.y - man.bounds.top,
-							originalParentRect.width,
-							originalParentRect.height
-						),
-						0)
-				},
-				{
-					var newX = mouse.x - screenMouseClick.x;
-					var newY = mouse.y - screenMouseClick.y;
-					parent.bounds_(
-						Rect(
-							originalParentRect.origin.x + newX,
-							originalParentRect.origin.y + newY,
-							originalParentRect.width,
-							originalParentRect.height
-						)
-					)
-				}
-			)
-		}, \mouseMoveAction);
 
 		edgeViews.do({|manipulator|
 			manipulator.addAction({|man, x, y|
@@ -223,6 +177,54 @@ QGui_ViewControl : UserView {
 		};
 	}
 
+	addMoveControler{
+		moveView.addAction({|man, x, y, buttNum|
+			// "mouseDownAction % [%,%]".format(man.name, x, y).postln;
+			manipulatorMouseClick = x@y;
+			screenMouseClick = QtGUI.cursorPosition;
+			originalParentRect = parent.bounds;
+
+		}, \mouseDownAction);
+
+		moveView.addAction({|man, x, y, buttNum|
+			// "\n%_ManipulatorEnter [%]".format(man.name, man.bounds).postln;
+			var mouse = QtGUI.cursorPosition;
+
+			// (direction.asSymbol == \horizontal).if({ newY = anchorPoint.y });
+			// (direction.asSymbol == \vertical).if({ newX = anchorPoint.x });
+
+			parent.isKindOf(TopView).if(
+				{
+					var canvan = parent.findWindow;
+					canvan.setTopLeftBounds(
+						Rect(
+							originalParentRect.origin.x + mouse.x - manipulatorMouseClick.x - man.bounds.left ,
+							originalParentRect.origin.y + mouse.y - manipulatorMouseClick.y - man.bounds.top,
+							originalParentRect.width,
+							originalParentRect.height
+						),
+						0)
+				},
+				{
+					var newX = mouse.x - screenMouseClick.x;
+					var newY = mouse.y - screenMouseClick.y;
+					parent.bounds_(
+						Rect(
+							originalParentRect.origin.x + newX,
+							originalParentRect.origin.y + newY,
+							originalParentRect.width,
+							originalParentRect.height
+						)
+					)
+				}
+			)
+		}, \mouseMoveAction);
+	}
+	removeMoveConroler {
+		moveView.removeAction(\mouseDownAction);
+		moveView.removeAction(\mouseMoveAction);
+	}
+
 	fitManipulators {
 		// var manipulatorsZone = 20;
 		manipulatorDrag.not.if({
@@ -273,6 +275,8 @@ QGui_ViewControl : UserView {
 			});
 		});
 	}
+
+
 
 	manipulatorEnter {|man|
 		var time = 0.45;

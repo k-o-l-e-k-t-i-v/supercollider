@@ -3,53 +3,42 @@ QGui {
 	classvar <>debbuging = true;
 
 	classvar
-	<version,
 	canvan,
-	win, // old
-	<qPalette, <fonts, <syntax,
-	isRunning, <isFullScreen, <isMinimize,
-	lastWinBounds, minWinSizeX, minWinSizeY,
-	<mouseClickDown;
-
-	// var objects;
+	<>isRunning,
+	<qPalette, <fonts, <syntax;
 
 	*new{ ^super.new.initPalette.initGUI }
+	*close {
+		canvan = nil;
+		isRunning = false;
+		QuantMap.removeGui;
+	}
 
 	initGUI {
 		this.initDebugging(true);
 
 		// (QGui.debbuging and: thisClassDebugging).if({"\n% [debugging: %]".format(thisMethod, debbuging).postln;});
 
-		win.isNil.if(
+		canvan.isNil.if(
 			{ isRunning = false },
 			{
 				isRunning = true;
-				win.front;
+				canvan.front;
 			}
 		);
 
 		isRunning.not.if({
-			version = QTools.version;
-
 			canvan = QGui_Canvan(Rect(50,100,1000,800));
 			canvan.background_(qPalette.window);
-			canvan.view.decorator = FlowLayout(canvan.bounds);
 			canvan.front;
-			"jsem2".warn;
 
-
-			isRunning = true;
-			isFullScreen = false;
-			isMinimize = false;
-			minWinSizeX = 600;
-			minWinSizeY = 400;
-
-
+			QuantMap.addGui(canvan);
 		});
 
-		// super.class.refreshAll;
-
+		super.class.refreshAll;
 	}
+
+
 
 	initDebugging{|bool|
 		debbuging = bool;
@@ -57,12 +46,13 @@ QGui {
 			QuantMap.thisClassDebugging = true;
 			QGui.thisClassDebugging = true;
 			QGui_Canvan.thisClassDebugging = true;
+			QGui_PanelMap.thisClassDebugging = true;
 			QGui_PanelStages.thisClassDebugging = true;
 			QGui_Stage.thisClassDebugging = true;
-			QGui_PanelNodes.thisClassDebugging = true;
-			QGui_Node.thisClassDebugging = true;
-			QGui_Controler.thisClassDebugging = true;
-			QGui_CodeView.thisClassDebugging = true;
+			// QGui_PanelNodes.thisClassDebugging = true;
+			// QGui_Node.thisClassDebugging = true;
+			// QGui_Controler.thisClassDebugging = true;
+			// QGui_CodeView.thisClassDebugging = true;
 		})
 	}
 
@@ -95,6 +85,7 @@ QGui {
 
 	*setDisplayPanel {|type, bool|
 		case
+		{type.asSymbol == \panelMap}{ QuantMap.panelMap.setDisplay_(bool) }
 		{type.asSymbol == \panelStages}{ QuantMap.panelStages.setDisplay_(bool) }
 		{type.asSymbol == \panelNodes}{ QuantMap.panelNodes.setDisplay_(bool) };
 		this.refreshAll;
@@ -189,131 +180,6 @@ QGui {
 
 	// WIN ///////////////////////////////
 
-	*refreshAll { /*canvan.recall;*/ canvan.refresh; }
-/*
-	*closeGUI {
-		"CloseGUI".postln;
-		isRunning = false;
-		canvan.remove;
-		canvan = nil;
-	}
+	*refreshAll { canvan.asView.doAction; canvan.refresh; }
 
-	*maximizeGUI {
-		isFullScreen.not.if(
-			{
-				"MaximizeGUI [fullScreen: %]".format(isFullScreen).postln;
-				lastWinBounds = canvan.bounds;
-				canvan.bounds_(Rect
-					(
-						0,
-						Window.screenBounds.height - Window.availableBounds.height,
-						Window.availableBounds.width,
-						Window.availableBounds.height
-					)
-				);
-				isFullScreen = true;
-			},
-			{
-				"MaximizeGUI [fullScreen: %]".format(isFullScreen).postln;
-				canvan.bounds_(lastWinBounds);
-				isFullScreen = false;
-			}
-		);
-		// this.refreshAll;
-	}
-
-	*minimizeGUI {
-		"MinimizeGUI".postln;
-		isMinimize.not.if(
-			{canvan.minimize; isMinimize = true},
-			{canvan.unminimize; isMinimize = false}
-		)
-	}
-
-	*resizeGUI { |x, y, direction = nil|
-		// "ResizeGUI [%,%,%]".format(x, y, direction).postln;
-		isFullScreen.not.if({
-			(x.notNil && y.notNil && direction.notNil).if({
-				switch ( direction,
-					\right, {
-						var newWidth = win.bounds.width + x - mouseClickDown.x;
-						(newWidth > minWinSizeX).if({
-							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
-						});
-					},
-					\top, {
-						var newHeight = win.bounds.height - y + mouseClickDown.y;
-						(newHeight > minWinSizeY).if({
-							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
-						});
-					},
-					\bottom, {
-						var newHeight = win.bounds.height + y - mouseClickDown.y;
-						(newHeight > minWinSizeY).if({
-							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, win.bounds.width, newHeight));
-						});
-					},
-					\left, {
-						var newWidth = win.bounds.width - x + mouseClickDown.x;
-						(newWidth > minWinSizeX).if({
-							win.bounds_(Rect(win.bounds.origin.x, win.bounds.origin.y, newWidth, win.bounds.height));
-						});
-					}
-				);
-			});
-			// this.refreshAll;
-		});
-	}
-
-	*moveGUI {|x, y|
-		isFullScreen.not.if({
-			// var newX = canvan.bounds.origin.x + x - mouseClickDown.x;
-			// var newY = canvan.bounds.origin.y - y + mouseClickDown.y;
-			var newX = x - mouseClickDown.x;
-			var newY = y + mouseClickDown.y;
-			"MoveGUI [%,%]".format(x, y).postln;
-			// canvan.setProperty( \geometry, Rect(newX, newY, canvan.bounds.width, canvan.bounds.height));
-			canvan.setProperty( \geometry, Rect(newX, newY, canvan.bounds.width, canvan.bounds.height));
-		});
-	}
-
-	*mouseDown { |w, x, y, buttNum|
-		"MouseDown [%, %, %, %]".format(w.name, x, y, buttNum).postln;
-		mouseClickDown = x@y;
-	}
-*/
-
-
-
-
-
-	////////////////////////////////////////
-	/*
-	initControls {
-	var v, b, t ;
-
-
-	v = ListView(canvan,Rect(10,10,220,70))
-	.items_([ "SinOsc", "Saw", "LFSaw", "WhiteNoise", "PinkNoise", "BrownNoise", "Osc" ])
-	.palette_(qPalette)
-	.action_({ arg sbs;
-	[sbs.value, v.items[sbs.value]].postln; // .value returns the integer
-	});
-
-
-	b = EnvelopeView(canvan, Rect(0, 300, 230, 80))
-	.drawLines_(true)
-	//     .selectionColor_(Color.red)
-	.drawRects_(true)
-	.resize_(5)
-	.step_(0.05)
-	.action_({arg b; [b.index, b.value].postln})
-	.thumbSize_(5)
-	.value_([[0.0, 0.1, 0.5, 1.0],[0.1,1.0,0.8,0.0]])
-	.palette_(qPalette)
-	;
-	b.grid = Point(0.2, 0.2);
-	b.gridOn_(true);
-	}
-	*/
 }

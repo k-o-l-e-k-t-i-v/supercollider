@@ -42,7 +42,7 @@ QGui_Stage : UserView {
 		positionY = 0;
 		frameAlpha = 0;
 
-		objects.put(\StageName, TextField(this)
+		objects.put(\StageName, TextField(this,Rect.offsetCornerLT(this.bounds, 5,5,60,20))
 			.align_(\left)
 			.font_(QGui.fonts[\Small])
 			.palette_(QGui.qPalette)
@@ -52,25 +52,27 @@ QGui_Stage : UserView {
 				var oldName = this.name;
 				// this.name = text.string;
 				QGui.renameStage(oldName, text.string.asSymbol);
-				parent.refresh;
+				parent.doAction;
+				// parent.refresh;
 			}
 		);
 
-		objects.put(\ButtonRemoveStage, QGui_Button(this)
+		objects.put(\ButtonRemoveStage, QGui_Button(this,Rect.offsetCornerRT(this.bounds, 5,5,15,15))
 			.name_("ButtonRemoveStage")
 			.iconName("ButtonExitGUI")
 			.colorFrameOver_(Color.clear)
 			.keepingState_(false)
 			.action_{|button|
 				QGui.removeStage(this.name);
-				parent.refresh;
+				parent.doAction;
+				// parent.refresh;
 			}
 		);
 
 		this.drawFunc = { this.draw };
 
 		this.onResize_{
-			this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionY, 5, 5, 40));
+			// "stageOnResize".warn;
 			objects[\StageName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
 			objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerRT(this.bounds, 5,5,15,15));
 		};
@@ -79,7 +81,7 @@ QGui_Stage : UserView {
 			objects[\StageName].string = this.name;
 		};
 
-		this.refresh;
+		// this.refresh;
 	}
 
 	setDisplay_ {|bool|
@@ -89,9 +91,10 @@ QGui_Stage : UserView {
 		this.visible_(bool);
 	}
 
-	moveTo{|y|
+	moveStage{|y|
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, y).postln; });
 		positionY = y;
+		this.moveTo(this.bounds.left, positionY);
 	}
 
 	recall {
