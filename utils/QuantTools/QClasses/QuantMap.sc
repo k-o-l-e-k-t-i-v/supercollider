@@ -250,10 +250,10 @@ QuantMap {
 				// nodeProxy.nameDef("QNode [ % ]".format(nodeProxy.envirKey.asSymbol), 0);
 				nodeProxy.parentGroup_(group);
 				// .monitorGroup = group;
-				nodeProxy.group = group;
+				// nodeProxy.group = group;
 				nodeProxy.send;
 				// nodeProxy.playN(vol:0,group:group);
-				// nodeProxy.setGroup();
+				nodeProxy.setGroup(group);
 				nodeProxy.play(vol:0.5,group:group.nodeID);
 
 				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \group, group);
@@ -312,11 +312,18 @@ QuantMap {
 		this.nodeExist(stageName.asSymbol, nodeName.asSymbol).if(
 			{
 				var node = this.getNode(stageName, nodeName);
-				var newNode = QuantNode(node[\proxy].copy);
+				var oldNode = QuantNode(node[\proxy].copy);
+				// newNode.name = node[\proxy].envirKey;
+				// node[\proxy][index].free;
 				// newNode.proxy[index] = thisProcess.interpreter.compile(function.def.sourceCode);
+				node[\proxy][index] = function;
+				oldNode.nodeName = nodeName.asSymbol;
+				// newNode.proxy[index] = function;
+
+				// function.play(newNode.proxy.parentGroup);
 				// newNode.proxy[index] = function.value();
-				newNode.proxy.put(index, function, now:true);
-				this.setNode(stageName, nodeName, newNode, node[\curr]);
+				// newNode.proxy[index].set(function);
+				this.setNode(stageName, nodeName, node[\curr], oldNode);
 			}, {
 				this.prWarnings(\notExistNode, thisMethod).warn;
 				^nil;
@@ -450,8 +457,8 @@ QuantMap {
 						{ itemTxt = "QGui_PanelMap [display: %, %]".format(item.display, item.bounds) }
 
 						{ item.isKindOf(QuantNode) }
-						// { itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
-						{ itemTxt = "QuantNode [%]".format(item.print) }
+						{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
+						// { itemTxt = "QuantNode [%]".format(item.print) }
 
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
 						{ item.isKindOf(QGui_Stage) }{

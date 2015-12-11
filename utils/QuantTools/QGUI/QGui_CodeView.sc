@@ -37,14 +37,6 @@ QGui_CodeView : UserView {
 			buttonOk.bounds_(Rect.offsetCornerRT(this.bounds, 3,3,26,(this.bounds.height/2)-3));
 			buttonCancle.bounds_(Rect.offsetCornerRB(this.bounds, 3,3,26,(this.bounds.height/2)-3));
 		};
-		this.onMove = {|view|
-			// (QGui.debbuging and: thisClassDebugging).if({("% [node %] onMove".format(parent.name, view.name)).postln });
-
-		};
-		this.onClose = {|view|
-			// (QGui.debbuging and: thisClassDebugging).if({("% [node %] onClose".format(parent.name, view.name)).postln});
-
-		};
 
 		this.name = "QGui_CodeView";
 		string = "";
@@ -93,7 +85,6 @@ QGui_CodeView : UserView {
 		.keyUpAction_{ |view, char, modifiers, unicode, keycode, key|
 			// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln;
 
-
 			// Ctrl + Enter -> unicode 10
 			(unicode == 10).if({
 				"\n>>> FIRE %".format(view.string).postln;
@@ -133,8 +124,10 @@ QGui_CodeView : UserView {
 	functionString{|function|
 		var sourceCode = function.def.sourceCode;
 		this.string_(sourceCode[1..sourceCode.size-2]);
+		// this.string_(function.def.sourceCode);
 
-		this.safeTry(string);
+		// this.safeTry(string);
+		// this.safeTry(sourceCode);
 	}
 
 	displayState_ {|type|
