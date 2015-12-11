@@ -25,7 +25,8 @@ QGui_PanelMap : UserView {
 		objects = Dictionary.new();
 
 		this.name = "QGui_PanelMap";
-		this.setDisplay_(false);
+		// this.setDisplay_(false);
+		this.setDisplay_(true);
 
 		mapTextView = ScrollView(this)
 		.hasHorizontalScroller_(false)
@@ -36,20 +37,20 @@ QGui_PanelMap : UserView {
 		this.initControl;
 
 		this.onResize_{
-			(this.name + "resize").warn;
-			mapTextView.bounds_(Rect.offsetEdgeBottom(this.bounds, 5,5,5,500));
+			// (this.name + "resize").warn;
+			mapTextView.bounds_(Rect.offsetRect(this.bounds, 5,5,5,5));
 			objects[\MapText].bounds_(Rect.offsetCornerLT(mapTextView, 10,10,480,500));
 
 			parent.refreshPanels;
 		};
-
-		// this.drawFunc = { this.draw };
 
 		this.action_{
 			(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 			// "action".warn;
 			objects[\MapText].string_(QGui.getMapText);
 		};
+
+		this.drawFunc = { this.draw };
 
 		this.doAction;
 	}
@@ -74,4 +75,13 @@ QGui_PanelMap : UserView {
 		this.visible_(bool);
 	}
 
+	draw {
+		// (QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+
+		this.background_(Color.new255(330,30,30));
+		Pen.width = 1;
+		Pen.strokeColor = Color.new255(20,20,20);
+		Pen.addRect(Rect(0,0, this.bounds.width, this.bounds.height));
+		Pen.stroke;
+	}
 }

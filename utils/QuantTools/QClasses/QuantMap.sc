@@ -434,7 +434,8 @@ QuantMap {
 						var itemTxt = case
 						{ item.isKindOf(QGui_Canvan) }{ itemTxt = "QGui_Canvan [%]".format(item.bounds) }
 
-						{ item.isKindOf(QGui_PanelMap) }{ itemTxt = "QGui_PanelMap [display: %, rect: %]".format(item.display, item.bounds) }
+						{ item.isKindOf(QGui_PanelMap) }
+						{ itemTxt = "QGui_PanelMap [display: %, %]".format(item.display, item.bounds) }
 
 						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }

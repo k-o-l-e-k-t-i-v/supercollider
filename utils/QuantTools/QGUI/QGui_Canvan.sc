@@ -20,9 +20,10 @@ QGui_Canvan : Window {
 		objects = Dictionary.new();
 		// this.asView.minWidth_(400);
 		// this.asView.minHeight_(200);
-		panelMap = QGui_PanelMap(this, Rect(0,0,150,150)).name("panelMap");
-		// panelStages = QGui_PanelStages(this).name_("panelStages");
-		// panelNodes = QGui_PanelNodes(this).name_("panelNodes");
+		panelMap = QGui_PanelMap(this, Rect(0,0,350,150));
+		panelStages = QGui_PanelStages(this, Rect(0,0,250,150)).name_("panelStages");
+		panelNodes = QGui_PanelNodes(this).name_("panelNodes");
+
 		this.refreshPanels;
 
 		this.initControls;
@@ -43,7 +44,6 @@ QGui_Canvan : Window {
 		};
 
 		this.asView.onResize_{
-
 			this.refreshCoor;
 			this.refreshPanels;
 		};
@@ -73,11 +73,20 @@ QGui_Canvan : Window {
 	}
 
 	refreshPanels{
-		"Canvan.refreshPanels".warn;
-		// panelMap.bounds_(Rect.offsetEdgeLeft(this.bounds, 10,50,50, 300));
-		"jsem".warn;
-		// panelStages.bounds_(Rect.offsetEdgeLeft(this.bounds, panelMap.bounds.width + 30,50,50,panelStages.bounds.width));
-		// panelNodes.bounds_(Rect.offsetEdgeRight(this.bounds, 10,50,50, this.bounds.width - panelStages.bounds.width - 30));
+		// "Canvan.refreshPanels".warn;
+		panelMap.bounds_(Rect.offsetEdgeLeft(this.bounds, 10,50,50, panelMap.bounds.width));
+		panelStages.bounds_(
+			Rect.offsetEdgeLeft(this.bounds, panelMap.bounds.width + 15,50,50, panelStages.bounds.width)
+		);
+		panelNodes.bounds_(
+			Rect.offsetEdgeLeft(
+				this.bounds,
+				panelMap.bounds.width + panelStages.bounds.width + 20,
+				50,
+				50,
+				this.bounds.width - panelMap.bounds.width - panelStages.bounds.width - 25
+			)
+		);
 
 	}
 
