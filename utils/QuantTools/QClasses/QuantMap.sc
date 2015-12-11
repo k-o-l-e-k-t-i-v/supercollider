@@ -239,11 +239,11 @@ QuantMap {
 
 	*playStage {|stageName|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
-		this.stageGroup(stageName).isPlaying_(true);
+		this.stageGroup(stageName).run(true);
 			}
 	*stopStage {|stageName|
 		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
-		this.stageGroup(stageName).isPlaying_(false);
+		this.stageGroup(stageName).run(false);
 			}
 
 	//NODES///////////////////////////////////////////
