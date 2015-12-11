@@ -23,7 +23,7 @@ QGui {
 			{ isRunning = false },
 			{
 				isRunning = true;
-				canvan.front;
+				canvan.asView.visible_(true);
 			}
 		);
 
@@ -49,10 +49,10 @@ QGui {
 			QGui_PanelMap.thisClassDebugging = true;
 			QGui_PanelStages.thisClassDebugging = true;
 			QGui_Stage.thisClassDebugging = true;
-			// QGui_PanelNodes.thisClassDebugging = true;
-			// QGui_Node.thisClassDebugging = true;
-			// QGui_Controler.thisClassDebugging = true;
-			// QGui_CodeView.thisClassDebugging = true;
+			QGui_PanelNodes.thisClassDebugging = true;
+			QGui_Node.thisClassDebugging = true;
+			QGui_Controler.thisClassDebugging = true;
+			QGui_CodeView.thisClassDebugging = true;
 		})
 	}
 

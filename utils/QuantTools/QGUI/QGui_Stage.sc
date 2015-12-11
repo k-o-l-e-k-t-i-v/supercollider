@@ -28,20 +28,32 @@ QGui_Stage : UserView {
 		objects = Dictionary.new();
 		this.name = stageName;
 		this.setDisplay = parent.display;
-
-		// QTools.print;
-		// QGui.currentStage.asSymbol.postln;
-		// this.name.asSymbol.postln;
+		this.initControl;
 
 		( QGui.currentStage.asSymbol == this.name.asSymbol ).if(
 			{ isCurrent = true },
 			{ isCurrent = false }
 		);
-		// isCurrent.postln;
 
 		positionY = 0;
 		frameAlpha = 0;
 
+		this.drawFunc = { this.draw };
+
+		this.onResize_{
+			// "stageOnResize".warn;
+			objects[\StageName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
+			objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerRT(this.bounds, 5,5,15,15));
+		};
+
+		this.action_{
+			objects[\StageName].string = this.name;
+		};
+
+		this.refresh;
+	}
+
+	initControl {
 		objects.put(\StageName, TextField(this,Rect.offsetCornerLT(this.bounds, 5,5,60,20))
 			.align_(\left)
 			.font_(QGui.fonts[\Small])
@@ -68,20 +80,6 @@ QGui_Stage : UserView {
 				// parent.refresh;
 			}
 		);
-
-		this.drawFunc = { this.draw };
-
-		this.onResize_{
-			// "stageOnResize".warn;
-			objects[\StageName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
-			objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerRT(this.bounds, 5,5,15,15));
-		};
-
-		this.action_{
-			objects[\StageName].string = this.name;
-		};
-
-		// this.refresh;
 	}
 
 	setDisplay_ {|bool|
@@ -95,20 +93,6 @@ QGui_Stage : UserView {
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, y).postln; });
 		positionY = y;
 		this.moveTo(this.bounds.left, positionY);
-	}
-
-	recall {
-		(QGui.debbuging and: thisClassDebugging).if({ ("!!!RECAL" + thisMethod).warn });
-
-		/*
-		(QGui.debbuging and: thisClassDebugging).if({ "% - %".format(thisMethod, this.name).postln; });
-
-		objects[\StageName].string = this.name;
-
-		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionY, 5, 5, 40));
-		objects[\StageName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
-		objects[\ButtonRemoveStage].bounds_(Rect.offsetCornerRT(this.bounds, 5,5,15,15));
-		*/
 	}
 
 	mouseDown{ arg x, y, modifiers, buttonNumber, clickCount;

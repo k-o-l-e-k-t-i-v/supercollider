@@ -251,17 +251,24 @@ QuantMap {
 				nodeProxy.parentGroup_(group);
 				// .monitorGroup = group;
 				nodeProxy.group = group;
-				// nodeProxy.send;
+				nodeProxy.send;
 				// nodeProxy.playN(vol:0,group:group);
-				nodeProxy.setGroup();
-				nodeProxy.play(vol:0,group:group.nodeID);
+				// nodeProxy.setGroup();
+				nodeProxy.play(vol:0.5,group:group.nodeID);
 
 				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \group, group);
 				map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \curr, newNode);
 
 				this.hasGui.if({
 					var panel = map.at(\gui, \canvan).panelNodes;
-					map.put(\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \gui, QGui_Node(panel, nodeProxy:nodeProxy));
+					map.put(
+						\stage, stageName.asSymbol, \nodes, nodeProxy.envirKey.asSymbol, \gui,
+						QGui_Node(
+							parent:panel.nodeView,
+							bounds: Rect.offsetEdgeTop(panel.bounds, 5, 5, 5, 400),
+							nodeProxy:nodeProxy
+						);
+					);
 				});
 			},
 			{ this.editNode(stageName, nodeProxy) }
@@ -299,11 +306,16 @@ QuantMap {
 	}
 
 	*editNode {|stageName, nodeName, index, function|
+		(QGui.debbuging and: thisClassDebugging).if({
+			"% [% || % || % || %]".format(thisMethod, stageName, nodeName, index, function).postln
+		});
 		this.nodeExist(stageName.asSymbol, nodeName.asSymbol).if(
 			{
 				var node = this.getNode(stageName, nodeName);
 				var newNode = QuantNode(node[\proxy].copy);
-				newNode.proxy[index] = thisProcess.interpreter.compile(function);
+				// newNode.proxy[index] = thisProcess.interpreter.compile(function.def.sourceCode);
+				// newNode.proxy[index] = function.value();
+				newNode.proxy.put(index, function, now:true);
 				this.setNode(stageName, nodeName, newNode, node[\curr]);
 			}, {
 				this.prWarnings(\notExistNode, thisMethod).warn;
@@ -437,7 +449,10 @@ QuantMap {
 						{ item.isKindOf(QGui_PanelMap) }
 						{ itemTxt = "QGui_PanelMap [display: %, %]".format(item.display, item.bounds) }
 
-						{ item.isKindOf(QuantNode) }{ itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
+						{ item.isKindOf(QuantNode) }
+						// { itemTxt = "QuantNode [% -> %]".format(item.nodeName, item.proxy.source.def.sourceCode) }
+						{ itemTxt = "QuantNode [%]".format(item.print) }
+
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
 						{ item.isKindOf(QGui_Stage) }{
 							itemTxt = "QGui_Stage [name: %, display: %, Y: %]".format(item.name, item.display, item.positionY)

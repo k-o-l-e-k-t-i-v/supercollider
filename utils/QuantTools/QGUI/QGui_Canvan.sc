@@ -22,7 +22,7 @@ QGui_Canvan : Window {
 		// this.asView.minHeight_(200);
 		panelMap = QGui_PanelMap(this, Rect(0,0,350,150));
 		panelStages = QGui_PanelStages(this, Rect(0,0,250,150)).name_("panelStages");
-		panelNodes = QGui_PanelNodes(this).name_("panelNodes");
+		panelNodes = QGui_PanelNodes(this, Rect(0,0,250,150)).name_("panelNodes");
 
 		this.refreshPanels;
 
@@ -68,8 +68,8 @@ QGui_Canvan : Window {
 		objects[\Version].bounds_(Rect.offsetCornerRB(this.bounds, 12,13,60,20));
 
 		objects[\Button_Map].bounds_(Rect.offsetCornerLB(this.bounds, 10,10,25,25));
-		objects[\Button_Node].bounds_(Rect.offsetCornerLB(this.bounds, 40,10,25,25));
-		objects[\Button_Time].bounds_(Rect.offsetCornerLB(this.bounds, 70,10,25,25));
+		objects[\Button_Stage].bounds_(Rect.offsetCornerLB(this.bounds, 40,10,25,25));
+		objects[\Button_Node].bounds_(Rect.offsetCornerLB(this.bounds, 70,10,25,25));
 	}
 
 	refreshPanels{
@@ -127,6 +127,20 @@ QGui_Canvan : Window {
 			.action_{|button|
 				"\n>>>Button_Map pressed %".format(button.value).postln;
 				(button.value == 1).if(
+					{ QGui.setDisplayPanel(\panelMap, true)},
+					{ QGui.setDisplayPanel(\panelMap, false)}
+				);
+				panelMap.doAction;
+			}
+			.displayState_(\on)
+		);
+		objects.put(\Button_Stage, QGui_Button(this)
+			.name_("ButtonStage")
+			.iconName("IconTime")
+			.colorFrame_(Color.clear)
+			.action_{|button|
+				"\n>>>Button_Node pressed %".format(button.value).postln;
+				(button.value == 1).if(
 					{ QGui.setDisplayPanel(\panelStages, true)},
 					{ QGui.setDisplayPanel(\panelStages, false)}
 				);
@@ -134,27 +148,16 @@ QGui_Canvan : Window {
 			}
 		);
 		objects.put(\Button_Node, QGui_Button(this)
-			.name_("ButtonNode")
-			.iconName("IconNode")
-			.colorFrame_(Color.clear)
-			.action_{|button|
-				"\n>>>Button_Node pressed %".format(button.value).postln;
-				(button.value == 1).if(
-					{ QGui.setDisplayPanel(\panelNodes, true)},
-					{ QGui.setDisplayPanel(\panelNodes, false)}
-				)
-			}
-		);
-		objects.put(\Button_Time, QGui_Button(this)
 			.name_("ButtonTime")
-			.iconName("IconTime")
+			.iconName("IconNode")
 			.colorFrame_(Color.clear)
 			.action_{|button|
 				"\nTimePressed %".format(button.value).postln;
 				(button.value == 1).if(
-					{ QGui.setDisplayPanel(\panelMap, true)},
-					{ QGui.setDisplayPanel(\panelMap, false)}
-				)
+					{ QGui.setDisplayPanel(\panelNodes, true)},
+					{ QGui.setDisplayPanel(\panelNodes, false)}
+				);
+				panelNodes.doAction;
 			}
 		);
 

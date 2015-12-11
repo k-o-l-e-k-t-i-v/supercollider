@@ -5,7 +5,7 @@ QGui_Controler : UserView {
 	var parent, bounds;
 	var objects;
 	var name;
-	var positionControlY;
+	var <positionControlY;
 
 	*new { | parent, bounds, controlName|
 		var me = super.new(parent, bounds ?? {this.sizeHint} );
@@ -31,24 +31,34 @@ QGui_Controler : UserView {
 		// "Rect %".format(rect).postln;
 		this.initControl;
 		this.drawFunc = { this.draw };
+
+		this.action = {
+			objects[\keyName].string = "\\" ++ name;
+		};
+
+		this.onResize = {
+			objects[\keyName].bounds_(Rect.offsetCornerLT(this.bounds, 5,5,60,20));
+			objects[\controlerCode].bounds_(Rect.offsetCornerLT(this.bounds, 65,5,170,30));
+			objects[\controlerTime].bounds_(Rect.offsetCornerLT(this.bounds, 5,35,470,15));
+		};
 	}
 
 	initControl {
 
-		objects.put(\controlerCode, TextView(this)
-			.focus(true)
-			.palette_(QGui.qPalette)
-			.font_(QGui.fonts[\script])
+		objects.put(\controlerTime, QGui_Slider(this)
+			.domain_(0,8,80)
+			.graphDensity_(0.7)
 		);
 
-
-		/*
-		objects.put(\timeline, ScrollView(parent, Rect.newSides((frame.left + 405),(frame.top + 5), (frame.right - 5), (frame.bottom - 5)))
-		.autohidesScrollers_(true)
-		.palette_(QGui.qPalette)
+		objects.put(\controlerCode, QGui_CodeView(this)
+			/*
+			.functionString(proxy.source)
+			.action_{|codeView|
+				QGui.editNode(this.name, 0, codeView.function);
+			}
+			*/
 		);
 
-		*/
 		objects.put(\keyName, StaticText(this)
 			.align_(\left)
 			.string_("aaa")
@@ -59,19 +69,9 @@ QGui_Controler : UserView {
 
 	}
 
-	moveTo{|y|
+	moveConroler{|y|
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, name, y).postln; });
 		positionControlY = y;
-	}
-
-	recall {
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-
-		objects[\keyName].string = "\\" ++ name;
-
-		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionControlY, 5, 15, 50));
-		objects[\keyName].bounds_(Rect.offsetCornerLT(this.bounds, 5,5,60,20));
-		objects[\controlerCode].bounds_(Rect.offsetCornerLT(this.bounds, 65,5,170,20));
 	}
 
 	draw {

@@ -102,6 +102,8 @@ QGui_CodeView : UserView {
 				this.colorizeSyntax(view.string, \varName, Color.new255(250,220,100));
 				this.colorizeSyntax(view.string, \class, Color.new255(180,180,180));
 				this.colorizeSyntax(view.string, \nameControl, Color.new255(20,180,240));
+
+				this.doAction;
 			});
 			this.refresh;
 		};
@@ -118,13 +120,15 @@ QGui_CodeView : UserView {
 		.keepingState_(false);
 
 		this.displayState_(\isCode);
-		lastValidDef = (textView.string).compile.def;
+		lastValidDef = (textView.string).compile;
 
 		this.drawFunc = { this.draw };
 	}
 
 
 	string_{|txt| textView.string = txt }
+
+	function { ^lastValidDef }
 
 	functionString{|function|
 		var sourceCode = function.def.sourceCode;
@@ -147,17 +151,17 @@ QGui_CodeView : UserView {
 
 		try {
 			// function = string.compile;
-			lastValidDef = string.compile.def;
+			lastValidDef = string.compile;
 			this.displayState_(\isCode);
 		}
 		{ |error|
 			this.displayState_(\isError);
 		};
 
-		("\nValidCode:" + lastValidDef.sourceCode).postln;
-		("Class" + lastValidDef.selectors).postln;
-		("Constats" + lastValidDef.constants).postln;
-		("VarNames" + lastValidDef.varNames).postln;
+		("\nValidCode:" + lastValidDef.def.sourceCode).postln;
+		("Class" + lastValidDef.def.selectors).postln;
+		("Constats" + lastValidDef.def.constants).postln;
+		("VarNames" + lastValidDef.def.varNames).postln;
 		// ("displayError" + displayError).postln;
 
 
@@ -168,9 +172,9 @@ QGui_CodeView : UserView {
 		var keys;
 		keys = case
 		// {type.asSymbol == \var} { \var }
-		{type.asSymbol == \varName} { lastValidDef.varNames }
-		{type.asSymbol == \class} { lastValidDef.selectors }
-		{type.asSymbol == \nameControl} { lastValidDef.constants };
+		{type.asSymbol == \varName} { lastValidDef.def.varNames }
+		{type.asSymbol == \class} { lastValidDef.def.selectors }
+		{type.asSymbol == \nameControl} { lastValidDef.def.constants };
 
 		keys.do({|oneKey|
 			var positions = string.findAll(oneKey.asString);

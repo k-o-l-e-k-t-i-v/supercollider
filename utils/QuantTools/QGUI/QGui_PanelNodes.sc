@@ -2,7 +2,7 @@ QGui_PanelNodes : UserView {
 	classvar >thisClassDebugging = false;
 
 	var parent, bounds;
-	var objects, <nodes;
+	var objects, <nodeView, <nodes;
 	var <>display;
 
 	var yPositionNode, yPositionNodeStart, ySizeNode;
@@ -28,7 +28,13 @@ QGui_PanelNodes : UserView {
 		this.name = "QGui_PanelNodes";
 		this.setDisplay_(false);
 
-		yPositionNodeStart = 25;
+		nodeView = ScrollView(this)
+		.hasHorizontalScroller_(false)
+		.hasVerticalScroller_(true)
+		.autohidesScrollers_(true)
+		.palette_(QGui.qPalette);
+
+		yPositionNodeStart = 5;
 		ySizeNode = 200;
 
 		this.initControl;
@@ -36,6 +42,20 @@ QGui_PanelNodes : UserView {
 		this.onResize_{
 			(this.name + "resize").warn;
 			objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
+			nodeView.bounds_(Rect.offsetRect(this.bounds, 5,20,5,5));
+
+
+			this.positionOfNodes;
+			QGui.getNodesGUI(QGui.currentStage).do({|oneNode|
+				oneNode.bounds_(Rect.offsetEdgeTop(this.bounds, oneNode.positionNodeY, 5, 5, 200));
+			});
+		};
+
+		this.action_{
+			(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+			this.positionOfNodes;
+			QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.doAction });
+
 		};
 
 		this.drawFunc = { this.draw };
@@ -51,14 +71,12 @@ QGui_PanelNodes : UserView {
 			.action_{|button|
 				"\n>>> QGui_PanelNodes button AddNode".postln;
 				QGui.addNode(\node);
-				this.recall;
+				this.positionOfNodes;
+				QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.refreshCoor });
+				this.doAction;
+				// QGui.refreshAll;
 			};
 		);
-		/*
-		QGui.getNodes(QGui.currentStage).do({|nodeName, i|
-		this.addNode(nodeName);
-		});
-		*/
 	}
 
 	setDisplay_ {|bool|
@@ -73,19 +91,10 @@ QGui_PanelNodes : UserView {
 		QGui.getNodesGUI(QGui.currentStage).do({|oneNode, i|
 			oneNode.display.if({
 				yPositionNode = ((ySizeNode + 5)*i ) + yPositionNodeStart;
-				oneNode.moveTo(yPositionNode).recall;
+				// oneNode.moveNode(yPositionNode).doAction;
+				oneNode.moveNode(yPositionNode);
 			});
 		});
-	}
-
-	recall{
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-
-		/*
-		this.bounds_(Rect.offsetEdgeRight(parent, 10,50,50, parent.bounds.width - 325));
-		objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
-		*/
-		this.positionOfNodes;
 	}
 
 	draw {

@@ -39,9 +39,8 @@ QGui_PanelStages : UserView {
 		this.onResize_{
 			// (this.name + "resize").warn;
 			objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
-						QGui.getStagesGUI.do({|oneStage|
-				oneStage.bounds_(Rect.offsetEdgeTop(this.bounds, oneStage.positionY, 5, 5, 40))
-				// oneStage.resize;
+			QGui.getStagesGUI.do({|oneStage|
+				oneStage.bounds_(Rect.offsetEdgeTop(this.bounds, oneStage.positionY, 5, 5, 40));
 			});
 
 			parent.refreshPanels;
@@ -50,14 +49,13 @@ QGui_PanelStages : UserView {
 		this.drawFunc = { this.draw };
 
 		this.action_{
-			(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-
 			this.positionOfStages;
+			parent.refreshPanels;
 
 			QGui.getStagesGUI.do({|oneStage| oneStage.doAction });
 		};
 
-		this.doAction;
+		// this.doAction;
 	}
 
 	initControl {
@@ -66,7 +64,7 @@ QGui_PanelStages : UserView {
 
 		QGui_ViewControl(this, [\right]).removeMoveConroler;
 
-			objects.put(\ButtonAddStage, QGui_Button.new(this)
+		objects.put(\ButtonAddStage, QGui_Button.new(this)
 			.string_("Add")
 			// .palette_(QGui.qPalette)
 			.colorFrame_(Color.new255(120,120,120))
@@ -75,6 +73,7 @@ QGui_PanelStages : UserView {
 				QGui.addStage(\temp);
 				this.positionOfStages;
 				this.doAction;
+				// QGui.refreshAll;
 			};
 		);
 	}
@@ -93,11 +92,7 @@ QGui_PanelStages : UserView {
 
 		QGui.getStagesGUI.do({|oneStage, i|
 			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
-			yPositionStage.postln;
 			oneStage.moveStage(yPositionStage);
-			// oneStage.resizeTo(this.bounds.width-10, oneStage.height);
-			/*oneStage.recall;*/
-			oneStage.doAction;
 		});
 	}
 

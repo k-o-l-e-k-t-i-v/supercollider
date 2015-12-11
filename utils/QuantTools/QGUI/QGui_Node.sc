@@ -27,7 +27,7 @@ QGui_Node : UserView {
 		controls = Dictionary.new();
 
 		parent = argParent;
-		bounds = argBounds;
+		this.bounds = argBounds;
 
 		this.setDisplay_(true);
 
@@ -46,38 +46,47 @@ QGui_Node : UserView {
 
 		this.initControl;
 		this.drawFunc = { this.draw };
+
+		this.onResize_{
+			this.refreshCoor;
+		};
+
+		this.action_{
+			objects[\nodeName].string = this.name;
+			objects[\sourceCode].functionString(proxy.source);
+
+			controls.do({|oneControl| oneControl.doAction; });
+
+			this.refreshCoor;
+		};
+		this.refreshCoor;
+	}
+
+	refreshCoor{
+		objects[\nodeName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
+		objects[\ButtonReleaseNode].bounds = Rect.offsetCornerLT(this.bounds, 595,5,15,15);
+		objects[\sourceCode].bounds_(Rect.offsetCornerLT(this.bounds, 5,30,600,100)).resize;
+		objects[\timeline].bounds_(
+			Rect.offsetEdgeRight(this.bounds, 5,5,5,(this.bounds.width - objects[\sourceCode].bounds.width - 20))
+		);
+
+		controls.do({|oneControl|
+			oneControl.bounds_(Rect.offsetEdgeTop(parent.bounds, oneControl.positionControlY, 5, 15, 50));
+		});
 	}
 
 	initControl {
-		// QGui.syntax.at(\nameControl).postln;
-		/*
-		objects.put(\sourceCode, TextView(this)
-		.focus(true)
-		.palette_(QGui.qPalette)
-		.font_(QGui.fonts[\script])
-		.string_(proxy.source.asCompileString)
-		.stringColor_(Color.new255(100,100,100))
-		.tabWidth_(25)
-		.keyDownAction_{ |view, char, modifiers, unicode, keycode, key|
-		// "ENTER \sourceCode %,%,%,%,%,%".format(view, char, modifiers, unicode, keycode, key).postln
 
-		/*
-		this.colorizeSyntax(view, proxy.source, \var, Color.new255(255,255,255));
-		this.colorizeSyntax(view, proxy.source, \varName, Color.new255(250,220,100));
-		this.colorizeSyntax(view, proxy.source, \class, Color.new255(180,180,180));
-		*/
-		this.colorizeSyntax(view, proxy.source, \nameControl, Color.new255(20,180,240));
-
-		// Ctrl + Enter -> unicode 10
-		(unicode == 10).if({
-		"\n>>> FIRE %".format(view.string).postln;
-		QGui.editNode(this.name, 0, view.string);
-		});
-		}
-		);
-		*/
 		objects.put(\sourceCode, QGui_CodeView(this)
 			.functionString(proxy.source)
+			.action_{|codeView|
+				// "codeAction".warn;
+				// codeView.function.postln;
+				// codeView.function.def.sourceCode.postln;
+				// "codeAction2".warn;
+				QGui.editNode(this.name, 0, codeView.function);
+				// QGui.refreshAll;
+			}
 		);
 
 		objects.put(\nodeName, TextField(this)
@@ -113,7 +122,7 @@ QGui_Node : UserView {
 
 		proxy.controlKeys.do({|key|
 			// key.postln;
-			controls.put(key.asSymbol, QGui_Controler(objects[\timeline], Rect(5,5,400,40), key.asSymbol));
+			controls.put(key.asSymbol, QGui_Controler(objects[\timeline], Rect(5,5,400,50), key.asSymbol));
 		});
 
 		this.positionOfCotrolers
@@ -130,82 +139,33 @@ QGui_Node : UserView {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 		controls.do({|oneCnt, i|
 			yPositionControl = ((ySizeControl + 5)*i ) + yPositionControlStart;
-			oneCnt.moveTo(yPositionControl);
+			oneCnt.moveConroler(yPositionControl);
 		});
 	}
 
-	colorizeSyntax{	|textView, function, type, color|
-		var string, keys;
 
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		// textView.stringColor_(Color.new255(100,100,100));
-
-		string = function.asCompileString;
-		keys = case
-		{type.asSymbol == \var} { \var }
-		{type.asSymbol == \varName} { function.def.varNames }
-		{type.asSymbol == \class} { function.def.selectors }
-		{type.asSymbol == \nameControl} { function.def.constants };
-
-		keys.do({|oneKey|
-			var positions = string.findAll(oneKey.asString);
-			positions.do({|onePosition|
-				case
-				{type.asSymbol == \var}
-				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
-
-				{type.asSymbol == \varName}
-				{
-					(string[onePosition-1] == $\ ).if({
-						textView.setStringColor(color, onePosition, oneKey.asString.size)
-					})
-				}
-
-				{type.asSymbol == \class}
-				{ textView.setStringColor(color, onePosition, oneKey.asString.size) }
-
-				{type.asSymbol == \nameControl}
-				{
-					oneKey.isKindOf(Symbol).if({
-						(string[onePosition-1] != $\ ).if({
-							textView.setStringColor(color, onePosition-1, oneKey.asString.size+1)
-						})
-					},
-					// { textView.setStringColor(Color.red, onePosition, oneKey.asString.size)} //NUMBERS??
-					);
-				};
-			});
-		});
-	}
-
-	moveTo{|y|
+	moveNode{|y|
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, y).postln; });
 		positionNodeY = y;
 	}
 
 	recall {
 
-		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
+		// (QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
-		objects[\nodeName].string = this.name;
-		objects[\sourceCode].functionString(proxy.source);
+		"Node.recall".warn;
 
+		// objects[\nodeName].string = this.name;
+		// objects[\sourceCode].functionString(proxy.source);
 		/*
-		this.colorizeSyntax(objects[\sourceCode], proxy.source, \var, Color.new255(255,255,255));
-		this.colorizeSyntax(objects[\sourceCode], proxy.source, \varName, Color.new255(250,220,100));
-		this.colorizeSyntax(objects[\sourceCode], proxy.source, \class, Color.new255(180,180,180));
-		*/
-
 		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionNodeY, 5, 5, 200));
 		objects[\nodeName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
 		objects[\ButtonReleaseNode].bounds = Rect.offsetCornerLT(this.bounds, 595,5,15,15);
 		objects[\sourceCode].bounds_(Rect.offsetCornerLT(this.bounds, 5,30,600,100)).resize;
 		objects[\timeline].bounds_(Rect.offsetEdgeRight(this.bounds, 5,5,5,(this.bounds.width - objects[\sourceCode].bounds.width - 20)));
-
-		// this.colorizeSyntax(objects[\sourceCode], proxy[0].functionString, \nameControl, Color.new255(20,180,240));
-
-		controls.do({|oneControl| oneControl.recall; });
+		*/
+		// controls.do({|oneControl| oneControl.recall; });
 	}
 
 	draw {

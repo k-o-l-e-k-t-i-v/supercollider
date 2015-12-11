@@ -25,7 +25,6 @@ QGui_PanelMap : UserView {
 		objects = Dictionary.new();
 
 		this.name = "QGui_PanelMap";
-		// this.setDisplay_(false);
 		this.setDisplay_(true);
 
 		mapTextView = ScrollView(this)
@@ -52,7 +51,7 @@ QGui_PanelMap : UserView {
 
 		this.drawFunc = { this.draw };
 
-		this.doAction;
+		// this.doAction;
 	}
 
 	initControl {
