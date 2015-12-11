@@ -40,6 +40,8 @@ QuantNode {
 		"\nQuantNode [%] release".format(nodeName).postln;
 	}
 
+
+
 	addObject{|slot, phase, qObject|
 		var key = qObject.key;
 		// UPRAVIT MAPU NA -> KEY / SLOT

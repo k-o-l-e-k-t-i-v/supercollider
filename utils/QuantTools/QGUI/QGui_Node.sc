@@ -53,14 +53,14 @@ QGui_Node : UserView {
 
 		this.action_{
 			objects[\nodeName].string = this.name;
-			// objects[\sourceCode].functionString(proxy.source);
 
 			controls.do({|oneControl| oneControl.doAction; });
 
 			this.refreshCoor;
 		};
+
 		this.refreshCoor;
-		objects[\sourceCode].functionString(proxy.source);
+		objects[\sourceCode].functionString(proxy[0]);
 	}
 
 	refreshCoor{
@@ -79,15 +79,8 @@ QGui_Node : UserView {
 	initControl {
 
 		objects.put(\sourceCode, QGui_CodeView(this)
-
 			.action_{|codeView|
-				// "codeAction".warn;
-				// codeView.function.postln;
-				// codeView.function.def.sourceCode.postln;
-				// "codeAction2".warn;
 				QGui.editNode(this.name, 0, codeView.function);
-				// codeView.functionString(proxy[0]);
-				// QGui.refreshAll;
 				this.doAction;
 			}
 		);
@@ -115,7 +108,6 @@ QGui_Node : UserView {
 				QGui.releaseNode(this.name);
 				parent.refresh;
 			}
-
 		);
 
 		objects.put(\timeline, ScrollView(this)

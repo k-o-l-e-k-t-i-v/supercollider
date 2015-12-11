@@ -150,6 +150,9 @@ QuantMap {
 				stageGui.remove;
 			});
 
+			this.stageGroup(stageName).release(4);
+			Server.local.makeBundle(4, {this.stageGroup(stageName).free;});
+
 			map.removeEmptyAt(\stage, stageName.asSymbol);
 		}, { this.prWarnings(\notExistStage, thisMethod).warn });
 	}
@@ -233,6 +236,15 @@ QuantMap {
 			^map.at(\stage, stageName.asSymbol, \group)
 		},{	this.prWarnings(\notExistStage, thisMethod).warn; ^nil;	});
 	}
+
+	*playStage {|stageName|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
+		this.stageGroup(stageName).isPlaying_(true);
+			}
+	*stopStage {|stageName|
+		(QGui.debbuging and: thisClassDebugging).if({ "% [%]".format(thisMethod, stageName).postln });
+		this.stageGroup(stageName).isPlaying_(false);
+			}
 
 	//NODES///////////////////////////////////////////
 
@@ -505,4 +517,4 @@ QuantMap {
 		answ = "QuantMap method [*%]: %".format(method.name, msg);
 		^answ;
 	}
-}
+	}

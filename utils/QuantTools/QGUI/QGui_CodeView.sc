@@ -89,10 +89,11 @@ QGui_CodeView : UserView {
 			(unicode == 10).if({
 				"\n>>> FIRE %".format(view.string).postln;
 				this.safeTry(view.string);
-				this.colorizeSyntax(view.string, \var, Color.new255(255,255,255));
-				this.colorizeSyntax(view.string, \varName, Color.new255(250,220,100));
-				this.colorizeSyntax(view.string, \class, Color.new255(180,180,180));
-				this.colorizeSyntax(view.string, \nameControl, Color.new255(20,180,240));
+
+				// this.colorizeSyntax(view.string, \var, Color.new255(255,255,255));
+				// this.colorizeSyntax(view.string, \varName, Color.new255(250,220,100));
+				// this.colorizeSyntax(view.string, \class, Color.new255(180,180,180));
+				// this.colorizeSyntax(view.string, \nameControl, Color.new255(20,180,240));
 
 				this.doAction;
 			});
@@ -126,7 +127,7 @@ QGui_CodeView : UserView {
 		this.string_(sourceCode[1..sourceCode.size-2]);
 		// this.string_(function.def.sourceCode);
 
-		// this.safeTry(string);
+		this.safeTry(string);
 		// this.safeTry(sourceCode);
 	}
 
@@ -139,12 +140,13 @@ QGui_CodeView : UserView {
 		{true} {("QGui_CodeView displayState_(%) not define, use [\\isCode, \\isChanged, \\isError, \\isOver]".format(type)).warn};
 	}
 
-	safeTry {|string|
+	safeTry {|codeString|
+		(QGui.debbuging and: thisClassDebugging).if({("% [%]".format(thisMethod, codeString)).postln;});
 		// var function;
 
 		try {
 			// function = string.compile;
-			lastValidDef = string.compile;
+			lastValidDef = codeString.compile;
 			this.displayState_(\isCode);
 		}
 		{ |error|
@@ -156,6 +158,11 @@ QGui_CodeView : UserView {
 		("Constats" + lastValidDef.def.constants).postln;
 		("VarNames" + lastValidDef.def.varNames).postln;
 		// ("displayError" + displayError).postln;
+
+		this.colorizeSyntax(lastValidDef.def.sourceCode, \var, Color.new255(255,255,255));
+		this.colorizeSyntax(lastValidDef.def.sourceCode, \varName, Color.new255(250,220,100));
+		this.colorizeSyntax(lastValidDef.def.sourceCode, \class, Color.new255(180,180,180));
+		this.colorizeSyntax(lastValidDef.def.sourceCode, \nameControl, Color.new255(20,180,240));
 
 
 	}

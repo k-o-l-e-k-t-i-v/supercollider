@@ -73,8 +73,8 @@ QGui_PanelNodes : UserView {
 				QGui.addNode(\node);
 				this.positionOfNodes;
 				QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.refreshCoor });
-				this.doAction;
-				// QGui.refreshAll;
+				// this.doAction;
+				QGui.refreshAll;
 			};
 		);
 	}
