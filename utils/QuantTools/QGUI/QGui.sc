@@ -31,14 +31,12 @@ QGui {
 			canvan = QGui_Canvan(Rect(50,100,1000,800));
 			canvan.background_(qPalette.window);
 			canvan.front;
-
+			"QuantMap.addGui(canvan);".warn;
 			QuantMap.addGui(canvan);
 		});
 
 		super.class.refreshAll;
 	}
-
-
 
 	initDebugging{|bool|
 		debbuging = bool;
@@ -100,6 +98,7 @@ QGui {
 		name = QuantMap.uniqueName(this.getStages, name.asSymbol);
 		QuantMap.stageExist(name.asSymbol).not.if({
 			QuantMap.addStage(name.asSymbol);
+			QuantMap.addStageGui(name.asSymbol);
 			this.refreshAll;
 		});
 	}

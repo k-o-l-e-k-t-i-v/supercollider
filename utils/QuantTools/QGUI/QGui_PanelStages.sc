@@ -2,7 +2,7 @@ QGui_PanelStages : UserView {
 
 	classvar >thisClassDebugging = false;
 
-	var parent, bounds;
+	var parent;
 	var objects, <>stages;
 	var mapTextView;
 	var <>display;
@@ -23,7 +23,7 @@ QGui_PanelStages : UserView {
 		});
 
 		parent = argParent;
-		bounds = argBounds;
+		this.bounds = argBounds;
 
 		objects = Dictionary.new();
 		stages = Dictionary.new();
@@ -40,7 +40,7 @@ QGui_PanelStages : UserView {
 			// (this.name + "resize").warn;
 			objects[\ButtonAddStage].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 			QGui.getStagesGUI.do({|oneStage|
-				oneStage.bounds_(Rect.offsetEdgeTop(this.bounds, oneStage.positionY, 5, 5, 40));
+				oneStage.bounds_(Rect.offsetEdgeTop(this.bounds, oneStage.positionY, 5, 5, oneStage.bounds.height));
 			});
 
 			parent.refreshPanels;
@@ -70,6 +70,7 @@ QGui_PanelStages : UserView {
 			.colorFrame_(Color.new255(120,120,120))
 			.keepingState_(false)
 			.action_{|button|
+				">>>Button_StageAdd pressed".postln;
 				QGui.addStage(\temp);
 				this.positionOfStages;
 				this.doAction;
@@ -91,7 +92,7 @@ QGui_PanelStages : UserView {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
 
 		QGui.getStagesGUI.do({|oneStage, i|
-			yPositionStage = ((ySizeStage + 5)*i ) + yPositionStageStart;
+			yPositionStage = ((oneStage.bounds.height + 5)*i ) + yPositionStageStart;
 			oneStage.moveStage(yPositionStage);
 		});
 	}

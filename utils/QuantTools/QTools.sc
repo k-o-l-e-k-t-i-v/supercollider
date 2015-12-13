@@ -1,10 +1,11 @@
 QTools {
 
-	*version { ^0.24 }
+	*version { ^0.25 }
 
 	*gui{
 		Server.local.waitForBoot({
 			QuantMap.new();
+			"QuantMap.new().DONE".warn;
 			QGui.new();
 		});
 	}

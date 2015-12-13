@@ -2,7 +2,7 @@ QGui_Stage : UserView {
 
 	classvar >thisClassDebugging = false;
 
-	var parent, bounds;
+	var parent;
 	var objects;
 	var <>display;
 	var <>isCurrent;
@@ -23,11 +23,11 @@ QGui_Stage : UserView {
 		});
 
 		parent = argParent;
-		bounds = argBounds;
+		this.bounds = argBounds;
 
 		objects = Dictionary.new();
 		this.name = stageName;
-		this.setDisplay = parent.display;
+		// this.setDisplay = parent.display;
 		this.initControl;
 
 		( QGui.currentStage.asSymbol == this.name.asSymbol ).if(
@@ -48,6 +48,7 @@ QGui_Stage : UserView {
 
 		this.action_{
 			objects[\StageName].string = this.name;
+			// this.setDisplay = parent.display;
 		};
 
 		this.refresh;
@@ -86,7 +87,7 @@ QGui_Stage : UserView {
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, bool).postln; });
 
 		display = bool;
-		this.visible_(bool);
+		// this.visible_(bool);
 	}
 
 	moveStage{|y|
