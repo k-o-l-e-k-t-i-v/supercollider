@@ -396,6 +396,8 @@ QuantMap {
 				map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \group, group);
 				map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \curr, newNode);
 
+				this.addSlot(stageName, nodeName, 0, newNode.proxy[0]);
+
 				this.hasGui.if({
 					this.addNodeGui(stageName, newNode);
 					/*
@@ -618,6 +620,17 @@ QuantMap {
 		},{ this.prWarnings(\notExistStage, thisMethod).warn; ^nil; });
 	}
 
+	*removeControl { |stageName, nodeName, keyName|
+		map.removeEmptyAt(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \controls, keyName.asSymbol);
+	}
+
+	// Slots ////////////////////////////////////////////
+
+	*addSlot {|stageName, nodeName, index, function|
+		// var newControl = QuantControl(keyName, quant, function);
+		map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \slots, index.asSymbol, function);
+	}
+
 	////////////////////////////////////////////////
 
 	*uniqueName {|inArray, rootName|
@@ -679,6 +692,9 @@ QuantMap {
 
 						{ item.isKindOf(QuantControl) }
 						{ itemTxt = "QuantControl [%, %]".format(item.quant, item.fnc.asCompileString) }
+
+						{ item.isKindOf(Function) }
+						{ itemTxt = "Fnc %".format(item.def.sourceCode) }
 
 						{ item.isKindOf(QGui_PanelStages) }{ itemTxt = "QGui_PanelStages [display: %]".format(item.display) }
 						{ item.isKindOf(QGui_Stage) }{

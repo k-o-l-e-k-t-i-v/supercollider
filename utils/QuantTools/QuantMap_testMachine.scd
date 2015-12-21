@@ -40,3 +40,7 @@ QuantMap.controlExist(\default, \test, \moje5)
 a = QuantMap.getControl(\default, \test, \moje2)
 a.text
 
+QuantMap.addSlot(\default, \test, 0, {SinOsc.ar(440)})
+
+QuantMap.removeControl(\default, \test, \moje7)
+
