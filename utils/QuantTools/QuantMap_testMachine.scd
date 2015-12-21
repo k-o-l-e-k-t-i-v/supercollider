@@ -13,15 +13,30 @@ p = ProxySpace.push(s).makeTempoClock;
 };
 
 
-~test[1] = \map -> { QuantEnv(\amp, 2, [0,1,0], [0.25, 1.75], [5,-2]) };
-~test[2] = \map -> { QuantEnv(\freq, 8, [180,78,60],[0.05, 1.95]).cycle(\default, \phase2) };
+// ~test[1] = \map -> { QuantEnv(\amp, 2, [0,1,0], [0.25, 1.75], [5,-2]) };
+~test[1] = \qmap -> { QuantControl(\amp, 2, [0,1,0], [0.25, 1.75], [5,-2]) };
+// ~test[2] = \map -> { QuantEnv(\freq, 8, [180,78,60],[0.05, 1.95]).cycle(\default, \phase2) };
 )
-QTools.addNodes(\pokus, ~test)
 QTools.addNodes(\pokus, ~test2)
 
 QTools.print
-QTools.gui
 
 QTools.version
 
 QuantMap.nodes(\default)
+
+p
+
+currentEnvironment
+
+QTools.gui
+QTools.addNodes(\default, \test)
+QuantMap.addControl(\default, \test, \moje2)
+QuantMap.addControl(\default, \test, \moje7)
+QTools.print
+
+QuantMap.controlNames(\default, \test)
+QuantMap.controlExist(\default, \test, \moje5)
+a = QuantMap.getControl(\default, \test, \moje2)
+a.text
+

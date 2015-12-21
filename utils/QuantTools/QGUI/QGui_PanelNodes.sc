@@ -40,7 +40,7 @@ QGui_PanelNodes : UserView {
 		this.initControl;
 
 		this.onResize_{
-			(this.name + "resize").warn;
+			// (this.name + "resize").warn;
 			objects[\ButtonAddNode].bounds_(Rect.offsetEdgeTop(this.bounds, 5,5,5,15));
 			nodeView.bounds_(Rect.offsetRect(this.bounds, 5,20,5,5));
 
@@ -70,7 +70,7 @@ QGui_PanelNodes : UserView {
 			.keepingState_(false)
 			.action_{|button|
 				"\n>>> QGui_PanelNodes button AddNode".postln;
-				QGui.addNode(\node);
+				QGui.addNode("node");
 				this.positionOfNodes;
 				QGui.getNodesGUI(QGui.currentStage).do({|oneNode| oneNode.refreshCoor });
 				// this.doAction;

@@ -35,7 +35,7 @@ QGui_Canvan : Window {
 		};
 
 		this.asView.action_{
-			"CanvanAction".warn;
+			// "CanvanAction".warn;
 			panelMap.doAction;
 			panelStages.doAction;
 			panelNodes.doAction;

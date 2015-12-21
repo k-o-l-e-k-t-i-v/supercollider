@@ -4,19 +4,22 @@ QGui_Controler : UserView {
 
 	var parent, bounds;
 	var objects;
+	var nodeName;
 	var name;
+	var quant;
+	var code;
 	var <positionControlY;
 
-	*new { | parent, bounds, controlName|
+	*new { | parent, bounds, nodeName, controlKey, quant, fnc|
 		var me = super.new(parent, bounds ?? {this.sizeHint} );
 		me.canFocus = true;
-		me.init(parent, bounds, controlName);
+		me.init(parent, bounds, nodeName, controlKey, quant, fnc);
 		^me;
 	}
 
-	init { |argParent, argBounds, controlName|
+	init { |argParent, argBounds, argNodeName, controlKey, argQuant, fnc|
 		(QGui.debbuging and: thisClassDebugging).if({
-			"\n% - % [%, %]".format(thisMethod, controlName, argParent, argBounds).postln;
+			"\n% - % [%, %]".format(thisMethod, controlKey, argParent, argBounds).postln;
 		});
 
 		objects = Dictionary.new();
@@ -24,7 +27,10 @@ QGui_Controler : UserView {
 		parent = argParent;
 		bounds = argBounds;
 
-		name = controlName.asString;
+		nodeName = argNodeName;
+		name = controlKey.asString;
+		quant = argQuant;
+		code = fnc;
 
 		positionControlY = 0;
 
@@ -38,7 +44,7 @@ QGui_Controler : UserView {
 
 		this.onResize = {
 			objects[\keyName].bounds_(Rect.offsetCornerLT(this.bounds, 5,5,60,20));
-			objects[\controlerCode].bounds_(Rect.offsetCornerLT(this.bounds, 65,5,170,30));
+			objects[\controlerCode].bounds_(Rect.offsetCornerLT(this.bounds, 65,5,370,30));
 			objects[\controlerTime].bounds_(Rect.offsetCornerLT(this.bounds, 5,35,470,15));
 		};
 	}
@@ -51,12 +57,15 @@ QGui_Controler : UserView {
 		);
 
 		objects.put(\controlerCode, QGui_CodeView(this)
-			/*
-			.functionString(proxy.source)
+			// .string_(code.asCompileString)
+			.functionString(code)
+
 			.action_{|codeView|
-				QGui.editNode(this.name, 0, codeView.function);
+				"nodeName: %".format(nodeName).postln;
+				"codeView: %".format(codeView.function).postln;
+				// QGui.controlNode(nodeName, name, codeView.function);
 			}
-			*/
+
 		);
 
 		objects.put(\keyName, StaticText(this)

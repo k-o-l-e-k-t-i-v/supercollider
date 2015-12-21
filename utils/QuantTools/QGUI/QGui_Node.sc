@@ -3,24 +3,25 @@ QGui_Node : UserView {
 	classvar >thisClassDebugging = false;
 
 	var parent, bounds;
-	var proxy;
+	var qNode;
+	// var proxy;
 	var objects, controls;
 	var <>display;
 	var <positionNodeY;
 	var yPositionControl, yPositionControlStart, ySizeControl;
 
 
-	*new { | parent, bounds, nodeProxy |
+	*new { | parent, bounds, qNode |
 		var me = super.new(parent, bounds ?? {this.sizeHint} );
 		me.canFocus = true;
-		me.init(parent, bounds, nodeProxy);
+		me.init(parent, bounds, qNode);
 		^me;
 	}
 
-	init { |argParent, argBounds, nodeProxy|
+	init { |argParent, argBounds, argQNode|
 
 		(QGui.debbuging and: thisClassDebugging).if({
-			"\n% - % [%, %]".format(thisMethod, nodeProxy.envirKey, argParent, argBounds).postln;
+			"\n% - % [%, %]".format(thisMethod, argQNode.proxy.envirKey, argParent, argBounds).postln;
 		});
 
 		objects = Dictionary.new();
@@ -34,13 +35,15 @@ QGui_Node : UserView {
 		yPositionControlStart = 5;
 		ySizeControl = 50;
 
-		this.name = nodeProxy.envirKey;
+		qNode = argQNode;
+
+		this.name = qNode.nodeName;
 
 		// ndoeName.asSymbol.envirPut(node);
-		proxy = nodeProxy;
-		"proxy : %".format(proxy).postln;
-		"proxyControls : %".format(proxy.controlKeys).postln;
-		"proxySource : %".format(proxy.source.def.sourceCode).postln;
+		// proxy = nodeProxy;
+		"proxy : %".format(qNode.proxy).postln;
+		"proxyControls : %".format(qNode.proxy.controlKeys).postln;
+		"proxySource : %".format(qNode.proxy.source.def.sourceCode).postln;
 
 		positionNodeY = 0;
 
@@ -60,7 +63,8 @@ QGui_Node : UserView {
 		};
 
 		this.refreshCoor;
-		objects[\sourceCode].functionString(proxy[0]);
+		objects[\sourceCode].functionString(qNode.proxy[0]);
+
 	}
 
 	refreshCoor{
@@ -78,10 +82,31 @@ QGui_Node : UserView {
 
 	initControl {
 
+		controls = Dictionary.new();
+
 		objects.put(\sourceCode, QGui_CodeView(this)
 			.action_{|codeView|
+
 				QGui.editNode(this.name, 0, codeView.function);
+				qNode.initControlKeys;
 				this.doAction;
+
+				QGui.getNodeControlNames.do({|oneCnt|
+					// qNode.qControls.do({|oneCnt|
+					// key.postln;
+					controls.put(oneCnt.key.asSymbol,
+						QGui_Controler(
+							parent:	objects[\timeline],
+							bounds: Rect(5,5,400,50),
+							nodeName: this.name,
+							controlKey: oneCnt.key.asSymbol,
+							quant: oneCnt.quant,
+							fnc: oneCnt.fnc
+					));
+				});
+				this.positionOfCotrolers;
+				this.refreshCoor;
+				QGui.refreshAll;
 			}
 		);
 
@@ -114,13 +139,22 @@ QGui_Node : UserView {
 			.autohidesScrollers_(true)
 			.palette_(QGui.qPalette)
 		);
-
-		proxy.controlKeys.do({|key|
-			// key.postln;
-			controls.put(key.asSymbol, QGui_Controler(objects[\timeline], Rect(5,5,400,50), key.asSymbol));
+		/*
+		qNode.qControls.do({|oneCnt|
+		// key.postln;
+		controls.put(oneCnt.key.asSymbol,
+		QGui_Controler(
+		parent:	objects[\timeline],
+		bounds: Rect(5,5,400,50),
+		nodeName: this.name,
+		controlKey: oneCnt.key.asSymbol,
+		quant: oneCnt.quant,
+		fnc: oneCnt.fnc
+		));
 		});
-
-		this.positionOfCotrolers
+		*/
+		this.positionOfCotrolers;
+		// objects[\nodeName].doAction;
 	}
 
 	setDisplay_ {|bool|
@@ -138,30 +172,11 @@ QGui_Node : UserView {
 		});
 	}
 
-
-
 	moveNode{|y|
 		(QGui.debbuging and: thisClassDebugging).if({ "% - % [%]".format(thisMethod, this.name, y).postln; });
 		positionNodeY = y;
 	}
 
-	recall {
-
-		// (QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });
-
-		"Node.recall".warn;
-
-		// objects[\nodeName].string = this.name;
-		// objects[\sourceCode].functionString(proxy.source);
-		/*
-		this.bounds_(Rect.offsetEdgeTop(parent.bounds, positionNodeY, 5, 5, 200));
-		objects[\nodeName].bounds = Rect.offsetCornerLT(this.bounds, 5,5,60,20);
-		objects[\ButtonReleaseNode].bounds = Rect.offsetCornerLT(this.bounds, 595,5,15,15);
-		objects[\sourceCode].bounds_(Rect.offsetCornerLT(this.bounds, 5,30,600,100)).resize;
-		objects[\timeline].bounds_(Rect.offsetEdgeRight(this.bounds, 5,5,5,(this.bounds.width - objects[\sourceCode].bounds.width - 20)));
-		*/
-		// controls.do({|oneControl| oneControl.recall; });
-	}
 
 	draw {
 		(QGui.debbuging and: thisClassDebugging).if({ thisMethod.postln });

@@ -31,7 +31,6 @@ QGui {
 			canvan = QGui_Canvan(Rect(50,100,1000,800));
 			canvan.background_(qPalette.window);
 			canvan.front;
-			"QuantMap.addGui(canvan);".warn;
 			QuantMap.addGui(canvan);
 		});
 
@@ -41,16 +40,16 @@ QGui {
 	initDebugging{|bool|
 		debbuging = bool;
 		debbuging.if({
-			QuantMap.thisClassDebugging = true;
-			QGui.thisClassDebugging = true;
-			QGui_Canvan.thisClassDebugging = true;
-			QGui_PanelMap.thisClassDebugging = true;
-			QGui_PanelStages.thisClassDebugging = true;
-			QGui_Stage.thisClassDebugging = true;
-			QGui_PanelNodes.thisClassDebugging = true;
-			QGui_Node.thisClassDebugging = true;
-			QGui_Controler.thisClassDebugging = true;
-			QGui_CodeView.thisClassDebugging = true;
+			// QuantMap.thisClassDebugging = true;
+			// QGui.thisClassDebugging = true;
+			// QGui_Canvan.thisClassDebugging = true;
+			// QGui_PanelMap.thisClassDebugging = true;
+			// QGui_PanelStages.thisClassDebugging = true;
+			// QGui_Stage.thisClassDebugging = true;
+			// QGui_PanelNodes.thisClassDebugging = true;
+			// QGui_Node.thisClassDebugging = true;
+			// QGui_Controler.thisClassDebugging = true;
+			// QGui_CodeView.thisClassDebugging = true;
 		})
 	}
 
@@ -131,7 +130,8 @@ QGui {
 
 	// NODES ///////////////////////////////
 
-	*addNode {|name|
+	*addNode {|arrName|
+		/*
 		var proxy;
 		var currStage = QuantMap.stageCurrent;
 		var currGroup = this.getStageGroup(currStage);
@@ -145,13 +145,23 @@ QGui {
 		proxy.fadeTime = 4;
 		// proxy[0] = {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}; //.play(currGroup);
 		proxy.put(0, {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}, now:false); //.play(currGroup);
+*/
+		// QuantMap.addNode(currStage, proxy);
 
-		QuantMap.addNode(currStage, proxy);
+		var currStage = QuantMap.stageCurrent;
+		var name = QuantMap.uniqueName(this.getNodeNames(currStage), arrName.asSymbol);
+		name.postln;
+		QuantMap.addNode(currStage, name);
 		this.refreshAll;
 	}
 
 	*editNode{|nodeName, index, function|
 		QuantMap.editNode(QuantMap.stageCurrent, nodeName, index, function);
+		this.refreshAll;
+	}
+
+	*controlNode{|nodeName, key, function|
+		QuantMap.controlNode(QuantMap.stageCurrent, nodeName, key, function);
 		this.refreshAll;
 	}
 
@@ -172,8 +182,12 @@ QGui {
 
 	// CONTROL ///////////////////////////////
 
-	*addControl{|node, key|
+	*addControl{|nodeName, keyName|
+		QuantMap.addControl(QuantMap.stageCurrent, nodeName, keyName, 1, {120});
+	}
 
+	*getNodeControlNames {|stageName, nodeName|
+		^QuantMap.controlNames(stageName, nodeName);
 	}
 
 
