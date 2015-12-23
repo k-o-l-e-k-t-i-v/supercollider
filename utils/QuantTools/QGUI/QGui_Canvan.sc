@@ -20,13 +20,15 @@ QGui_Canvan : Window {
 		objects = Dictionary.new();
 		// this.asView.minWidth_(400);
 		// this.asView.minHeight_(200);
-		panelMap = QGui_PanelMap(this, Rect(0,0,350,150));
+		panelMap = QGui_PanelMap(this, Rect(0,0,500,150));
 		panelStages = QGui_PanelStages(this, Rect(0,0,250,150)).name_("panelStages");
 		panelNodes = QGui_PanelNodes(this, Rect(0,0,250,150)).name_("panelNodes");
 
 		this.refreshPanels;
 
 		this.initControls;
+		objects[\Button_Map].displayState_(\on).value_(1).refresh;
+
 		this.refreshCoor;
 
 		this.onClose_{
@@ -87,7 +89,9 @@ QGui_Canvan : Window {
 				this.bounds.width - panelMap.bounds.width - panelStages.bounds.width - 25
 			)
 		);
-
+		panelMap.doAction;
+		// panelStages.doAction;
+		// panelNodes.doAction;
 	}
 
 	initControls {
@@ -125,21 +129,20 @@ QGui_Canvan : Window {
 			.iconName("IconMap2")
 			.colorFrame_(Color.clear)
 			.action_{|button|
-				"\n>>>Button_Map pressed %".format(button.value).postln;
+				"\n>>> Button_Map pressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{ QGui.setDisplayPanel(\panelMap, true)},
 					{ QGui.setDisplayPanel(\panelMap, false)}
 				);
 				panelMap.doAction;
 			}
-			.displayState_(\on)
 		);
 		objects.put(\Button_Stage, QGui_Button(this)
 			.name_("ButtonStage")
 			.iconName("IconTime")
 			.colorFrame_(Color.clear)
 			.action_{|button|
-				"\n>>>Button_Node pressed %".format(button.value).postln;
+				"\n>>> Button_Stage pressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{ QGui.setDisplayPanel(\panelStages, true)},
 					{ QGui.setDisplayPanel(\panelStages, false)}
@@ -152,7 +155,7 @@ QGui_Canvan : Window {
 			.iconName("IconNode")
 			.colorFrame_(Color.clear)
 			.action_{|button|
-				"\nTimePressed %".format(button.value).postln;
+				"\n>>> Button_Node pressed %".format(button.value).postln;
 				(button.value == 1).if(
 					{ QGui.setDisplayPanel(\panelNodes, true)},
 					{ QGui.setDisplayPanel(\panelNodes, false)}

@@ -19,16 +19,26 @@ QuantNode {
 	// init{|proxy, slot, phase, qObject|
 	init{|argNodeName, stageGroup|
 
-		proxy = NodeProxy.audio(Server.local, 2);
-		argNodeName.asSymbol.envirPut(proxy);
+		argNodeName.asSymbol.envirGet.isNil.if({
+			"novy nodeProxy".warn;
+
+			proxy = NodeProxy.audio(Server.local, 2);
+			proxy.put(0, {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}, now:false); //.play(currGroup);
+			argNodeName.asSymbol.envirPut(proxy);
+		}, {
+			"neni novy nodeProxy".warn;
+			proxy = argNodeName.asSymbol.envirGet;
+		}
+		);
+
 		group = stageGroup;
 		proxy.fadeTime = 4;
 		// proxy[0] = {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}; //.play(currGroup);
-		proxy.put(0, {SinOsc.ar(\freq.kr(120)!2, mul:Saw.kr(1,0.25,0.4), add:\add.kr(0))}, now:false); //.play(currGroup);
+
 
 		nodeName = argNodeName;
 
-		this.initControlKeys;
+		// this.initControlKeys;
 		// this.slot = slot;
 		/*
 		qControls.isNil.if(

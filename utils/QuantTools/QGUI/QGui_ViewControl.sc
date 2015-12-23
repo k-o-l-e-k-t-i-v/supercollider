@@ -3,7 +3,7 @@ QGui_ViewControl : UserView {
 	classvar >displayMoveZone = false;
 
 	var parent, limits;
-	var edgeViews, moveView;
+	var <>edgeViews, moveView;
 	var >offset, manipulatorsZone;
 	var manipulatorMouseClick, screenMouseClick, manipulatorDrag, originalParentRect;
 	var routine;

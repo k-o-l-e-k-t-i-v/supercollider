@@ -5,7 +5,6 @@ QTools {
 	*gui{
 		Server.local.waitForBoot({
 			QuantMap.new();
-			"QuantMap.new().DONE".warn;
 			QGui.new();
 		});
 	}
@@ -21,7 +20,7 @@ QTools {
 			QuantMap.new();
 			QuantMap.addStage(stage);
 			nodes.do({|oneNode|
-				QuantMap.addNode(stage, oneNode);
+				QuantMap.addNode(stage, oneNode.envirKey);
 			});
 			this.print;
 		});

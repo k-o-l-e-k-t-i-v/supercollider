@@ -150,7 +150,7 @@ QGui {
 
 		var currStage = QuantMap.stageCurrent;
 		var name = QuantMap.uniqueName(this.getNodeNames(currStage), arrName.asSymbol);
-		name.postln;
+		"QGui.addNode name: %".format(name).postln;
 		QuantMap.addNode(currStage, name);
 		this.refreshAll;
 	}

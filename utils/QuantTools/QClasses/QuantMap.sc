@@ -149,6 +149,12 @@ QuantMap {
 
 	//PANELS///////////////////////////////////////////
 
+	*panelMap{
+		this.hasGui.if({
+			^map.at(\gui, \panelMap)
+		},{ this.prWarnings(\notInitGui, thisMethod).warn })
+	}
+
 	*panelStages{
 		this.hasGui.if({
 			^map.at(\gui, \panelStages)
@@ -397,6 +403,13 @@ QuantMap {
 				map.put(\stage, stageName.asSymbol, \nodes, nodeName.asSymbol, \curr, newNode);
 
 				this.addSlot(stageName, nodeName, 0, newNode.proxy[0]);
+				newNode.proxy.controlKeys.do({|oneKey|
+					// oneKey.postln;
+					this.addControl(stageName, nodeName, oneKey, 1, "nil...");
+
+
+					// qControls.put(oneKey.asSymbol, QuantControl(oneKey, 1, {Env( [0,1,0], [0.15,0.85], [8,-4] )}));
+				});
 
 				this.hasGui.if({
 					this.addNodeGui(stageName, newNode);

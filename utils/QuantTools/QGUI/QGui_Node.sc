@@ -88,22 +88,24 @@ QGui_Node : UserView {
 			.action_{|codeView|
 
 				QGui.editNode(this.name, 0, codeView.function);
-				qNode.initControlKeys;
+				// qNode.initControlKeys;
 				this.doAction;
-
+				/*
 				QGui.getNodeControlNames.do({|oneCnt|
-					// qNode.qControls.do({|oneCnt|
-					// key.postln;
-					controls.put(oneCnt.key.asSymbol,
-						QGui_Controler(
-							parent:	objects[\timeline],
-							bounds: Rect(5,5,400,50),
-							nodeName: this.name,
-							controlKey: oneCnt.key.asSymbol,
-							quant: oneCnt.quant,
-							fnc: oneCnt.fnc
-					));
+				// qNode.qControls.do({|oneCnt|
+				// key.postln;
+				controls.put(oneCnt.key.asSymbol,
+				QGui_Controler(
+				parent:	objects[\timeline],
+				bounds: Rect(5,5,400,50),
+				nodeName: this.name,
+				controlKey: oneCnt.key.asSymbol,
+				quant: oneCnt.quant,
+				fnc: oneCnt.fnc
+				));
 				});
+				*/
+
 				this.positionOfCotrolers;
 				this.refreshCoor;
 				QGui.refreshAll;
