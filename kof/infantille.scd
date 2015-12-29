@@ -19,15 +19,15 @@
   ~one.quant=2;
   ~one.fadeTime=0.2;
   ~one={
-    var mod2 = Duty.kr(1/50/~tempo*2,0,Dseq([1,2,1.5,1.25],inf)).lag(0.0025);
-    var mod = Duty.kr(4/~tempo*2,0,Dseq([1,2,1.5,1.25,1,2,1.5,1.333333],inf));
+    var mod2 = Duty.kr(1/[50,25,10,2]/~tempo*2,0,Dseq([1,2,1.5,1.25],inf)).lag(0.0025);
+    var mod = Duty.kr([4,3,16]*4/~tempo*2,0,Dseq([1,2,1.5,1.25,1,2,1.5,1.333333],inf));
     //         |       |       |       |       |  
-    var pat = [1,0,0,0].rotate(3);
-    var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
+    var pat = [1,1,0,0].rotate(1);
+    var imp = PulseDivider.kr(~tick.kr,[1,2,3,4]*2,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15*[1,2,4,8]],[3,-3],curve:'exp'),imp * hit);
+    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.0025,0.25*[1,2,4,8]],[3,-3],curve:'exp'),imp * hit);
     var sig = [
-      Dust.ar(50!2),
+      Dust.ar(1!2),
       SinOsc.ar(1500/mod!2),
       SinOsc.ar(50!2*mod+(env**50*500)),
       LFSaw.ar(1500/mod!2),
@@ -36,14 +36,15 @@
       Pulse.ar(4!2),
       SinOsc.ar(1500/1.5*mod),
       DC.ar(0),
-      LFPulse.ar(250/mod)
+      LFNoise0.ar(2500/mod)
     ];
+    sig = sig * LFNoise2.kr(1/4!4);
     sig = Select.ar(PulseCount.kr(imp*hit)/[1,2,3,4]%sig.size,sig);
     sig = sig * env;
     sig = CombN.ar(sig,1/40,1/[20,1000,50,250]*mod2,4)/64+sig;
     sig = LPF.ar(sig,[8000,800,2000,200]) + sig;
     sig = CompanderD.ar(sig,3/4,1/2,1/2)/2;
-    Splay.ar(sig,0.5,0.5,SinOsc.ar(1/4));
+    Splay.ar(sig,0.75,0.5,SinOsc.ar(1/[4,3,2,1]));
   };
   ~one.play;
 );
