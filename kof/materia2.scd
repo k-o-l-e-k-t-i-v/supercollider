@@ -15,7 +15,7 @@ p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
 
 
 (
-  p.clock.tempo_(60/60/10);
+  p.clock.tempo_(60/60);
   
   ~offset = (0..7)/8;
   
@@ -39,7 +39,6 @@ p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
         var imp = Impulse.ar(~tempo/4,(0..3)/4);
         var sig = Decay2.ar(imp,0.02,1/4);
         sig = sig * SinOsc.ar([700,71]+(sig**20*200),mul:0.5);
-        SendTrig.ar(imp,0,sig.abs*255);
         Splay.ar(sig,0.5,0.5);
     };
     ~one.play;
@@ -83,7 +82,7 @@ p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
 ~three={
   //         |       |       |       |       |  
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-    var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
+    var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.502,1.5],[3,-3],curve:'exp'),imp * hit);
   var sig = [
@@ -99,6 +98,7 @@ p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
   SinOsc.ar(50!2),
 ];
     sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
+    SendTrig.kr(imp*hit,1,(PulseCount.kr(imp*hit)%10));
  // sig = sig * env;
     Splay.ar(sig,0.75,0.15,SinOsc.ar(1/4));
 };
