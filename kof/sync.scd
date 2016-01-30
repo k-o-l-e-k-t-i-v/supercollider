@@ -28,7 +28,7 @@
 
 //receiver
 (
-    var port = 10000;
+    var port = 10001;
     thisProcess.openUDPPort(port); // attempt to open 10001
     thisProcess.openPorts;
     r = OSCFunc({arg ...args; 
