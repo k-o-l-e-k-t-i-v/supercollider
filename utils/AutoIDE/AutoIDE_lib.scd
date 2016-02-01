@@ -89,6 +89,9 @@ AutoIDE.prStore(\afreq, {~n1[2]=\set->Pbind(\args, [\freq], \dur,1, \freq, Pseq(
 //Gverb
 AutoIDE.prStore(\agverb, {~n1[30]=\filter->{arg in; GVerb.ar(in,roomsize:40)};});
 
+///comb
+AutoIDE.prStore(\acomb, {~n1[32]=\filter->{arg in; CombN.ar(in,2,0.5)};});
+
 //LPF
 AutoIDE.prStore(\alpf, {~n1[33]=\filter->{arg in; LPF.ar(in,\lpf.kr(400,2))};});
 
