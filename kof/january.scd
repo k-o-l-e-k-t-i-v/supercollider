@@ -1,7 +1,10 @@
-
+(
+  p=ProxySpace.push(s.boot);
+  p.makeTempoClock;
+);
 
 (
-  p.clock.tempo_(240/60);
+  p.clock.tempo_(120/60);
 
   ~offset = (0..7)/8;
 
@@ -23,13 +26,13 @@
   ~one={
     var mod = Duty.kr(16,0,Dseq(100/[1.5,2,1.333,3],inf)).lag(1);
     //         |       |       |       |       |  
-    var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-    var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
+    var pat = [1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+    var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
     var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5+SinOsc.kr(1/16,mul:0.5)],[3,-3],curve:'exp'),imp * hit);
-    var sig = SinOsc.ar(mod+(env**20*500),SinOsc.ar(4.01*(env))*env**6.2*8pi);
+    var sig = SinOsc.ar(mod+(env**20*200));
     sig = sig * env * LFNoise2.kr(1/4!2).range(0.25,1);
-    Splay.ar(sig,0.005,0.15);
+    Splay.ar(sig,0.005,0.25);
   };
   ~one.play;
 );
@@ -215,11 +218,14 @@
 
 (
   ~compress={
-    var sig = ~one.ar+~two.ar+~three.ar+~four.ar+~oo.ar+~bbas.ar+~aa.ar+~mel.ar;
+    var sig = []++~one.ar++~two.ar++~three.ar++~four.ar++~oo.ar++~bbas.ar++~aa.ar++~mel.ar;
+     
     //sig = DelayN.ar(sig,(1..4),(1..4))*LFNoise2.kr(1/4!4)+sig;
     sig = GVerb.ar(LPF.ar(sig,7500),[30,10],[3,4],SinOsc.kr(1/16/[4.0111,4.1]).range(0.1,0.9),[0.22,0.9],spread:55)/128.0+sig;
-    sig = CompanderD.ar(sig,3/4,1/2,1/2,0.00001,0.5);
+    sig = Mix.ar(CompanderD.ar(sig*LFNoise2.kr(1/4!8).range(0.2,0.7),3/4,1/3.5,1/2,0.00001,0.5));
     Splay.ar(sig,0.82,0.33,SinOsc.kr(1/4.1)*pi);
   };
   ~compress.play;
 )
+
+~compress.stop(15);
