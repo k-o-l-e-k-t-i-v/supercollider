@@ -219,7 +219,7 @@
     //sig = DelayN.ar(sig,(1..4),(1..4))*LFNoise2.kr(1/4!4)+sig;
     sig = GVerb.ar(LPF.ar(sig,7500),[30,10],[3,4],SinOsc.kr(1/16/[4.0111,4.1]).range(0.1,0.9),[0.22,0.9],spread:55)/128.0+sig;
     sig = CompanderD.ar(sig,3/4,1/2,1/2,0.00001,0.5);
-    Splay.ar(sig,0.82,0.133,SinOsc.kr(1/4.1)*pi);
+    Splay.ar(sig,0.82,0.33,SinOsc.kr(1/4.1)*pi);
   };
   ~compress.play;
 )
