@@ -23,7 +23,7 @@
 ~deep.quant=2;
 ~deep.fadeTime=2.2;
 ~deep={
-  var mod = Duty.kr(1/4,0,Dseq([1,2,1,1.5,1,4],inf));
+  var mod = Duty.kr(4,0,Dseq([1,2,1,1.5,1,4],inf));
   //         |       |       |       |       |  
   var pat = [
     1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,
