@@ -10,7 +10,7 @@ Kolektiv(\kof)
 
 
 (
-  p.clock.tempo_(120/60);
+  p.clock.tempo_(120/60*2);
   
   ~offset = (0..7)/8;
   
@@ -27,18 +27,23 @@ Kolektiv(\kof)
 ~input.quant=2;
 ~input.fadeTime=4.2;
 ~input={
-  var mod = Duty.kr(4,0,Dseq([1,2,1.5,1.25],inf));
+  var mod = Duty.kr(~tempo/16,0,Dseq([1,2,1.5,1.25],inf));
   //         |       |       |       |       |  
-  var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+  var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
-  var sig = AudioIn.ar([0,1,2,3],mul:0.95);
-  sig = Normalizer.ar(sig);
-  sig = PitchShift.ar(sig,0.2,mod);
- // sig = sig * env;
- //sig = DelayN.ar(sig,1,[1,2,4,8])+sig;
-  Splay.ar(sig,0.75,0.15);
+  var sig = AudioIn.ar([1,2],mul:1);
+  //sig = Resonz.ar(sig,500*[1,2,4,8,16],0.02) * LFSaw.ar(~tempo.kr/[1,2,3,4]).exprange(0.001,1);
+  
+  sig = RLPF.ar(sig,1502*(1..8).reciprocal,0.5);
+  sig= HPF.ar(sig,500);
+  //sig = Normalizer.ar(sig);
+ // sig = PitchShift.ar(sig,0.25,mod);
+  //sig = sig * env;
+  sig = DelayN.ar(sig,1,[1,2,4,8])+sig;
+  sig = GVerb.ar(sig,100,10)/2+sig;
+  Splay.ar(sig,0.75,0.55);
 };
 ~input.play;
 );
@@ -57,7 +62,7 @@ Kolektiv(\kof)
 ~kick={
   //         |       |       |       |       |  
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,[],~counter.kr);
+  var imp = PulseDivider.kr(~tick.kr,[2],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,3.5],[3,-3],curve:'exp'),imp * hit);
   var sig = SinOsc.ar(50+(env**50*500));
@@ -94,7 +99,7 @@ Kolektiv(\kof)
   ];
   sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
   //sig = sig * env;
-  Splay.ar(sig,0.75,0.5,SinOsc.ar(4));
+  Splay.ar(sig,0.75,0.25,SinOsc.ar(4));
 };
 ~ws.play;
 );
@@ -165,7 +170,7 @@ Kolektiv(\kof)
   var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
-  var sig = LFNoise2.ar(10);
+  var sig = LFNoise2.ar(1000);
   sig = sig * env;
   Splay.ar(sig,0.75,0.5);
 };

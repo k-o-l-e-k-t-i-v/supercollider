@@ -1,41 +1,44 @@
 
 
-
-
-// one synth ///////////////////////////////////////
-
 (
-~one.ar(2);
-~one.quant=2;
-~one.fadeTime=4;
-~one={
-    var sig = SinOsc.ar(16000/16*(1..16)+LFTri.ar((16..1)/4).range(-400,400)) * LFPulse.ar(1/(1..16)) ;
-  Splay.ar(sig,0.5,0.0001);
-};
-~one.play;
+  p=ProxySpace.push(s.reboot);
+  e=ProxySubmix.new(\filter);
+  m = ProxyMixer.new(p);
 );
-~one.stop(4);
-~one.clear;
-~one.pause;
-~one.resume;
 
 
-// two synth ///////////////////////////////////////
 
 (
-~two.quant=1;
-~two.fadeTime=1.02;
-~two={
+  var tempo = 4/3;
+  var offset = (0..7)/8;
+  t = TempoClock.new(tempo);
+  ~tick.quant = 1;
+  ~tick = {Mix(Impulse.kr( tempo / 2 , offset ))};
+  
+  offset = (0..7)+0.5/8;
+  ~tick2.quant = 1;
+  ~tick2 = {Mix(Impulse.kr( tempo / 2 , offset ))};
+)
+
+
+
+// kick synth ///////////////////////////////////////
+
+(
+~kick.quant=1;
+~kick.fadeTime=1.02;
+~kick={
   var imp = PulseDivider.kr(~tick.kr,[4,8,16]*2);
   var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3]),imp);
   var sig = SinOsc.ar(env**[80,120,400]*800+80);
   sig = sig * env;
-  Splay.ar(sig,0.25,~n2);
+  Splay.ar(sig,0.25,0.5);
 };
-~two.play;
+e.addMix(~kick,postVol:true);
+~kick.play;
 );
-~two.stop(7);
-~two.clear;
+~kick.stop(7);
+~kick.clear;
 
 
 // bb synth ///////////////////////////////////////
@@ -58,40 +61,63 @@ e.addMix(~bb,postVol:true);
 ~bb.clear;
 
 
-// three synth ///////////////////////////////////////
+// hat synth ///////////////////////////////////////
 
 (
-~three.quant=1;
-~three.fadeTime=0.02;
-~three={
+~hat.quant=1;
+~hat.fadeTime=0.02;
+~hat={
   var imp = PulseDivider.kr(~tick.kr,[4,16]);
   var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,[0.15,2]],[3,-3]),imp);
   var sig = WhiteNoise.ar(0.5!2);
   sig = HPF.ar(sig,LFNoise2.kr(1/16!4).range(1000,16000));
   sig = sig * env;
   sig = sig + (CombC.ar(sig,1/32,1/33,1) * LFPulse.ar(1));
-  Splay.ar(sig,0.25,~n3);
+  Splay.ar(sig,0.25,0.5);
 };
-~three.play;
+e.addMix(~hat,postVol:true);
+~hat.play;
 );
-~three.stop(7);
-~three.clear;
+~hat.stop(7);
+~hat.clear;
 
 
-// four synth ///////////////////////////////////////
+// high synth ///////////////////////////////////////
 
 (
-~four.quant=1;
-~four.fadeTime=0.02;
-~four={
+~high.quant=1;
+~high.fadeTime=0.02;
+~high={
   var imp = PulseDivider.kr(~tick.kr,32);
   var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,4.5],[3,-3]),imp);
   var sig = SinOsc.ar(5000 + SinOsc.kr(11).range(-10,10),mul:0.02);
   sig = sig * env;
-  Splay.ar(sig,0.25,~n4);
+  Splay.ar(sig,0.25,0.5);
 };
-~four.play;
+e.addMix(~high,postVol:true);
+~high.play;
 );
-~four.stop(7);
-~four.clear;
+~high.stop(7);
+~high.clear;
 
+
+
+// fil filter ///////////////////////////////////////
+
+(
+~fil.quant=1;
+~fil.fadeTime=1;
+~fil={
+  var high,mid,low;
+  var sig = e.ar;
+  sig = GVerb.ar(HPF.ar(sig,400),40)/8 + LPF.ar(sig,400);
+  low = CompanderD.ar(LPF.ar(sig,800),3/4,1/2,1/2);
+  mid = CompanderD.ar(BPF.ar(sig,800,2),3/4,1/2,1/2);
+  high = CompanderD.ar(HPF.ar(sig,800),3/4,1/2,1/2);
+  sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
+  Splay.ar(sig,0.25,0.25);
+};
+~fil.play;
+);
+~fil.stop(7);
+~fil.clear;

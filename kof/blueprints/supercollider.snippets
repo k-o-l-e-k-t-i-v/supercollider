@@ -240,3 +240,8 @@ snippet tick
 		
 		~counter = {PulseCount.kr(~tick.kr)};
 	);
+snippet mixer
+	(
+	n = ProxyMixer(p,32);
+	n.parent.alwaysOnTop_(true);
+	)
