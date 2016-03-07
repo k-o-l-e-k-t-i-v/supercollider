@@ -43,27 +43,31 @@
 // sss synth ///////////////////////////////////////
 
 (
-~sss.ar(2);
-~sss.quant=2;
-~sss.fadeTime=0.2;
-~sss={
-  //         |       |       |       |       |  
-  var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
-  var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
-  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
-  var sig = [
-  SinOsc.ar(100!2,SinOsc.kr(4)),
-  LFSaw.ar(50!2),
-  LFNoise2.ar(LFNoise2.kr(1/4).range(4000,16000)),
-  Pulse.ar(4!2),
-  ];
-  sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
-  sig = sig * env;
-  sig = CombN.ar(sig,1/4,1/4,4);
-  Splay.ar(sig,0.75,0.25);
-};
-~sss.play;
+  ~sss.ar(2);
+  ~sss.quant=2;
+  ~sss.fadeTime=0.2;
+  ~sss={
+    //         |       |       |       |       |  
+    var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
+    var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
+    var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
+    var sig = [
+      SinOsc.ar(100!2,SinOsc.kr(4)),
+      LFSaw.ar(50!2),
+      LFNoise2.ar(LFNoise2.kr(1/4).range(4000,16000)),
+      Pulse.ar(4!2),
+      SinOsc.ar(100!2,SinOsc.kr(4)),
+      LFSaw.ar(100!2),
+      LFNoise2.ar(LFNoise2.kr(1/4).range(400,16000)),
+      Pulse.ar(2!2)
+    ];
+    sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
+    sig = sig * env;
+    sig = CombN.ar(sig,1/2,1/4,4);
+    Splay.ar(sig,0.75,0.25,SinOsc.kr(~tempo/4)*2pi);
+  };
+  ~sss.play;
 );
 ~sss.stop(4);
 ~sss.clear;
