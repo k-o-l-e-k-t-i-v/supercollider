@@ -54,7 +54,7 @@
   sig = CompanderD.ar(sig,3/4,1/3,1/2);
   sig = Limiter.ar(sig,0.95)/2;
   sig = LPF.ar(GVerb.ar(sig,90,3)/2,2000)+sig/2;
-  Splay.ar(sig,0.95,0.125);
+  Splay.ar(sig,0.95,0.125,SinOsc.kr(4.1));
 };
 ~scanner.play;
 );
