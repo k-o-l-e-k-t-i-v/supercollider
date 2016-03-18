@@ -14,7 +14,6 @@
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );
 ~parksynth.stop(15);

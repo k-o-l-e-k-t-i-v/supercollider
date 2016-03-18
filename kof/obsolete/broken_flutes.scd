@@ -23,7 +23,6 @@ sig = BBandPass.ar(sig,LFDNoise1.ar(1!8).range(400,18000)) ;
   sig = GVerb.ar(sig,[5,6])/2+(sig*LFSaw.ar(1/8/fib(8)).exprange(0.001,1));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~fader,postVol:true);
 ~fader.play;
 );
 ~fader.stop(7);
