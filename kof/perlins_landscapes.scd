@@ -1,5 +1,22 @@
 
 
+// ssss synth ///////////////////////////////////////
+
+(
+~ssss.ar(2);
+~ssss.quant=2;
+~ssss.fadeTime=1;
+~ssss={
+  var sig = VarSaw.ar(MouseX.kr(514,520)*[1.5,1.333,4,8]);
+  Splay.ar(sig,0.95,0.5);
+};
+~ssss.play;
+);
+~ssss.stop(4);
+~ssss.clear;
+~ssss.pause;
+~ssss.resume;
+
 Tdef(\reb,{loop{~one.rebuild;32.wait;}}).play;
 Tdef(\reb).stop;
 
