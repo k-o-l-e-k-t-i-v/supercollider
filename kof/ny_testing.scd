@@ -24,27 +24,27 @@ b = Buffer.read(s,"/home/kof/marimba.wav");
 // player synth ///////////////////////////////////////
 
 (
-    ~marimba.ar(2);
-    ~marimba.quant=2;
-    ~marimba.fadeTime=2.02;
-    ~marimba={
+    ~five.ar(2);
+    ~five.quant=2;
+    ~five.fadeTime=2.02;
+    ~five={
         var mod = 1;
         var spread = 0.0;
-        var pos = (1..4)/16 + LFSaw.ar(1/16);
+        var pos = (1..4)/16 + LFSaw.ar(1/1600);
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(3);
-        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+        var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
         var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
         var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
 
         sig = sig * env;
-        Splay.ar(sig.flat,0.5,0.5);
+        Splay.ar(sig.flat,0.5,~n5);
     };
-    ~marimba.play;
+    ~five.play;
 );
-~marimba.stop(7);
-~marimba.clear;
+~five.stop(7);
+~five.clear;
 
 
 b = Buffer.read(s,"/home/kof/vendula.wav");
@@ -52,10 +52,10 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
 // player synth ///////////////////////////////////////
 
 (
-    ~smp.ar(2);
-    ~smp.quant=2;
-    ~smp.fadeTime=2.02;
-    ~smp={
+    ~six.ar(2);
+    ~six.quant=2;
+    ~six.fadeTime=2.02;
+    ~six={
         var mod = 1*((1..16).reciprocal);
         var spread = 0.0;
         var pos = (1..4)/80+LFSaw.ar(1/100);
@@ -68,34 +68,35 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
 
         sig = sig * env;
         //sig = CompanderD.ar(sig,3/4,1/2,1/2);
-        Splay.ar(sig[0]!2,0.05,0.5);
+        Splay.ar(sig[0]!2,0.05,~n6);
     };
-    ~smp.play;
+    ~six.play;
 );
-~smp.stop(7);
-~smp.clear;
+~six.stop(7);
+~six.clear;
 
 
-// kick synth ///////////////////////////////////////
+// two synth ///////////////////////////////////////
 
 (
-    ~kick.ar(2);
-    ~kick.quant=2;
-    ~kick.fadeTime=0.2;
-    ~kick={
+    ~two.ar(2);
+    ~two.quant=2;
+    ~two.fadeTime=0.2;
+    ~two={
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
+        var imp = PulseDivider.kr(~tick.kr,[4,4,8,16],~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = SinOsc.ar(50+(env**100*100));
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,5.5],[3,-3],curve:'exp'),imp * hit);
+        var sig = SinOsc.ar(50+(env**10*100));
         sig = sig * env;
-        Splay.ar(sig,0.75,0.75);
+        Splay.ar(sig,0.75,~n2);
     };
-    ~kick.play;
+    ~two.play;
 );
-~kick.pause;
-~kick.resume;
+~two.pause;
+~two.resume;
+~two.stop;
 
 // ff filter ///////////////////////////////////////
 
@@ -118,52 +119,60 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
 ~ff.stop(7);
 ~ff.clear;
 
-// ticka synth ///////////////////////////////////////
+// three synth ///////////////////////////////////////
 
 (
-    ~ticka.ar(2);
-    ~ticka.quant=2;
-    ~ticka.fadeTime=0.2;
-    ~ticka={
+    ~three.ar(2);
+    ~three.quant=2;
+    ~three.fadeTime=0.2;
+    ~three={
         //         |       |       |       |       |  
-        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
-        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = LFNoise2.ar(500);
+        var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
+        var sig = LFNoise2.ar(15000);
         sig = sig * env;
-        Splay.ar(sig,0.75,0.5);
+        Splay.ar(sig,0.75,~n3);
     };
-    ~ticka.play;
+    ~three.play;
 );
-~ticka.stop(7);
-~ticka.pause;
-~ticka.resume;
+~three.stop(7);
+~three.pause;
+~three.resume;
 
-// voice synth ///////////////////////////////////////
+// four synth ///////////////////////////////////////
 
 (
-    ~voice.ar(2);
-    ~voice.quant=2;
-    ~voice.fadeTime=4.2;
-    ~voice={
+    ~four.ar(2);
+    ~four.quant=2;
+    ~four.fadeTime=4.2;
+    ~four={
         //         |       |       |       |       |  
-        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0].rotate(3);
+        var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = AudioIn.ar([0,1])*2;
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
+        var sig = AudioIn.ar([0,1])*1;
         //sig = Normalizer.ar(sig);
-        sig = CompanderD.ar(sig,3/4,1/2,1/2);
-        //sig = PitchShift.ar(sig,0.025,0.95+(1..4).reciprocal,0.001,0.1);
+        sig = CompanderD.ar(sig,3/4,1/3,1/2);
+        sig = PitchShift.ar(sig,0.025,[1,0.5,2,1.5],0.001,0.1);
         sig = Limiter.ar(sig);
-        //sig = CombN.ar(sig,1/4,1/4,8)+sig;
-        //sig = Greyhole.ar(sig);
-        sig = sig * env;
-        Splay.ar(sig,0.75,0.5);
+        sig = CombN.ar(sig,4,[1,2,3,4]*4,64)+sig;
+        //sig = LPF.ar(sig,[5000,2500,1500,10000]);
+        // sig = Greyhole.ar(sig)/4+sig;
+        //sig = sig * env;
+        sig = Notch.ar(sig,450);
+        Splay.ar(sig.flat,0.005,~n4);
     };
-    ~voice.play;
+    ~four.play;
 );
-~voice.stop(4);
-~voice.pause;
-~voice.resume;
+~four.stop(4);
+~four.pause;
+~four.resume;
+
+
+(
+    p=ProxySpace.push(s.reboot);
+    p.makeTempoClock;
+);

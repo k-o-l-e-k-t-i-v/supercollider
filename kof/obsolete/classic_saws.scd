@@ -15,7 +15,6 @@
   sig = GVerb.ar(sig,100) + LPF.ar(sig/2,800);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );
 ~saw.stop(30);

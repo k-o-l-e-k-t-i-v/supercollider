@@ -67,13 +67,14 @@ Ndef(\Low).quant = 2.0;
 
 t = Tuning.harmonic;
 
-Ndef(\Low,{Splay.ar(
+Ndef(\Low,{
 
 	var mod,melody,notes;
 	mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/4)),2*31.415926536/[1,2,4,2,1,2,4,8]);
 
 	melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4])),[1,0.5,4,0.25,1.5,4,2,1.5]);
 	notes = t.cents.at([1,2,7]) / mod * melody;
+    Splay.ar(
 
 	FreeVerb.ar(
 		RLPF.ar(
@@ -100,11 +101,12 @@ Ndef(\Long).quant = 2.0;
 
 t = Tuning.harmonic;
 
-Ndef(\Long,{Splay.ar(
+Ndef(\Long,{
 
 	var modlong,mod,melody,notes;
 	modlong = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8]/16)),2*[1,2,4,2,1,2,4,8]);
 	mod = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8,1/16]/8)),modlong*31.415926536/[1,2,4,2,1,2,4,8]);
+    Splay.ar(
 
 	melody = Select.kr(Stepper.kr(Impulse.kr([1/2,1/4,1/8,1/16]/8)),[1,0.5,4,0.25,1.5,4,2,1.5]);
 	notes = t.cents.at([1,2,7,11]) / mod / melody;
@@ -130,7 +132,8 @@ Ndef(\Low).scope(2,zoom:4)
 Ndef(\Hiss).fadeTime = 2.0;
 Ndef(\Hiss).quant = 2.0;
 
-Ndef(\Hiss,{Splay.ar(
+Ndef(\Hiss,{
+    Splay.ar(
 	RLPF.ar(
 		XFade2.ar(
 			WhiteNoise.ar(0.05!4),
@@ -152,7 +155,8 @@ Ndef(\Hiss,{Splay.ar(
 Ndef(\Beat).fadeTime = 2.0;
 Ndef(\Beat).quant = 2.0;
 
-Ndef(\Beat,{Splay.ar(
+Ndef(\Beat,{
+    Splay.ar(
 	RLPF.ar(
 		XFade2.ar(
 			SinOsc.ar([55,56],mul:0.4).distort,

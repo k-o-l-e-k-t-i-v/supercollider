@@ -9,7 +9,6 @@
   sig = LPF.ar(sig,LFSaw.ar(4).exprange(10.001,1000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 13.161408943, 'me', "(
@@ -20,7 +19,6 @@ e.addMix(~impressum,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 26.163162565, 'me', "(
@@ -31,7 +29,6 @@ e.addMix(~impressum,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[1,1,1,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 33.653242234, 'me', "(
@@ -42,7 +39,6 @@ e.addMix(~impressum,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[1,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 41.915073788, 'me', "(
@@ -53,7 +49,6 @@ e.addMix(~impressum,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[4,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 54.013751098, 'me', "(
@@ -64,7 +59,6 @@ e.addMix(~impressum,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[4,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 63.719770108, 'me', "(
@@ -75,7 +69,6 @@ e.addMix(~impressum,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[4,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 68.247885518, 'me', "(
@@ -86,7 +79,6 @@ e.addMix(~impressum,postVol:true);
   sig = RLPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[4,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 75.519347817, 'me', "(
@@ -97,7 +89,6 @@ e.addMix(~impressum,postVol:true);
   sig = RLPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[4,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 88.407437156, 'me', "(
@@ -108,7 +99,6 @@ e.addMix(~impressum,postVol:true);
   sig = RLPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,100*[4,1,20,10]));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 102.858188679, 'me', "(
@@ -119,7 +109,6 @@ e.addMix(~impressum,postVol:true);
   sig = RLPF.ar(sig,LFSaw.ar([1,2,3,4]).exprange(10.001,1000*[4,1,20,10])) * Pulse.ar([1,2,3,4]);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 120.741689814, 'me', "(
@@ -146,7 +135,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 135.672104862, 'me', "(
@@ -158,7 +146,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 151.662852752, 'me', "(
@@ -170,7 +157,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 167.250041004, 'me', "(
@@ -197,7 +183,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 195.843962924, 'me', "(
@@ -209,7 +194,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 203.860927244, 'me', "(
@@ -221,7 +205,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 209.347908728, 'me', "(
@@ -233,7 +216,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 230.994792639, 'me', "(
@@ -245,7 +227,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 237.865012943, 'me', "(
@@ -257,7 +238,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 243.414051934, 'me', "(
@@ -269,7 +249,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 259.273420251, 'me', "(
@@ -281,7 +260,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 272.422559427, 'me', "(
@@ -293,7 +271,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 287.716070532, 'me', "(
@@ -305,7 +282,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.25);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 292.503606586, 'me', "(
@@ -317,7 +293,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 300.962264786, 'me', "(
@@ -374,7 +349,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 329.432783812, 'me', "(
@@ -386,7 +360,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 341.226856082, 'me', "(
@@ -398,7 +371,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 361.270798093, 'me', "(
@@ -410,7 +382,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 372.097468395, 'me', "(
@@ -422,7 +393,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 383.189474491, 'me', "(
@@ -434,7 +404,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 390.45083294, 'me', "(
@@ -446,7 +415,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 395.973419275, 'me', "(
@@ -458,7 +426,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 416.458546978, 'me', "(
@@ -470,7 +437,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 431.825790963, 'me', "(
@@ -482,7 +448,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 436.847101338, 'me', "(
@@ -494,7 +459,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 440.713764971, 'me', "(
@@ -506,7 +470,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 453.180374048, 'me', "(
@@ -518,7 +481,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 456.922545781, 'me', "(
@@ -530,7 +492,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 462.092809579, 'me', "(
@@ -542,7 +503,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 464.212716944, 'me', "(
@@ -554,7 +514,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 469.74284307, 'me', "(
@@ -566,7 +525,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 472.481789637, 'me', "(
@@ -578,7 +536,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 479.29071376, 'me', "(
@@ -590,7 +547,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 482.25346477, 'me', "(
@@ -602,7 +558,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 484.685180816, 'me', "(
@@ -614,7 +569,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 491.339155045, 'me', "(
@@ -626,7 +580,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 496.315484261, 'me', "(
@@ -638,7 +591,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 498.798806697, 'me', "(
@@ -650,7 +602,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 501.841219189, 'me', "(
@@ -662,7 +613,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 504.02041594, 'me', "(
@@ -674,7 +624,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 509.373544617, 'me', "(
@@ -686,7 +635,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 511.391186414, 'me', "(
@@ -698,7 +646,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 520.580157016, 'me', "(
@@ -710,7 +657,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 528.726344498, 'me', "(
@@ -722,7 +668,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 532.736325183, 'me', "(
@@ -734,7 +679,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 536.008936695, 'me', "(
@@ -746,7 +690,6 @@ e.addMix(~impressum,postVol:true);
 
   Splay.ar(sig.flat.distort,0.25,0.5);
 };
-e.addMix(~impressum,postVol:true);
 ~impressum.play;
 );" ],
 [ 545.698653312, 'me', "(

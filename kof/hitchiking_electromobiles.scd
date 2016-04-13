@@ -26,7 +26,7 @@
 ~sss={
   //         |       |       |       |       |  
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+  var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,0.6,1,0.001],[0.2,0.5,0.2],[3,1,-3],curve:'exp'),imp * hit);
   var sig = SinOsc.ar(LFNoise2.ar(4!8).range(10,16000),mul:0.1) * Decay.ar(Dust.ar(2!16),0.02);
@@ -34,7 +34,7 @@
   sig = CombN.ar(sig,1/2,1/LFNoise2.ar(1/8/fib(16)).range(1,50),20)+sig;
   sig = Normalizer.ar(sig) * LFTri.ar(~tempo.kr/4/fib(8)).exprange(0.001,0.2);
   //sig = sig * env;
-  Splay.ar(sig,0.25,0.5);
+  Splay.ar(sig,0.25,0.25);
 };
 ~sss.play;
 );

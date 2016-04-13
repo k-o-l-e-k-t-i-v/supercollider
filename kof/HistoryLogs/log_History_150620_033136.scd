@@ -9,7 +9,6 @@
   sig = sig* LFSaw.ar(1/4).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 17.47035121, 'me', "(
@@ -20,7 +19,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 32.149178747, 'me', "(
@@ -31,7 +29,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 39.101234699, 'me', "(
@@ -42,7 +39,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 42.190797576, 'me', "(
@@ -53,7 +49,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 44.153239199, 'me', "(
@@ -64,7 +59,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 57.828134168, 'me', "(
@@ -75,7 +69,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 63.317383522, 'me', "(
@@ -86,7 +79,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 68.654672968, 'me', "(
@@ -97,7 +89,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 75.470909271, 'me', "(
@@ -108,7 +99,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 81.603732724, 'me', "(
@@ -119,7 +109,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 88.207672895, 'me', "(
@@ -130,7 +119,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 103.497672474, 'me', "(
@@ -141,7 +129,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 111.543255034, 'me', "(
@@ -152,7 +139,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(1/4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 134.078972162, 'me', "(
@@ -163,7 +149,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 148.465112529, 'me', "(
@@ -174,7 +159,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 154.867672939, 'me', "(
@@ -185,7 +169,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 163.429067327, 'me', "(
@@ -196,7 +179,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 169.14985102, 'me', "(
@@ -207,7 +189,6 @@ e.addMix(~saw,postVol:true);
   sig = sig* LFSaw.ar(4/fib(8)).exprange(0.001,1) ;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 178.994533725, 'me', "(
@@ -219,7 +200,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 206.161240978, 'me', "(
@@ -231,7 +211,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 212.530555594, 'me', "(
@@ -243,7 +222,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 301.71495744, 'me', "(
@@ -255,7 +233,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 310.528612427, 'me', "(
@@ -267,7 +244,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 319.444456296, 'me', "(
@@ -279,7 +255,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 323.044953, 'me', "(
@@ -291,7 +266,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 325.690371171, 'me', "(
@@ -303,7 +277,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 337.632017554, 'me', "(
@@ -315,7 +288,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 347.422018811, 'me', "(
@@ -327,7 +299,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 350.439328913, 'me', "(
@@ -339,7 +310,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 355.422548301, 'me', "(
@@ -351,7 +321,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 359.872466918, 'me', "(
@@ -363,7 +332,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 365.890752314, 'me', "(
@@ -375,7 +343,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 372.230091762, 'me', "(
@@ -387,7 +354,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 378.282851613, 'me', "(
@@ -399,7 +365,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 432.724817903, 'me', "(
@@ -411,7 +376,6 @@ e.addMix(~saw,postVol:true);
   sig = LPF.ar(sig,800) + Resonz.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(40.001,10000));
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~saw,postVol:true);
 ~saw.play;
 );" ],
 [ 462.177013349, 'me', "(

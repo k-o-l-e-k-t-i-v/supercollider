@@ -67,3 +67,33 @@ AutoIDE.prStore(\ndstart,{~nodeName.play(vol: 0.0, fadeTime: 8);});
 AutoIDE.prStore(\pblpf,{~nodeIndex = \set -> Pbind(\args, [\lpf_freq], \lpf_freq, Pseq([600, 1200, 800, 2400], inf), \dur, 8);});
 AutoIDE.prStore(\quantplot,{QuantEnv.plot_(true).plotTime_(2);});
 AutoIDE.prStore(\varfenv,{var fEnv = EnvGen.ar(Env([\freq.kr(60,1),14000,\freq.kr(60,1)], [0.03,0.14], \exp), \aTrig.tr);});
+
+
+/////alex
+
+//play
+AutoIDE.prStore(\aplay, {~n1.play(vol:0.7, fadeTime:2, numChannels:2).quant_(2);});
+
+//env
+AutoIDE.prStore(\aenv, {var env=EnvGen.kr(Env([0,1,0],[0.01,0.4],\welch),\trig.tr);});
+
+//fenv
+AutoIDE.prStore(\afenv, {var fenv=EnvGen.kr(Env([\freq.kr,\freq.kr*\top.kr(4),\freq.kr],[0.01,0.04],\welch),\trig.tr);});
+
+//trig
+AutoIDE.prStore(\atrig, {~n1[1]=\set->Pbind(\args, [\trig], \dur, 1, \trig, 1);});
+
+//set freq
+AutoIDE.prStore(\afreq, {~n1[2]=\set->Pbind(\args, [\freq], \dur,1, \freq, Pseq([65],inf));});
+
+//Gverb
+AutoIDE.prStore(\agverb, {~n1[30]=\filter->{arg in; GVerb.ar(in,roomsize:40)};});
+
+///comb
+AutoIDE.prStore(\acomb, {~n1[32]=\filter->{arg in; CombN.ar(in,2,0.5)};});
+
+//LPF
+AutoIDE.prStore(\alpf, {~n1[33]=\filter->{arg in; LPF.ar(in,\lpf.kr(400,2))};});
+
+//limiter
+AutoIDE.prStore(\alimit, {~n1[36]=\filter-> {arg in; Limiter.ar(in,0.9)}});

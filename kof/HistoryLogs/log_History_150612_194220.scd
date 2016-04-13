@@ -9,7 +9,6 @@
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 9.754710307, 'me', "(
@@ -20,7 +19,6 @@ e.addMix(~damn,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 13.776855351, 'me', "(
@@ -31,7 +29,6 @@ e.addMix(~damn,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 20.861913437, 'me', "(
@@ -42,7 +39,6 @@ e.addMix(~damn,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 26.636563624, 'me', "(
@@ -53,7 +49,6 @@ e.addMix(~damn,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 29.449705412, 'me', "(
@@ -64,7 +59,6 @@ e.addMix(~damn,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 36.503880497, 'me', "(
@@ -75,7 +69,6 @@ e.addMix(~damn,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 108.121707333, 'me', "(
@@ -87,7 +80,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 115.644011374, 'me', "(
@@ -99,7 +91,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 122.375143514, 'me', "(
@@ -111,7 +102,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 147.315085498, 'me', "(
@@ -123,7 +113,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 170.370236348, 'me', "(
@@ -135,7 +124,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 200.552097849, 'me', "(
@@ -148,7 +136,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 237.597607055, 'me', "(
@@ -161,7 +148,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1) * Pulse.ar(4);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 282.203684963, 'me', "(
@@ -174,7 +160,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1) * Pulse.ar(4);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 303.100395317, 'me', "(
@@ -187,7 +172,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1) * Pulse.ar(4);
   Splay.ar(sig.flat,0.25,0.5);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 312.01268433, 'me', "(
@@ -200,7 +184,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1) * Pulse.ar(4);
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 326.942269513, 'me', "(
@@ -213,7 +196,6 @@ e.addMix(~damn,postVol:true);
   sig = sig * LFSaw.ar(1/4/fib(8)).exprange(0.001,1) * Pulse.ar(4/fib(4));
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 387.833534631, 'me', "(
@@ -227,7 +209,6 @@ e.addMix(~damn,postVol:true);
   sig = Greyhole.ar(sig)/4+sig;
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 536.399346098, 'me', "(
@@ -242,7 +223,6 @@ e.addMix(~damn,postVol:true);
   sig = PitchShift.ar(sig,m.kr(0,3)*2);
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 547.377366603, 'me', "(
@@ -257,7 +237,6 @@ e.addMix(~damn,postVol:true);
   sig = Greyhole.ar(sig)/4+sig;
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 603.515988439, 'me', "(
@@ -272,7 +251,6 @@ e.addMix(~damn,postVol:true);
   sig = Greyhole.ar(sig)/4+sig;
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 623.310021107, 'me', "(
@@ -286,7 +264,6 @@ e.addMix(~damn,postVol:true);
   sig = Greyhole.ar(sig)/4+sig;
   Splay.ar(sig.flat,0.25,0.25);
 };
-e.addMix(~damn,postVol:true);
 ~damn.play;
 );" ],
 [ 632.237512684, 'me', "(

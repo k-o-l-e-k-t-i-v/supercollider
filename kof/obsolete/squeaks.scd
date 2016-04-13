@@ -23,7 +23,6 @@
     sig= GVerb.ar(sig,10)/4+sig;
     Splay.ar(sig.flat,0.25,0.5);
   };
-  e.addMix(~squeaks,postVol:true);
   ~squeaks.play;
 );
 ~squeaks.stop(7);

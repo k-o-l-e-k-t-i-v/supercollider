@@ -24,31 +24,46 @@ s.scope;
 // bpm synth ///////////////////////////////////////
 
 (
+    ~bpm.kr(1);
     ~bpm.quant=2;
     ~bpm.fadeTime=0.2;
     ~bpm={
         //         |       |       |       |       |  
         var z = Buffer.alloc(s, 512);
-        var sig = AudioIn.ar([0,1]);
+        var sig = Mix.ar(AudioIn.ar([1,2]));
         var chain = FFT(z,sig);
-        var imp = PulseDivider.kr(Onsets.kr(chain, 0.33 , \rcomplex), [1,2,3,4]*8);
-        var env = EnvGen.ar(Env([0.001,1,1,0.001],[0.002,0.15,0.002],[3,1,-3],curve:'exp'),imp);
-
-        sig = [
-            SinOsc.ar(4000),
-            LFSaw.ar(12000),
-            SinOsc.ar(80+(env**2*10000)),
-            WhiteNoise.ar(0.8)
-        ];
-        sig = env * sig;
+        var imp = PulseDivider.kr(Onsets.kr(chain, 0.33 , \rcomplex), 4);
+        var env = EnvGen.ar(Env([0.001,1],[0.002,0.5],[3,1],curve:'exp'),imp);
 
 
-        Splay.ar(sig.flat,0.15,0.5);
+        imp;
     };
-    ~bpm.play;
 );
 ~bpm.stop(7);
 ~bpm.clear;
+
+// cklick synth ///////////////////////////////////////
+
+(
+~cklick.ar(2);
+~cklick.quant=2;
+~cklick.fadeTime=0.2;
+~cklick={
+  //         |       |       |       |       |  
+  var pat = [1,1,1,1].rotate(1);
+  var imp = ~bpm.kr;
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
+  var sig = SinOsc.ar(50!2+(env**50*500));
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.95);
+};
+~cklick.play;
+);
+~cklick.stop(4);
+~cklick.clear;
+~cklick.pause;
+~cklick.resume;
 
 
 // ff filter ///////////////////////////////////////

@@ -1,9 +1,12 @@
-
+(
+  p=ProxySpace.push(s.boot);
+  p.makeTempoClock;
+);
 
 
 
 (
-  p.clock.tempo_(240/60/1.5);
+  p.clock.tempo_(240/60);
   
   ~offset = (0..7)/8;
   
@@ -25,7 +28,7 @@
 ~oaoa={
   //         |       |       |       |       |  
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,2,~counter.kr);
+  var imp = PulseDivider.kr(~tick.kr,8,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)/[1,2,3,4]%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.25],[3,-3],curve:'exp'),imp * hit);
   var sig = LFNoise2.ar(12000/[1,2,4,8]) + BrownNoise.ar(1!8) + WhiteNoise.ar(0.1!8);
@@ -50,9 +53,9 @@
 ~kick={
   //         |       |       |       |       |  
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1].rotate(3);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+  var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,1.5],[3,-3],curve:'exp'),imp * hit);
+  var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,3.5],[3,-3],curve:'exp'),imp * hit);
   var sig = SinOsc.ar(1.001+(env**[4,4.001]*100),SinOsc.ar(43.2*[1,2,1.5,1.3333])*2pi+(env**4*10));
   sig = sig * env;
   Splay.ar(sig,0.75,0.5);
@@ -87,7 +90,7 @@
   sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
   sig = PitchShift.ar(sig,0.25,0.5*1.333);
   sig = sig * env * LFPulse.ar(4*[1,2,4,8]);
-  Splay.ar(sig,0.75,0.75);
+  Splay.ar(sig,0.75,0.25);
 };
 ~one.play;
 );

@@ -9,7 +9,6 @@
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.15,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 23.275806382, 'me', "(
@@ -20,7 +19,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.15,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 35.735649218, 'me', "(
@@ -31,7 +29,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 46.756375452, 'me', "(
@@ -42,7 +39,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 60.751184355, 'me', "(
@@ -53,7 +49,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 105.679888288, 'me', "(
@@ -64,7 +59,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 109.838731216, 'me', "(
@@ -75,7 +69,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 115.326873143, 'me', "(
@@ -86,7 +79,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 118.403836561, 'me', "(
@@ -97,7 +89,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 123.569196446, 'me', "(
@@ -108,7 +99,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(8)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 133.853390938, 'me', "(
@@ -119,7 +109,6 @@ e.addMix(~parksynth,postVol:true);
   sig = LPF.ar(sig,LFSaw.ar(1/4/fib(4)).exprange(0.001,1)*18000+50);
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 214.835606556, 'me', "(
@@ -131,7 +120,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig)+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 221.817608679, 'me', "(
@@ -143,7 +131,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 235.502068538, 'me', "(
@@ -155,7 +142,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,8)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 241.245912187, 'me', "(
@@ -167,7 +153,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,0.1,0.01,8)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 243.637659387, 'me', "(
@@ -179,7 +164,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,0.5,0.01,8)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 253.694742034, 'me', "(
@@ -191,7 +175,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,0.05,0.01,8)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 265.807449283, 'me', "(
@@ -203,7 +186,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,0.05,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 271.985152221, 'me', "(
@@ -215,7 +197,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 277.47269527, 'me', "(
@@ -227,7 +208,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 281.490788108, 'me', "(
@@ -239,7 +219,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 285.509343081, 'me', "(
@@ -251,7 +230,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 292.439387204, 'me', "thisProcess.stop;" ],
@@ -265,7 +243,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.5,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 354.199445682, 'me', "(
@@ -278,7 +255,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.25,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 356.706214726, 'me', "(
@@ -291,7 +267,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.15,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 364.312068894, 'me', "(
@@ -304,7 +279,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.015,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 372.33186687, 'me', "(
@@ -317,7 +291,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.025,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 376.161301219, 'me', "(
@@ -330,7 +303,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.035,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 384.957942949, 'me', "(
@@ -343,7 +315,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.035,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 399.4875475, 'me', "(
@@ -355,7 +326,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig * Pulse.ar(4);
   Splay.ar(sig.flat,0,0.035,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 402.473106129, 'me', "thisProcess.stop;" ],
@@ -369,7 +339,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.035,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 725.681945091, 'me', "(
@@ -382,7 +351,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1/4,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.035,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 732.02521948, 'me', "(
@@ -395,7 +363,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.035,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 741.930750253, 'me', "(
@@ -408,7 +375,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 753.935246797, 'me', "(
@@ -421,7 +387,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 763.145704382, 'me', "(
@@ -434,7 +399,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 769.138522226, 'me', "(
@@ -447,7 +411,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 789.211935384, 'me', "(
@@ -460,7 +423,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 799.600868732, 'me', "(
@@ -473,7 +435,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 826.636798253, 'me', "(
@@ -486,7 +447,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 843.469078449, 'me', "(
@@ -499,7 +459,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 858.85506154, 'me', "(
@@ -512,7 +471,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 871.435324989, 'me', "(
@@ -525,7 +483,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.045,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 879.7080057, 'me', "(
@@ -538,7 +495,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.085,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 899.305884237, 'me', "(
@@ -551,7 +507,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.285,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 908.000510635, 'me', "thisProcess.stop;" ],
@@ -566,7 +521,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.285,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 965.737591263, 'me', "thisProcess.stop;" ],
@@ -581,7 +535,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.0285,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 979.875462109, 'me', "thisProcess.stop;" ],
@@ -596,7 +549,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.0285,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1013.731044595, 'me', "(
@@ -610,7 +562,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.0285,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1020.397929391, 'me', "(
@@ -624,7 +575,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.485,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1044.221421443, 'me', "(
@@ -638,7 +588,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1053.837487522, 'me', "(
@@ -652,7 +601,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1081.847150627, 'me', "(
@@ -666,7 +614,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1105.797852726, 'me', "(
@@ -680,7 +627,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1116.514641137, 'me', "(
@@ -694,7 +640,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1123.421089502, 'me', "(
@@ -708,7 +653,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1134.19096437, 'me', "(
@@ -722,7 +666,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1158.517910863, 'me', "(
@@ -736,7 +679,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1170.473798285, 'me', "(
@@ -750,7 +692,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1182.740107401, 'me', "(
@@ -764,7 +705,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1191.290145048, 'me', "(
@@ -778,7 +718,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1198.942624926, 'me', "(
@@ -792,7 +731,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1204.003005758, 'me', "(
@@ -806,7 +744,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1225.675775571, 'me', "(
@@ -820,7 +757,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1237.136028135, 'me', "(
@@ -834,7 +770,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1248.277752597, 'me', "(
@@ -848,7 +783,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1270.435968013, 'me', "(
@@ -862,7 +796,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1291.443188834, 'me', "(
@@ -876,7 +809,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1299.151387566, 'me', "(
@@ -890,7 +822,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1306.842537636, 'me', "(
@@ -904,7 +835,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,1,0.01,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1323.312942269, 'me', "(
@@ -918,7 +848,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,0.01,0.91,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1329.99204964, 'me', "(
@@ -932,7 +861,6 @@ e.addMix(~parksynth,postVol:true);
   sig = Greyhole.ar(sig,0.02,0.91,15)/2+sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1349.261226138, 'me', "(
@@ -947,7 +875,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig * Pulse.ar(1/fib(4)) + sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1362.522767481, 'me', "(
@@ -962,7 +889,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1381.146326976, 'me', "(
@@ -977,7 +903,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.685,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1400.436865322, 'me', "(
@@ -992,7 +917,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1407.543785411, 'me', "(
@@ -1007,7 +931,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1431.798204068, 'me', "(
@@ -1022,7 +945,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1440.064809963, 'me', "(
@@ -1037,7 +959,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1450.138827613, 'me', "(
@@ -1052,7 +973,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1457.454748561, 'me', "(
@@ -1066,7 +986,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1463.858884667, 'me', "(
@@ -1081,7 +1000,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1469.59470008, 'me', "(
@@ -1096,7 +1014,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1474.924593495, 'me', "(
@@ -1111,7 +1028,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1490.911621196, 'me', "(
@@ -1126,7 +1042,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.785,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1512.561415961, 'me', "(
@@ -1141,7 +1056,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1522.755615624, 'me', "(
@@ -1156,7 +1070,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1529.337261301, 'me', "(
@@ -1171,7 +1084,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1546.054164517, 'me', "(
@@ -1186,7 +1098,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1565.45743578, 'me', "(
@@ -1201,7 +1112,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1576.85978955, 'me', "(
@@ -1216,7 +1126,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1580.094520084, 'me', "(
@@ -1231,7 +1140,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1583.343338799, 'me', "(
@@ -1246,7 +1154,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1586.516227937, 'me', "(
@@ -1261,7 +1168,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1589.418390269, 'me', "(
@@ -1276,7 +1182,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1593.400189693, 'me', "(
@@ -1291,7 +1196,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1600.55363086, 'me', "(
@@ -1306,7 +1210,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1614.01913835, 'me', "(
@@ -1321,7 +1224,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1627.420422116, 'me', "(
@@ -1336,7 +1238,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1636.287545125, 'me', "(
@@ -1351,7 +1252,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1657.567409156, 'me', "(
@@ -1366,7 +1266,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1670.227059146, 'me', "(
@@ -1381,7 +1280,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1673.903946851, 'me', "(
@@ -1396,7 +1294,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1679.227654814, 'me', "(
@@ -1411,7 +1308,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1682.960946772, 'me', "(
@@ -1426,7 +1322,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1688.263814852, 'me', "(
@@ -1441,7 +1336,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1692.193213834, 'me', "(
@@ -1456,7 +1350,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1696.638703158, 'me', "(
@@ -1471,7 +1364,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1700.517105872, 'me', "(
@@ -1486,7 +1378,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1709.5506836, 'me', "(
@@ -1501,7 +1392,6 @@ e.addMix(~parksynth,postVol:true);
   sig = sig;
   Splay.ar(sig.flat,0,0.985,1);
 };
-e.addMix(~parksynth,postVol:true);
 ~parksynth.play;
 );" ],
 [ 1712.895893246, 'me', "~parksynth.stop(15);" ],
