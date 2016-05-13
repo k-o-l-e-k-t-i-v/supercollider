@@ -50,6 +50,19 @@ snippet simple
 	~$1.clear;
 	~$1.pause;
 	~$1.resume;
+snippet bare
+	// $1 synth ///////////////////////////////////////
+	
+	(
+	~$1.ar(2);
+	~${1:}.quant=2;
+	~$1.fadeTime=2;
+	~$1={
+		var sig = ${2:SinOsc.ar(50!2)};
+		Splay.ar(sig,0.5,${3:0.25});
+	};
+	);
+	~$1.clear;
 snippet switch
 	// $1 synth ///////////////////////////////////////
 	
