@@ -10,7 +10,7 @@
 
 
 (
-  p.clock.tempo_(60/60);
+  p.clock.tempo_(120/60*2);
   
   ~offset = (0..7)/8;
   
@@ -28,15 +28,21 @@
 ~kick.fadeTime=0.2;
 ~kick={
   //         |       |       |       |       |  
-  var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+  var pat = [
+      1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+      1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+      1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+      1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
-  var sig = SinOsc.ar(50!2,env**20*8pi);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5/(1..4)],[3,-3],curve:'exp'),imp * hit);
+  var sig = SinOsc.ar(50*[1,2,1.5,1.3333],env**20*8pi);
     SendTrig.ar(K2A.ar(hit*imp),0,LFSaw.ar(1.01)*1000.0);
   sig = sig * env;
+  sig = GVerb.ar(sig,80,4)/8+sig;
   sig = CompanderD.ar(sig,3/4,1/3,1/10);
-  Splay.ar(sig,0.75,0.5);
+  Splay.ar(sig,0.05,0.5);
 };
 ~kick.play;
 );
