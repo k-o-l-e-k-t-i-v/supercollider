@@ -1,15 +1,5 @@
 
 (
-    ~a.quant=2;
-    ~a={var speed = 2/[1,2,3,4];
-    Pulse.ar(1*speed)*SinOsc.ar(50*[1,2,4,8],Pulse.ar(speed)*8pi);
-};
-~a.play;
-~a.stop;
-)
-
-
-(
   p.clock.tempo_(120/60*2);
   
   ~offset = (0..7)/8;
