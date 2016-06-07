@@ -248,7 +248,7 @@ snippet tick
 	(
 		p.clock.tempo_(${1:60}/60);
 		
-		~offset = (0..7)/8;
+		~offset = {(0..7)/8};
 		
 		~tick.quant = 1;
 		~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
