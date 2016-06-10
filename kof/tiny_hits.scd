@@ -1,12 +1,12 @@
 
 
 ~mm.quant=2;
-~mm = {var t = LFTri.ar([1/2,1/4,8]) + LFSaw.ar(1/5000/[1,2,3]); Perlin3.ar(t[0],t[1],t[2])};
+~mm = {var t = LFTri.ar(1/1600/[1,2,3]) ** 4 + LFSaw.ar(1/5000/[1,2,3]); Perlin3.ar(t[0],t[1],t[2])};
 
 (
-  p.clock.tempo_(240/60*8);
+  p.clock.tempo_(240/60);
   
-  ~offset = (0..7)/8;
+  ~offset = {(0..7)/8};
   
   ~tick.quant = 1;
   ~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
@@ -25,19 +25,20 @@
     var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0].rotate(1);
     var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr % pat.size);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.05*[1,2,3,4]],[3,-3],curve:'exp'),imp * hit);
+    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.005,0.075*[1,2,3,4]],[3,-3],curve:'exp'),imp * hit);
+    var duty = Duty.kr([4,3,2,1]*~tempo,0,Dseq([1,2,1.5,2,4,1.333,8],inf));
     var sig = [
       DC.ar(0),
-      SinOsc.ar(1500),
+      SinOsc.ar(15000/duty),
       Pulse.ar(4),
-      Formant.ar(150/1.5,150,1500),
+      Formant.ar(150*4/duty,150,150),
       LFNoise2.ar(1500),
-      SinOsc.ar(1500),
-      LFNoise1.ar(15000/2)
+      SinOsc.ar(50,env**20*8pi),
+      LFNoise1.ar(15000/[1,2,3,4],mul:0.1) * Pulse.ar(4/[1,2,3,4])
     ];
-    sig = SelectX.ar((~mm/[1,2,3,4]*sig.size)%sig.size,sig);
+    sig = SelectX.ar((~mm*[1,2,3,4]*sig.size)%sig.size,sig);
     sig = sig * env;
-    Splay.ar(sig,0.05,0.25);
+    Splay.ar(sig,0.75,0.5);
   };
   ~got.play;
 );
@@ -60,12 +61,12 @@
   //sig = Resonz.ar(sig,MouseX.kr(100,10000,(1..8)),MouseY.kr(0.1,1,(1..4)/16))/4;
   //sig = CombN.ar(sig,4,[4,8,16],32)+sig;
   //sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
-  sig = LPF.ar(DWGReverb.ar(NumChannels.ar(sig,2),2000),2000)+sig;
-  low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/2!2).range(100,800)),3/4,1/2,1/2);
-  mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1/2);
-  high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,10000)),3/4,1/2,1/2);
-  sig = CompanderD.ar((high+mid+low).flat,3/4,1/2,1/2,0.002,0.3);
-  Splay.ar(sig,0.75,0.0125);
+  low = CompanderD.ar(RLPF.ar(sig,LFNoise2.kr(1/8!2).range(100,1800),0.13),3/4,1/3,1/2);
+  mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/8!2).range(700,8000),0.2),3/4,1/2.4,1/2);
+  high = CompanderD.ar(RHPF.ar(sig,LFNoise2.kr(1/8!2).range(1000,10000),0.13),3/4,1/2,1/2);
+  sig = LPF.ar(DWGReverb.ar(NumChannels.ar((high+mid+low).flat,2),4000),2000);
+  sig = CompanderD.ar(sig,3/4,1/2,1/2,0.002,0.3);
+  Splay.ar(sig,0.95,0.025);
 };
 ~ff.play;
 );
