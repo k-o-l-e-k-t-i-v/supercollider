@@ -244,6 +244,32 @@ snippet sampler
 	);
 	~$1.stop(7);
 	~$1.clear;
+snippet grains
+	b = Buffer.read(s,Platform.resourceDir ++ "/sounds/mono/${2:douce.wav}");
+
+	// player synth ///////////////////////////////////////
+
+	(
+	    ~$1.ar(2);
+	    ~${1:}.quant=2;
+	    ~$1.fadeTime=2.02;
+	    ~$1={
+	        var mod = 1;//[1,1.3333,1.5,2];
+			var trate, dur, clk, pos, pan,sig;
+			trate = 120;
+			dur = BufDur.kr(b) / trate;
+			clk = Impulse.kr(trate);
+			pos = LFSaw.ar(1/4000/[1,2,4,8]).range(0,BufDur.kr(b)) + TRand.kr(0, 0.01, clk);
+			pan = WhiteNoise.kr(0.6);
+			sig = TGrains.ar(2, clk, b.bufnum, mod, pos, dur, pan, 0.3);
+			//sig = sig * (LFTri.ar(1/16/[1,2,3,4])**4);
+			sig = CompanderD.ar(sig,3/4,1/2,1/2);
+			Splay.ar(sig.flat,0.5,${3:0.5});
+	    };
+	    ~$1.play;
+	);
+	~$1.stop(7);
+	~$1.clear;
 snippet tick
 	(
 		p.clock.tempo_(${1:60}/60);
