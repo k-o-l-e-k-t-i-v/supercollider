@@ -9,7 +9,7 @@
 ~one={
   var mod = Duty.kr(4,0,Dseq([1,2,1.5,1.33333],inf));
   var sig = LFPulse.ar(16000/[1,2,1.5,1.333]/mod) * LFNoise0.ar(1/4!4);
-  sig = sig * Pulse.ar(4/[1,2,3,4]) + (SinOsc.ar(70,Pulse.ar(4/[1,2,3,4]))*Pulse.ar(4/[1,2,3,4]),mul:0.2);
+  sig = sig * Pulse.ar(4/[1,2,3,4]) + (SinOsc.ar(70,Pulse.ar(4/[1,2,3,4]),mul:0.2)*Pulse.ar(4/[1,2,3,4]));
   Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
@@ -43,7 +43,7 @@
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.05*[1,20,3,40]],[3,-3],curve:'exp'),imp * hit);
   var sig = LFNoise2.ar(16000) * LFPulse.ar(9000);
-  sig = HPF.ar(sig,9000*[1,1.5,1.25,.3333]);
+  sig = HPF.ar(sig,9000*[1,1.5,1.25,1.3333]);
   sig = sig * env;
   Splay.ar(sig,0.75,0.65);
 };
