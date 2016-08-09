@@ -26,7 +26,9 @@
         sig = Normalizer.ar(sig);
         sig = Vibrato.ar(sig,[4,5,6,7],0.12);
         sig = GVerb.ar(sig,70,3)/8+sig;
-        sig = sig *  LFTri.ar(1/4.1/[1,2,3,4]).exprange(0.01,1); 
+	//u can have multichannels for various room sizes and also rev times. makes it more spacey. can't listen to this because old version..dammit
+	//GVerb.ar(sig,[70,80,120],[3,4,5])
+        sig = sig *  LFTri.ar(1/4.1/[1,2,3,4]).exprange(0.01,1);
         sig = AllpassN.ar(PitchShift.ar(sig,0.1,0.5),1,1,4) + sig;
         sig = CompanderD.ar(sig,3/4,1/2,1/2);
         Splay.ar(sig,0.75,0.15);
