@@ -19,14 +19,25 @@
 ~one.pause;
 ~one.resume;
 
+
+
+//or this?
+/*(~one={
+	var mod = Duty.kr(4,0,Dseq([4,[1,1,0.5,0.5,-0.5],4].convertRhythm,inf));
+	var sig = LFPulse.ar([1660,1692]/[1,2,1.5,1.333]/mod).lag([0.02,0.04]) * LFNoise0.ar(1/4!4);
+	sig = sig * Pulse.ar(4/[1,2,3,4]) + (SinOsc.ar(70+[400,[0.15,1,0.25,0.5],4].convertRhythm,Pulse.ar(4/[1,2,3,4]))*Pulse.ar(4/[1,2,3,4], mul:0.2));
+  Splay.ar(sig,0.5,0.15);
+};
+)*/
+
 (
   p.clock.tempo_(120/60);
-  
+
   ~offset = {(0..7)/8};
-  
+
   ~tick.quant = 1;
   ~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
-  
+
   ~counter = {PulseCount.kr(~tick.kr)};
 );
 
@@ -37,7 +48,7 @@
 ~two.quant=2;
 ~two.fadeTime=0.2;
 ~two={
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
