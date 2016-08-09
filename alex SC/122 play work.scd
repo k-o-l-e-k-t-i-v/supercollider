@@ -36,9 +36,9 @@ p=ProxySpace.push(s);
 ~f[1]=\set-> Pbind(\args, [\trig], \dur, Pseq([Pn(1,2),Pn(0.25,2),Rest(2.25)],inf), \trig, 1);
 ~f[2]=\set-> Pbind(\args, [\freq], \dur, 12, \freq, 11000);
 
-~f[30]=\filter->{arg in; CombN.ar(in,2,SinOsc.kr(0.5).range(0.1,0.01),2)};
+~f[30]=\filter->{arg in; CombN.ar(in,2,SinOsc.kr(0.5).range(0.1,1),2)};
 ~f[31]=\filter->{arg in; Pan2.ar(Mix.ar(GVerb.ar(in,roomsize:40,revtime:20)),SinOsc.kr(2))};
-~f[32]=\filter-> {arg in; LPF.ar(GVerb.ar(in,180,20)*0.8,SinOsc.kr(0.025).range(100,4500)).lag(0.01)};
+~f[32]=\filter-> {arg in; LPF.ar(GVerb.ar(in,180,[20,10])*0.8,SinOsc.kr(0.025).range(100,4500)).lag(0.01)};
 
 ~f.rebuild
 ~f.scope
@@ -82,7 +82,7 @@ p=ProxySpace.push(s);
 
 };
 )
-~h[1]=\set-> Pbind(\args, [\trig], \dur,Pseq([Pn(0.2,4),Rest(0.8)],inf), \trig, 1);
+~h[1]=\set-> Pbind(\args, [\trig], \dur,Pseq([Pn(0.25,4),Rest(1)],inf), \trig, 1);
 ~h[2]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,[10,9],\degree, Pseq([Pn([8,9],5),[2,4]],inf));
 
 ~h[30]=\filter->{arg in; Pan2.ar(Mix.ar(in),\pos.kr)};
@@ -141,8 +141,8 @@ p=ProxySpace.push(s);
 
 
 ~b.clear;
-~b.play(fadeTime:2, vol:0.8).quant_(2);
-~b.clock=TempoClock(128/60).permanent_(true);
+~b.play(fadeTime:2, vol:0.2).quant_(2);
+~b.clock=TempoClock(126/60).permanent_(true);
 (
 ~b[0]={
 	var sig, env, fenv;
@@ -163,4 +163,49 @@ p=ProxySpace.push(s);
 
 
 
+~k=NodeProxy.new(s, \audio, 2);
+~k.play(fadeTime:2, vol:1);
+~k.quant_(2);
+~k.clock=TempoClock(126/60).permanent_(true);
+(~k[0]={
+	var sig, env, fenv, nenv;
 
+	env=EnvGen.kr(Env(times:[0.01,0.2],curve:[\welch, \welch]),\trig.tr);
+	fenv=EnvGen.kr(Env([\freq.kr,\freq.kr*4,\freq.kr],times:[0.01,0.04],curve:[\welch, \welch]),\trig.tr);
+	nenv=EnvGen.kr(Env([0,\noise.kr,0,\noise.kr*2,0],times:[0.01,0.01,0.01,0.01,],curve:[\welch, \welch]),\trig.tr);
+
+	sig=SinOsc.ar(fenv!2+[1,2,3,5,8,13,21,33].reciprocal,add:WhiteNoise.ar(nenv))*env;
+	// Pan2.ar(sig);
+};
+)
+~k[1]=\set-> Pbind(\args, [\trig], \dur, Pseq([Pn(0.25,4),Rest(1)],inf), \trig, 1);
+~k[2]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,[1,2],\degree, Pseq([Pn(Pseq([2,4,3],1),16),Pn([4,6],4)],inf));
+~k[3]=\set-> Pbind(\args, [\noise], \dur, 2, \noise, Pseq([Pseq([Pn(0.1,4),Pn(0,3)],4),Pn(0,10)],inf));
+
+
+~k[32]=\filter->{arg in; Limiter.ar(CompanderD.ar(in,1,0.8,SinOsc.kr(0.125).range(0.2,1.5)),0.6)};
+~k[33]=\filter-> {arg in; Limiter.ar(GVerb.ar(in,20,[0.5,0.7,0.2],[0.1,0.5,0.6],add:in*2),0.7)};
+~k[34]=\filter-> {arg in; LPF.ar(in,\lpf.kr(400))};
+
+
+
+~klang=NodeProxy.new(s, \audio, 2);
+~klang.play(fadeTime:2, vol:1);
+~klang.quant_(2);
+~klang.clock=TempoClock(126/60).permanent_(true);
+(~klang[0]={
+	var sig, env, fenv, nenv;
+
+	env=EnvGen.kr(Env(times:[0.01,0.2],curve:[\welch, \welch]),\trig.tr);
+	sig=Klank.ar(`[\freq.kr+[1,2,3,5,8,13,21,33],nil,[1,2,3,5,8,13,21,33].reciprocal],env
+	// Pan2.ar(sig);
+};
+)
+~klang[1]=\set-> Pbind(\args, [\trig], \dur, Pseq([Pn(0.25,4),Rest(1)],inf), \trig, 1);
+~klang[2]=\set-> Pbind(\args, [\freq], \dur, 2, \octave,[1,2],\degree, Pseq([Pn(Pseq([2,4,3],1),16),Pn([4,6],4)],inf));
+~klang[3]=\set-> Pbind(\args, [\noise], \dur, 2, \noise, Pseq([Pseq([Pn(0.1,4),Pn(0,3)],4),Pn(0,10)],inf));
+
+
+~klang[32]=\filter->{arg in; Limiter.ar(CompanderD.ar(in,1,0.8,SinOsc.kr(0.125).range(0.2,1.5)),0.6)};
+~klang[33]=\filter-> {arg in; Limiter.ar(GVerb.ar(in,20,[0.5,0.7,0.2],[0.1,0.5,0.6],add:in*2),0.7)};
+~klang[34]=\filter-> {arg in; LPF.ar(in,\lpf.kr(400))};
