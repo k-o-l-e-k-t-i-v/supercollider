@@ -5,7 +5,10 @@ ProxySynthDef.sampleAccurate = true;
 
 p.clock.tempo = 128/60;
 
-//next up create a variable that modulates frequencies up and down for simultaneous peaks and a few more strange events
+//next up create a variable that modulates frequencies up and down for simultaneous peaks
+//a few more strange events
+//noise control invert
+//blow a bit
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 ~tum1.stop(freeTime:10);
