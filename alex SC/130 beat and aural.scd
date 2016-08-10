@@ -9,6 +9,8 @@ p.clock.tempo = 128/60;
 //a few more strange events
 //noise control invert
 //blow a bit
+//dust+combN
+//long mod noise
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 ~tum1.stop(freeTime:10);
