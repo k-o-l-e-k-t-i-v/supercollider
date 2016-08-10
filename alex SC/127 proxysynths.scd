@@ -1,26 +1,34 @@
 (
 ProxySynthDef(\ju, {
 	arg sustain, amp, f2;
-	var sig, fenv, env;
+	var sig, fenv,fenv2, env;
 
 	env=EnvGen.kr(Env(),timeScale:sustain,doneAction:2);
 	fenv= EnvGen.kr(Env([\freq.kr, \freq.kr*4],[sustain*0.5]),timeScale:sustain);
+	fenv2= EnvGen.kr(Env([f2*2, f2],[sustain*0.7]),timeScale:sustain);
 
-	sig= BPF.ar(WhiteNoise.ar(amp!2)+BrownNoise.ar(amp!2),fenv,rq:SinOsc.kr(f2).range(0.001,1));
+	sig=BPF.ar(WhiteNoise.ar(amp)+BrownNoise.ar(amp),fenv,rq:SinOsc.kr(fenv2).range(0.001,1));
+	sig=FreeVerb.ar(sig,room:2,damp:0.1,add:sig);
+	sig=Pan2.ar(sig*env,SinOsc.kr(fenv));
+	sig=FreeVerb.ar(sig,room:2);
+
 	sig=sig*env*amp;
 
 }).add;
 
-ProxySynthDef(\tss, {
-	arg  sustain,  amp, pan;
+
+ProxySynthDef(\zit, {
+	arg  sustain,  amp, pan, hpf, noise;
 	var sig, env, fenv;
 
-	env=EnvGen.kr(Env.perc([0,1,0],[0.01,0.5]),timeScale:sustain,doneAction:2);
-	sig=HPF.ar(WhiteNoise.ar(0.7)+PinkNoise.ar(0.5),\freq.kr);
-	sig=Pan2.ar(Limiter.ar(sig,0.7),pan);
-	sig=FreeVerb.ar(sig,mix:0.5,room:2,damp:1)*env*amp;
+	env=EnvGen.kr(Env([0,1,0],[0.1,0.3]),timeScale:sustain,doneAction:2);
+	sig=LFSaw.ar(\freq.kr+fib(10).reciprocal)+GrayNoise.ar(noise);
+	sig=Clip.ar(Splay.ar(sig),0.5,1);
+	sig=Pan2.ar(HPF.ar(sig,hpf), pan);
+	sig=sig*env*amp;
 
 }).add;
+
 
 ProxySynthDef(\tus, {
 	arg  sustain,  amp, pan;
@@ -58,7 +66,17 @@ ProxySynthDef(\mel, {
 
 }).add;
 
+ProxySynthDef(\vrr, {
+	arg  sustain, amp, lag;
+	var sig, env, fenv;
 
+	env=EnvGen.kr(Env([0,1,0],[1,0.001]),timeScale:sustain,doneAction:2);
+	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*1.2, \freq.kr*2,\freq.kr],[0.8,0.05,0.001]),timeScale:sustain);
+	sig=LFSaw.ar(fenv).lag(0.4);
+	sig=Pan2.ar(sig,SinOsc.kr(sustain*4));
+	sig=sig*env*amp*2;
+
+}).add;
 
 ProxySynthDef(\strange, {
 	arg  sustain,  amp;
@@ -70,7 +88,6 @@ ProxySynthDef(\strange, {
 
 }).add;
 
-
 ProxySynthDef(\aural, {
 	arg  sustain,  amp;
 	var sig, env, fenv;
@@ -81,7 +98,6 @@ ProxySynthDef(\aural, {
 	sig=sig*env*amp;
 
 }).add;
-
 
 ProxySynthDef(\tum, {
 	arg  sustain,  amp, pan, rq;
@@ -111,31 +127,13 @@ ProxySynthDef(\dribble, {
 	var sig, env;
 
 	env=EnvGen.kr(Env(),timeScale:sustain,doneAction:2);
-	sig=BPF.ar(BrownNoise.ar(amp),\freq.kr+SinOsc.kr(\freq.kr*2).range(40,20),
-		rq:SinOsc.kr(\freq.kr).range(0.01,0.1));
+	sig=BPF.ar(BrownNoise.ar(amp),\freq.kr+SinOsc.kr(\freq.kr*2).range(80,20),
+		rq:SinOsc.kr([f2,\freq.kr]).range(0.001,0.1));
 	sig=sig+Mix.fill(4,{LFSaw.ar(\freq.kr!4,mul:0.5).lag(lag).clip(-1,0.2)});
-	sig=Limiter.ar(sig,0.1);
+	sig=Limiter.ar(Splay.ar(sig),0.7);
 	sig=FreeVerb.ar(sig,room:1.5,damp:SinOsc.kr(f2),add:sig);
 
-	sig=DelayN.ar(sig*env*amp,0.4,delaytime:0.2);
+	sig=sig*env*amp;
 }).add;
 
-
-ProxySynthDef(\woosh, {
-	arg  sustain, amp,f2;
-	var sig, env,fenv;
-
-
-	env=EnvGen.kr(Env(),timeScale:sustain,doneAction:2);
-	fenv= EnvGen.kr(Env([\freq.kr*2, \freq.kr],[sustain]),timeScale:sustain);
-
-	sig=BPF.ar(WhiteNoise.ar(amp),fenv,0.5,mul:SinOsc.kr(f2).range(0.2,0.8));
-	sig=HPF.ar(sig,16000).clip(-0.3,1);
-	sig=FreeVerb.ar(sig,room:2,damp:0.1,add:sig);
-	sig=Pan2.ar(sig*env,SinOsc.kr(f2));
-	sig=FreeVerb.ar(sig,room:2);
-
-sig*amp*env;
-
-}).add;
 )
