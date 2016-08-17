@@ -95,7 +95,7 @@ p.clock=TempoClock(120/60).permanent_(true);
 ~blow.clock=TempoClock(60/60).permanent_(true);
 (~blow[1]=Pbind(
 	\instrument, \blow,
-	\dur, Pseq([4,2],inf),
+	\dur, Pseq([4,6],inf),
 	\legato,3,
 	\octave, Prand([[4,2,6],[7,6],[4,2],[3,2],[1,2]],inf),
 	\degree,Pseq([[4,2,6,8],[4,8],[4,2],[4,2,6]],inf),
@@ -104,6 +104,7 @@ p.clock=TempoClock(120/60).permanent_(true);
 ););
 ~blow[3]=\filter->{arg in; AllpassN.ar(in,2,0.2)};
 ~blow[4]=\filter->{arg in; GVerb.ar(in,[40,80,120],[4,6],mul:0.4,add:in)*4};
+~blow[5]=\filter->{arg in; LPF.ar(in,\lpf6.kr(400))};
 // ~blow[5]=nil;
 )
 (
