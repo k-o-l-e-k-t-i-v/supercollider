@@ -10,7 +10,7 @@ p.gui;
 
 
 ~intro.play(vol:0.1, fadetime:10, numChannels:2);
-~blow.clear(fadeTime:10);
+~intro.clear(fadeTime:10);
 (~intro[0]={BPF.ar(GVerb.ar(Wrap.ar(CombN.ar(Dust.ar(Line.kr(18,1800,30)!2),2,1)*(-1),-0.8,0.8),120,5,mul:0.7),Line.kr(45,5000,30),Line.kr(2,0.02,30))};)
 
 ~tum1.clear;
