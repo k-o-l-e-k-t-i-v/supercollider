@@ -30,18 +30,22 @@ ProxySynthDef(\zit, {
 }).add;
 
 
-ProxySynthDef(\rrr, {
-	arg  sustain, freq, amp, pan, lag;
-	var sig, env, lenv;
 
-	env=EnvGen.kr(Env([0,1,0],[1,3]),timeScale:sustain,doneAction:2);
+ProxySynthDef(\rrr2, {
+	arg  sustain,  amp, pan, lag;
+	var sig, env, lenv, fenv;
+
 	lenv=EnvGen.kr(Env([lag, lag+0.02, lag+0.05],[0.01,4]),timeScale:sustain);
-	sig=Lag.ar(CombN.ar(GrayNoise.ar(0.7),1/freq,1/freq,4),lenv);
-	sig=CompanderD.ar(Pan2.ar(sig,pan));
+	env=EnvGen.kr(Env([0,1,0],[0.5,2]),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env([4,6,2,3]/5*\freq.kr,[4,[0.2,5,1],1].convertRhythm),timeScale:sustain,doneAction:2);
+
+	sig=LFSaw.ar([fenv, fenv+[1,2,3,5,8].reciprocal]).lag([0.01,0.02]);
+	sig=CompanderD.ar(Pan2.ar(sig,SinOsc.ar(0.25/2)));
 	sig=Limiter.ar(sig,0.5);
 	sig=sig*env*amp;
 
 }).add;
+
 
 ProxySynthDef(\scr, {
 	arg  sustain,  amp, pan, hpf,den;
@@ -55,6 +59,8 @@ ProxySynthDef(\scr, {
 
 }).add;
 
+
+
 ProxySynthDef(\dust, {
 	arg  sustain,  amp, pan, hpf,den;
 	var sig, env, fenv;
@@ -67,14 +73,13 @@ ProxySynthDef(\dust, {
 }).add;
 
 
-ProxySynthDef(\tus, {
+ProxySynthDef(\noiselong, {
 	arg  sustain,  amp, pan;
-	var sig, env, fenv;
+	var sig, env;
 
-	env=EnvGen.kr(Env([0,1,0],[0.01,0.3]),timeScale:sustain,doneAction:2);
-	sig=Clip.ar(GrayNoise.ar(1),-0.2,1)-0.5;
-	sig=Pan2.ar(Limiter.ar(sig,1),pan);
-	sig=LPF.ar(sig, \freq.kr);
+	env=EnvGen.kr(Env([0,1,0],[1,0.01]),timeScale:sustain,doneAction:2);
+	sig=DFM1.ar(WhiteNoise.ar(0.7),\freq.kr,fib(10));
+	sig=Pan2.ar(sig,SinOsc.kr(pan));
 	sig=sig*env*amp;
 
 }).add;
@@ -148,16 +153,18 @@ ProxySynthDef(\tum, {
 }).add;
 
 ProxySynthDef(\bum, {
-	arg  sustain,  amp;
+	arg  sustain,  amp, noise;
 	var sig, env, fenv;
 
 	env=EnvGen.kr(Env([0,1,0],[0.01,1]),timeScale:sustain,doneAction:2);
 	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*4, \freq.kr],[0.001,0.05]));
-	sig=SinOsc.ar(fenv!2+fib(10).reciprocal);
+	sig=SinOsc.ar(fenv!2+fib(10).reciprocal)+HPF.ar(GrayNoise.ar(noise!2),800);
 	sig=FreeVerb.ar(sig,mix:0.3,room:1,damp:1);
 	sig=Splay.ar(sig)*env*amp;
 
 }).add;
+
+
 
 ProxySynthDef(\dribble, {
 	arg  sustain,  amp,lag,f2;
