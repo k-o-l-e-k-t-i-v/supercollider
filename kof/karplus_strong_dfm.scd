@@ -8,11 +8,12 @@
 ~one.fadeTime=4;
 ~one={
   var sig = PinkNoise.ar(0.45!2) * Pulse.ar(2/[1,2,3,4]) + LocalIn.ar(2)/2;
-  var f = NumChannels.ar(LFSaw.kr(1/4/[1,2,3,4]).exprange(50.01,14500),2);
-  sig = DFM1.ar(sig,f,LFNoise2.kr(1/4!2).range(0.2,0.9));
-  sig = MoogFF.ar(sig,f/[1,2],1.0+LFNoise2.kr(1/8!2).range(0.1,0.8))+sig/2;
+  var f = NumChannels.ar(LFTri.kr(1/16/[1,2,3,4]).exprange(50.01,[4400,8000]),2);
+  sig = DFM1.ar(sig,f,LFTri.kr(4!2).exprange(0.12,0.69));
+  sig = MoogFF.ar(sig,f*[1,1.5],1.0+LFNoise2.kr(1/8!2).exprange(0.001,0.5));
   //sig = BPF.ar(sig,f,0.94).tanh*sig;
-  LocalOut.ar(DelayN.ar(NumChannels.ar(Normalizer.ar(sig)/2.15,2),1/f.lag(0.1),1/f));
+  sig = LeakDC.ar(sig);
+  LocalOut.ar(DelayN.ar(NumChannels.ar(Normalizer.ar(sig)/2.76,2),1/f.lag(0.1),1/f));
   Splay.ar(sig,0.95,0.75);
 };
 ~one.play;
