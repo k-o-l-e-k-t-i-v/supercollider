@@ -5,16 +5,16 @@
 (
     ~one.ar(2);
     ~one.quant=2;
-    ~one.fadeTime=10;
+    ~one.fadeTime=4;
     ~one={
         var mod = Duty.kr(8,0,Dseq([1,2,1.5,1.25],inf));
         var t = LFSaw.ar([1/4/[1,2,3,4],1/320,1/160]) ** (1/mod)*4;
         var n = Perlin3.ar([t[0],t[1],t[2]]);
-        var sig = LFPulse.ar(1/32/[4,3,2,1]) + LocalIn.ar(4);
+        var sig = LFPulse.ar(1/16/[4,3,2,1]) + LocalIn.ar(4);
         var f = NumChannels.ar(n.exprange(50.01,15000/[1,1.5,2,1.3333]),4) + SinOsc.ar(1/[3,4,5,6],mul:2pi);
         sig = DFM1.ar(sig,f,LFSaw.ar(1/4/[1,2,3,4]).exprange(0.12,0.99));
-        sig = MoogFF.ar(sig,f,0.06+LFSaw.ar(1/16/[1,2,3,4]).exprange(0.001,2.5));
-        //sig = LPF.ar(sig,f/[1,1.001]);
+      //  sig = MoogFF.ar(sig,f,0.06+LFSaw.ar(1/16/[1,2,3,4]).exprange(0.001,2.5));
+        sig = LPF.ar(sig,f/[1,1.001]);
         sig = LeakDC.ar(sig);
         //sig = CombN.ar(sig,1/[51,52],1/50*mod,1)/4+sig;
         //sig = CompanderD.ar(sig,3/4,1/2,1/2)/2;
@@ -26,8 +26,9 @@
         Splay.ar(sig,0.95,0.5);
     };
     ~one.play;
+    ~ff.rebuild;
 );
-~one.stop(32);
+~one.stop(4);
 ~one.clear;
 ~one.pause;
 ~one.resume;
@@ -37,7 +38,7 @@
 
 (
     ~ff.quant=1;
-    ~ff.fadeTime=10;
+    ~ff.fadeTime=1;
     ~ff={
         var synths = p.playingProxies;
         var high,mid,low;
@@ -56,7 +57,7 @@
     };
     ~ff.play;
 );
-~ff.stop(32);
+~ff.stop(7);
 ~ff.clear;
 
 
