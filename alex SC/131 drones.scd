@@ -10,7 +10,8 @@ p.gui;
 
 
 ~raw.clear;
-~raw.play(vol:0.7, fadeTime:2, numChannels:2).quant_(2);
+~raw.stop(fadeTime:10);
+~raw.play(vol:1, fadeTime:2, numChannels:2).quant_(2);
 (
 ~raw[0]={
 	var sig, env,fenv;
@@ -27,8 +28,8 @@ p.gui;
 ~raw[2]=\set-> Pbind(\args, [\freq], \dur,Pseq([4,2,2,Rest(8)],inf), \freq, Pseq([Pn(65,1),Pn(205,1),Pn(35,1), Rest(1)],inf));
 ~raw[30]=\filter-> {arg in; GVerb.ar(Pan2.ar(Splay.ar(in),SinOsc.kr(0.25)),[80,65],[10,8],drylevel:SinOsc.kr([0.125,0.0125]).range(0.1,1),mul:0.7)};
 ~raw[31]=\filter->{arg in; LPF.ar(in,\lpf2.kr(200,4))};
-~raw[32]=\set-> Pbind(\args, [\lpf2], \dur,6, \lpf2, Prand([200,400,600,800,1200],inf));
-~raw[33]=\filter-> {arg in; Limiter.ar(in, 0.5).range(-0.8,0.8)};
+~raw[32]=\set-> Pbind(\args, [\lpf2], \dur,6, \lpf2, Prand([200,400,100,800,1200],inf));
+~raw[33]=\filter-> {arg in; Limiter.ar(in, 0.7)};
 
 
 
@@ -50,14 +51,14 @@ p.gui;
 ););
 ~tz[3]=\filter->{arg in; AllpassN.ar(Splay.ar(in),0.02)};
 ~tz[5]=\filter->{arg in; GVerb.ar(in,20,[4,6],mul:0.2,add:in)};
-~tz[6]=\filter->{arg in; LPF.ar(in, \lpf2.kr(200,4))};
+~tz[6]=\filter->{arg in; LPF.ar(in, SinOsc.kr(1/16).range(200,600))};
 ~tz[7]=\filter->{arg in; in*SinOsc.kr(0.125).range(0.6,1)};
 
 
 
 ~bumnoise.clear;
 ~bumnoise.stop(fadeTime:10);
-~bumnoise.play(vol:0.02, fadeTime:4, numChannels:2).quant_(4);
+~bumnoise.play(vol:0.2, fadeTime:4, numChannels:2).quant_(4);
 (~bumnoise[0]=Pbind(
 	\instrument, \bum,
 	\amp,1,
@@ -66,22 +67,57 @@ p.gui;
 	\noise, Pseq([Pn(0.02,6),Pn(0.2,6),Pn(0.1,6)],inf),
 	\dur, Pseq([1,Rest(1)],inf)
 );)
-~bumnoise[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,120,revtime:4,damping:SinOsc.kr(0.125).range(0.3,0.8),mul:0.1,add:in*0.5))};
+~bumnoise[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,120,revtime:LFSaw.kr(1/16).range(4,40),damping:SinOsc.kr(0.125).range(0.3,0.8),mul:0.1,add:in*0.5))};
+
+
+
+~drum1.clear;
+~drum1.stop(fadeTime:10);
+~drum1.play(vol:0.1, fadeTime:4, numChannels:2).quant_(4);
+(~drum1[0]=Pbind(
+	\instrument, \drum,
+	\amp,Pseq([0.6,0.1],inf),
+	\legato, 1,
+	\octave, [2,3],
+	\degree, Pseq([2,4,6,5,3],inf),
+	\dur, 1,
+	\rq, Pseq([0.6,0.2],inf)
+);)
+~drum1[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,20,revtime:LFSaw.kr(1/32).range(0.4,10),damping:0.8,mul:0.1,add:in*0.5))};
+~drum1[6]=nil;
+
 
 
 
 ~noisedfm.clear;
 ~noisedfm.stop(fadeTime:10);
-~noisedfm.play(vol:0.01, fadeTime:4, numChannels:2).quant_(4);
+~noisedfm.play(vol:0.021, fadeTime:4, numChannels:2).quant_(4);
 (~noisedfm[0]=Pbind(
 	\instrument, \noiselong,
 	\amp,1,
-	\legato,0.5,
-	\octave, 5,
+	\legato,Prand([0.2,0.5,0.6],inf),
+	\octave, 9,
 	\degree, [5,6,9],
 	\dur, 8,
-	\pan, 1/Pkey(\dur),
+	\pan, 1/2,
 
 );)
-~noisedfm[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in*LFSaw.kr(5),120,8,mul:0.1,add:in*0.5))};
+~noisedfm[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in*LFSaw.kr([2,0.5,5]),140,10,mul:0.3,add:in*0.3))};
 
+
+
+
+~voice1.clear;
+~voice1.stop(fadeTime:10);
+~voice1.play(vol:0.1, fadeTime:4, numChannels:2).quant_(4);
+(~voice1[0]=Pbind(
+	\instrument, \voice,
+	\amp,0.8,
+	\legato,Prand([0.2,0.5,0.6],inf),
+	\freq,Prand([[160,180],[80,220],[180,60],[80,220]],inf),
+	\dur, Prand([4,8,6],inf),
+);)
+~voice1[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,[140,120],[10,12],mul:0.3,add:in*0.3),0.7)};
+~voice1[31]=\filter->{arg in; LPF.ar(in,\lpf2.kr(200,4))};
+~voice1[32]=\set-> Pbind(\args, [\lpf2], \dur,6, \lpf2, Prand([200,400,200,800,1200],inf));
+~voice1[33]=\filter-> {arg in; Limiter.ar(in, 0.7)};

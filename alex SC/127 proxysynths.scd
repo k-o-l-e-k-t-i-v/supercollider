@@ -78,7 +78,7 @@ ProxySynthDef(\noiselong, {
 	var sig, env;
 
 	env=EnvGen.kr(Env([0,1,0],[1,0.01]),timeScale:sustain,doneAction:2);
-	sig=DFM1.ar(WhiteNoise.ar(0.7),\freq.kr,fib(10));
+	sig=DFM1.ar(WhiteNoise.ar(0.7),\freq.kr,fib(10),type:0);
 	sig=Pan2.ar(sig,SinOsc.kr(pan));
 	sig=sig*env*amp;
 
@@ -161,6 +161,30 @@ ProxySynthDef(\bum, {
 	sig=SinOsc.ar(fenv!2+fib(10).reciprocal)+HPF.ar(GrayNoise.ar(noise!2),800);
 	sig=FreeVerb.ar(sig,mix:0.3,room:1,damp:1);
 	sig=Splay.ar(sig)*env*amp;
+
+}).add;
+
+ProxySynthDef(\drum, {
+	arg  sustain,  amp, rq;
+	var sig, env,  fenv;
+
+	env=EnvGen.kr(Env.perc(0.01,0.2),timeScale:sustain,doneAction:2);
+	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*5, \freq.kr],[0.01,0.5]));
+	sig=BPF.ar(GrayNoise.ar(0.8)+BrownNoise.ar(1),fenv+fib(5).reciprocal,rq)*20;
+	sig=Clip.ar(sig*env*amp,-0.5,0.6);
+
+}).add;
+
+
+
+ProxySynthDef(\voice, {
+	arg  sustain, amp;
+	var sig,env;
+
+	env=EnvGen.kr(Env.perc(2,4),timeScale:sustain,doneAction:2);
+	sig=Gendy4.ar(1,1,1,1,\freq.kr,\freq.kr+100,0.01,0.05,10);
+	sig=Pan2.ar(sig,SinOsc.kr(0.125));
+	sig=sig*env*amp;
 
 }).add;
 
