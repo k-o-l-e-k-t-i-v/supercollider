@@ -1,8 +1,10 @@
-~play.play;
+~play1.play;
 (
-~play[0]={
+~play1[0]={
 	var sig;
-	sig=
+	sig=CrossoverDistortion.ar(Splay.ar(SinOsc.ar([64,66]+fib(8).flatten)*SinOsc.kr(0.5).range(0.1,0.8))).lag(0.02);
+	LPF.ar(sig,1000);
+
 };
 )
 
@@ -24,3 +26,27 @@
 
 //play me
 {Pan2.ar(RLPF.ar(Gendy4.ar(2,3,minfreq:20, maxfreq:MouseX.kr(100,1000), durscale:0.0, initCPs:40), 500,0.3, 0.2), 0.0)}.play
+
+
+///
+{CrossoverDistortion.ar(Splay.ar(SinOsc.ar([44,46]+fib(8).flatten)*SinOsc.kr(0.5).range(0.1,0.8))).lag(0.02)}.play;
+
+
+///dwg
+{DWGBowed.ar(LFSaw.kr(0.5,add:15),[0.2,0.1],SinOsc.ar(0.125).range(0.1,1))}.play;
+{Limiter.ar(DWGPlucked.ar(LFSaw.kr(0.25,add:5),[0.01,0.01],pos:0.1,c3:2,release:0.8)).lag(0.00.5)*(-1)}.play;
+
+
+
+// glitch
+
+{GlitchBPF.ar(LFSaw.ar(54!2).lag(0.02),200)}.play;
+{GlitchHPF.ar(LFSaw.ar(54!2).lag(0.02),200)}.play;
+{GlitchRHPF.ar(LFSaw.ar(54!2).lag(0.02),50+fib(10),0.2)}.play;
+
+
+///moog
+{MoogLadder.ar(LFSaw.ar(54!2).lag(0.02),fib(10).sum,0.5)}.play;
+
+
+PV_NoiseSynthF.new
