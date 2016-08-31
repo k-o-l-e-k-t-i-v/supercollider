@@ -65,16 +65,15 @@
   var imp = PulseDivider.kr(~tick.kr,[2,4,16,24],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
-  var env2 = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.75],[3,-3],curve:'exp'),imp * hit);
   var sig = SinOsc.ar([1500,50]) + WhiteNoise.ar(0.01);
   sig = sig * env;
   
   sig = LocalIn.ar(4) + sig;
   sig = DelayN.ar(sig,1/50*lar,1/50*lar);
-  sig = LPF.ar(sig,18000);
-  LocalOut.ar(sig/1.0001);
+  sig = LPF.ar(sig,1800);
+  LocalOut.ar(sig/1.3001);
 
-  sig = sig * env2;
+  //sig = sig * env2;
 
   Splay.ar(sig,0.75,0.5);
 };
@@ -108,7 +107,7 @@
   mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1/2);
   high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,15000)),3/4,1/2,1/2);
   sig = CompanderD.ar((high+mid+low).flat,3/4,1/2,1/2,0.002,0.3);
-  sig = LPF.ar(DWGReverb.ar(NumChannels.ar(sig,2),[4000,4010]),2000);
+  sig = LPF.ar(DWGReverb.ar(NumChannels.ar(sig,2),[4000,4010]),2000) * LFSaw.ar(1/4) + sig;
   Splay.ar(sig,0.75,0.15);
 };
 ~one2.play;
