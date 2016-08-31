@@ -52,7 +52,7 @@
 (
 ~ttt.ar(2);
 ~ttt.quant=2;
-~ttt.fadeTime=8.2;
+~ttt.fadeTime=1.2;
 ~ttt={
   //         |       |       |       |       |  
   var pat = [
@@ -65,17 +65,17 @@
   var imp = PulseDivider.kr(~tick.kr,[2,4,16,24],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
-  var sig = SinOsc.ar([1500,50]) + WhiteNoise.ar(0.01);
+  var sig = SinOsc.ar([15000,50],mul:0.7) + WhiteNoise.ar(0.01);
   sig = sig * env;
   
   sig = LocalIn.ar(4) + sig;
-  sig = DelayN.ar(sig,1/50*lar,1/50*lar);
-  sig = LPF.ar(sig,1800);
-  LocalOut.ar(sig/1.3001);
+  sig = DelayN.ar(sig,1/500*lar,1/50*lar);
+  sig = LPF.ar(sig,18000);
+  LocalOut.ar(sig/1.1001);
 
   //sig = sig * env2;
 
-  Splay.ar(sig,0.75,0.5);
+  Splay.ar(sig,0.75,0.75);
 };
 ~ttt.play;
 );
