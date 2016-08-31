@@ -30,6 +30,23 @@ ProxySynthDef(\zit, {
 }).add;
 
 
+ProxySynthDef(\noiserand, {
+	arg  sustain,  amp, pan, hpf, noise;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env([0,1,0],[3,0.01],[\lin, \exp]),timeScale:sustain,doneAction:2);
+
+	sig=(WhiteNoise.ar(LFNoise0.kr(3).range(0.1,0.6))*LFSaw.kr(LFNoise0.kr(20).range(0.5,4)))+GrayNoise.ar(LFNoise0.kr(5).range(0.1,0.8));
+	sig=sig+BPF.ar(GrayNoise.ar(1!2),\freq.kr,LFNoise0.kr(0.5).range(0.2,2));
+	sig=FreeVerb.ar(sig,LFNoise0.kr(20).range(0.3,1),LFNoise0.kr(3).range(0.5,2),LFNoise0.kr(3).range(0.2,1),0.2,add:sig);
+	sig=Clip.ar(Splay.ar(sig),-1,1);
+	sig=Pan2.ar(sig, SinOsc.kr(0.25));
+	sig=sig*env*amp;
+
+}).add;
+
+
+
 
 ProxySynthDef(\rrr2, {
 	arg  sustain,  amp, pan, lag;
