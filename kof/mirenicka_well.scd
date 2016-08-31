@@ -61,7 +61,7 @@
     1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
     1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,
   ].rotate(3);
-  var lar = Duty.kr(1/4,0,Dseq([1,2,1.5,1.333],inf)).lag(1/5);
+  var lar = Duty.kr(4,0,Dseq([1,2,1.5,1.333],inf)).lag(1/5);
   var imp = PulseDivider.kr(~tick.kr,[2,4,16,24],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
