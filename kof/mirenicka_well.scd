@@ -61,20 +61,22 @@
     1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
     1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,
   ].rotate(3);
-  var lar = Duty.kr(4,0,Dseq([1,2,1.5,1.333],inf));
+  var lar = Duty.kr(8,0,Dseq([1,2,1.5,1.333],inf));
   var imp = PulseDivider.kr(~tick.kr,[2,4,16,24],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.015],[3,-3],curve:'exp'),imp * hit);
-  var sig = SinOsc.ar([15000,570]) + WhiteNoise.ar(0.01);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
+  var env2 = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.75],[3,-3],curve:'exp'),imp * hit);
+  var sig = SinOsc.ar([1500,50]) + WhiteNoise.ar(0.01);
   sig = sig * env;
   
-  sig = LocalIn.ar(2) + sig;
+  sig = LocalIn.ar(4) + sig;
   sig = DelayN.ar(sig,1/50*lar,1/50*lar);
   sig = LPF.ar(sig,18000);
-  LocalOut.ar(sig/1.001);
+  LocalOut.ar(sig/1.0001);
 
+  sig = sig * env2;
 
-  Splay.ar(sig,0.75,0.75);
+  Splay.ar(sig,0.75,0.5);
 };
 ~ttt.play;
 );
@@ -107,7 +109,7 @@
   high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,15000)),3/4,1/2,1/2);
   sig = CompanderD.ar((high+mid+low).flat,3/4,1/2,1/2,0.002,0.3);
   sig = LPF.ar(DWGReverb.ar(NumChannels.ar(sig,2),[4000,4010]),2000);
-  Splay.ar(sig,0.75,0.015);
+  Splay.ar(sig,0.75,0.15);
 };
 ~one2.play;
 );
