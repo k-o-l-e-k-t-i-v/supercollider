@@ -61,21 +61,23 @@
     1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
     1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,
   ].rotate(3);
-  var lar = Duty.kr(4,0,Dseq([1,2,1.5,1.333],inf)).lag(1/5);
+  var lar = Duty.kr(2,0,Dseq([1,2,1.5,1.333],inf)).lag(1/60);
   var imp = PulseDivider.kr(~tick.kr,[2,4,16,24],~counter.kr);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3],curve:'exp'),imp * hit);
-  var sig = SinOsc.ar([15000,50],mul:0.7) + WhiteNoise.ar(0.01);
+  var sig = SinOsc.ar([15000,50],mul:0.7) + WhiteNoise.ar(0.02);
   sig = sig * env;
   
   sig = LocalIn.ar(4) + sig;
-  sig = DelayN.ar(sig,1/50*lar,1/50*lar);
-  sig = LPF.ar(sig,1800);
-  LocalOut.ar(sig/1.01);
+  sig = DelayN.ar(sig,1/100*lar,1/lar);
+
+  sig = BPF.ar(sig,15000/(lar*2**2),0.2);
+  LocalOut.ar(sig/1.001);
+  sig = Normalizer.ar(sig)/2;
 
   //sig = sig * env2;
 
-  Splay.ar(sig,0.75,0.75);
+  Splay.ar(sig,0.75,0.5);
 };
 ~ttt.play;
 );
@@ -97,18 +99,20 @@
   var synths = p.playingProxies;
   var high,mid,low;
   var sig = [];
-  var mod = Duty.kr(4,0,Dseq([1,2,1.5,1.3333],inf));
+  var mod2 = Duty.kr([4,2]*8,0,Dseq([1,2,1.5,1.3333],inf)).lag(1);
+
+  var mod = Duty.kr([4,2],0,Dseq([1,2,1.5,1.3333],inf)).lag(1);
   synths.collect{|n| if(n!=\one2){sig=sig++p.[n.asSymbol];}};
 
   //sig = Resonz.ar(sig,MouseX.kr(100,10000,(1..8)),MouseY.kr(0.1,1,(1..4)/16))/4;
-  sig = CombN.ar(sig,1/50*mod,1/50*mod,1.5) +sig;
-  //sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
+  sig = CombN.ar(sig,1/100/mod2,1/100/mod2*mod,0.5) +sig;
+  sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
   low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/2!2).range(100,1800)),3/4,1/2,1/2);
   mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1/2);
   high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,15000)),3/4,1/2,1/2);
   sig = CompanderD.ar((high+mid+low).flat,3/4,1/2,1/2,0.002,0.3);
-  sig = LPF.ar(DWGReverb.ar(NumChannels.ar(sig,2),[4000,4010]),2000) + sig;
-  Splay.ar(sig,0.75,0.35);
+  sig = LPF.ar(DWGReverb.ar(NumChannels.ar(sig,2),[4000,4010]),2000)/4+sig/2;
+  Splay.ar(sig,0.75,0.75);
 };
 ~one2.play;
 );
