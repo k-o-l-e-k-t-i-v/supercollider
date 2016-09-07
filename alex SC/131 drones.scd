@@ -11,6 +11,7 @@ p.gui;
 
 ~raw.clear;
 ~raw.stop(fadeTime:10);
+
 ~raw.play(vol:0.5, fadeTime:2, numChannels:2).quant_(2);
 (
 ~raw[0]={
@@ -73,7 +74,7 @@ p.gui;
 
 ~drum1.clear;
 ~drum1.stop(fadeTime:10);
-~drum1.play(vol:0.1, fadeTime:4, numChannels:2).quant_(4);
+~drum1.play(vol:0.051, fadeTime:4, numChannels:2).quant_(4);
 (~drum1[0]=Pbind(
 	\instrument, \drum,
 	\amp,Pseq([0.6,0.1],inf),
@@ -114,7 +115,8 @@ p.gui;
 	\instrument, \voice,
 	\amp,0.8,
 	\legato,Prand([0.2,0.1,0.3],inf),
-	\freq,Prand([[160,180],[80,220],[180,60],[80,220]],inf),
+	\octave,[4,7],
+	\degree, [4,2],//Prand([[160,180],[80,220],[180,60],[80,220]],inf),
 	\dur, Prand([4,2],inf),
 );)
 ~voice1[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,[140,120],[10,12],mul:0.3,add:in*0.3),0.7)};
