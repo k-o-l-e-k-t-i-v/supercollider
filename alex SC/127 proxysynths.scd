@@ -137,6 +137,26 @@ ProxySynthDef(\vrr, {
 
 }).add;
 
+
+ProxySynthDef(\kick, {|out=0, amp=0.1, pan=0|
+	var env0, env1, env1m, snd;
+
+	env0=EnvGen.ar(Env([0.5,1,0.5,0],[0.005,0.06,0.26],[-4,-2,-4]),dooneAction:2);
+	env1=EnvGen.ar(Env([110, 59, 29], [0.005, 0.29], [-4,-5]));
+	env1m=env1.midicps;
+
+	snd=LFPulse.ar(env1m, 0, 0.5, 1, -0.5);
+	snd=snd+WhiteNoise.ar(1);
+	snd=LPF.ar(snd, env1m*1.5, env0);
+
+	snd=snd*1.2;
+	snd=snd.clip2(1);
+	snd=LPF.ar(snd, 120).tanh;
+
+	OffsetOut.ar(out, Pan2.ar(snd*amp));
+}).add;
+
+
 ProxySynthDef(\strange, {
 	arg  sustain,  amp;
 	var sig, env, fenv;
@@ -158,13 +178,21 @@ ProxySynthDef(\aural, {
 
 }).add;
 
+//LFPulse.ar(fenv,0,0.5,add:-0.5)+
+
 ProxySynthDef(\tum, {
 	arg  sustain,  amp, pan, rq;
 	var sig, env, fenv;
 
-	env=EnvGen.kr(Env([0,1,0],[0.01,0.9]),timeScale:sustain,doneAction:2);
-	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*\top.kr(6), \freq.kr],[0.001,0.05]));
-	sig=SinOsc.ar(fenv)+BPF.ar(Clip.ar(GrayNoise.ar(1,1),0.9,1), fenv,rq);
+	env=EnvGen.kr(Env([0.5,1,0.5,0],[0.001,0.06,0.26],[-4,-2,-4]),timeScale:sustain,doneAction:2);
+	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*\top.kr(6), \freq.kr],[0.005,0.026]));
+
+	//env=EnvGen.ar(Env([0.5,1,0.5,0],[0.005,0.06,0.26],[-4,-2,-4]),dooneAction:2);
+	//fenv=EnvGen.ar(Env([110, 59, 29], [0.005, 0.29], [-4,-5]));
+
+	sig=SinOsc.ar(fenv,env**20*8pi);
+	sig=sig+BPF.ar(GrayNoise.ar(1!2,add:-0.5),fenv,rq);
+
 	sig=Pan2.ar(Splay.ar(sig)*env*amp, pan);
 
 }).add;

@@ -97,3 +97,23 @@ AutoIDE.prStore(\alpf, {~n1[33]=\filter->{arg in; LPF.ar(in,\lpf.kr(400,2))};});
 
 //limiter
 AutoIDE.prStore(\alimit, {~n1[36]=\filter-> {arg in; Limiter.ar(in,0.9)}});
+
+
+//node pattern
+AutoIDE.prStore(\anode, {~n1.clear;
+~n1.stop(freeTime:10);
+~n1.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+~n1[0]=Pbind(
+	\instrument, \tum,
+	\amp, 1,
+	\legato, 1,
+	\pan, 0,
+	\octave, [2,3],
+	\degree, [3,6],
+	\dur, 0.5,
+	\rq,0.2,
+);
+~n1[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(120,2)),0.7)};
+~n1[4]=\filter->{arg in; Limiter.ar(GVerb.ar(Splay.ar(in),20,[2,1],mul:0.2)+in,0.7)};
+	~n1[4]=nil;
+});

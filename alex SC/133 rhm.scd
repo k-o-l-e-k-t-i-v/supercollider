@@ -5,8 +5,11 @@ p=ProxySpace.push(s);
 p.makeTempoClock;
 ProxySynthDef.sampleAccurate = true;
 )
-p.clock.tempo = 60/60;
+p.clock.tempo = 120/60;
 p.gui;
+
+AutoIDE.run;
+
 
 
 ~drujba.clear;
@@ -42,7 +45,7 @@ p.gui;
 
 ~noiserand1.clear;
 ~noiserand1.stop(fadeTime:10);
-~noiserand1.play(vol:0.1, fadeTime:4, numChannels:2).quant_(4);
+~noiserand1.play(vol:0.2, fadeTime:4, numChannels:2).quant_(4);
 (~noiserand1[0]=Pbind(
 	\instrument, \noiserand,
 	\amp,1,
