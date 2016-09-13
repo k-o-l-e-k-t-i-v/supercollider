@@ -3,15 +3,15 @@ AutoIDE.prStore(\pbselect,{~nodeIndex = \set -> Pbind(\args, [\sel], \sel, Pseq(
 AutoIDE.prStore(\setlpf,{~nodeName.set(\lpf_freq, 800);});
 AutoIDE.prStore(\ndflat,{~nodeIndex = \filter -> {|in| Balance2.ar( Mix.ar(in), Mix.ar(in), 1) };});
 AutoIDE.prStore(\setgverb,{~nodeName.set(\gverb_size, 60);
-~nodeName.set(\gverb_time, 4);});
+	~nodeName.set(\gverb_time, 4);});
 AutoIDE.prStore(\ndlimiter,{~nodeIndex = \filter -> {|in| Limiter.ar(in, 0.95) };});
 AutoIDE.prStore(\ndscope,{~nodeName.scope;});
 AutoIDE.prStore(\ndgverb,{~nodeIndex = \filter -> {|in| GVerb.ar(in, \gverb_size.kr(12), \gverb_time.kr(1), 0.9, mul:\mulgverb.kr(1)) };});
 AutoIDE.prStore(\qenv,{(
-~nodeIndex = \set -> QuantEnv(\amp, 1)
-.phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1)
-.phase(2, [0,1,0], [0.35, 0.65], [2,-2], 0, 1)
-.play([1,2]);
+	~nodeIndex = \set -> QuantEnv(\amp, 1)
+	.phase(1, [0,1,0], [0.05, 0.95], [2,-2], 0, 1)
+	.phase(2, [0,1,0], [0.35, 0.65], [2,-2], 0, 1)
+	.play([1,2]);
 )});
 AutoIDE.prStore(\ndsin,{(
 	~nodeName[0] = {
@@ -26,9 +26,9 @@ AutoIDE.prStore(\ndlpf,{~nodeIndex = \filter -> {|in| LPF.ar(in, \lpf_freq.kr(80
 AutoIDE.prStore(\setfreq,{~nodeName.set(\freq, 80);});
 AutoIDE.prStore(\varaenv,{var aEnv = EnvGen.ar(Env([0,1,0], [0.95,0.05], [\sin, \welch]), \aTrig.tr);});
 AutoIDE.prStore(\varfill,{var num = 8;
-var osc = Mix.fill(num, {|i| SinOsc.ar(60,0.05*i,1/num)});});
+	var osc = Mix.fill(num, {|i| SinOsc.ar(60,0.05*i,1/num)});});
 AutoIDE.prStore(\proxy,{p = ProxySpace.push(s).makeTempoClock;
-p.clock.tempo_(240/60);});
+	p.clock.tempo_(240/60);});
 AutoIDE.prStore(\envg,{EnvGen.ar( Env( [0,1,0], [0.15,0.85]), \aTrig.tr )});
 AutoIDE.prStore(\pbtrig,{~nodeIndex = \set -> Pbind(\args, [\aTrig], \aTrig, 1, \dur, 1);});
 AutoIDE.prStore(\pbpan,{~nodeIndex = \set -> Pbind(\args, [\pan], \pan, Pseq([-0.7,0.7], inf), \dur, 0.5);});
@@ -48,11 +48,11 @@ AutoIDE.prStore(\kolektiv,{Kolektiv(\joach);
 AutoIDE.prStore(\setamp,{~nodeName.set(\amp, 0.3);});
 AutoIDE.prStore(\pbfreq,{~nodeIndex = \set -> Pbind(\args, [\freq], \octave, 3, \degree, Pseq([3,4,3,7], inf), \dur, 4);});
 AutoIDE.prStore(\ndswitch,{(
-~nodeIndex = \set-> Pswitch(
-[
-QuantEnv(\amp, 1, [0,1,0], [0.05, 0.45], \exp, 0, 7),
-QuantEnv(\amp, 1, [0,1,0], [0.95, 0.05], \exp, 0, 1),
-], Pseq([0,1], inf)
+	~nodeIndex = \set-> Pswitch(
+		[
+			QuantEnv(\amp, 1, [0,1,0], [0.05, 0.45], \exp, 0, 7),
+			QuantEnv(\amp, 1, [0,1,0], [0.95, 0.05], \exp, 0, 1),
+		], Pseq([0,1], inf)
 ))});
 AutoIDE.prStore(\ndsaw,{(
 	~nodeName[0] = {
@@ -100,20 +100,104 @@ AutoIDE.prStore(\alimit, {~n1[36]=\filter-> {arg in; Limiter.ar(in,0.9)}});
 
 
 //node pattern
-AutoIDE.prStore(\anode, {~n1.clear;
-~n1.stop(freeTime:10);
-~n1.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
-~n1[0]=Pbind(
-	\instrument, \tum,
-	\amp, 1,
-	\legato, 1,
-	\pan, 0,
-	\octave, [2,3],
-	\degree, [3,6],
-	\dur, 0.5,
-	\rq,0.2,
-);
-~n1[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(120,2)),0.7)};
-~n1[4]=\filter->{arg in; Limiter.ar(GVerb.ar(Splay.ar(in),20,[2,1],mul:0.2)+in,0.7)};
-	~n1[4]=nil;
+AutoIDE.prStore(\atum, {~tum.clear;
+	~tum.stop(freeTime:10);
+	~tum.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+	~tum[0]=Pbind(
+		\instrument, \tum,
+		\amp, 1,
+		\legato, 1,
+		\pan, 0,
+		\octave, [2,3],
+		\degree, [3,6],
+		\dur, 0.5,
+		\rq,0.2,
+	);
+	~tum[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(120,2)),0.7)};
+	~tum[4]=\filter->{arg in; Limiter.ar(GVerb.ar(Splay.ar(in),20,[2,1],mul:0.2)+in,0.7)};
+
+});
+
+AutoIDE.prStore(\akick, {~kick.clear;
+	~kick.stop(freeTime:10);
+	~kick.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+	~kick[0]=Pbind(
+		\instrument, \kick,
+		\amp, 1,
+		\legato, 1,
+		\pan, Pseq([-1,01],inf),
+		\freq, [45,47],
+		\dur, 0.5,
+	);
+	~kick[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(120,2)),0.7)};
+	~kick[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in,80,[2,1],mul:0.2)+in,0.7)};
+
+});
+
+AutoIDE.prStore(\aaural, {~aural.clear;
+	~aural.stop(freeTime:10);
+	~aural.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+	~aural[0]=Pbind(
+		\instrument, \aural,
+		\amp,Prand([0.8,0.4,0.6],inf)/4,
+		\legato, 1.5,
+		\octave, Prand([[5,6],[4,2],[5,4],[3,6]],inf)-1,
+		\degree, Prand([[1,5],[4,7],[7,2],[2,4],[2,6],[4,2]],inf),
+		\dur, 4
+	);
+	~aural[5]=\filter->{arg in; GVerb.ar(in,[40,60],[8,4],mul:0.2)+in};
+	~aural[6]=\filter->{arg in; LPF.ar(in,\lpf3.kr(2000,4))};
+	// ~aural[7]=\set->Pbind(\args, [\lpf], \dur,1, \lpf, 1000);
+
+
+});
+
+AutoIDE.prStore(\azit, {~zit.clear;
+	~zit.stop(freeTime:10);
+	~zit.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+	~zit[0]=Pbind(
+		\instrument, \zit,
+		\amp, 1,
+		\legato, 1,
+		\pan, Pseq([1,0,-1,-1,1,-1],inf),
+		\octave, [4,8,6]-1,
+		\degree, [3,6],
+		\dur, 0.5,
+		\hpf, 1000,
+		\noise, 0.5,
+		\rq,0.2,
+	);
+	~zit[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(120,2)),0.7)};
+	~zit[4]=\filter->{arg in; Limiter.ar(GVerb.ar(Splay.ar(in),20,[2,1],mul:0.2)+in,0.7)};
+	~zit[5]=\filter->{arg in; AllpassN.ar(Splay.ar(in),0.02)};
+	~zit[6]=\filter->{arg in; GVerb.ar(in,20,[4,6],mul:0.2,add:in)};
+	~zit[7]=\filter->{arg in; LPF.ar(in, \lpf2.kr(400,4))};
+
+});
+
+AutoIDE.prStore(\azzz, {
+	~zzz1.clear;
+	~zzz1.stop(freeTime:10);
+	~zzz1.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+	(~zzz1[0]=Pbind(
+		\instrument, \zzz,
+		\amp, 1,
+		\sustain, 1.2,
+		\dur, Prand([4,6,8],inf),
+		\freq, Pseq([60,200,90,80, Prand([800,1000,900],1)],inf),
+	);)
+	~zzz1[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(220,2)),0.7)};
+	~zzz1[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in!2,80,[2,1],mul:0.2)+in,0.7)};
+});
+
+
+AutoIDE.prStore(\abegin,{
+	currentEnvironment.free;
+	p=ProxySpace.push(s);
+	p.makeTempoClock;
+	ProxySynthDef.sampleAccurate = true;
+
+	p.clock.tempo = 128/60;
+	p.gui;
+
 });

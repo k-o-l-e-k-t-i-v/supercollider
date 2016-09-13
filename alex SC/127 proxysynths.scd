@@ -78,16 +78,6 @@ ProxySynthDef(\scr, {
 
 
 
-ProxySynthDef(\dust, {
-	arg  sustain,  amp, pan, hpf,den;
-	var sig, env, fenv;
-
-	env=EnvGen.kr(Env([0,1,0.7,1,0],[0.01,0.1,0.05,0.2]),timeScale:sustain,doneAction:2);
-	sig=Dust.ar(den+[5,12]);
-	sig=CombN.ar(sig,0.5,0.15,1);
-	sig=sig*env*amp;
-
-}).add;
 
 
 ProxySynthDef(\noiselong, {
@@ -125,47 +115,20 @@ ProxySynthDef(\mel, {
 
 }).add;
 
-ProxySynthDef(\vrr, {
-	arg  sustain, amp, lag;
+
+
+
+ProxySynthDef(\kick,{
+	arg  sustain,  amp, pan=0;
 	var sig, env, fenv;
 
-	env=EnvGen.kr(Env([0,1,0],[1,0.001]),timeScale:sustain,doneAction:2);
-	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*1.2, \freq.kr*2,\freq.kr],[0.8,0.05,0.001]),timeScale:sustain);
-	sig=LFSaw.ar(fenv).lag(0.4);
-	sig=Pan2.ar(sig,SinOsc.kr(sustain*4));
-	sig=sig*env*amp*2;
-
+	env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3],curve:'exp'),timeScale:sustain, doneAction:2);
+	sig = SinOsc.ar(\freq.kr,env**20*8pi);
+	sig = Pan2.ar(sig * env*amp,pan);
+	Splay.ar(sig,0.75,0.25);
 }).add;
 
 
-ProxySynthDef(\kick, {|out=0, amp=0.1, pan=0|
-	var env0, env1, env1m, snd;
-
-	env0=EnvGen.ar(Env([0.5,1,0.5,0],[0.005,0.06,0.26],[-4,-2,-4]),dooneAction:2);
-	env1=EnvGen.ar(Env([110, 59, 29], [0.005, 0.29], [-4,-5]));
-	env1m=env1.midicps;
-
-	snd=LFPulse.ar(env1m, 0, 0.5, 1, -0.5);
-	snd=snd+WhiteNoise.ar(1);
-	snd=LPF.ar(snd, env1m*1.5, env0);
-
-	snd=snd*1.2;
-	snd=snd.clip2(1);
-	snd=LPF.ar(snd, 120).tanh;
-
-	OffsetOut.ar(out, Pan2.ar(snd*amp));
-}).add;
-
-
-ProxySynthDef(\strange, {
-	arg  sustain,  amp;
-	var sig, env, fenv;
-
-	env=EnvGen.kr(Env([0,1,0],[0.01,0.5]),timeScale:sustain,doneAction:2);
-	sig=BPF.ar(WhiteNoise.ar(0.7),LFSaw.kr([4,3]).range(\freq.kr,\freq.kr+[200,202]),Saw.kr([5,8]).range(1,0.001));
-	sig=sig*env*amp*2;
-
-}).add;
 
 ProxySynthDef(\aural, {
 	arg  sustain,  amp;
@@ -246,6 +209,19 @@ ProxySynthDef(\dribble, {
 	sig=Limiter.ar(Splay.ar(sig),0.7);
 	sig=FreeVerb.ar(sig,room:1.5,damp:SinOsc.kr(f2),add:sig);
 
+	sig=sig*env*amp;
+}).add;
+
+
+
+
+ProxySynthDef(\zzz, {
+	arg sustain, amp;
+	var sig, env;
+	env=EnvGen.kr(Env([0,1,0],[0.1,6], [\welch,\welch]),timeScale:sustain,doneAction:2);
+	sig=CombL.ar(GrayNoise.ar(0.5),1/\freq.kr,1/(\freq.kr-10),4);
+	sig=OnePole.ar(sig,0.2)+FreeVerb.ar(sig,room:0.2);
+	sig=Limiter.ar(CompanderD.ar(Lag.ar([sig, DelayL.ar(sig,0.4,0.02)],0.002)),0.5);
 	sig=sig*env*amp;
 }).add;
 
