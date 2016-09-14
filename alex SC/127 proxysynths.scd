@@ -76,6 +76,20 @@ ProxySynthDef(\scr, {
 
 }).add;
 
+ProxySynthDef(\ottto, {
+	arg  sustain,  amp, dist=1200,lpfmul=0.5;
+	var sig, env, env2;
+
+	env=EnvGen.kr(Env([0,1,0],[4,0.02]),timeScale:sustain,doneAction:2);
+	env2= EnvGen.kr( Env([0,1,0],[0.05,1]),timeScale: sustain/2, doneAction: 2 );
+	sig = RLPF.ar( LFSaw.ar( \freq.kr, mul: env2), LFSaw.kr(0.015,mul: 36,add: 55).midicps, 0.2 ).lag(0.02);
+	sig = AllpassN.ar(sig, [0.05, 0.05, 0.08], [0.05.rand, 0.05.rand], 4);
+	sig = LPF.ar(sig, [200, 400, 600, 100], lpfmul);
+	sig = tanh(sig * dist);
+	sig=sig*env*amp;
+
+}).add;
+
 
 
 
