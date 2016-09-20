@@ -185,7 +185,7 @@ AutoIDE.prStore(\azzz, {
 		\sustain, 1.2,
 		\dur, Prand([4,6,8],inf),
 		\freq, Pseq([60,200,90,80, Prand([800,1000,900],1)],inf),
-	);)
+	););
 	~zzz1[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(220,2)),0.7)};
 	~zzz1[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in!2,80,[2,1],mul:0.2)+in,0.7)};
 });

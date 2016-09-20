@@ -17,31 +17,32 @@ AutoIDE.run;
 (~kick[0]=Pbind(
 	\instrument, \kick,
 	\amp,1,
-	\freq, [44,45],
+	\freq, [44,45]-5,
 	\dur, Pseq([Pseq([4,[0.1!4,-1,0.1,-0.1,0.1!3,-0.1].flatten,3].convertRhythm),
 		Pseq([4,[0.1!4,-1,0.1,0.1,0.1!3,-0.1].flatten,3].convertRhythm)
 	],inf),
 	\top, 40,
 
 ););
-~kick[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,60,mul:0.5,add:in*0.5),0.6)};
-~kick[7]=\filter->{arg in; LPF.ar(in,SinOsc.kr(1/32).range(400,200))};
+~kick[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,30,mul:0.5,add:in*0.5),0.8)};
+~kick[7]=\filter->{arg in; LPF.ar(in,SinOsc.kr(1/32).range(400,600))+in};
 ~kick[6]=nil;
+
 
 ~bum.clear;
 ~bum.stop(freeTime:10);
-~bum.play(vol:0.5, fadeTime:4, numChannels:2).quant_(4);
+~bum.play(vol:1, fadeTime:4, numChannels:2).quant_(4);
 (~bum[0]=Pbind(
 	\instrument, \bum,
 	\legato,0.2,
 	\amp, 1,
 	\dur,Pseq([1,Rest(1)],inf),
 	\pan, 0,
-	\freq, [45,47]-20,
+	\freq, [45,47]-0,
 
 ););
-~bum[3]=\filter->{arg in; LPF.ar(in,\lpf4.kr(80,2))};
-~bum[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in,120,4,mul:0.2)+in)};
+~bum[3]=\filter->{arg in; LPF.ar(in,\lpf4.kr(180,2))};
+~bum[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in,120,2,mul:0.2)+in)};
 ~bum[4]=nil;
 
 
@@ -70,31 +71,31 @@ m=Group.new;
 d=Group.new;
 ~drujba.clear;
 ~drujba.stop(fadeTime:20);
-~drujba.play(vol:0.8, fadeTime:4, numChannels:2,group:d).quant_(4);
+~drujba.play(vol:1, fadeTime:4, numChannels:2,group:d).quant_(4);
 (~drujba[0]=Pbind(
 	\instrument, \zit,
 	\amp,1,
 	\legato, 0.8,
-	\freq,30,//Prand([200,400,1200,100,65,200,400],inf),
+	\freq,80,//Prand([200,400,1200,100,65,200,400],inf),
 	\noise, 0.9,
 	\dur, 0.2,//Prand([Pseq([Pn(0.05*40), Rest(2)],2),Pseq([Pn(0.05*20), Rest(3)],1)],inf),
 ););
 ~drujba[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,[40,80],revtime:LFSaw.kr(1/16).range(4,40),damping:SinOsc.kr(0.125).range(0.6,0.9),mul:0.1,add:in*0.5),0.7)};
-~drujba[7]=\filter->{arg in; LPF.ar(in, SinOsc.kr(1/32).range(200,800))};
+~drujba[7]=\filter->{arg in; LPF.ar(in, SinOsc.kr(1/32).range(400,900))};
 
 
 z=Group.new;
 ~zit1.clear;
 ~zit1.stop(fadeTime:10);
-~zit1.play(vol:0.00001, fadeTime:4, numChannels:2, group:z).quant_(4);
+~zit1.play(vol:0.1, fadeTime:4, numChannels:2, group:z).quant_(4);
 (~zit1[0]=Pbind(
 	\instrument, \zit,
-	\amp,0.02,
+	\amp,0.2,
 	\legato, 0.7,
 	\freq,Prand([4000,2000,2000,4000],inf),
 	\noise, 0.5,
-	\hpf, 9000,
-	\dur, Pseq([0.1,Rest(0.1)],inf)
+	\hpf, 900,
+	\dur, Pseq([0.2,Rest(0.1)],inf)
 ););
 ~zit1[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,20,10,mul:0.6,add:in*0.5))};
 ~zit1[8]=\filter->{arg in; HPF.ar(in*SinOsc.kr(1/32).range(0.1,0.8),SinOsc.kr(1/32).range(12000,9000))};
