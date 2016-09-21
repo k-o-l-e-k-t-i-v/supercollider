@@ -5,7 +5,7 @@ p=ProxySpace.push(s);
 p.makeTempoClock;
 ProxySynthDef.sampleAccurate = true;
 )
-p.clock.tempo = 60/60;
+p.clock.tempo = 128/60;
 p.gui;
 
 
@@ -56,25 +56,41 @@ p.gui;
 ~tz[7]=\filter->{arg in; in*SinOsc.kr(0.125).range(0.6,1)};
 
 
-
+/////////////////////////////////YES
 ~bumnoise.clear;
 ~bumnoise.stop(fadeTime:10);
-~bumnoise.play(vol:0.2, fadeTime:4, numChannels:2).quant_(4);
+~bumnoise.play(vol:0.6, fadeTime:4, numChannels:2).quant_(4);
 (~bumnoise[0]=Pbind(
 	\instrument, \bum,
 	\amp,1,
-	\legato, 1,
-	\freq, [44,45],
-	\noise, Pseq([Pn(0.02,6),Pn(0.2,6),Pn(0.1,6)],inf),
-	\dur, Pseq([1,Rest(1)],inf)
+	\legato, 0.5,
+	\freq,[65,67]-15,
+	\noise, Pseq([Pn(0.02,6),Pn(0.002,6),Pn(0.1,6)],inf),
+	\dur, Pseq([Pseq([4,[0.25!6,-1].flatten,4].convertRhythm),
+		Pseq([4,[0.25!3,-0.5,0.25!3,-0.5].flatten,1].convertRhythm),
+	],inf)
 );)
-~bumnoise[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,120,revtime:LFSaw.kr(1/16).range(4,40),damping:SinOsc.kr(0.125).range(0.3,0.8),mul:0.1,add:in*0.5))};
+~bumnoise[6]=\filter->{arg in; GVerb.ar(in,120,damping:SinOsc.kr(0.125).range(0.3,0.8),mul:0.1,add:in*0.9)};
+//////////////////////////////////////////////////
 
 
+~bumnoise1.clear;
+~bumnoise1.stop(fadeTime:10);
+~bumnoise1.play(vol:0.8, fadeTime:4, numChannels:2).quant_(4);
+(~bumnoise1[0]=Pbind(
+	\instrument, \bum,
+	\amp,1,
+	\legato, 0.5,
+	\freq,[65,67]-15,
+	\noise, Pseq([Pn(0.02,6),Pn(0.002,6),Pn(0.1,6)],inf),
+	\dur, Pseq([1, Rest(3)],inf)
+);)
+~bumnoise1[6]=\filter->{arg in; GVerb.ar(in,120,damping:SinOsc.kr(0.125).range(0.3,0.8),mul:0.1,add:in*0.9)};
+////////////////////////////////////
 
 ~drum1.clear;
 ~drum1.stop(fadeTime:10);
-~drum1.play(vol:0.051, fadeTime:4, numChannels:2).quant_(4);
+~drum1.play(vol:0.4, fadeTime:4, numChannels:2).quant_(4);
 (~drum1[0]=Pbind(
 	\instrument, \drum,
 	\amp,Pseq([0.6,0.1],inf),
