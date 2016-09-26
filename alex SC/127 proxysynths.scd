@@ -162,13 +162,13 @@ ProxySynthDef(\tum, {
 	var sig, env, fenv;
 
 	env=EnvGen.kr(Env([0.5,1,0.5,0],[0.001,0.06,0.26],[-4,-2,-4]),timeScale:sustain,doneAction:2);
-	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*\top.kr(6), \freq.kr],[0.005,0.026]));
+	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*\top.kr(4), \freq.kr],[0.005,0.026]));
 
 	//env=EnvGen.ar(Env([0.5,1,0.5,0],[0.005,0.06,0.26],[-4,-2,-4]),dooneAction:2);
 	//fenv=EnvGen.ar(Env([110, 59, 29], [0.005, 0.29], [-4,-5]));
 
 	sig=SinOsc.ar(fenv,env**20*8pi);
-	sig=sig+BPF.ar(GrayNoise.ar(1!2,add:-0.5),fenv,rq);
+	sig=sig+BPF.ar(GrayNoise.ar(1!2),fenv,rq);
 
 	sig=Pan2.ar(Splay.ar(sig)*env*amp, pan);
 

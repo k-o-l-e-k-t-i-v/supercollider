@@ -3,7 +3,7 @@ p=ProxySpace.push(s);
 p.makeTempoClock;
 ProxySynthDef.sampleAccurate = true;
 
-p.clock.tempo = 128/60;
+p.clock.tempo = 127/60;
 p.gui;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,9 +13,12 @@ p.gui;
 ~intro.clear(fadeTime:10);
 (~intro[0]={BPF.ar(GVerb.ar(Wrap.ar(CombN.ar(Dust.ar(Line.kr(18,1800,30)!2),2,1)*(-1),-0.8,0.8),120,5,mul:0.7),Line.kr(45,5000,30),Line.kr(2,0.02,30))};)
 
+
+
+
 ~tum1.clear;
 ~tum1.stop(freeTime:10);
-~tum1.play(vol:0.01, fadeTime:4, numChannels:2).quant_(4);
+~tum1.play(vol:1, fadeTime:4, numChannels:2).quant_(4);
 (~tum1[0]=Pbind(
 	\instrument, \tum,
 	\amp, Pseq([1!3,0.5,1],inf),
@@ -27,31 +30,33 @@ p.gui;
 	\rq, Pseq([Pseries(2,0.2,100),Pseries(0.1,0.2,100)],inf),
 );)
 ~tum1[3]=\filter->{arg in; Limiter.ar(LPF.ar(in,\lpf4.kr(400,2)),0.7)};
-~tum1[4]=\filter->{arg in; Limiter.ar(GVerb.ar(Splay.ar(in),20,[2,1],mul:0.2)+in,0.7)};
-// ~tum1[4]=nil;
+~tum1[4]=\filter->{arg in; Limiter.ar(GVerb.ar(Splay.ar(in),20,[2,1],mul:0.1)+in,4)};
+~tum1[4]=nil;
 
 
 
 ~bum1.clear;
 ~bum1.stop(fadeTime:10);
-~bum1.play(vol:0.9, fadeTime:4, numChannels:2).quant_(4);
+~bum1.play(vol:0.2, fadeTime:4, numChannels:2).quant_(4);
 (~bum1[0]=Pbind(
 	\instrument, \bum,
 	\amp,1,
 	\legato, 1,
 	\freq, [44,45],
+	\rq, 0.002,
 	\dur, Pseq([Pseq([1,Rest(1)],4)],inf)
 );)
 ~bum1[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,20,mul:0.1,add:in*0.5))};
 
 
-// ~aural1.stop(fadeTime:10);
-~aural1.play(vol:0.01, fadeTime:4, numChannels:2).quant_(4);
+
+~aural1.stop(fadeTime:10);
+~aural1.play(vol:0.03, fadeTime:4, numChannels:2).quant_(4);
 (~aural1[0]=Pbind(
 	\instrument, \aural,
 	\amp,Prand([0.8,0.4,0.6],inf)/4,
 	\legato, 1.5,
-	\octave, Prand([[5,6],[4,2],[5,4],[3,6]],inf)-1,
+	\octave, Prand([[5,6],[4,2],[5,4],[3,6]],inf)+1,
 	\degree, Prand([[1,5],[4,7],[7,2],[2,4],[2,6],[4,2]],inf),
 	\dur, 2
 );)
@@ -59,6 +64,8 @@ p.gui;
 ~aural1[6]=\filter->{arg in; LPF.ar(in,\lpf3.kr(2000,4))};
 // ~aural1[7]=\set->Pbind(\args, [\lpf], \dur,1, \lpf, 1000);
 // ~aural1[7]=nil;
+
+
 
 ~zit.clear;
 ~zit.stop(fadeTime:10);
@@ -81,6 +88,7 @@ p.gui;
 // ~zit[4]=nil;
 
 
+
 ~drib1.stop(fadeTime:4);
 ~drib1.play(vol:0.2,fadeTime:4, numChannels:2).quant_(4);
 (~drib1[1]=Pbind(
@@ -95,20 +103,6 @@ p.gui;
 ););
 ~drib1[5]=\filter->{arg in; GVerb.ar(in,120,[4,6],mul:0.4,add:in)};
 
-
-
-~vrr.stop(fadeTime:10);
-~vrr.play(vol:1.2,fadeTime:4, numChannels:2).quant_(4);
-(~vrr[1]=Pbind(
-	\instrument, \vrr,
-	\dur, Pseq([Rest(16),1],inf),
-	\legato,0.3,
-	\freq, Pseq([2000,1500,400,Prand([7200,8000,6000,12000],2)],inf),
-	\amp, Prand([1.5,3,2],inf),
-	\lag, [0.04,0.02],
-););
-~vrr[5]=\filter->{arg in; CombN.ar(in,2,1,2)};
-~vrr[6]=\filter->{arg in; GVerb.ar(in,80,[4,2],mul:0.2,add:in)};
 
 
 
