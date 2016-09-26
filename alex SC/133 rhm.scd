@@ -24,7 +24,7 @@ AutoIDE.run;
 	\top, 40,
 
 ););
-~kick[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,60,mul:0.5,add:in*0.5),0.6)};
+~kick[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,30,mul:0.5,add:in*0.5),0.6)};
 ~kick[7]=\filter->{arg in; LPF.ar(in,SinOsc.kr(1/32).range(400,200))};
 ~kick[6]=nil;
 
@@ -37,11 +37,11 @@ AutoIDE.run;
 	\amp, 1,
 	\dur,Pseq([1,Rest(1)],inf),
 	\pan, 0,
-	\freq, [45,47]-20,
+	\freq, [45,47],
 
 ););
-~bum[3]=\filter->{arg in; LPF.ar(in,\lpf4.kr(80,2))};
-~bum[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in,120,4,mul:0.2)+in)};
+~bum[3]=\filter->{arg in; LPF.ar(in,\lpf4.kr(120,2))};
+~bum[4]=\filter->{arg in; Limiter.ar(GVerb.ar(in,80,4,mul:0.2)+in)};
 ~bum[4]=nil;
 
 
@@ -75,8 +75,8 @@ d=Group.new;
 	\instrument, \zit,
 	\amp,1,
 	\legato, 0.8,
-	\freq,30,//Prand([200,400,1200,100,65,200,400],inf),
-	\noise, 0.9,
+	\freq,40,//Prand([200,400,1200,100,65,200,400],inf),
+	\noise, 0.7,
 	\dur, 0.2,//Prand([Pseq([Pn(0.05*40), Rest(2)],2),Pseq([Pn(0.05*20), Rest(3)],1)],inf),
 ););
 ~drujba[6]=\filter->{arg in; Limiter.ar(GVerb.ar(in,[40,80],revtime:LFSaw.kr(1/16).range(4,40),damping:SinOsc.kr(0.125).range(0.6,0.9),mul:0.1,add:in*0.5),0.7)};
@@ -118,7 +118,7 @@ z=Group.new;
 
 g=Group.new;
 ~otto.clear;
-~otto.stop(fadeTime:20);
+~otto.stop(fadeTime:30);
 ~otto.play(vol:0.7, fadeTime:4, numChannels:2, group:g).quant_(4);
 (~otto[0]=Pbind(
 	\instrument, \ottto,
@@ -126,7 +126,7 @@ g=Group.new;
 	\legato, 3,
 	\dur, 8,
 	\octave, Pseq([Pn([3,2],4),Pn([1,2],4),Pn([6,4],2)],inf)+1,
-	\degree, [2,3]+5,
+	\degree, [2,3]+2,
 	\dist, Pseries(2,1,400),
 
 ););
