@@ -8,6 +8,14 @@
         p.clock.sched(0,{
             var synths = p.playingProxies;
             p.makeTempoClock(msg[1]/60);
+
+            ~offset = {(0..7)/8};
+
+            ~tick.quant = 0;
+            ~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
+
+            ~counter = {PulseCount.kr(~tick.kr)};
+            
             synths.collect{|n| p.[n.asSymbol].rebuild;};
         })
 
@@ -15,7 +23,7 @@
 )
 
 // reset clocks to others
-n.sendMsg('/bang',125);
+n.sendMsg('/bang',95.8);
 
 
 
