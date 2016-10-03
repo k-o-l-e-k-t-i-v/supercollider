@@ -1,4 +1,33 @@
 (
+
+ProxySynthDef(\imp, {
+	arg  sustain,  amp, pan, den,hpf;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env([0,1,0],[0.2,0.001],\welch),timeScale:sustain,doneAction:2);
+
+	sig=Impulse.ar(den).lag([0.002,0.02,0.03,0.003]);
+	sig=Pan2.ar(sig, SinOsc.kr(1));
+	sig=sig*env*amp;
+
+}).add;
+
+ProxySynthDef(\zum, {
+	arg  sustain,  amp, pan;
+	var sig,sig1,sig2, env, fenv, renv;
+
+	env=EnvGen.kr(Env([0,1,0],[0.001,0.2],\welch),timeScale:sustain,doneAction:2);
+	fenv=EnvGen.kr(Env([\freq.kr, \freq.kr*4, \freq.kr],[0.01,0.12]),timeScale:sustain);
+	renv=EnvGen.kr(Env([1,0.1,1],[0.001,0.2],\welch),timeScale:sustain,doneAction:2);
+
+	sig1=LFPulse.ar(fenv);
+	sig2=BPF.ar(WhiteNoise.ar(1),rq:renv);
+	sig=sig1+sig2;
+	sig=Pan2.ar(sig, pan);
+	sig=sig*env*amp;
+
+}).add;
+
 ProxySynthDef(\ju, {
 	arg sustain, amp, f2;
 	var sig, fenv,fenv2, env;
@@ -76,7 +105,7 @@ ProxySynthDef(\scr, {
 
 }).add;
 
-ProxySynthDef(\ottto, {
+ProxySynthDef(\oto, {
 	arg  sustain,  amp, dist=1200,lpfmul=0.5;
 	var sig, env, env2;
 
@@ -133,15 +162,26 @@ ProxySynthDef(\mel, {
 
 
 ProxySynthDef(\kick,{
-	arg  sustain,  amp, pan=0;
+	arg  sustain,  amp, pan=0, top=40;
 	var sig, env, fenv;
 
 	env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3],curve:'exp'),timeScale:sustain, doneAction:2);
-	sig = SinOsc.ar(\freq.kr,env**20*8pi);
+	sig = SinOsc.ar(\freq.kr,env**top*8pi);
 	sig = Pan2.ar(sig * env*amp,pan);
 	Splay.ar(sig,0.75,0.25);
 }).add;
 
+
+ProxySynthDef(\beez, {
+	arg  sustain,  amp;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env([0,1,0],[4,0.01]),timeScale:sustain,doneAction:2);
+	sig=LFSaw.ar(\freq.kr);
+	// sig=sig+;
+	sig=sig*env*amp;
+
+}).add;
 
 
 ProxySynthDef(\aural, {
@@ -154,6 +194,7 @@ ProxySynthDef(\aural, {
 	sig=sig*env*amp;
 
 }).add;
+
 
 //LFPulse.ar(fenv,0,0.5,add:-0.5)+
 
@@ -178,9 +219,9 @@ ProxySynthDef(\bum, {
 	arg  sustain,  amp, noise;
 	var sig, env, fenv;
 
-	env=EnvGen.kr(Env([0,1,0],[0.01,1]),timeScale:sustain,doneAction:2);
+	env=EnvGen.kr(Env([0,1,0],[0.01,[0.2,0.6]]),timeScale:sustain,doneAction:2);
 	fenv= EnvGen.kr(Env([\freq.kr,\freq.kr*4, \freq.kr],[0.001,0.05]));
-	sig=SinOsc.ar(fenv!2+fib(10).reciprocal)+HPF.ar(GrayNoise.ar(noise!2),800);
+	sig=SinOsc.ar(fenv!2+fib(10).reciprocal)+HPF.ar(GrayNoise.ar(noise!2),200);
 	sig=FreeVerb.ar(sig,mix:0.3,room:1,damp:1);
 	sig=Splay.ar(sig)*env*amp;
 
