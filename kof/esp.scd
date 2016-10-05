@@ -14,6 +14,13 @@ TempoClock.default.pause; // pause the beat
 
 
 
+p.clock = TempoClock.default;
+
+
+~a.quant = 2;
+~a.play;
+~a = {Pulse.ar(~tempo) * SinOsc.ar(440,mul:0.1)};
+
 (
 p.clock = EspClock.new;
 p.clock.start;
