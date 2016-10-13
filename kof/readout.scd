@@ -16,11 +16,6 @@ a="ahoj jak se mas dnes";
 
         //////////////////|/////////|/////////|/////////|/////////|////////| 
         code="
-        hoj všichni, v Kauflandu už začali prodávat čokoládový Mikuláše a adventní
-        kalendáře, takže i my bychom se měli začít domlouvat na letošním výjezdu na
-        silvestra. Vzhledem k tomu, že potřebujeme být s Alešem ideálně v regionu
-        jižní Čechy, protože máme brzo v lednu verni v Domě umění v Budějicích,
-        zvolili jsme již předběžně s více lidma pro letošek Šumavu.
         ";
         //////////////////|/////////|/////////|/////////|/////////|////////| 
 
