@@ -15,14 +15,14 @@ snippet synth
 	
 	(
 	~$1.ar(2);
-	~${1:}.quant=2;
+	~${1:}.quant=[2,0];
 	~$1.fadeTime=0.2;
 	~$1={
 		//         |       |       |       |       |  
-		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-		var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
+		var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3]),imp * hit);
 		var sig = ${2:SinOsc.ar(50!2)};
 		sig = sig * env;
 		Splay.ar(sig,0.75,${3:0.5});
@@ -38,6 +38,7 @@ snippet simple
 	
 	(
 	~$1.ar(2);
+	~$1.clock = p.clock;
 	~${1:}.quant=2;
 	~$1.fadeTime=4;
 	~$1={
@@ -148,7 +149,7 @@ snippet master
 		sig = Compander.ar(sig,3/4,1/1.1,1/3);
 		fx = LPF.ar(sig,lp);
 		fx = HPF.ar(fx,hp);
-		fx = DWGReverb.ar(NumChannels.ar(sig,2),[5000,5010],1/len)/rev;
+		fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
 		sig = SelectX.ar(wet,[orig,fx]);
 		sig = NumChannels.ar(sig,2);
 		ReplaceOut.ar(0,sig);
@@ -290,19 +291,47 @@ snippet grains
 	);
 	~$1.stop(7);
 	~$1.clear;
+snippet tick2
+	(
+	    s.latency=0;
+	    ~tick.kr;
+	    ~tick.clock = p.clock;
+	    ~counter = {PulseCount.kr(~tick.kr)};
+	    ~tick.fadeTime=0;
+	    ~tick.quant=0;
+	    ~tick = { Trig1.kr(1.0,0.05) };
+	    t = p.clock;
+	    t.sched(t.timeToNextBeat(1),{~tick.rebuild; 1;});
+	    p.clock.tempo_(${1:60}/60);
+	);	
 snippet tick
 	(
-		p.clock.tempo_(${1:60}/60);
-		
-		~offset = {(0..7)/8};
-		
-		~tick.quant = 1;
-		~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
-		
-		~counter = {PulseCount.kr(~tick.kr)};
+		~tick.kr(1);
+		~tick.clock = p.clock;
+		~tick.quant=2;
+		~tick = { Impulse.kr(~tempo*4); };
+		~counter = {PulseCount.kr(~tick.kr);};
 	);
+
 snippet mixer
 	(
 	n = ProxyMixer(p,32);
 	n.parent.alwaysOnTop_(true);
 	)
+snippet stop
+	(
+	{
+		p.stop(${1:30});
+		~master.play;
+		$1.wait;
+		p.clean;
+	}.fork;	
+	)
+snippet sync
+	p.arProxyNames.do(p[_.asSymbol].rebuild);
+snippet clock
+	(
+		p.clock.tempo_(${1:120}/60);
+		p.arProxyNames.do(p[_.asSymbol].rebuild);
+	)
+
