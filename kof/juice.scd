@@ -8,6 +8,7 @@
         var orig = sig;
         var fx,hi,lo;
         //fx = Limiter.ar(sig,0.95);
+        sig = Limiter.ar(sig);
         fx = LPF.ar(sig,lp);
         fx = HPF.ar(fx,hp);
         lo = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
@@ -40,11 +41,12 @@ p.moveNodeToTail(\master);
     ~tick.kr(1);
     ~tick.clock = p.clock;
     //~tick.quantize(~kick,~switch,~menavka,~menavka_deep,~master,~flute);
-    ~tick.quant=4;
+    ~tick.quant=8;
     ~counter = {PulseCount.kr(~tick.kr);};
     ~tick = { Impulse.kr(~tempo*4); };
 );
 
+p.makeTempoClock;
 p.clean;
 (
     p.clock.tempo_(127/60);
@@ -136,7 +138,7 @@ p.clean;
 (
     ~menavka_deep.ar(2);
     ~menavka_deep.clock = p.clock;
-    ~menavka_deep.quant=[4,1/2];
+    ~menavka_deep.quant=[4];
     ~menavka_deep.fadeTime=8;
     ~menavka_deep={
         var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
@@ -165,13 +167,13 @@ p.clean;
 (
     ~menavka_deep_mod.ar(2);
     ~menavka_deep_mod.clock = p.clock;
-    ~menavka_deep_mod.quant=[4,1/2];
+    ~menavka_deep_mod.quant=[4];
     ~menavka_deep_mod.fadeTime=8;
     ~menavka_deep_mod={
         var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
         var basemod = TWChoose.kr(Impulse.kr(~tempo/2/[1,1.3333,1.5,2]),[1,2,4,8],[4,0.5,0.3,0.1],1);
         var base = [33].midicps * (basemod * mal/4)+ LFDNoise1.kr(1/4!4,mul:1/2);
-        var tmod = 1;//TWChoose.kr(Impulse.kr(~tempo/[1,2,3,4]!4),[1,2,1/4,1/8],[0.6,0.4,0.2,0.1],1);
+        var tmod = 1/2;
         var cmod = LFDNoise1.ar(1/8!4).range(0.25,0.95);
         var mod = LFDNoise1.ar(1/32!4).range(0.1,8);
         var sig = SinOsc.ar(base,Pulse.ar(2/[1,2,3,4]*~tempo*tmod)**mod*2pi);
@@ -180,7 +182,7 @@ p.clean;
         sig = Normalizer.ar(sig);
         sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4));
         sig = LPF.ar(sig,8000);
-        Splay.ar(sig,0.85,0.15,LFPar.kr(~tempo,mul:0.2));
+        Splay.ar(sig,0.85,0.15,LFPar.kr(~tempo/1.2,mul:0.2));
     };
     ~menavka_deep_mod.play;
 );
@@ -212,7 +214,7 @@ p.clean;
         sig = Normalizer.ar(sig);
         sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4 * tmod));
         sig = LPF.ar(sig,4000);
-        Splay.ar(sig,0.85,0.25,LFPar.kr(~tempo,mul:0.2));
+        Splay.ar(sig,0.85,0.25,LFPar.kr(~tempo/1.1,mul:0.2));
     };
     ~menavka.play;
     ~menavka[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
@@ -240,7 +242,9 @@ p.clean;
         sig = LeakDC.ar(sig);
         sig = Vibrato.ar(sig,[5,6,7],0.02);
         //sig = LPF.ar(sig,f*4);
-        sig = CompanderD.ar(sig,1,1/2);
+        //sig = sig * Pulse.ar(1/4/[1,2,3,4]*~tempo);
+        sig = CompanderD.ar(sig,3/4,1,1/2);
+        sig = LPF.ar(sig,3000);
         Splay.ar(sig,0.35,0.025);
     };
     ~flute.play;
