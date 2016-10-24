@@ -325,6 +325,7 @@ snippet stop
 		~master.play;
 		$1.wait;
 		p.clean;
+		~tick.rebuild;
 	}.fork;	
 	)
 snippet sync
