@@ -36,8 +36,8 @@ p.moveNodeToTail(\master);
 )
 
 
-TempoClock.default=p.clock;
 p.makeTempoClock;
+TempoClock.default=p.clock;
 p.clean;
 (
     p.clock.tempo_(127/60);
@@ -143,7 +143,7 @@ p.clean;
 
 (
     ~crack.ar(2);
-    ~crack.quant=2;
+    ~crack.quant=[2,1/2];
     ~crack.fadeTime=4;
     ~crack={
         var sig = Crackle.ar(1+LFNoise2.kr(1/4).range(0.01,0.7),LFPulse.ar(5000*[1,2,1.3333,1.5])/LFSaw.ar(1/4*~tempo/2).range(1,50)) * Pulse.ar(8*~tempo/2) * LFPulse.ar(1*~tempo/2) * LFPulse.ar(7/[1,2,3,4]*~tempo/2);
@@ -181,7 +181,7 @@ p.clean;
 
 (
     ~menavka_deep.ar(2);
-    //~menavka_deep.clock = p.clock;
+    ~menavka_deep.clock = p.clock;
     ~menavka_deep.quant=[4];
     ~menavka_deep.fadeTime=8;
     ~menavka_deep={
@@ -210,7 +210,7 @@ p.clean;
 
 (
     ~menavka_deep_mod.ar(2);
-    //~menavka_deep_mod.clock = p.clock;
+    ~menavka_deep_mod.clock = p.clock;
     ~menavka_deep_mod.quant=[4];
     ~menavka_deep_mod.fadeTime=8;
     ~menavka_deep_mod={
@@ -242,7 +242,7 @@ p.clean;
 
 (
     ~menavka.ar(2);
-    //~menavka.clock = p.clock;
+    ~menavka.clock = p.clock;
     ~menavka.quant=[4];
     ~menavka.fadeTime=16;
     ~menavka={
@@ -271,6 +271,7 @@ p.clean;
 
 (
     ~flute.ar(2);
+    ~flute.clock = p.clock;
     ~flute.quant=2;
     ~flute.fadeTime=4;
     ~flute={

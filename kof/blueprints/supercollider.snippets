@@ -15,7 +15,7 @@ snippet synth
 	
 	(
 	~$1.ar(2);
-	//~$1.clock = p.clock;
+	~$1.clock = p.clock;
 	~${1:}.quant=[2,0];
 	~$1.fadeTime=0.2;
 	~$1={
@@ -39,7 +39,7 @@ snippet simple
 	
 	(
 	~$1.ar(2);
-	//~$1.clock = p.clock;
+	~$1.clock = p.clock;
 	~${1:}.quant=2;
 	~$1.fadeTime=4;
 	~$1={
