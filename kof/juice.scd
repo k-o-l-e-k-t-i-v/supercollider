@@ -22,7 +22,7 @@
     ~master_wet = {LFDNoise1.kr(~tempo/8).exprange(0.15,0.35);};
     ~master.map(\wet,~master_wet);
 );
-    p.moveNodeToTail(\master);
+p.moveNodeToTail(\master);
 
 
 (
@@ -31,7 +31,6 @@
         ~master.play;
         10.wait;
         p.clean;
-        ~tick.rebuild;
     }.fork;  
 )
 
@@ -104,13 +103,91 @@ p.clean;
         sig = Resonz.ar(sig,[1000,2500,12500,15000,500,12500],LFDNoise1.kr(~tempo!6).range(0.01,0.9));
         sig = sig * env * LFPulse.ar(8/(1..6)*~tempo,0,1/2);
         sig = CompanderD.ar(sig,3/4,1,1/3,0.0002);
-        Splay.ar(sig,0.5,0.25,SinOsc.kr(~tempo,mul:0.24));
+        Splay.ar(sig,0.5,0.15,SinOsc.kr(~tempo,mul:0.24));
     };
     ~switch.play;
 );
 ~switch.play;
 ~switch.stop(4);
 ~switch.clear;
+
+
+// under_bass synth ///////////////////////////////////////
+
+(
+    ~under_bass.ar(2);
+    ~under_bass.clock = p.clock;
+    ~under_bass.quant=2;
+    ~under_bass.fadeTime=4;
+    ~under_bass={
+        var sig = SinOsc.ar(55!2,Pulse.ar(1/4/[1,2,3,4]*~tempo)*8pi) * SinOsc.ar(~tempo/4/[1,2,3,4]);
+        sig = Limiter.ar(sig,0.7);
+        Splay.ar(sig,0.5,0.75);
+    };
+    ~under_bass.play;
+);
+~under_bass.stop(4);
+~under_bass.clear;
+~under_bass.pause;
+~under_bass.resume;
+
+// menavka_deep synth ///////////////////////////////////////
+
+(
+    ~menavka_deep.ar(2);
+    ~menavka_deep.clock = p.clock;
+    ~menavka_deep.quant=[4,1/2];
+    ~menavka_deep.fadeTime=8;
+    ~menavka_deep={
+        var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
+        var basemod = TWChoose.kr(Impulse.kr(~tempo/2/[1,1.3333,1.5,2]),[1,2,4,8],[4,0.5,0.3,0.1],1);
+        var base = [33].midicps + LFDNoise1.kr(1/4!4,mul:1/2);
+        var tmod = 1;//TWChoose.kr(Impulse.kr(~tempo/[1,2,3,4]!4),[1,2,1/4,1/8],[0.6,0.4,0.2,0.1],1);
+        var cmod = LFDNoise1.ar(1/8!4).range(0.25,0.95);
+        var mod = LFDNoise1.ar(1/32!4).range(0.1,8);
+        var sig = SinOsc.ar(base,Pulse.ar(2/[1,2,3,4]*~tempo*tmod)**mod*2pi);
+        sig = CompanderD.ar(sig,cmod,1,1/2);
+        sig = CombC.ar(sig,1/base,1/base,8 * LFDNoise1.ar(1/16!4).range(0.01,1) / ~tempo);
+        sig = Normalizer.ar(sig);
+        sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4));
+        sig = LPF.ar(sig,8000);
+        Splay.ar(sig,0.85,0.5,LFPar.kr(~tempo,mul:0.2));
+    };
+    ~menavka_deep.play;
+);
+~menavka_deep.stop(4);
+~menavka_deep.clear;
+~menavka_deep.pause;
+~menavka_deep.resume;
+
+// menavka_deep synth ///////////////////////////////////////
+
+(
+    ~menavka_deep_mod.ar(2);
+    ~menavka_deep_mod.clock = p.clock;
+    ~menavka_deep_mod.quant=[4,1/2];
+    ~menavka_deep_mod.fadeTime=8;
+    ~menavka_deep_mod={
+        var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
+        var basemod = TWChoose.kr(Impulse.kr(~tempo/2/[1,1.3333,1.5,2]),[1,2,4,8],[4,0.5,0.3,0.1],1);
+        var base = [33].midicps * (basemod * mal/4)+ LFDNoise1.kr(1/4!4,mul:1/2);
+        var tmod = 1;//TWChoose.kr(Impulse.kr(~tempo/[1,2,3,4]!4),[1,2,1/4,1/8],[0.6,0.4,0.2,0.1],1);
+        var cmod = LFDNoise1.ar(1/8!4).range(0.25,0.95);
+        var mod = LFDNoise1.ar(1/32!4).range(0.1,8);
+        var sig = SinOsc.ar(base,Pulse.ar(2/[1,2,3,4]*~tempo*tmod)**mod*2pi);
+        sig = CompanderD.ar(sig,cmod,1,1/2);
+        sig = CombC.ar(sig,1/base,1/base,8 * LFDNoise1.ar(1/16!4).range(0.01,1) / ~tempo);
+        sig = Normalizer.ar(sig);
+        sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4));
+        sig = LPF.ar(sig,8000);
+        Splay.ar(sig,0.85,0.15,LFPar.kr(~tempo,mul:0.2));
+    };
+    ~menavka_deep_mod.play;
+);
+~menavka_deep_mod.stop(4);
+~menavka_deep_mod.clear;
+~menavka_deep_mod.pause;
+~menavka_deep_mod.resume;
 
 
 
@@ -138,41 +215,12 @@ p.clean;
         Splay.ar(sig,0.85,0.25,LFPar.kr(~tempo,mul:0.2));
     };
     ~menavka.play;
+    ~menavka[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
 );
 ~menavka.stop(4);
 ~menavka.clear;
 ~menavka.pause;
 ~menavka.resume;
-
-// menavka_deep synth ///////////////////////////////////////
-
-(
-    ~menavka_deep.ar(2);
-    ~menavka_deep.clock = p.clock;
-    ~menavka_deep.quant=[4,1/2];
-    ~menavka_deep.fadeTime=8;
-    ~menavka_deep={
-        var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
-        var basemod = TWChoose.kr(Impulse.kr(~tempo/2/[1,1.3333,1.5,2]),[1,2,4,8],[4,0.5,0.3,0.1],1);
-        var base = [33].midicps + LFDNoise1.kr(1/4!4,mul:1/2);
-        var tmod = 1;//TWChoose.kr(Impulse.kr(~tempo/[1,2,3,4]!4),[1,2,1/4,1/8],[0.6,0.4,0.2,0.1],1);
-        var cmod = LFDNoise1.ar(1/8!4).range(0.25,0.95);
-        var mod = LFDNoise1.ar(1/32!4).range(0.1,8);
-        var sig = SinOsc.ar(base,Pulse.ar(2/[1,2,3,4]*~tempo*tmod)**mod*2pi);
-        sig = CompanderD.ar(sig,cmod,1,1/2);
-        sig = CombC.ar(sig,1/base,1/base*4,4 * LFDNoise1.ar(1/16!4).range(0.01,1) / ~tempo);
-        sig = Normalizer.ar(sig);
-        sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4));
-        sig = LPF.ar(sig,8000);
-        Splay.ar(sig,0.85,0.35,LFPar.kr(~tempo,mul:0.2));
-    };
-    ~menavka_deep.play;
-);
-~menavka_deep.stop(4);
-~menavka_deep.clear;
-~menavka_deep.pause;
-~menavka_deep.resume;
-
 // flute synth ///////////////////////////////////////
 
 (
@@ -202,5 +250,16 @@ p.clean;
 ~flute.clear;
 ~flute.pause;
 ~flute.resume;
+
+
+(
+    {
+        p.stop(30);
+        ~master.play;
+        30.wait;
+        p.clean;
+        ~tick.rebuild;
+    }.fork;  
+)
 
 
