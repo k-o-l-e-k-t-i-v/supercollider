@@ -15,6 +15,7 @@ snippet synth
 	
 	(
 	~$1.ar(2);
+	~$1.clock = p.clock;
 	~${1:}.quant=[2,0];
 	~$1.fadeTime=0.2;
 	~$1={
@@ -306,13 +307,12 @@ snippet tick2
 	);	
 snippet tick
 	(
-		~tick.kr(1);
+		~tick.ar(1);
 		~tick.clock = p.clock;
-		~tick.quant=2;
-		~tick = { Impulse.kr(~tempo*4); };
+		~tick.quant=1;
+		~tick = { Impulse.ar(~tempo*4); };
 		~counter = {PulseCount.kr(~tick.kr);};
-	);
-
+	);		
 snippet mixer
 	(
 	n = ProxyMixer(p,32);
@@ -330,6 +330,7 @@ snippet stop
 snippet sync
 	p.arProxyNames.do(p[_.asSymbol].rebuild);
 snippet clock
+	p.makeTempoClock;
 	(
 		p.clock.tempo_(${1:120}/60);
 		p.arProxyNames.do(p[_.asSymbol].rebuild);
