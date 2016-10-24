@@ -3,7 +3,7 @@
     ~master.quant=2;
     ~master.play;
     ~master.fadeTime = 0.01;
-    ~master = {|wet=0.45,lp=2500,hp=100,len=10,rev = 2|
+    ~master = {|wet=0.45,lp=2500,hp=250,len=10,rev = 4|
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx,hi,lo;
@@ -15,7 +15,7 @@
         fx = HPF.ar(sig,lp);
         hi = DWGReverb.ar(NumChannels.ar(fx,2),[4000,4010],1/len/10)/rev/10;
         sig = SelectX.ar(wet,[orig,NumChannels.ar([]++lo+hi,4)]);
-        sig = Compander.ar(sig,3/4,1.1,1/3);
+        sig = Compander.ar(sig,3/4,1/2,1/3);
         sig = NumChannels.ar(sig,2);
         ReplaceOut.ar(0,sig);
     };
@@ -39,9 +39,9 @@ p.moveNodeToTail(\master);
 ~tick.clear;
 (
     ~tick.kr(1);
-    ~tick.clock = p.clock;
+    //~tick.clock = p.clock;
     //~tick.quantize(~kick,~switch,~menavka,~menavka_deep,~master,~flute);
-    ~tick.quant=8;
+    ~tick.quant=0;
     ~counter = {PulseCount.kr(~tick.kr);};
     ~tick = { Impulse.kr(~tempo*4); };
 );
@@ -54,12 +54,12 @@ p.clean;
 )
 
 
+~kick.clear;
 // kick synth ///////////////////////////////////////
 
 (
     ~kick.ar(2);
-    ~kick.clock = p.clock;
-    ~kick.quant = [4,0];
+    ~kick.quant = [4];
     ~kick.fadeTime=0.2;
     ~kick={
         //         |       |       |       |       |  
@@ -69,16 +69,16 @@ p.clean;
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
         ];
-        var mod = LFDNoise1.kr(~tempo/32).range(-20,40);
+        var mod = LFDNoise1.kr(~tempo/32).range(-3,3);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.0001],[0.001,1.5],[mod,-4.3]), imp * hit);
+        var env = EnvGen.ar(Env([0.001,1,0.0001],[0.001,1.5],[mod,-3.3]), imp * hit);
         var sig;
         var hum = LFDNoise1.kr(~tempo).range(0.0,0.01);
         env = DelayN.ar(env,hum,hum);
-        sig = SinOsc.ar(33.midicps+(env**20*250),env*8pi);
+        sig = SinOsc.ar(33.midicps+(env**20*60.midicps),env*8pi);
         sig = sig * env;
-        Splay.ar(sig,0.75,0.5);
+        Splay.ar(sig,0.75,0.25);
     };
     ~kick.play;
 );
@@ -113,12 +113,79 @@ p.clean;
 ~switch.stop(4);
 ~switch.clear;
 
+// raw synth ///////////////////////////////////////
+
+(
+    ~raw.ar(2);
+    ~raw.quant=[2];
+    ~raw.fadeTime=8;
+    ~raw={|speed = 1|
+        var sig = VarSaw.ar([55,550] +.x [1,2,3,4,5],0,LFSaw.ar(speed/[1,2,3,4]*~tempo/16)**4) + GrayNoise.ar(0.5!2) * (1-(LFTri.ar(speed)**4));
+        //sig = Resonz.ar(sig,LFSaw.ar(1/32/[1,2,3,4]).exprange(160.001,250)+SinOsc.ar(4).range(-100,1000),LFNoise2.kr(1/32!2).range(0.02,0.6));
+        sig = Resonz.ar(sig,LFSaw.ar(speed*~tempo/2).range(55,3900),LFDNoise1.kr(1/[1,2,3,4]*~tempo/2).range(0.01,0.3));
+        sig = Limiter.ar(sig);// * Pulse.ar(4/[1,2,8,16]);
+        Splay.ar(sig,0.5,0.155);
+    };
+    ~raw.play;
+
+    ~raw.map(\speed,~ctl);
+
+    ~ctl.quant=2;
+    ~ctl = {Duty.kr(1/4/~tempo*2,0,Dseq([1,8,4,1,8,2,1,8,3,1,8,16,1,8,32,64,128],inf))};
+
+);
+~raw.stop(4);
+~raw.clear;
+~raw.pause;
+~raw.resume;
+
+
+
+
+
+// one synth ///////////////////////////////////////
+
+(
+    ~one.ar(2);
+    ~one.quant=2;
+    ~one.fadeTime=4;
+    ~one={
+        var sig = SinOsc.ar([55,55.01]+.x[1,2,3,4,5],Pulse.ar([1,2,3,4]/4)/LFNoise1.kr(1/16!4).range(2,8) );
+        sig = sig + (LFSaw.ar(55.02,mul:0.3) * (LFSaw.ar(1/16*~tempo/2)**8));
+        Splay.ar(sig,0.95,0.25);
+    };
+    ~one.play;
+);
+~one.stop(4);
+~one.clear;
+~one.pause;
+~one.resume;
+
+
+// crack synth ///////////////////////////////////////
+
+(
+    ~crack.ar(2);
+    ~crack.quant=2;
+    ~crack.fadeTime=4;
+    ~crack={
+        var sig = Crackle.ar(1+LFNoise2.kr(1/4).range(0.01,0.7),LFPulse.ar(5000*[1,2,1.3333,1.5])/LFSaw.ar(1/4*~tempo/2).range(1,50)) * Pulse.ar(8*~tempo/2) * LFPulse.ar(1*~tempo/2) * LFPulse.ar(7/[1,2,3,4]*~tempo/2);
+        Splay.ar(sig,0.5,0.25);
+    };
+    ~crack.play;
+);
+~crack.stop(4);
+~crack.clear;
+~crack.pause;
+~crack.resume;
+
+
 
 // under_bass synth ///////////////////////////////////////
 
 (
     ~under_bass.ar(2);
-    ~under_bass.clock = p.clock;
+    //~under_bass.clock = p.clock;
     ~under_bass.quant=2;
     ~under_bass.fadeTime=4;
     ~under_bass={
@@ -137,7 +204,7 @@ p.clean;
 
 (
     ~menavka_deep.ar(2);
-    ~menavka_deep.clock = p.clock;
+    //~menavka_deep.clock = p.clock;
     ~menavka_deep.quant=[4];
     ~menavka_deep.fadeTime=8;
     ~menavka_deep={
@@ -153,7 +220,7 @@ p.clean;
         sig = Normalizer.ar(sig);
         sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4));
         sig = LPF.ar(sig,8000);
-        Splay.ar(sig,0.85,0.5,LFPar.kr(~tempo,mul:0.2));
+        Splay.ar(sig,0.85,0.25,LFPar.kr(~tempo,mul:0.2));
     };
     ~menavka_deep.play;
 );
@@ -166,13 +233,13 @@ p.clean;
 
 (
     ~menavka_deep_mod.ar(2);
-    ~menavka_deep_mod.clock = p.clock;
+    //~menavka_deep_mod.clock = p.clock;
     ~menavka_deep_mod.quant=[4];
     ~menavka_deep_mod.fadeTime=8;
     ~menavka_deep_mod={
         var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
         var basemod = TWChoose.kr(Impulse.kr(~tempo/2/[1,1.3333,1.5,2]),[1,2,4,8],[4,0.5,0.3,0.1],1);
-        var base = [33].midicps * (basemod * mal/4)+ LFDNoise1.kr(1/4!4,mul:1/2);
+        var base = [33].midicps * (basemod * mal/8)+ LFDNoise1.kr(1/4!4,mul:1/2);
         var tmod = 1/2;
         var cmod = LFDNoise1.ar(1/8!4).range(0.25,0.95);
         var mod = LFDNoise1.ar(1/32!4).range(0.1,8);
@@ -182,7 +249,7 @@ p.clean;
         sig = Normalizer.ar(sig);
         sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4));
         sig = LPF.ar(sig,8000);
-        Splay.ar(sig,0.85,0.15,LFPar.kr(~tempo/1.2,mul:0.2));
+        Splay.ar(sig,0.85,0.05,LFPar.kr(~tempo/1.2,mul:0.2));
     };
     ~menavka_deep_mod.play;
 );
@@ -198,7 +265,7 @@ p.clean;
 
 (
     ~menavka.ar(2);
-    ~menavka.clock = p.clock;
+    //~menavka.clock = p.clock;
     ~menavka.quant=[4];
     ~menavka.fadeTime=16;
     ~menavka={
@@ -214,7 +281,7 @@ p.clean;
         sig = Normalizer.ar(sig);
         sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4 * tmod));
         sig = LPF.ar(sig,4000);
-        Splay.ar(sig,0.85,0.25,LFPar.kr(~tempo/1.1,mul:0.2));
+        Splay.ar(sig,0.85,0.05,LFPar.kr(~tempo/1.1,mul:0.2));
     };
     ~menavka.play;
     ~menavka[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
