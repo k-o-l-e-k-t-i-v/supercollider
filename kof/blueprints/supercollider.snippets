@@ -333,6 +333,7 @@ snippet sync
 snippet clock
 	p.makeTempoClock;
 	(
+		TempoClock.default = p.clock;
 		p.clock.tempo_(${1:120}/60);
 		p.arProxyNames.do(p[_.asSymbol].rebuild);
 	)
