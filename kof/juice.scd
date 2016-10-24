@@ -3,7 +3,7 @@
     ~master.quant=2;
     ~master.play;
     ~master.fadeTime = 0.01;
-    ~master = {|wet=0.45,lp=2500,hp=250,len=10,rev = 2|
+    ~master = {|wet=0.45,lp=2500,hp=250,len=20,rev = 4|
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx,hi,lo;
@@ -20,7 +20,7 @@
         ReplaceOut.ar(0,sig);
     };
     ~master_wet.quant = 4;
-    ~master_wet = {LFDNoise1.kr(~tempo/8).exprange(0.15,0.35);};
+    ~master_wet = {LFDNoise1.kr(~tempo/2).exprange(0.15,0.35);};
     ~master.map(\wet,~master_wet);
 );
 p.moveNodeToTail(\master);
@@ -39,22 +39,26 @@ p.moveNodeToTail(\master);
 p.makeTempoClock;
 TempoClock.default=p.clock;
 p.clean;
+
+
+
 (
     p.clock.tempo_(127/60);
     p.arProxyNames.do(p[_.asSymbol].rebuild);
     ~tick.kr(1);
-    //~tick.clock = p.clock;
-    //~tick.quantize(~kick,~switch,~menavka,~menavka_deep,~master,~flute);
+    ~tick.clock = p.clock;
     ~tick.quant=0;
     ~counter = {PulseCount.kr(~tick.kr);};
     ~tick = { Impulse.kr(~tempo*4); };
 );
+
 
 ~kick.clear;
 // kick synth ///////////////////////////////////////
 
 (
     ~kick.ar(2);
+    ~kick.clock = p.clock;
     ~kick.quant = [8];
     ~kick.fadeTime=0.2;
     ~kick={
@@ -87,6 +91,7 @@ p.clean;
 
 (
     ~switch.ar(2);
+    ~switch.clock = p.clock;
     ~switch.quant=[4];
     ~switch.fadeTime=8.2;
     ~switch={
@@ -113,6 +118,7 @@ p.clean;
 
 (
     ~raw.ar(2);
+    ~raw.clock = p.clock;
     ~raw.quant=[2];
     ~raw.fadeTime=8;
     ~raw={|speed = 1|
@@ -143,6 +149,7 @@ p.clean;
 
 (
     ~crack.ar(2);
+    ~crack.clock = p.clock;
     ~crack.quant=[2,1/2];
     ~crack.fadeTime=4;
     ~crack={
@@ -254,7 +261,7 @@ p.clean;
         var mod = LFDNoise1.ar(1/32!4).range(0.1,8);
         var sig = SinOsc.ar(base,Pulse.ar(2/[1,2,3,4]*~tempo*tmod)**mod*2pi);
         sig = CompanderD.ar(sig,cmod,1,1/2);
-        sig = CombC.ar(sig,1/base,1/base/1.001/basemod,4 * LFDNoise1.ar(1/16!4).range(0.01,1) / ~tempo);
+        sig = CombC.ar(sig,1/base,1/base/4.001/basemod,4 * LFDNoise1.ar(1/16!4).range(0.01,1) / ~tempo);
         sig = Normalizer.ar(sig);
         sig = OnePole.ar(sig,LFDNoise1.ar(1/4!4 * tmod));
         sig = LPF.ar(sig,4000);

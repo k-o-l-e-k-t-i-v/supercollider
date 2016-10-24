@@ -329,7 +329,18 @@ snippet stop
 	}.fork;	
 	)
 snippet sync
-	p.arProxyNames.do(p[_.asSymbol].rebuild);
+	(
+		s.latency=0;
+		p.clock.tempo_(${1:120}/60);
+		p.arProxyNames.do(p[_.asSymbol].rebuild);
+		~tick.kr(1);
+		~tick.clock = p.clock;
+		~tick.quant=4;
+		~counter.clock = p.clock;
+		~counter.quant = 4;
+		~counter = {PulseCount.kr(~tick.kr);};
+		~tick = { Impulse.kr(~tempo*4); };
+	);
 snippet clock
 	p.makeTempoClock;
 	(
