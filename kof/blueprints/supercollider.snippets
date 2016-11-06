@@ -142,7 +142,7 @@ snippet master
 		~master.quant=2;
 		~master.play;
 		~master.fadeTime = 0.01;
-		~master = {|wet=0.5,lp=3500,hp=250,len=10,rev = 3|
+		~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
 		var sig = In.ar([0,1]);
 		var orig = sig;
 		var fx;
@@ -307,10 +307,10 @@ snippet tick2
 	);	
 snippet tick
 	(
-		~tick.ar(1);
+		~tick.kr(1);
 		~tick.clock = p.clock;
 		~tick.quant=1;
-		~tick = { Impulse.ar(~tempo*4); };
+		~tick = { Impulse.kr(~tempo * 4); };
 		~counter = {PulseCount.kr(~tick.kr);};
 	);		
 snippet mixer
@@ -320,19 +320,20 @@ snippet mixer
 	)
 snippet stop
 	(
-	{
-		p.stop(${1:30});
-		~master.play;
-		$1.wait;
-		p.clean;
-		~tick.rebuild;
-	}.fork;	
+	Task({
+	  p.arProxyNames.do({|synth| p[synth.asSymbol].stop(10);});
+	  ~master.play;
+	  (11).wait;
+	  //p.arProxyNames.do(p[_.asSymbol].clear);
+	  p.clean;
+	  ~tick.rebuild;
+	}).play(TempoClock.default);  
 	)
 snippet sync
 	(
 		s.latency=0;
-		p.clock.tempo_(${1:120}/60);
-		p.arProxyNames.do(p[_.asSymbol].rebuild);
+		//p.clock.tempo_(${1:120}/60);
+		p.arProxyNames.do({|synth| p[synth.asSymbol].rebuild;});
 		~tick.kr(1);
 		~tick.clock = p.clock;
 		~tick.quant=4;
