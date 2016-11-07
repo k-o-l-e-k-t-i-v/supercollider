@@ -320,14 +320,9 @@ snippet mixer
 	)
 snippet stop
 	(
-	Task({
-	  p.arProxyNames.do({|synth| p[synth.asSymbol].stop(10);});
-	  ~master.play;
-	  (11).wait;
-	  //p.arProxyNames.do(p[_.asSymbol].clear);
-	  p.clean;
-	  ~tick.rebuild;
-	}).play(TempoClock.default);  
+	{
+	  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(${1:20});};});
+	}.fork;  
 	)
 snippet sync
 	(
