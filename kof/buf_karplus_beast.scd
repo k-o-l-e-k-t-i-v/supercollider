@@ -6,6 +6,13 @@ i
     p.makeTempoClock;
 );
 
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
+
 b = Buffer.alloc(s, 44100 * 16.0, 2);
 
 
@@ -13,20 +20,21 @@ b = Buffer.alloc(s, 44100 * 16.0, 2);
 
 (
     ~karplus_beast.ar(2);
-    ~karplus_beast.quant=2;
+    ~karplus_beast.clock = p.clock;
+    ~karplus_beast.quant=[4,1/2];
     ~karplus_beast.fadeTime=4.1;
     ~karplus_beast={
-        var mod = Duty.kr(4,0,Dseq([1,2,1.5,1.33333],inf));
-        var t = LFTri.ar([1/16,1/320,50*mod]) * 1/4 + LFTri.ar(1/400,mul:4);
+        var mod = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+        var t = LFTri.ar([1/16,1/320,50*mod]*~tempo) * 1/4 + LFTri.ar(1/400,mul:4);
         var sig = RLPF.ar(Perlin3.ar(t[0],t[1],t[2]),LFNoise1.ar(1/16!2).range(50,15000)) + LocalIn.ar(2);
         sig = Normalizer.ar(sig);
         DelayN.ar(sig,1/50,1/50);
         sig = LPF.ar(sig,LFNoise2.kr(1/4!2).range(500,15000));
         LocalOut.ar(sig/1.001);
         RecordBuf.ar(sig,b.bufnum,1,0.33,loop:1);
-        sig = PlayBuf.ar(2,b.bufnum,LFTri.ar(4/[1,2,3,4]).exprange(1.00001,1.021),loop:1);
+        sig = PlayBuf.ar(2,b.bufnum,LFTri.ar(4/[1,2,3,4]*~tempo).exprange(1.00001,1.021),loop:1);
         
-        sig = sig * (LFTri.ar(1/4/[1,2,3,4])**5);
+        sig = sig * (LFTri.ar(1/4/[1,2,3,4]*~tempo)**5);
         sig = CompanderD.ar(sig,3/4,1/2,1/2);
         sig = LeakDC.ar(sig);
         Splay.ar(sig,0.5,0.95,SinOsc.kr(3)/4);

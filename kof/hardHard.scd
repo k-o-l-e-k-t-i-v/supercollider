@@ -1,5 +1,10 @@
 
-
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(2);};});
+}.fork;  
+)
 (
   p.clock.tempo_(240/60);
   
@@ -10,6 +15,43 @@
   
   ~counter = {PulseCount.kr(~tick.kr)};
 );
+
+
+/// 8 KICK start
+
+(
+    ~kick.ar(2);
+    ~kick.clock = p.clock;
+    ~kick.quant = [8];
+    ~kick.fadeTime=0.2;
+    ~kick={
+        //         |       |       |       |       |  
+        var pat = [
+            1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+            1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+            1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+            1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
+        ];
+        var mod2 = LFNoise2.kr(~tempo/160).range(20,80);
+        var mod = LFDNoise1.kr(~tempo/160).range(20,80);
+        var imp = PulseDivider.kr(~tick.kr,8,~counter.kr%pat.size);
+        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+        var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[mod,-3.3]), imp * hit);
+        var sig;
+        var hum = LFDNoise1.kr(~tempo).range(0.0,0.01);
+
+        // env = DelayN.ar(env,hum,hum);
+
+        sig = Mix.fill(4,{|i|SinOsc.ar(33.midicps+(env**mod2*33.midicps),env**(mod2+i)*8pi)})/2;
+        sig = sig * env;
+        Splay.ar(sig,0.75,0.5);
+    };
+    ~kick.play;
+);
+~kick.stop(10);
+~kick.clear(6);
+~kick.pause;
+~kick.resume;
 
 
 // one synth ///////////////////////////////////////
