@@ -17,7 +17,7 @@ b = Buffer.alloc(s, 44100 * 16, 2);
 // Write into buffer:
 
 (
-    ~rec.quant=2;
+    ~rec.quant=16;
     ~rec.ar(2);
     ~rec = { arg rate=1; 
         var sig;
@@ -41,7 +41,7 @@ b = Buffer.alloc(s, 44100 * 16, 2);
 (
     ~b.ar(2);
     ~b.mold(2);
-    ~b.quant=2;
+    ~b.quant=16;
     ~b.fadeTime=4;
     ~b = { 
         var t = LFTri.ar([1/400/[1,2,3,4],1/4000,44100/2]) * 4 + LFTri.ar(50,mul:1/50);
@@ -117,14 +117,14 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/douce.wav");
         var spread = 0.0;
         var pos = [0,0.5,0.1,0.3333] + LFSaw.ar(1/320);
         //         |       |       |       |       |  
-        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
         var imp = PulseDivider.kr(~tick.kr,[1,2,3,4,5],~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
         var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.001),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
 
         sig = sig * env;
-        Splay.ar(sig.flat,0.5,0.25);
+        Splay.ar(sig.flat,0.5,0.5);
     };
     ~ddd.play;
     ~ddd[10] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,300),2000),[4000,4021],1/5)/2+sig};

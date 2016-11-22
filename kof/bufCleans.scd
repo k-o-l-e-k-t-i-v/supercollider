@@ -19,8 +19,8 @@ b = Buffer.alloc(s, 44100 * 4, 2);
 ~lin.fadeTime = 32;
 ~lin = {
   var sig = SinOsc.ar(50!2,Pulse.ar(2/[1,2])/LFNoise2.kr(1/32!2).range(1,8));
-  sig = sig + (WhiteNoise.ar(0.5!2) * (LFSaw.ar(4/[2,1],0.5)**2) );
-  sig = sig * Pulse.ar(4/(4..9));
+  sig = sig + (WhiteNoise.ar(0.5!2) + BrownNoise.ar(0.4!2) + LFSaw.ar(50,mul:0.2) * (LFSaw.ar(4/[2,1] * ~tempo/2,0.5)**2) );
+  sig = sig * Pulse.ar(4/(4..9) * ~tempo/2);
   Splay.ar(sig);
 };
 )
@@ -98,10 +98,10 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/mono/douce.wav");
         trate = 120;
         dur = BufDur.kr(b) / trate;
         clk = Impulse.kr(trate);
-        pos = LFSaw.ar(1/2/[1,2,4,8]).range(0,BufDur.kr(b)) + TRand.kr(0, 0.001, clk);
+        pos = LFSaw.ar(1/2/[1,2,4,8] * ~tempo).range(0,BufDur.kr(b)) + TRand.kr(0, 0.001, clk);
         pan = WhiteNoise.kr(0.6);
         sig = TGrains.ar(2, clk, b.bufnum, mod, pos, dur, pan, 0.3);
-        sig = sig * (LFTri.ar(4/[1,2,3,4])**4);
+        sig = sig * (LFTri.ar(4/[1,2,3,4] * ~tempo)**4);
         sig = CompanderD.ar(sig,3/4,1/2,1/2);
         Splay.ar(sig.flat,0.5,0.25);
     };

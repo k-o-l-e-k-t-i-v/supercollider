@@ -16,11 +16,16 @@ snippet synth
 	(
 	~$1.ar(2);
 	~$1.clock = p.clock;
-	~${1:}.quant=[2,0];
-	~$1.fadeTime=0.2;
+	~${1:}.quant=[16,0];
+	~$1.fadeTime=0.02;
 	~$1={
-		//         |       |       |       |       |  
-		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0];
+		//  |       |       |       |       |  
+		var pat = [
+			1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+			0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+			0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+			0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+		];
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
 		var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3]),imp * hit);
@@ -310,7 +315,7 @@ snippet tick
 		~tick.kr(1);
 		~tick.clock = p.clock;
 		~tick.quant=1;
-		~tick = { Impulse.kr(~tempo * 4); };
+		~tick = { Impulse.kr(~tempo * 2); };
 		~counter = {PulseCount.kr(~tick.kr);};
 	);		
 snippet mixer
@@ -336,7 +341,7 @@ snippet sync
 		~counter.clock = p.clock;
 		~counter.quant = 4;
 		~counter = {PulseCount.kr(~tick.kr);};
-		~tick = { Impulse.kr(~tempo*4); };
+		~tick = { Impulse.kr(~tempo*2); };
 	);
 snippet clock
 	p.makeTempoClock;
@@ -345,4 +350,16 @@ snippet clock
 		p.clock.tempo_(${1:120}/60);
 		p.arProxyNames.do(p[_.asSymbol].rebuild);
 	)
-
+snippet sched
+	(
+	  p.clock.sched(p.clock.timeToNextBeat(${1:16}),{ 
+	  ${2:}
+	  });
+	);
+snippet scheds
+	//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+	(
+	  p.clock.sched(p.clock.timeToNextBeat(${1:32}),{
+	  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(${2:0.2});};});
+	});  
+	);
