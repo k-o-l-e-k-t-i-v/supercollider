@@ -90,7 +90,7 @@ p.bpm(127);
 );
 
 (
-  ~master.quant=2;
+  ~master.quant=4;
   ~master.play;
   ~master.fadeTime = 0.01;
   ~master = {|wet=0.25,lp=3500,hp=250,len=20,rev = 2|
@@ -126,20 +126,21 @@ p.moveNodeToTail(\master);
 (
 ~background.ar(2);
 ~background.clock = p.clock;
-~background.quant=[16,0];
+~background.quant=[4,0];
 ~background.fadeTime=16.02;
 ~background={
+    //var seed = RandSeed.kr(Impulse.kr(1/640),2017);
   //  |       |       |       |       |  
   var pat = [
-    1,0,1,0
+    1,1,1,1
   ];
-  var chord = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[60,64,67,69,65],[1,1,1,0.1,0.05],1);
+  var chord = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[60,72,36,64,65],[1,1,1,0.1,0.05],1);
   var oct = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[1,-2,2,4],[1,0.1,0.1,0.1],1);
   var base = (chord+oct).midicps/[1,0.5];
   var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,1,4,1,8],inf)).lag(4);
   var mod2 = Duty.kr(4*16/~tempo*[2,4,8]*2,0,Dseq([1,2,1,4,1,2],inf));
   var mod = Duty.kr(16/~tempo*[2,4,8]*4,0,Dseq([1,0.5,4,2]/mod2*[1,2,0.5],inf)).lag(1/40);
-  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4]);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3]);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = {EnvGen.ar(Env.asr(0.002,1/env_mod,1/16*env_mod,[8,-2,-8]*mod),imp * hit)};
   var t = SinOsc.ar([base*mod,LFSaw.kr(1/3200*~tempo,mul:10),env**LFDNoise1.kr(1/16!3).range(1/20,4)]).abs + 1 * LFNoise2.kr(1/16!3 * ~tempo).range(1/4,4);
