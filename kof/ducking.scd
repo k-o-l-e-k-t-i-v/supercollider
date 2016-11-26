@@ -20,9 +20,9 @@ p.makeTempoClock;
 
 
 (
-
+    // world is predictable, and seekable ))
     ~seed.quant=16;
-    ~seed = {RandSeed.ar(Impulse.kr(~tempo/64/(1..16)),2016)};
+    ~seed = {RandSeed.ar(Impulse.kr(~tempo/64/(1..16)),(2000..2016) )};
     ~seed.play;
 
     (
@@ -34,12 +34,12 @@ p.makeTempoClock;
             var orig = sig;
             var fx;
             sig = Limiter.ar(sig,0.95);
+            sig = Compander.ar(sig,~kick.ar,LFNoise2.kr(1/4*~tempo!2).range(0.1,0.9),1,0.01)*duck+sig;
             fx = LPF.ar(sig,lp);
             fx = HPF.ar(fx,hp);
-            fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+            fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010,2000,3000],1/len)/rev;
             sig = SelectX.ar(wet,[orig,fx]);
             sig = NumChannels.ar(sig,2);
-            sig = Compander.ar(sig,~kick.ar,LFNoise2.kr(1/4*~tempo!2).range(0.1,0.9),1,0.01)*duck+sig;
             //sig = sig + ~kick.ar;
             sig = HPF.ar(sig,20);
             sig = HPF.ar(sig,20);
@@ -154,7 +154,7 @@ p.makeTempoClock;
         var base = ([60,60,64]).midicps;
         var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,16,32],inf)).lag(4);
         var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/4,0,Dseq([1,2,1,4,1,1.5],inf));
-        var mod = Duty.kr(16/~tempo*[2,4,8]/2,0,Dseq([1,0.5,1.5,1.33333]/mod2*[1,2,0.5],inf)).lag(1/40);
+        var mod = Duty.kr(16/~tempo*[2,4,8]/2,0,Dseq([1,0.5,1/4,4]/mod2*[1,2,0.5],inf)).lag(1/40);
         var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = {EnvGen.ar(Env.asr(0.002,1/16*env_mod,2/16*env_mod,[2,-2,-8]*env_mod),imp * hit)};
@@ -192,7 +192,7 @@ p.makeTempoClock;
         var base = ([60,64,67]-12).midicps;
         var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,16,32],inf)).lag(4);
         var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/4,0,Dseq([1,2,1,4,1,1.5],inf));
-        var mod = Duty.kr(16/~tempo*[2,4,8]/8,0,Dseq([1,0.5,1.5,1.33333]/mod2*[1,2,0.5],inf)).lag(1/40);
+        var mod = Duty.kr(16/~tempo*[2,4,8]/8,0,Dseq([1,0.5,1/2,2]/mod2*[1,2,0.5],inf)).lag(1/40);
         var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = {EnvGen.ar(Env.asr(0.002,env_mod/8,env_mod/4,[-4,-2,-8]*env_mod),imp * hit)};
