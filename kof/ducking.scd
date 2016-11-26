@@ -22,7 +22,7 @@ p.makeTempoClock;
 (
     // world is predictable, and seekable ))
     ~seed.quant=16;
-    ~seed = {RandSeed.ar(Impulse.kr(~tempo/64/(1..16)),(2000..2016) )};
+    ~seed = {RandSeed.ar(Impulse.kr(~tempo/64/(1..4)),(2012..2016) )};
     ~seed.play;
 
     (
