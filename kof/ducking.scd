@@ -134,8 +134,8 @@ p.moveNodeToTail(\master);
   var pat = [
     1,1,1,1
   ];
-  var chord = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[60,72,36,64,65],[1,1,1,0.1,0.05],1);
-  var oct = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[1,-2,2,4],[1,0.1,0.1,0.1],1);
+  var chord = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[60,72,48,64,65],[1,1,1,0.1,0.05],1);
+  var oct = TWChoose.kr(Impulse.kr([1,2,3]/16*~tempo),[0,-1,1,2],[1,0.1,0.1,0.1],1);
   var base = (chord+oct).midicps/[1,0.5];
   var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,1,4,1,8],inf)).lag(4);
   var mod2 = Duty.kr(4*16/~tempo*[2,4,8]*2,0,Dseq([1,2,1,4,1,2],inf));
