@@ -37,19 +37,24 @@ p.makeTempoClock;
         ~kick={
             //  |       |       |       |       |  
             var pat = [
+                [
+                    1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
                 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
                 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
-                1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
-                1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+                1,0,1,0, 1,0,1,0, 1,0,1,0, 1,1,1,1,
+            ],
+            [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+            [0,0,0,0, 1,0,1,0, 0,0,0,0, 1,0,0],
+
             ];
-            var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+            var imp = PulseDivider.kr(~tick.kr,1!3,~counter.kr%pat.size);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
             var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,LFNoise2.kr(1/16*~tempo).range(0.2,1)],[3,-3]),imp * hit)};
-            var sig = SinOsc.ar(55!2,env**LFNoise2.kr(1/16*~tempo).range(1,20)*8pi);
+            var sig = SinOsc.ar(55!3,env**LFNoise2.kr(1/16*~tempo!3).range(1,80)*8pi)/3;
             sig = sig * env;
-            Splay.ar(sig,0.005,0.5);
+            Splay.ar(sig,0.005,0.25);
         };
-        ~kick.play;
+        //~kick.play;
     );
     /*
     ~kick.stop(4);
@@ -95,7 +100,7 @@ p.makeTempoClock;
             var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,LFNoise2.kr(1/16!4).range(0.02,0.5)],[3,-3]),imp * hit)};
             var sig = BPF.ar(WhiteNoise.ar(0.1!4),LFNoise2.kr(1/16!4).range(500,15000),LFNoise2.kr(1/16!4).range(0.1,0.9));
             sig = sig * env;
-            Splay.ar(sig,0.75,0.25);
+            Splay.ar(sig,0.75,0.15);
         };
         ~hiss.play;
     );
@@ -111,7 +116,7 @@ p.makeTempoClock;
     ~master.quant=16;
     ~master.play;
     ~master.fadeTime = 0.01;
-    ~master = {|wet=0.25,lp=3500,hp=250,len=20,rev = 2|
+    ~master = {|wet=0.15,lp=3500,hp=250,len=20,rev = 2|
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx;
