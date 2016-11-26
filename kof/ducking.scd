@@ -15,15 +15,20 @@
 
 
 p = NetProxy.push();
-s.latency = 0.75;
 p.makeTempoClock;
 
+(
+  p=NetProxy.push();
+s.latency = 0.95;
+);
+
+p.bpm(127/2);
 
 (
     // world is predictable, and seekable ))
-    ~seed.quant=16;
-    ~seed = {RandSeed.ar(Impulse.kr(~tempo/64/(1..4)),(2012..2016) )};
-    ~seed.play;
+    //~seed.quant=16;
+    //~seed = {RandSeed.ar(Impulse.ar(1/16*~tempo),(2012..2016) )};
+    //~seed.play;
 
     (
         ~master.quant=16;
@@ -66,11 +71,11 @@ p.makeTempoClock;
                     1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
                     1,0,1,0, 1,0,1,0, 1,0,1,0, 1,1,1,1,
                 ],
-                [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-                [0,0,0,0, 1,0,1,0, 0,0,0,0, 1,0,0],
+                [0,0,1,0, 1,0,0,0, 0,0,1,0, 1,0,1,0],
+                [0,0,1,0, 1,0,1,0, 0,0,1,0, 1,0,0],
 
             ];
-            var imp = PulseDivider.kr(~tick.kr,1!3,~counter.kr%pat.size);
+            var imp = PulseDivider.kr(~tick.kr,[1,2,4]);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
             var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,LFNoise2.kr(1/16*~tempo).range(0.2,1)],[3,-3]),imp * hit)};
             var sig = SinOsc.ar(55!3,env**LFNoise2.kr(1/16*~tempo!3).range(1,80)*8pi)/3;
@@ -79,12 +84,6 @@ p.makeTempoClock;
         };
         ~kick.play;
     );
-    /*
-    ~kick.stop(4);
-    ~kick.clear;
-    ~kick.pause;
-    ~kick.resume;
-    */
     // hiss synth ///////////////////////////////////////
 
     (
@@ -120,21 +119,13 @@ p.makeTempoClock;
             ];
             var imp = PulseDivider.kr(~tick.kr,[1,3,7,9],~counter.kr%pat.size);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-            var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,LFNoise2.kr(1/16!4).range(0.02,0.5)],[3,-3]),imp * hit)};
-            var sig = BPF.ar(WhiteNoise.ar(0.1!4),LFNoise2.kr(1/16!4).range(500,15000),LFNoise2.kr(1/16!4).range(0.1,0.9));
+            var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,LFNoise2.kr(1/16!4).exprange(0.02,0.5)],[3,-3]),imp * hit)};
+            var sig = BPF.ar(WhiteNoise.ar(0.4!4),LFNoise2.kr(1/16!4).range(500,15000),LFNoise2.kr(1/16!4).range(0.1,0.9));
             sig = sig * env;
-            Splay.ar(sig,0.75,0.15);
+            Splay.ar(sig,0.75,0.05);
         };
         ~hiss.play;
     );
-    /*
-    ~hiss.stop(4);
-    ~hiss.clear;
-    ~hiss.pause;
-    ~hiss.resume;
-    */
-);
-
 
 // background synth ///////////////////////////////////////
 
@@ -151,7 +142,8 @@ p.makeTempoClock;
             [0,0,1,1,0,0,0,0,0],
         ];
         var f;
-        var base = ([60,60,64]).midicps;
+        var note  = Duty.kr(4/~tempo,0,Dseq([64,67,69,63],inf));
+        var base = ([60,60,note]).midicps;
         var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,16,32],inf)).lag(4);
         var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/4,0,Dseq([1,2,1,4,1,1.5],inf));
         var mod = Duty.kr(16/~tempo*[2,4,8]/2,0,Dseq([1,0.5,1/4,4]/mod2*[1,2,0.5],inf)).lag(1/40);
@@ -189,7 +181,8 @@ p.makeTempoClock;
             [0,0,1,0, 0],
         ];
         var f;
-        var base = ([60,64,67]-12).midicps;
+        var note  = Duty.kr(4/~tempo,0,Dseq([64,67,69,63],inf));
+        var base = ([60,60,note]-12).midicps;
         var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,16,32],inf)).lag(4);
         var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/4,0,Dseq([1,2,1,4,1,1.5],inf));
         var mod = Duty.kr(16/~tempo*[2,4,8]/8,0,Dseq([1,0.5,1/2,2]/mod2*[1,2,0.5],inf)).lag(1/40);
