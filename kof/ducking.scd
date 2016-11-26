@@ -113,6 +113,13 @@ p.makeTempoClock;
 );
 
 (
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
+
+(
     ~master.quant=16;
     ~master.play;
     ~master.fadeTime = 0.01;
@@ -120,6 +127,7 @@ p.makeTempoClock;
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx;
+        RandSeed.ar(Impulse.kr(~tempo/(1..16)),2016);
         sig = Limiter.ar(sig,0.95);
         fx = LPF.ar(sig,lp);
         fx = HPF.ar(fx,hp);
@@ -163,7 +171,7 @@ p.moveNodeToTail(\master);
             var f;
             var base = ([60,60,64]).midicps;
             var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,16,32],inf)).lag(4);
-            var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/2,0,Dseq([1,2,1,4,1,1.5],inf));
+            var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/4,0,Dseq([1,2,1,4,1,1.5],inf));
             var mod = Duty.kr(16/~tempo*[2,4,8]/2,0,Dseq([1,0.5,1.5,1.33333]/mod2*[1,2,0.5],inf)).lag(1/40);
             var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -201,11 +209,11 @@ p.moveNodeToTail(\master);
             var f;
             var base = ([60,64,67]-12).midicps;
             var env_mod = Duty.kr(1/16/~tempo*[2,4,8]*1,0,Dseq([1,2,16,32],inf)).lag(4);
-            var mod2 = Duty.kr(4*16/~tempo*[2,4,8],0,Dseq([1,2,1,4,1,1.5],inf));
-            var mod = Duty.kr(16/~tempo*[2,4,8],0,Dseq([1,0.5,1.5,1.33333]/mod2*[1,2,0.5],inf)).lag(1/40);
+            var mod2 = Duty.kr(4*16/~tempo*[2,4,8]/4,0,Dseq([1,2,1,4,1,1.5],inf));
+            var mod = Duty.kr(16/~tempo*[2,4,8]/8,0,Dseq([1,0.5,1.5,1.33333]/mod2*[1,2,0.5],inf)).lag(1/40);
             var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
             var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-            var env = {EnvGen.ar(Env.asr(0.002,env_mod/4,env_mod/2,[-4,-2,-8]*env_mod),imp * hit)};
+            var env = {EnvGen.ar(Env.asr(0.002,env_mod/8,env_mod/4,[-4,-2,-8]*env_mod),imp * hit)};
             var t = SinOsc.ar([base*mod,LFSaw.kr(1/3200*~tempo,mul:10),env**LFDNoise1.kr(1/16!3).range(1/20,4)]).abs + 1 * LFNoise2.kr(1/160!3 * ~tempo).exprange(1/4,4);
             var sig = Perlin3.ar(t[0],t[1],t[2]);
             sig = LPF.ar(sig,LFNoise2.kr(1/16!3).exprange(15000.01,50));
