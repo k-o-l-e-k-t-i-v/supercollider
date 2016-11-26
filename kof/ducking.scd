@@ -126,11 +126,12 @@ p.moveNodeToTail(\master);
     1,1,1,1
   ];
   var base = ([60]).midicps;
+  var env_mod = Duty.kr(4*16/~tempo*[2,4,8],0,Dseq([1,2,1,4,1,8],inf)).lag(4);
   var mod2 = Duty.kr(4*16/~tempo*[2,4,8],0,Dseq([1,2,1,4,1,1.5],inf));
   var mod = Duty.kr(16/~tempo*[2,4,8],0,Dseq([1,0.5,1.5,1.33333]/mod2*[1,2,0.5],inf)).lag(1/40);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = {EnvGen.ar(Env.asr(0.002,2/16*mod,3/16*mod,[1,-2,-4]*mod),imp * hit)};
+  var env = {EnvGen.ar(Env.asr(0.002,2/16*env_mod,3/16*env_mod,[8,-2,-8]*mod),imp * hit)};
   var t = SinOsc.ar([base*mod,LFSaw.kr(1/320*~tempo,mul:10),env**LFDNoise1.kr(1/16!3).range(1/20,4)]).abs + 1 * 1/4;
   var sig = Perlin3.ar(t[0],t[1],t[2]);
   sig = LPF.ar(sig,LFNoise2.kr(1/16!3).exprange(15000.01,50));
