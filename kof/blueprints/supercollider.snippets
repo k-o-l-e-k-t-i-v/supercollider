@@ -297,25 +297,13 @@ snippet grains
 	);
 	~$1.stop(7);
 	~$1.clear;
-snippet tick2
-	(
-	    s.latency=0;
-	    ~tick.kr;
-	    ~tick.clock = p.clock;
-	    ~counter = {PulseCount.kr(~tick.kr)};
-	    ~tick.fadeTime=0;
-	    ~tick.quant=0;
-	    ~tick = { Trig1.kr(1.0,0.05) };
-	    t = p.clock;
-	    t.sched(t.timeToNextBeat(1),{~tick.rebuild; 1;});
-	    p.clock.tempo_(${1:60}/60);
-	);	
+	
 snippet tick
 	(
 		~tick.kr(1);
 		~tick.clock = p.clock;
 		~tick.quant=1;
-		~tick = { Impulse.kr(~tempo * 2); };
+		~tick = { Impulse.kr(~tempo * 4); };
 		~counter = {PulseCount.kr(~tick.kr);};
 	);		
 snippet mixer
@@ -332,16 +320,16 @@ snippet stop
 	)
 snippet sync
 	(
-		s.latency=0;
+		//s.latency=0.2;
 		//p.clock.tempo_(${1:120}/60);
 		p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
 		~tick.kr(1);
 		~tick.clock = p.clock;
-		~tick.quant=4;
+		~tick.quant = 16;
 		~counter.clock = p.clock;
-		~counter.quant = 4;
+		~counter.quant = 16;
 		~counter = {PulseCount.kr(~tick.kr);};
-		~tick = { Impulse.kr(~tempo*2); };
+		~tick = { Impulse.kr( ~tempo * 4 ); };
 	);
 snippet clock
 	p.makeTempoClock;
@@ -352,14 +340,14 @@ snippet clock
 	)
 snippet sched
 	(
-	  p.clock.sched(p.clock.timeToNextBeat(${1:16}),{ 
+	  p.clock.sched(p.clock.timeToNextBeat(${1:1} * 16),{ 
 	  ${2:}
 	  });
 	);
 snippet scheds
 	//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
 	(
-	  p.clock.sched(p.clock.timeToNextBeat(${1:32}),{
+	  p.clock.sched(p.clock.timeToNextBeat(${1:16}),{
 	  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(${2:0.2});};});
 	});  
 	);
