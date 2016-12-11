@@ -54,7 +54,7 @@ b = Buffer.alloc(s, 44100 * 16, 2);
         //sig = sig * Pulse.ar(4/[1,2,3,4]);
         sig = CompanderD.ar(sig,3/4,1/2,1/2);
         sig = LPF.ar(sig,8900);
-        Splay.ar(sig,0.95,0.5);
+        Splay.ar(sig,0.95,0.15);
     };
     ~b.play;
     ~b[10] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,300),5000),[5000,5021],1/10)/2+sig};

@@ -24,7 +24,6 @@ s.latency = 0.95;
 
 p.bpm(127/2);
 
-(
     // world is predictable, and seekable ))
     //~seed.quant=16;
     //~seed = {RandSeed.ar(Impulse.ar(1/16*~tempo),(2012..2016) )};
@@ -200,4 +199,3 @@ p.bpm(127/2);
 );
 
 
-);

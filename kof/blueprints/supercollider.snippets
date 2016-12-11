@@ -25,7 +25,7 @@ snippet synth
 			0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
 			0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
 			0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-		];
+		].rotate(1);
 		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
 		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
 		var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3]),imp * hit);

@@ -1,6 +1,6 @@
 
-b = Buffer.alloc(s, 44100 * 4, 2); 
 
+b = Buffer.alloc(s, 44100 * 8, 2); 
 // 7) =========  BufRd and BufWr  ==========
 
 
@@ -26,6 +26,24 @@ b = Buffer.alloc(s, 44100 * 4, 2);
 )
 // Write into buffer:
 
+
+// lin synth ///////////////////////////////////////
+
+(
+~lin.ar(2);
+~lin.clock = p.clock;
+~lin.quant=2;
+~lin.fadeTime=4;
+~lin={
+  var sig = AudioIn.ar([1,2]);
+  Splay.ar(sig,0.5,0.95);
+};
+//~lin.play;
+);
+~lin.stop(4);
+~lin.clear;
+~lin.pause;
+~lin.resume;
 
 RecordBuf.help
 (
@@ -53,7 +71,7 @@ RecordBuf.help
     ~b.quant=2;
     ~b.fadeTime=4;
     ~b = { 
-        var mod = LFNoise2.kr(1/16!2).range(0.998,1.002);//TChoose.kr(Impulse.kr(4!2),[1,2,4,8,16,1/16,1/4,1/8])  ;
+        var mod = LFNoise2.kr(4!2).range(0.998,TChoose.kr(Impulse.kr(4!2),[1,2,4,8,16,1/16,1/4,1/8]))  ;
         //var sig = BufRd.ar(2, b.bufnum, LFSaw.ar([1/4,1/1.5,1/1.33333,1/2]/mod,mul:[1,1,0.52,0.71]).range(0, BufFrames.kr(b)));
         var sig = PlayBuf.ar(2,b.bufnum,1,loop:1);
         //sig = sig * (LFTri.ar(1/16/[1,2,4,3])**4)/4;
@@ -64,7 +82,7 @@ RecordBuf.help
         Splay.ar(sig,0.95,0.95);
     };
     ~b.play;
-    ~b[10] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,300),5000),[5000,5021],1/30)/1.1+sig};
+//    ~b[10] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,300),5000),[5000,5021],1/30)/1.1+sig};
 )
 
 ~b.stop;

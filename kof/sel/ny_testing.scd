@@ -162,14 +162,22 @@ b = Buffer.read(s,"/home/kof/vendula.wav");
         sig = LPF.ar(sig,[5000,2500,1500,10000]);
         // sig = Greyhole.ar(sig)/4+sig;
         sig = sig * env;
-        Splay.ar(sig,0.25,~n4);
+        Splay.ar(sig,0.25,0.2);
     };
     ~four.play;
 );
 ~four.stop(4);
+~four.clean;
 ~four.pause;
 ~four.resume;
 
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
 
 (
     p=ProxySpace.push(s.reboot);
