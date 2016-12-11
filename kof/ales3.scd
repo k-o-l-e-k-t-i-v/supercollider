@@ -313,10 +313,13 @@ RecordBuf.help
         //  |       |       |       |       |  
         var pat = [
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0,
         ].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[20,-3]),imp * hit);
+        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5/LFNoise2.kr(1/4*~tempo).range(1,2)],[20,-3]),imp * hit)};
         var sig = SinOsc.ar(50!2 + (env**2*50),env**40*8pi) + VarSaw.ar(50,0,env**4);
         sig = sig * env;
         Splay.ar(sig,0.005,0.5);
@@ -342,10 +345,10 @@ RecordBuf.help
         ].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,[1,2,3,4]);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15*[1,2,3,4]],[3,-3]),imp * hit);
+        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5*LFNoise0.kr([1,2,3,4]*~tempo).range(0.01,0.5)],[3,-3]),imp * hit)};
         var sig = HPF.ar(WhiteNoise.ar(0.7!4),8000/[1,2,3,4]);
         sig = sig * env;
-        Splay.ar(sig,0.75,0.5);
+        Splay.ar(sig,0.35,0.5);
     };
     ~hiss.play;
 );
