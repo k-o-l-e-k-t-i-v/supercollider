@@ -58,6 +58,7 @@ TempoClock.default = p.clock;
         sig = NumChannels.ar(sig,2) ;
         sig = Limiter.ar(sig.softclip);
         sig = LeakDC.ar(sig);
+        sig = HPF.ar(sig,150);
         ReplaceOut.ar(0,sig);
     };
 
@@ -74,13 +75,13 @@ TempoClock.default = p.clock;
     ~weirdo.quant=1;
     ~weirdo.fadeTime=4.02;
     ~weirdo={
-        var sig = HPF.ar(AudioIn.ar([1,2]),100) + ~one.ar;
+        var sig = HPF.ar(LPF.ar(AudioIn.ar([1,1]),5000),150);
         var pure = sig;
         var t = (1..4) * ~tempo;
         sig = PitchShift.ar(sig,0.12,LFNoise2.kr(1/4 * ~tempo!8).exprange(0.75,1.15));
         sig = DelayN.ar(sig,t,t) * LFNoise2.kr(1/4 * ~tempo!8)+sig;
         //sig = GVerb.ar(HPF.ar(sig,100) + LPF.ar(sig,8000),[16,16],[5,6],spread:[50,90])/32 + sig;
-        Splay.ar(sig.flat,0.005,0.75);
+        Splay.ar(sig.flat,0.95,0.95,SinOsc.kr(~tempo));
     };
     ~weirdo.play;
 );
@@ -169,7 +170,7 @@ Tdef(\a).stop;
     ~plain.quant=1;
     ~plain.fadeTime=4;
     ~plain={
-        var sig = HPF.ar(AudioIn.ar([0,1]),200);
+        var sig = HPF.ar(LPF.ar(AudioIn.ar([1,1]),100),5000);
         //sig = CompanderD.ar(sig,3/4,1/2,1);
         Splay.ar(sig,0.5,0.55);
     };
@@ -199,7 +200,7 @@ b = Buffer.alloc(s, 44100 * 8, 2);
     ~lin.quant=16;
     ~lin.fadeTime=4;
     ~lin={
-        var sig = AudioIn.ar([1,2]);
+        var sig = HPF.ar(LPF.ar(AudioIn.ar([1,1]),150),5000);
         Splay.ar(sig,0.5,0.95);
     };
     //~lin.play;
@@ -277,7 +278,8 @@ b = Buffer.alloc(s, 44100 * 8, 2);
         var mod = Duty.ar(1/[1,2,3,4]/~tempo,0,Dseq([1,2,1,1.33333,4,0.1,0.8],inf));
         var f = [60,64,64,36].midicps * ~modulator.kr;
 
-        var in = Normalizer.ar(HPF.ar(LPF.ar(AudioIn.ar([1,2]),2500),150));
+        var in = HPF.ar(LPF.ar(AudioIn.ar([1,1]),150),5000);
+        //var in = Normalizer.ar(HPF.ar(LPF.ar(AudioIn.ar([1,2]),2500),150));
         //var in = CompanderD.ar(AudioIn.ar([1,2]),1/2,1/3,1);
         var t = LFSaw.ar([~tempo/4,~tempo/16,f]) + LFSaw.ar(4410,mul:1);
         var perl = Perlin3.ar(t[0],t[1],t[2]) * LFDNoise1.kr(1/16!4);
