@@ -69,13 +69,14 @@ TempoClock.default = p.clock;
 
         //fx = PitchShift.ar(fx,0.12,LFNoise2.kr(1/2!8).exprange(0.75,2.15));
         //fx = DelayN.ar(fx,[1,2,3,4,5,6]*~tempo,[1,2,3,4,5,6]*~tempo) * LFNoise2.kr(1/4!8)+fx;
-        fx = LeakDC.ar(sig);
+        fx = LeakDC.ar(fx);
         fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5100],1/len)/rev + fx;
 
         sig = SelectX.ar(wet,[orig,fx]);
         //  sig = Compander.ar(sig,~duck.ar,8/10,1/2,1);
         sig = NumChannels.ar(sig,2) ;
         sig = Limiter.ar(sig.softclip);
+        sig = LeakDC.ar(sig);
         ReplaceOut.ar(0,sig);
     };
 
@@ -151,6 +152,26 @@ TempoClock.default = p.clock;
     Tdef(\a).play;
 )
 ("rekniTo").unixCmd;
+
+// plain synth ///////////////////////////////////////
+
+(
+    ~plain.ar(2);
+    ~plain.clock = p.clock;
+    ~plain.quant=16;
+    ~plain.fadeTime=4;
+    ~plain={
+        var sig = AudioIn.ar([0,1]);
+        sig = CompanderD.ar(sig,3/4,1/2,1);
+        Splay.ar(sig,0.5,0.95);
+    };
+    ~plain.play;
+);
+~plain.stop(4);
+~plain.clear;
+~plain.pause;
+~plain.resume;
+
 
 
 (
@@ -230,31 +251,11 @@ RecordBuf.help
 )
 
 
-// plain synth ///////////////////////////////////////
-
-(
-    ~plain.ar(2);
-    ~plain.clock = p.clock;
-    ~plain.quant=16;
-    ~plain.fadeTime=4;
-    ~plain={
-        var sig = AudioIn.ar([0,1]);
-        sig = CompanderD.ar(sig,3/4,1/2,1);
-        Splay.ar(sig,0.5,0.95);
-    };
-    ~plain.play;
-);
-~plain.stop(4);
-~plain.clear;
-~plain.pause;
-~plain.resume;
-
-
 
 (
     ~modulator.quant=16;
     ~modulator.fadeTime = 2;
-    ~modulator = {TChoose.kr(Impulse.kr(1/4*~tempo),[1,2,4,8,16,1/16,1/8,1/4]).lag(1/40)};
+    ~modulator = {TChoose.kr(Impulse.kr(1/16*~tempo),[1,2,4,8,1/8,1/4]).lag(1/40)};
 
 
     // glitch synth ///////////////////////////////////////
@@ -302,6 +303,13 @@ RecordBuf.help
 ~glitch2.resume;
 
 
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
+
 // kick synth ///////////////////////////////////////
 
 (
@@ -319,15 +327,15 @@ RecordBuf.help
         ].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5/LFNoise2.kr(1/4*~tempo).range(1,2)],[20,-3]),imp * hit)};
+        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5/LFNoise2.kr(1/32*~tempo).range(1,2)],[20,-3]),imp * hit)};
         var sig = SinOsc.ar(50!2 + (env**2*50),env**40*8pi) + VarSaw.ar(50,0,env**4);
         sig = sig * env;
         Splay.ar(sig,0.005,0.5);
     };
     ~kick.play;
 );
-~kick.stop(4);
-~kick.clear;
+~kick.stop(16);
+~kick.clear(16);
 ~kick.pause;
 ~kick.resume;
 
@@ -353,7 +361,7 @@ RecordBuf.help
     ~hiss.play;
 );
 ~hiss.stop(4);
-~hiss.clear;
+~hiss.clear(16);
 ~hiss.pause;
 ~hiss.resume;
 
