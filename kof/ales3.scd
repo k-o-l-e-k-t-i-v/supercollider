@@ -26,25 +26,6 @@ p.bpm(110);
 
 TempoClock.default = p.clock;
 
-/*
-(
-    p=ProxySpace.push(s.reboot);
-    p.makeTempoClock;
-    TempoClock.default = p.clock;
-);
-
-(
-    p.clock.tempo_(110/60);
-
-    ~offset = (0..7)/8;
-
-    ~tick.quant = 1;
-    ~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
-
-    ~counter = {PulseCount.kr(~tick.kr)};
-);
-
-*/
 (
     ~master.quant=16;
     ~master.play;
@@ -67,7 +48,7 @@ TempoClock.default = p.clock;
         fx = HPF.ar(fx,hp);
         fx = AllpassN.ar(fx,1/1600*~tempo,1/4*~tempo,len);
 
-        //fx = PitchShift.ar(fx,0.12,LFNoise2.kr(1/2!8).exprange(0.75,2.15));
+        fx = PitchShift.ar(fx,0.12,LFNoise2.kr(1/2!8).exprange(0.75,2.15));
         //fx = DelayN.ar(fx,[1,2,3,4,5,6]*~tempo,[1,2,3,4,5,6]*~tempo) * LFNoise2.kr(1/4!8)+fx;
         fx = LeakDC.ar(fx);
         fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5100],1/len)/rev + fx;
@@ -81,7 +62,7 @@ TempoClock.default = p.clock;
     };
 
     ~master_wet.quant = 4;
-    ~master_wet = {LFDNoise1.kr(~tempo/1600!2).exprange(0.15,0.45);};
+    ~master_wet = {LFDNoise1.kr(~tempo/1600!2).exprange(0.15,0.35);};
     // ~master_wet = {|sig| sig-(1-LFSaw.ar(~tempo*1)).range(0,1)**4};
     ~master.map(\wet,~master_wet);
     p.moveNodeToTail(\master);
@@ -89,6 +70,51 @@ TempoClock.default = p.clock;
 
 
 
+(
+    ~weirdo.quant=1;
+    ~weirdo.fadeTime=4.02;
+    ~weirdo={
+        var sig = HPF.ar(AudioIn.ar([1,2]),100) + ~one.ar;
+        var pure = sig;
+        var t = (1..4) * ~tempo;
+        sig = PitchShift.ar(sig,0.12,LFNoise2.kr(1/4 * ~tempo!8).exprange(0.75,1.15));
+        sig = DelayN.ar(sig,t,t) * LFNoise2.kr(1/4 * ~tempo!8)+sig;
+        //sig = GVerb.ar(HPF.ar(sig,100) + LPF.ar(sig,8000),[16,16],[5,6],spread:[50,90])/32 + sig;
+        Splay.ar(sig.flat,0.005,0.75);
+    };
+    ~weirdo.play;
+);
+~weirdo.stop(7);
+~weirdo.clear;
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
+
+
+
+/*
+(
+    p=ProxySpace.push(s.reboot);
+    p.makeTempoClock;
+    TempoClock.default = p.clock;
+);
+
+(
+    p.clock.tempo_(110/60);
+
+    ~offset = (0..7)/8;
+
+    ~tick.quant = 1;
+    ~tick = {Mix(Impulse.kr( ~tempo / 2 , ~offset ))};
+
+    ~counter = {PulseCount.kr(~tick.kr)};
+);
+
+*/
 // one synth ///////////////////////////////////////
 
 (
@@ -113,25 +139,6 @@ TempoClock.default = p.clock;
 ~one.resume;
 
 
-// zeman synth ///////////////////////////////////////
-
-(
-    ~weirdo.quant=16;
-    ~weirdo.fadeTime=4.02;
-    ~weirdo={
-        var sig = AudioIn.ar([1,2]) + ~one.ar;
-        var pure = sig;
-        var t = (1..4) * ~tempo;
-        sig = PitchShift.ar(sig,0.12,LFNoise2.kr(1/4 * ~tempo!8).exprange(0.75,2.15));
-        sig = DelayN.ar(sig,t,t) * LFNoise2.kr(1/4 * ~tempo!8)+sig;
-        //sig = GVerb.ar(HPF.ar(sig,100) + LPF.ar(sig,8000),[16,16],[5,6],spread:[50,90])/32 + sig;
-        Splay.ar(sig.flat,0.005,1);
-    };
-    ~weirdo.play;
-);
-~weirdo.stop(7);
-~weirdo.clear;
-
 
 (
     var tmp = '';
@@ -152,18 +159,19 @@ TempoClock.default = p.clock;
     Tdef(\a).play;
 )
 ("rekniTo").unixCmd;
+Tdef(\a).stop;
 
 // plain synth ///////////////////////////////////////
 
 (
     ~plain.ar(2);
     ~plain.clock = p.clock;
-    ~plain.quant=16;
+    ~plain.quant=1;
     ~plain.fadeTime=4;
     ~plain={
-        var sig = AudioIn.ar([0,1]);
-        sig = CompanderD.ar(sig,3/4,1/2,1);
-        Splay.ar(sig,0.5,0.95);
+        var sig = HPF.ar(AudioIn.ar([0,1]),200);
+        //sig = CompanderD.ar(sig,3/4,1/2,1);
+        Splay.ar(sig,0.5,0.55);
     };
     ~plain.play;
 );
@@ -182,6 +190,7 @@ TempoClock.default = p.clock;
 )
 
 b = Buffer.alloc(s, 44100 * 8, 2); 
+
 // lin synth ///////////////////////////////////////
 
 (
@@ -200,7 +209,6 @@ b = Buffer.alloc(s, 44100 * 8, 2);
 ~lin.pause;
 ~lin.resume;
 
-RecordBuf.help
 (
     ~rec.quant=16;
     ~rec.ar(2);
@@ -223,7 +231,7 @@ RecordBuf.help
 (
     ~b.ar(2);
     ~b.mold(2);
-    ~b.quant=16;
+    ~b.quant=1;
     ~b.fadeTime=4;
     ~b = { 
         var mod = LFNoise2.kr(1/(1..8) * ~tempo).range(0.998,TChoose.kr(Impulse.kr(1/(1..8) * ~tempo),[1,2,4,8,16].reciprocal + 1))  ;
@@ -234,14 +242,15 @@ RecordBuf.help
         // sig = sig * LFTri.ar(1/4/[1,2,3,4]);
         //sig = CompanderD.ar(sig,3/4,1/2,1/2);
         //sig = LPF.ar(sig,15900);
-        Splay.ar(sig,0.95,0.95);
+        Splay.ar(sig,0.95,0.35);
     };
     ~b.play;
-    ~b[10] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,300),5000),[5000,5021],1/30)/1.1+sig};
+    ~b[10] = nil;
+    //~b[10] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,300),5000),[5000,5021],1/30)/1.1+sig};
 )
 
 ~b.stop;
-~b.clear;
+~b.clear(4);
 
 (
     //////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
@@ -253,7 +262,7 @@ RecordBuf.help
 
 
 (
-    ~modulator.quant=16;
+    ~modulator.quant=1;
     ~modulator.fadeTime = 2;
     ~modulator = {TChoose.kr(Impulse.kr(1/16*~tempo),[1,2,4,8,1/8,1/4]).lag(1/40)};
 
@@ -262,7 +271,7 @@ RecordBuf.help
 
     ~glitch2.ar(2);
     ~glitch2.clock = p.clock;
-    ~glitch2.quant=16;
+    ~glitch2.quant=1;
     ~glitch2.fadeTime=4;
     ~glitch2={
         var mod = Duty.ar(1/[1,2,3,4]/~tempo,0,Dseq([1,2,1,1.33333,4,0.1,0.8],inf));
@@ -293,12 +302,12 @@ RecordBuf.help
         sig = Normalizer.ar(sig);
         sig = Limiter.ar(sig/2,0.85);
         sig = CompanderD.ar(sig,3/4,1/2,1)/4;
-        Splay.ar(sig,0.5,0.5);
+        Splay.ar(sig,0.5,0.0025);
     };
     ~glitch2.play;
 );
 ~glitch2.stop(4);
-~glitch2.clear;
+~glitch2.clear(16);
 ~glitch2.pause;
 ~glitch2.resume;
 
@@ -325,15 +334,15 @@ RecordBuf.help
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0,
         ].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,2);
-        //var imp = PulseDivider.kr(~tick.kr,4);
+        //var imp = PulseDivider.kr(~tick.kr,2);
+        var imp = PulseDivider.kr(~tick.kr,16);
         //var imp = PulseDivider.kr(~tick.kr,16);
         //var imp = PulseDivider.kr(~tick.kr,[1,2,3,4].nthPrime);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5/LFNoise2.kr(1/32*~tempo).range(1,2)],[20,-3]),imp * hit)};
+        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,3.5/LFNoise2.kr(1/32*~tempo).range(1,2)],[20,-3]),imp * hit)};
         var sig = SinOsc.ar(50!2 + (env**2*50),env**40*8pi) + VarSaw.ar(50,0,env**4);
         sig = sig * env;
-        Splay.ar(sig,0.005,0.5);
+        Splay.ar(sig,0.005,0.0025);
     };
     ~kick.play;
 );
@@ -351,15 +360,19 @@ RecordBuf.help
     ~hiss.fadeTime=0.02;
     ~hiss={
         //  |       |       |       |       |  
+         //   1,0,1,0, 1,0,1,0, 1,0,1,0, 1,1,1,1,
         var pat = [
-            1,0,1,0, 1,0,1,0, 1,0,1,0, 1,1,1,1,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0,
         ].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,[1,2,3,5].nthPrime);
+        var imp = PulseDivider.kr(~tick.kr,1);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5*LFNoise0.kr([1,2,3,4]*~tempo).range(0.01,0.5)],[3,-3]),imp * hit)};
-        var sig = HPF.ar(ClipNoise.ar(0.7!4),8000/[1,2,3,4]);
+        var sig = SinOsc.ar(440,mul:0.95);//HPF.ar(ClipNoise.ar(0.7!4),8000/[1,2,3,4]);
         sig = sig * env;
-        Splay.ar(sig,0.05,0.15);
+        Splay.ar(sig,0.05,0.015);
     };
     ~hiss.play;
 );
@@ -379,18 +392,18 @@ RecordBuf.help
 // karplus_glitch synth ///////////////////////////////////////
 
 (
-    ~modulator.quant=16;
+    ~modulator.quant=1;
     ~modulator.fadeTime = 2;
     ~modulator = {TChoose.kr(Impulse.kr(1/16*~tempo),[1,2,4,8,1/8,1/4]).lag(1/40)};
 
     ~karplus_glitch.ar(2);
     ~karplus_glitch.clock = p.clock;
-    ~karplus_glitch.quant=16;
+    ~karplus_glitch.quant=1;
     ~karplus_glitch.fadeTime=4;
     ~karplus_glitch={
-        var sig = AudioIn.ar([1,2]);
+        var sig = CompanderD.ar(HPF.ar(AudioIn.ar([1,2],200)),1/3,1);
         //var f = [50,100,1000,500];
-        var f = [60,64,36,72].midicps/~modulator.kr;
+        var f = [60,64,36,72].midicps/4/~modulator.kr;
         sig = max(LocalIn.ar(4),sig * LFNoise2.kr(1/4*~tempo ! 4));// * Pulse.ar(~tempo/4/[1,2,3,4]).softclip;
         sig = DelayN.ar(sig,1/f,1/f) + sig / 2;
         sig = PitchShift.ar(sig,1/f,0.9905) + sig /2;
@@ -399,8 +412,9 @@ RecordBuf.help
         sig = Normalizer.ar(sig)/1.052;
 
         LocalOut.ar(sig);
+        sig = HPF.ar(sig,100);
 
-        Splay.ar(sig,0.5,0.5);
+        Splay.ar(sig,0.5,0.005);
     };
     ~karplus_glitch.play;
 );
