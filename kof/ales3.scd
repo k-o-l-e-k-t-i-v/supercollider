@@ -27,10 +27,10 @@ p.bpm(110);
 TempoClock.default = p.clock;
 
 (
-    ~master.quant=16;
+    ~master.quant=1;
     ~master.play;
     ~master.fadeTime = 0.01;
-    ~master = {|wet=0.35,lp=4500,hp=250,len=4,rev = 2,duckLo = 150|
+    ~master = {|wet=0.15,lp=4500,hp=250,len=4,rev = 2,duckLo = 150|
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx,low,high,mid;
@@ -63,7 +63,7 @@ TempoClock.default = p.clock;
     };
 
     ~master_wet.quant = 4;
-    ~master_wet = {LFDNoise1.kr(~tempo/1600!2).exprange(0.15,0.35);};
+    //~master_wet = {LFDNoise1.kr(~tempo/1600!2).exprange(0.15,0.35);};
     // ~master_wet = {|sig| sig-(1-LFSaw.ar(~tempo*1)).range(0,1)**4};
     ~master.map(\wet,~master_wet);
     p.moveNodeToTail(\master);
