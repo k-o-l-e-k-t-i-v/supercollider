@@ -416,7 +416,7 @@ b = Buffer.alloc(s, 44100 * 8, 2);
         LocalOut.ar(sig);
         sig = HPF.ar(sig,100);
 
-        Splay.ar(sig,0.5,0.005);
+        Splay.ar(sig,0.5,0.015);
     };
     ~karplus_glitch.play;
 );
