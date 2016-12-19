@@ -9,7 +9,7 @@ TempoClock.default = p.clock;
   ~master.quant=2;
   ~master.play;
   ~master.fadeTime = 0.01;
-  ~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
+  ~master = {|wet=0.35,lp=3500,hp=250,len=10,rev = 2|
   var sig = In.ar([0,1]);
   var orig = sig;
   var fx;
@@ -34,8 +34,8 @@ p.moveNodeToTail(\master);
 ~one.fadeTime=4;
 ~one={
     var len = 4;
-  var ran = 1/8;
-  var mod = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+  var ran = 1/80;
+  var mod = Duty.kr(16/~tempo*[1,2,4],0,Dseq([1,2,1.5,1.33333],inf));
   var f = TWChoose.kr(Impulse.kr(~tempo!3),[60,64,67,72,48].midicps,[1,1,1,1/2,0.1],0) * mod;
   var phase = SinOsc.ar(~tempo).range(0.1,0.5);
   var width = LFSaw.ar(1/64/[1,2,3]*~tempo).range(0.01,0.95);
@@ -46,7 +46,7 @@ p.moveNodeToTail(\master);
   sig = Limiter.ar(sig,0.9,0.002);
   sig = CompanderD.ar(sig,3/4,1/1.5,1,0.002,~tempo/4).softclip/10;
   //sig = Clip.ar(sig,0.99);
-  Splay.ar(sig,0.72,0.05,sig);
+  Splay.ar(sig,0.72,0.5);
 };
 ~one.play;
 );
