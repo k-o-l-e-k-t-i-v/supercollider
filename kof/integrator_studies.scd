@@ -42,7 +42,7 @@ p.moveNodeToTail(\master);
   var sig = Integrator.ar( SinOsc.ar(f,phase,width), SinOsc.ar(f.lag(0.001)).range(0.001,0.999) ) * ran + SinOsc.ar(1/64/[1,2,3]);
   sig = Perlin3.ar(sig[0],sig[1],sig[2]);
   sig = LeakDC.ar(sig);
-  sig = sig * Pulse.ar(~tempo/[1,2,3,4]);// * LFTri.ar(~tempo/[1,2,3]/16);//Decay.ar(Impulse.ar(~tempo/[1,2,3,4]/2),sig.range(0.01,len)*~tempo);
+  //sig = sig * Pulse.ar(~tempo/[1,2,3,4]);// * LFTri.ar(~tempo/[1,2,3]/16);//Decay.ar(Impulse.ar(~tempo/[1,2,3,4]/2),sig.range(0.01,len)*~tempo);
   sig = Limiter.ar(sig,0.9,0.002);
   sig = CompanderD.ar(sig,3/4,1/2,1,0.002,~tempo/4).softclip/8;
   //sig = Normalizer.ar(sig)/10;
@@ -57,6 +57,13 @@ p.moveNodeToTail(\master);
 ~one.pause;
 ~one.resume;
 
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
 
 LFPulse.help
 Integrator.help
