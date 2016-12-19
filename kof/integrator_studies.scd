@@ -1,6 +1,6 @@
 
 p = p.push();
-p.bpm(240);
+p.bpm(120);
 p.restartClock;
 
 TempoClock.default = p.clock;
@@ -33,15 +33,16 @@ p.moveNodeToTail(\master);
 ~one.quant=2;
 ~one.fadeTime=4;
 ~one={
-    var len = 2;
-  var ran = 1;
-  var f = TWChoose.kr(Impulse.kr(~tempo!3),[60,64,69,72,48].midicps * [1,2,1/2,5/4,4/3],[1,1,1,1/2,0.1],0);
+    var len = 4;
+  var ran = 1/8;
+  var mod = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+  var f = TWChoose.kr(Impulse.kr(~tempo!3),[60,64,67,72,48].midicps,[1,1,1,1/2,0.1],0) * mod;
   var phase = SinOsc.ar(~tempo).range(0.1,0.5);
   var width = LFSaw.ar(1/64/[1,2,3]*~tempo).range(0.01,0.95);
   var sig = Integrator.ar( LFPulse.ar(f,phase,width), LFSaw.ar(f.lag(0.001)).range(0.001,0.999) ) * ran + LFSaw.ar(1/64/[1,2,3]);
   sig = Perlin3.ar(sig[0],sig[1],sig[2]);
   sig = LeakDC.ar(sig);
-  sig = sig * LFTri.ar(~tempo/[1,2,3]);//Decay.ar(Impulse.ar(~tempo/[1,2,3,4]/2),sig.range(0.01,len)*~tempo);
+  sig = sig * LFTri.ar(~tempo/[1,2,3]/4);//Decay.ar(Impulse.ar(~tempo/[1,2,3,4]/2),sig.range(0.01,len)*~tempo);
   sig = Limiter.ar(sig,0.9,0.002);
   sig = CompanderD.ar(sig,3/4,1/1.5,1,0.002,~tempo/4).softclip/10;
   //sig = Clip.ar(sig,0.99);
