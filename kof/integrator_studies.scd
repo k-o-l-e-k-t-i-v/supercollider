@@ -5,6 +5,26 @@ p.restartClock;
 
 TempoClock.default = p.clock;
 
+(
+  ~master.quant=2;
+  ~master.play;
+  ~master.fadeTime = 0.01;
+  ~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
+  var sig = In.ar([0,1]);
+  var orig = sig;
+  var fx;
+  //fx = Limiter.ar(sig,0.95);
+  sig = Compander.ar(sig,3/4,1/1.1,1/3);
+  fx = LPF.ar(sig,lp);
+  fx = HPF.ar(fx,hp);
+  fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+  sig = SelectX.ar(wet,[orig,fx]);
+  sig = NumChannels.ar(sig,2);
+  ReplaceOut.ar(0,sig);
+  };
+);
+p.moveNodeToTail(\master);
+
 // one synth ///////////////////////////////////////
 
 (
@@ -13,19 +33,19 @@ TempoClock.default = p.clock;
 ~one.quant=2;
 ~one.fadeTime=4;
 ~one={
-    var len = 1;
-  var ran = 1/50;
+    var len = 2;
+  var ran = 1;
   var f = TWChoose.kr(Impulse.kr(~tempo!3),[60,64,69,72,48].midicps * [1,2,1/2,5/4,4/3],[1,1,1,1/2,0.1],0);
   var phase = SinOsc.ar(~tempo).range(0.1,0.5);
-  var width = LFSaw.ar(1/160*~tempo).range(0.1,0.5);
-  var sig = Integrator.ar( LFPulse.ar(f,phase,width), LFSaw.ar(f.lag(0.001)).range(0.001,0.999) ) * ran;
+  var width = LFSaw.ar(1/64/[1,2,3]*~tempo).range(0.01,0.95);
+  var sig = Integrator.ar( LFPulse.ar(f,phase,width), LFSaw.ar(f.lag(0.001)).range(0.001,0.999) ) * ran + LFSaw.ar(1/64/[1,2,3]);
   sig = Perlin3.ar(sig[0],sig[1],sig[2]);
   sig = LeakDC.ar(sig);
-  sig = sig * Decay.ar(Impulse.ar(~tempo/[1,2,3,4]),sig.range(0.01,len)*~tempo);
+  sig = sig * LFTri.ar(~tempo/[1,2,3]);//Decay.ar(Impulse.ar(~tempo/[1,2,3,4]/2),sig.range(0.01,len)*~tempo);
   sig = Limiter.ar(sig,0.9,0.002);
   sig = CompanderD.ar(sig,3/4,1/1.5,1,0.002,~tempo/4).softclip/10;
   //sig = Clip.ar(sig,0.99);
-  Splay.ar(sig,0.2,0.25);
+  Splay.ar(sig,0.72,0.05,sig);
 };
 ~one.play;
 );
