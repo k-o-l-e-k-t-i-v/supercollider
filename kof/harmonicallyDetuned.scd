@@ -32,7 +32,7 @@ p.moveNodeToTail(\master);
 ~sineperl={
     var mod2 = TChoose.kr(Impulse.kr(1/64/(1..8)),[1,2]).lag(16);
   var mod = TChoose.kr(Impulse.kr(1/64/(1..8)),[1,2,4/3,3/2,1,1,1]).lag(16);
-  var f = TChoose.kr(Impulse.kr(1/64/(1..8)),([60,48,72,36] +.x [0,2,4,7]).midicps).lag(16) / mod / mod2;
+  var f = TChoose.kr(Impulse.kr(1/64/(1..8)),([60,48,72,36] +.x [0,4,7]).midicps).lag(16) / mod / mod2;
   var carriage = SinOsc.ar([f,1/f/16/((1..8)**2),1/16/f],SinOsc.kr(f/[10.001,10.0010333] /.x [1,100])/8,mul:1/(1..8)) * LFTri.ar(f/100000,mul:4) + LFDNoise1.kr(1/4000!8);
   var perlin = Perlin3.ar(carriage[0],carriage[1],carriage[2]) * carriage;
   var sig;
@@ -56,6 +56,6 @@ p.moveNodeToTail(\master);
 (
 //////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
 {
-  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(60);};});
 }.fork;  
 )

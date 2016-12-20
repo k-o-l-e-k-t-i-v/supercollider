@@ -56,6 +56,6 @@ p.moveNodeToTail(\master);
 (
 //////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
 {
-  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(60);};});
 }.fork;  
 )
