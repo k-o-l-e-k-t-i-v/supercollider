@@ -41,7 +41,7 @@ p.moveNodeToTail(\master);
   sig = LPF.ar(sig,5000);
   sig = CompanderD.ar(sig,3/4,1/2,1);
   sig = Vibrato.ar(sig,[3,4,5,6],0.02);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.85,0.25);
 };
 ~sineperl.play;
 );
