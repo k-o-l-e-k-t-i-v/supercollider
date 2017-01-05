@@ -22,6 +22,26 @@ p.push();
 );
 p.moveNodeToTail(\master);
 
+(
+  p.clock.sched(p.clock.timeToNextBeat(1 * 16),{ 
+  
+p.bpm(120);
+  });
+);
+
+(
+  s.latency=0.4;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant = 16;
+  ~counter.clock = p.clock;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
+
 // sineperl synth ///////////////////////////////////////
 
 (
@@ -42,7 +62,7 @@ p.moveNodeToTail(\master);
   sig = LPF.ar(sig,2500);
   sig = CompanderD.ar(sig,3/4,1/2,1);
   sig = Vibrato.ar(sig,[3,4,5,6],0.02);
-  Splay.ar(sig,0.85,0.25);
+  Splay.ar(sig,0.85,0.15);
 };
 ~sineperl.play;
 );

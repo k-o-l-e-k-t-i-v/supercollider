@@ -36,7 +36,6 @@ p.moveNodeToTail(\master);
         var carriage = SinOsc.ar([f,1/f/16/((1..8)**2),1/16/f],SinOsc.kr(f/[10.001,10.0010333] /.x [1,100])/8,mul:1/(1..8)) * LFTri.ar(f/100000,mul:4) + LFDNoise1.kr(1/4000!8);
         var perlin = Perlin3.ar(carriage[0],carriage[1],carriage[2]) * carriage;
         var sig;
-
         sig = Resonz.ar(perlin,f*[1,2,4,1.5,1/2],0.02);
         sig = Normalizer.ar(LeakDC.ar(perlin))/8 * (LFTri.ar(1/64/(1..8))**1.2);
         sig = LPF.ar(sig,2500);

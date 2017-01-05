@@ -1,3 +1,17 @@
+p.push()
+
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant = 16;
+  ~counter.clock = p.clock;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
 
 (
 //////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
@@ -17,12 +31,32 @@
 );
 
 
+(
+  ~master.quant=2;
+  ~master.play;
+  ~master.fadeTime = 0.01;
+  ~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
+  var sig = In.ar([0,1]);
+  var orig = sig;
+  var fx;
+  //fx = Limiter.ar(sig,0.95);
+  sig = Compander.ar(sig,3/4,1/1.1,1/3);
+  fx = LPF.ar(sig,lp);
+  fx = HPF.ar(fx,hp);
+  fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+  sig = SelectX.ar(wet,[orig,fx]);
+  sig = NumChannels.ar(sig,2);
+  ReplaceOut.ar(0,sig);
+  };
+);
+p.moveNodeToTail(\master);
+
 /// 8 KICK start
 
 (
     ~kick.ar(2);
     ~kick.clock = p.clock;
-    ~kick.quant = [8];
+    ~kick.quant = [16];
     ~kick.fadeTime=0.2;
     ~kick={
         //         |       |       |       |       |  
@@ -31,10 +65,10 @@
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
-        ];
+        ].rotate(1);
         var mod2 = LFNoise2.kr(~tempo/160).range(20,80);
         var mod = LFDNoise1.kr(~tempo/160).range(20,80);
-        var imp = PulseDivider.kr(~tick.kr,8,~counter.kr%pat.size);
+        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[mod,-3.3]), imp * hit);
         var sig;
@@ -58,7 +92,7 @@
 
 (
 ~onea.ar(2);
-~onea.quant=2;
+~onea.quant=16;
 ~onea.fadeTime=0.2;
 ~onea={
   //         |       |       |       |       |  

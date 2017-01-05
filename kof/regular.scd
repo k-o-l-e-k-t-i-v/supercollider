@@ -30,26 +30,26 @@ p.moveNodeToTail(\master);
 // one synth ///////////////////////////////////////
 
 (
-~one.ar(2);
-~one.clock = p.clock;
-~one.quant=[16,0];
-~one.fadeTime=0.12;
-~one={
+~onek.ar(2);
+~onek.clock = p.clock;
+~onek.quant=[16,0];
+~onek.fadeTime=0.12;
+~onek={
   //  |       |       |       |       |  
   var pat = [
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
-    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
-  ];
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
+  ].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3]),imp * hit);
   var sig = SinOsc.ar(50!2,env**40*8pi);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.5);
+  Splay.ar(sig,0.75,0.85);
 };
-~one.play;
+~onek.play;
 );
 ~one.stop(4);
 ~one.clear(16);
@@ -70,14 +70,14 @@ p.moveNodeToTail(\master);
     0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0,
     0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0,
     0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0,
-  ];
+  ].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,[1,2,4],~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.25*[1,2,4]],[20,-3]),imp * hit);
   var sig = WhiteNoise.ar(0.12!3);
   sig = DFM1.ar(sig,env**2*8000+500,0.2*[1,2,4] * LFNoise2.kr(1/4*~tempo!3).range(0.1,0.9));
   sig = sig * env;
-  Splay.ar(sig,0.75,0.15);
+  Splay.ar(sig,0.75,0.55);
 };
 ~hiss.play;
 );
@@ -86,6 +86,18 @@ p.moveNodeToTail(\master);
 ~hiss.pause;
 ~hiss.resume;
 
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant = 16;
+  ~counter.clock = p.clock;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
 
 
 // perlin synth ///////////////////////////////////////
@@ -96,14 +108,14 @@ p.moveNodeToTail(\master);
 ~perlin.quant=[16,3/16];
 ~perlin.fadeTime=16;
 ~perlin={
-  var sig = SinOsc.ar(1/[64,128,[1,2,1/50]] * ~tempo.kr) +1 ** 0.2 * 44100 * ~tempo.kr * 16;
-  sig = Perlin3.ar(sig[0],sig[1],sig[2]) * Pulse.ar(2*~tempo/[1,2,4]);
+  var sig = SinOsc.ar(1/[64,128,[1,1/2,1/50]] * ~tempo.kr) +1 ** 0.2 * 44100 * ~tempo.kr * 16;
+  sig = Perlin3.ar(sig[0],sig[1],sig[2]) * Pulse.ar(4*~tempo/[1,2,4]);
   sig = LPF.ar(sig,900*[1,2,10]);
-  Splay.ar(sig,0.05,0.05);
+  Splay.ar(sig,0.05,0.15,sig);
 };
 ~perlin.play;
 );
 ~perlin.stop(4);
-~perlin.clear;
+~perlin.clear(16);
 ~perlin.pause;
 ~perlin.resume;
