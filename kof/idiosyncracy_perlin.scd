@@ -10,7 +10,7 @@ OpenObject.openInterpreter;
     ~master.quant=2;
     ~master.play;
     ~master.fadeTime = 0.01;
-    ~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
+    ~master = {|wet=0.05,lp=3500,hp=250,len=10,rev = 3|
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx;
@@ -33,17 +33,17 @@ OpenObject.openInterpreter;
     ~idiom.clock = p.clock;
     ~idiom.quant=2;
     ~idiom.fadeTime=0.1;
-    ~idiom={|x,y,z|
-        var sel
+    ~idiom={|x,y,ax,ay|
         //////////////////////////   interpolation
-        var ins = ([x,y,z]/256.0).lag(1/30*2);
-        var mod = SelectX.kr(ins*8,[1,2,1.333333,1.5,1/2,1/4,1/8,2,4,8]);
-        var freqs = ([60,64].midicps*4) / mod;
-        var sig = SinOsc.ar(freqs,ins*8pi,mul:0.2) + (ins**0.01*4);// * (ins);
-        sig = Perlin3.ar(sig[0],sig[1],sig[2]) * ins;
+        var mel = Duty.kr(4,0,Dseq([1,2,1.5,1.33333],inf));
+        var ins = [ax,ay].lag(1/30);
+        var sig = WhiteNoise.ar(1!2) + SinOsc.kr((0.5-[x,y]).abs.range(50,5000),[x,y]*8pi) * ins;
+        sig = BPF.ar(sig,500,LFTri.kr(1000*ins).range(0.01,0.2));
+        sig = CompanderD.ar(sig,3/4,1/2,1/2);
+        //sig = Perlin3.ar(sig[0],sig[1],sig[2]) * ins;
         //sel = sig * SinOsc.ar(Select.kr(ins*freqs.size,freqs));// * SinOsc.ar(freqs+ins);
 
-        Splay.ar(sig,0.5,0.5);
+        Splay.ar(sig,0.5,0.5,SinOsc.kr(29.97)/2);
     };
     ~idiom.play;
 );
