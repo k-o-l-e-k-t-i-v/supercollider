@@ -45,7 +45,7 @@ p.moveNodeToTail(\master);
 };
 ~perlin_again.play;
 );
-~perlin_again.stop(4);
+~perlin_again.stop(16);
 ~perlin_again.clear;
 ~perlin_again.pause;
 ~perlin_again.resume;
