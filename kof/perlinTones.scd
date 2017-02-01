@@ -1,7 +1,7 @@
 
 
 p.push();
-
+p.bpm(140/2)
 
 (
   ~master.quant=2;
@@ -32,20 +32,20 @@ p.moveNodeToTail(\master);
 ~perlin_again.quant=[2,0];
 ~perlin_again.fadeTime=16;
 ~perlin_again={
-  var mod2 = Duty.kr(16*[1,2,4],0,Dseq([1,2,1,4],inf)) *.x [2,1/2,1] ;
-  var mod = Duty.kr(32*[1,2,4],0,Dseq([1,1/2,1,2],inf)) *.x TWChoose.kr(1/16/[1,2,4],[1,1.5,1/2,2],[5,5,2,1],1);
-  var freq = TWChoose.kr(Impulse.kr(1/16/[1,2,4]),[60,64,48,72,36,24].midicps/mod2,[10,5,3,2,1,1],1) * mod;
-  var t = LFTri.ar([freq/10000,1/3600/[1,2,4],freq],SinOsc.kr(1/16/[1,2,4]*freq)*0.1pi) * [LFNoise2.kr(1/16!9).range(1/4,8),4000,1/4];
-  var sig = Perlin3.ar(t[0],t[1],t[2]) + BrownNoise.ar(0.001!3) * (LFTri.ar(1/16/[1,2,4])**1.66);
+  var mod2 = Duty.kr(16*[1,2,4] / ~tempo,0,Dseq([1,2,1,4],inf)) *.x [2,1/2,1] ;
+  var mod = Duty.kr(32*[1,2,4] / ~tempo,0,Dseq([1,1/2,1,2],inf)) *.x TWChoose.kr(1/16/[1,2,4],[1,1.5,1/2,2],[5,5,2,1],1);
+  var freq = TWChoose.kr(Impulse.kr(1/16/[1,2,4] * ~tempo),[60,64,48,72,36,24].midicps/mod2,[10,5,3,2,1,1],1) * mod;
+  var t = LFTri.ar([freq/10000,1/3600/[1,2,4],freq],SinOsc.kr(1/16/[1,2,4] * ~tempo*freq)*0.1pi) * [LFNoise2.kr(1/16!9).range(1/4,8),4000,1/4];
+  var sig = Perlin3.ar(t[0],t[1],t[2]) + BrownNoise.ar(0.001!3) * (LFTri.ar(1/16/[1,2,4] * ~tempo)**1.66);
   sig = Vibrato.ar(sig,[5,6,7],0.02);
   sig = MoogFF.ar(sig,[freq,freq*1.5],[2.5,LFNoise2.kr(1/4!3).range(1,3.45)],mul:[0.6,0.12]);
   sig = HPF.ar(sig,40);
   sig = CompanderD.ar(sig,3/4,1/2,1);
-  Splay.ar(sig,0.25,0.75);
+  Splay.ar(sig,0.25,0.25);
 };
 ~perlin_again.play;
 );
-~perlin_again.stop(16);
+~perlin_again.stop(120);
 ~perlin_again.clear;
 ~perlin_again.pause;
 ~perlin_again.resume;

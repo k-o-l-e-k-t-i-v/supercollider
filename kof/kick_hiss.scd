@@ -1,7 +1,11 @@
 
 p.push()
+p.disconnect();
+p.connect();
+
 
 p.bpm(105);
+
 (
 (
   s.latency=0.2;
@@ -83,8 +87,8 @@ p.bpm(105);
 (
 ~perl.ar(2);
 ~perl.clock = p.clock;
-~perl.quant=[0,3];
-~perl.fadeTime=1.02;
+~perl.quant=[16,0];
+~perl.fadeTime=5.02;
 ~perl={
   //  |       |       |       |       |  
   var pat = [
@@ -93,21 +97,22 @@ p.bpm(105);
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
   ].rotate(3);
-  var imp = PulseDivider.kr(~tick.kr,[1,2,4]*4,~counter.kr%pat.size);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,4],~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.025,0.15*[1,2,4]].scramble,[3,-3]),imp * hit);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.25,2.15*[1,2,4]].scramble,[3,-3]),imp * hit);
   var mod = Duty.kr(128/~tempo,0,Dseq([1,2,1.5,1.33333].scramble,inf)) * [4,2,1,8].scramble;
-  var f = [[64,60,60,60,36,48,69].choose,72,84].midicps.scramble / {[8,16,2,1,32,1/2,1/4].choose}!3 / Duty.kr([4,16,64,128].scramble * (8/[16,32,64].scramble) / (~tempo/2),0,Dseq([1,2,1.5,1.33333,1,2,1/2,4].scramble,inf)).lag(1/[128,512,2048]) * mod   ;
-  var t = VarSaw.ar([1/4,1/160,f],0,env**[1/8,20,200].scramble,mul:0.01) + SinOsc.ar(f*2,SinOsc.kr(1/4/[1,2,3].scramble,mul:LFTri.ar(1/16/[1,2,3,4]*~tempo)) * pi,mul:0.25) + LFTri.ar(f/2560/[16,64,512],mul:LFNoise2.kr(1/160!3).range(0.01,1/[4,8,1/100]));
-  var sig = Perlin3.ar(t[0],t[1],t[2]) ** LFSaw.ar(~tempo*4).range(0.5,1.5);
+  var f = [[60,60,60,36,48,72].choose,72,84].midicps.scramble / {[8,16,2,1,32].choose}!3 / 8 / Duty.kr([4,16,64,128].scramble * (32/[16,32,64].scramble) / (~tempo/2),0,Dseq([1,2,1.5,1.33333,1,2,1/2,4].scramble,inf)).lag(1/[128,512,2048]) * mod   ;
+  var t = VarSaw.ar([1/16,1/160,f],0,env**[1/8,20,200].scramble,mul:0.01) + SinOsc.ar(f*2,SinOsc.kr(1/16/[1,2,3].scramble,mul:LFTri.ar(1/16/[1,2,3,4]*~tempo)) * pi,mul:0.25) + LFTri.ar(f/2560/[16,64,512],mul:LFNoise2.kr(1/160!3).range(0.01,1/[4,8,1/100]));
+  var sig = Perlin3.ar(t[0],t[1],t[2]) ** LFTri.ar(~tempo/[4,2,3]/4).range(0.75,1.25);
+  sig = LPF.ar(sig,1500);
   sig = sig * env;
   sig = LeakDC.ar(sig) ;
   
   sig = sig + (sig * ToggleFF.kr(~tempo * 8 / {[1,2,3,4,5,6,7,8,1/4,1/2,1/4,1/8,1/16].choose}!8) );
-  sig = Compander.ar(sig,~one.ar,0.1,1,0.1);
-  sig = LPF.ar(sig,2000) + (Pulse.ar(~tempo*4/[1,2,3,4]*[1,2,4].choose)*HPF.ar(sig,1000));
+  //sig = Compander.ar(sig,~one.ar,0.1,1,0.1);
+  //sig = LPF.ar(sig,2000) + (Pulse.ar(~tempo*4/[1,2,3,4]*[1,2,4].choose)*HPF.ar(sig,1000));
   sig = CompanderD.ar(sig,1/2,1/2,1);
-  Splay.ar(sig,0.575,0.15);
+  Splay.ar(sig,0.575,0.05);
 };
 ~perl.play;
 );
@@ -128,11 +133,10 @@ p.bpm(105);
 r = Tdef(\resync,{
 loop{
     ~perl.rebuild;
-    (18.28571).wait;
+    (32).wait;
 };
 };);
 
-120/105*16
 
 (
   p.clock.sched(p.clock.timeToNextBeat(1 * 16),{ 
@@ -143,6 +147,7 @@ loop{
 )
 r.stop;
 
+120/105*16
 
 
 (
