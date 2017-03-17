@@ -6,7 +6,7 @@ p.push();
   ~master.quant=2;
   ~master.play;
   ~master.fadeTime = 0.01;
-  ~master = {|wet=0.25,lp=3500,hp=250,len=10,rev = 3|
+  ~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
   var sig = In.ar([0,1]);
   var orig = sig;
   var fx;
@@ -35,10 +35,10 @@ p.bpm(90);
 ~neo_beat={
 var frac = 1/32;
 
-var sp = 1/32;
-  var pat1 = LFSaw.ar([1,1/1,1/2560/1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20001*~tempo);
-  var pat2 = LFSaw.ar([1,1/2,1/2560/1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20002*~tempo);
-  var pat3 = LFSaw.ar([1,1/4,1/2560/1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20003*~tempo);
+var sp = 1/8/[1,2,3,4];
+  var pat1 = LFSaw.ar([1,1/1,1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20001*~tempo);
+  var pat2 = LFSaw.ar([1,1/2,1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20002*~tempo);
+  var pat3 = LFSaw.ar([1,1/4,1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20003*~tempo);
   
   var sig1 = Perlin3.ar(pat1[0],pat1[1],pat1[2]).round(frac);
   var sig2 = Perlin3.ar(pat2[0],pat2[1],pat2[2]).round(frac);
@@ -50,17 +50,17 @@ var sp = 1/32;
   var mod = Duty.kr(64/~tempo/[1,2,3,4],0,Dseq([1,2,1.5,1.33333],inf)) * mod2;
   
   var cad = 8 / [1,2,3,4];
-  var note = Duty.kr(1/8/~tempo,0,Dseq([60,72,60,48,60,55,60,84],inf)).midicps * 8;
+  var note = Duty.kr(8/~tempo,0,Dseq([60,72,60,48,60,55,60,84],inf)).midicps.lag(~tempo/16) * 16;
 
   sig1 = SinOsc.ar(50+Pulse.ar(sig1*~tempo*cad),Pulse.ar(sig1*~tempo*cad)) * sig1;
   sig2 = SinOsc.ar(note/mod,Pulse.ar(sig2*~tempo*cad),mul:0.15) * sig2;
   sig3 = RLPF.ar(WhiteNoise.ar(sig3),sig3.range(150,15000),0.2) * sig3;
  
   sig = CompanderD.ar(sig1+sig2+sig3,3/4,1/2,1);
-  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1,0.02,1);
   //sig = sig * Pulse.ar(~tempo*4/[1,2,3,4]);
 
-  Splay.ar(sig,0.5,0.5);
+  Splay.ar(sig,0.75,0.25);
 };
 ~neo_beat.play;
 );
@@ -81,11 +81,34 @@ var sp = 1/32;
   //  |       |       |       |       |  
   var pat = [
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,1,0, 1,1,1,1,
   ].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
-  var sig = SinOsc.ar(50!2+(env**50*500),env**80*8pi);
+  var sig = SinOsc.ar(55!2+(env**55*550),env**100*8pi);
   sig = sig * env;
   Splay.ar(sig,0.75,0.5);
 };
@@ -95,6 +118,35 @@ var sp = 1/32;
 ~kick.clear;
 ~kick.pause;
 ~kick.resume;
+
+// hiss synth ///////////////////////////////////////
+
+(
+~hiss.ar(2);
+~hiss.clock = p.clock;
+~hiss.quant=[16,0];
+~hiss.fadeTime=0.02;
+~hiss={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+  ].rotate(3);
+  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15] * LFNoise2.kr(~tempo/32).range(1,4),[3,-3]),imp * hit)};
+  var sig = WhiteNoise.ar(0.1!2);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.5);
+};
+~hiss.play;
+);
+~hiss.stop(4);
+~hiss.clear;
+~hiss.pause;
+~hiss.resume;
 
 
 (
