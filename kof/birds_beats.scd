@@ -7,7 +7,7 @@ p.bpm(90);
     ~master.quant=2;
     ~master.play;
     ~master.fadeTime = 0.01;
-    ~master = {|wet=0.25,lp=3500,hp=250,len=10,rev = 3|
+    ~master = {|wet=0.35,lp=3500,hp=250,len=10,rev = 3|
         var sig = In.ar([0,1]);
         var orig = sig;
         var fx;
@@ -29,13 +29,16 @@ p.bpm(90);
 (
     ~stereo_one.ar(2);
     ~stereo_one.clock = p.clock;
-    ~stereo_one.quant=16;
-    ~stereo_one.fadeTime=0.5;
+    ~stereo_one.quant=8;
+    ~stereo_one.fadeTime=2.5;
     ~stereo_one={
-        var note = SelectX.kr(LFSaw.kr(~tempo/32/(~tempo/32/(1..4)))*5,[60.01,60,36,72].midicps) * 8 / [1,2,1.5,1.333333,1/16];
-        var sig = SinOsc.ar(note,SinOsc.ar(~tempo/note*10000)*8pi*LFNoise2.kr(~tempo/2/32),mul:0.5) + VarSaw.ar(note/[2,1/4],mul:0.1);
-        sig = sig * ([] ++ Pulse.ar([2,1.5]*~tempo/[1,2,3,5]).softclip * LFTri.ar(1/4*~tempo/[3,1,7,9]) + Pulse.ar(~tempo/[1,3,7,9],mul:0.1));
-        Splay.ar(sig,0.85,0.15,SinOsc.kr(~tempo*3));
+        var nts = [72,60,36,48,96].midicps;
+        var note = SelectX.kr(LFTri.kr(~tempo/3200/((1..4)))*(nts.size+1),nts) / 2/[1,2,1.5,1.333333];
+        var sig = SinOsc.ar(note,SinOsc.ar(note*0.999)**LFNoise2.kr(~tempo/37!4).range(0.1,1.6)*8pi*LFNoise2.kr(~tempo/2/32)!4,mul:0.5) + VarSaw.ar(note/[2,1/4],mul:0.1);
+        sig = sig * ([] ++ Pulse.ar(~tempo*2/[1,2,3,5]).softclip * LFTri.ar(~tempo/[3,1,7,9]) + Pulse.ar(~tempo/[1,3,7,9],mul:0.1).softclip);
+        sig = sig * (LFTri.ar(~tempo/32/[1,2,3,4])**LFNoise2.kr(~tempo/4!4).range(0.1,4));
+        sig = CombN.ar(sig,1/note,1/note,LFNoise2.kr(~tempo/32!4).range(0.1,2))/4+sig;
+        Splay.ar(sig,0.85,0.25,SinOsc.kr(1/[7.1,7.10333])/2);
     };
     ~stereo_one.play;
 );
@@ -55,8 +58,8 @@ p.bpm(90);
     ~kick={
         //  |       |       |       |       |  
         var pat = [
-            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
-        ].rotate(3);
+            1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+        ].rotate(1);
         var len = LFNoise1.kr(~tempo/32).range(0.5,1.5);
         var imp = PulseDivider.kr(~tick.kr,1);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
