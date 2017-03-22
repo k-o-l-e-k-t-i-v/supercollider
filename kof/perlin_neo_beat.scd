@@ -35,7 +35,7 @@ p.bpm(90);
 ~neo_beat={
 var frac = 1/32;
 
-var sp = 1/8/[1,2,3,4];
+var sp = 1/16/[1,2,3,4];
   var pat1 = LFSaw.ar([1,1/1,1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20001*~tempo);
   var pat2 = LFSaw.ar([1,1/2,1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20002*~tempo);
   var pat3 = LFSaw.ar([1,1/4,1/[1,2,3,4]]*~tempo/sp) + LFSaw.kr(1/20003*~tempo);
@@ -49,7 +49,7 @@ var sp = 1/8/[1,2,3,4];
   var mod2 = Duty.kr(128/~tempo/[1,2,3,4],0,Dseq([1,2,1.5,1.33333],inf)) * mod3;
   var mod = Duty.kr(64/~tempo/[1,2,3,4],0,Dseq([1,2,1.5,1.33333],inf)) * mod2;
   
-  var cad = 8 / [1,2,3,4];
+  var cad = 2 / [1,2,3,4];
   var note = Duty.kr(8/~tempo,0,Dseq([60,72,60,48,60,55,60,84],inf)).midicps.lag(~tempo/16) * 16;
 
   sig1 = SinOsc.ar(50+Pulse.ar(sig1*~tempo*cad),Pulse.ar(sig1*~tempo*cad)) * sig1;
@@ -136,10 +136,11 @@ var sp = 1/8/[1,2,3,4];
   ].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15] * LFNoise2.kr(~tempo/32).range(1,4),[3,-3]),imp * hit)};
-  var sig = WhiteNoise.ar(0.1!2);
+  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5] * LFNoise2.kr(~tempo/32).range(1,4),[3,-3]),imp * hit)};
+  var sig = WhiteNoise.ar(0.2!2) * Pulse.ar(env**5*50);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.5);
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1,0.002,0.01);
+  Splay.ar(sig,0.75,0.95);
 };
 ~hiss.play;
 );
