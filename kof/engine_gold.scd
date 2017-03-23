@@ -3,7 +3,7 @@
 
 s.boot;
 p.push();
-p.bpm(89.9);
+p.bpm(120);
 
 
 ~temp.quant=16;
@@ -17,8 +17,8 @@ p.bpm(89.9);
 ~engine.quant=16;
 ~engine.fadeTime=30;
 ~engine={
-  var sig = SinOsc.ar(50,Pulse.ar(89.9/60+~temp.kr));
-  Splay.ar(sig,0.005,0.332);
+  var sig = SinOsc.ar(50,Pulse.ar(~tempo/4));
+  Splay.ar(sig,0.005,0.0332);
 };
 ~engine.play;
 );

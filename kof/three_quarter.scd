@@ -23,9 +23,64 @@
 p.moveNodeToTail(\master);
 
 p.push();
-p.bpm(120);
+p.bpm(240);
+
+// one synth ///////////////////////////////////////
+
+(
+~one.ar(2);
+~one.clock = p.clock;
+~one.quant=16;
+~one.fadeTime=4;
+~one={
+  var sig = WhiteNoise.ar(0.2!4);
+  sig = HPF.ar(sig,[5000,250,15000,1600]) * Pulse.ar(~tempo*[1,1.5,16,1/4]);
+  sig = Compander.ar(sig,~one2.ar,0.1,1,0.1);
+  Splay.ar(sig,0.5,0.15);
+};
+~one.play;
+);
+~one.stop(4);
+~one.clear;
+~one.pause;
+~one.resume;
 
 
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
+
+// one synth ///////////////////////////////////////
+
+(
+~one2.ar(2);
+~one2.clock = p.clock;
+~one2.quant=[16,0];
+~one2.fadeTime=0.02;
+~one2={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,1);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5] * LFNoise2.kr(~tempo/32).range(1/4,2),[3,-3]),imp * hit)};
+  var sig = SinOsc.ar(60!2+(env**LFNoise2.kr(~tempo/32).range(10,100)*250),env**LFNoise2.kr(~tempo/32).range(10,100)*8pi);// + VarSaw.ar(60,0,env**(0.2*LFNoise2.kr(~tempo/80))*8pi,mul:0.52);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.25);
+};
+~one2.play;
+);
+~one2.stop(4);
+~one2.clear;
+~one2.pause;
+~one2.resume;
 
 // ninety_threequarter synth ///////////////////////////////////////
 
@@ -35,8 +90,8 @@ p.bpm(120);
     ~ninety_threequarter.quant=[8,0];
     ~ninety_threequarter.fadeTime=4;
     ~ninety_threequarter={
-        var sig = SinOsc.ar(50!2,Pulse.ar(~tempo/4)) * Pulse.ar(~tempo/[1,1.5,3,4]);
-        Splay.ar(sig,0.5,0.27);
+        var sig = SinOsc.ar(50!2,Pulse.ar(~tempo/4/4)) * Pulse.ar(~tempo/[1,1.5,3,4]/4);
+        Splay.ar(sig,0.5,0.127);
     };
     ~ninety_threequarter.play;
 );
@@ -71,12 +126,12 @@ p.bpm(120);
 (
     ~bck.ar(2);
     ~bck.clock = p.clock;
-    ~bck.quant=8;
+    ~bck.quant=[8,3];
     ~bck.fadeTime=16;
     ~bck={
-        var sig = SinOsc.ar({[24,36,74,72,57,65,69].choose.midicps}!4 *.x [1,2,1/1.5,8]) *.x LFTri.kr(1/32/[1,5,76,8]);
-        sig = Compander.ar(sig,[~ninety_threequarter.ar,~sixty_half] ,0.1,1,0.1,LFNoise2.kr(~tempo/43!12).range(1/10000,1/2.001),LFNoise2.kr(~tempo/32!12).range(1/10000,1.001));
-        Splay.ar(sig,0.85,0.05);
+        var sig = VarSaw.ar({[24,36,74,72,57,65,69].choose.midicps}!4 *.x [1,2,1/1.5,4]) *.x LFTri.kr(1/32/[1,5,76,8]);
+        sig = Compander.ar(sig,~one2.ar ,0.1,1,0.1,LFNoise2.kr(~tempo/43!12).range(1/10000,1/2.001),LFNoise2.kr(~tempo/32!12).range(1/10000,1.001));
+        Splay.ar(sig,0.85,0.15);
     };
     ~bck.play;
 );
@@ -85,6 +140,8 @@ p.bpm(120);
 ~bck.pause;
 ~bck.resume;
 
+
+90/60
 
 {
     (
@@ -106,7 +163,7 @@ p.bpm(120);
         var sig = LFSaw.ar(36.midicps + (env**0.01*33) * [1,1/1.66666666,1/1.33333333,8] * (1.0001**(1..8)));
         sig = sig * env * LFSaw.ar(~tempo/4/fib(8)).exprange(0.001,1);
         sig = GVerb.ar(LPF.ar(sig,1400),100)/2+sig;
-        Mix.ar(sig) * 0.0055;
+        Mix.ar(sig) * 0.155;
     };
     ~saw.play;
 );
@@ -126,13 +183,13 @@ p.bpm(120);
         var pat = [
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
         ].rotate(3);
-        var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
+        var imp = PulseDivider.kr(~tick.kr,[1,2,3,4]);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3]),imp * hit);
-        var sig = WhiteNoise.ar(0.1);
-        sig = HPF.ar(sig,[1,2,3,4]*3000);
+        var sig = WhiteNoise.ar(0.3);
+        sig = RHPF.ar(sig, [1,2,3,4] * 1000 * LFNoise2.kr(~tempo/32).range(1,1/4));
         sig = sig * env;
-        Splay.ar(sig,0.75,0.25);
+        Splay.ar(sig,0.75,0.15);
     };
     ~hiss.play;
 );
@@ -141,9 +198,10 @@ p.bpm(120);
 ~hiss.pause;
 ~hiss.resume;
 
+p.bpm(120);
 
 (
-    s.latency=0.2;
+    s.latency=0.333;
     //p.clock.tempo_(120/60);
     p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
     ~tick.kr(1);
@@ -154,3 +212,13 @@ p.bpm(120);
     ~counter = {PulseCount.kr(~tick.kr);};
     ~tick = { Impulse.kr( ~tempo * 4 ); };
 );
+
+
+
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(10);};});
+}.fork;  
+)
