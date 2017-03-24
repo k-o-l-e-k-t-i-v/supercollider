@@ -17,8 +17,8 @@ p.bpm(120);
 ~engine.quant=16;
 ~engine.fadeTime=30;
 ~engine={
-  var sig = SinOsc.ar(50,Pulse.ar(~tempo/4));
-  Splay.ar(sig,0.005,0.0332);
+  var sig = SinOsc.ar(50,Pulse.ar(~tempo/2));
+  Splay.ar(sig,0.005,0.01332);
 };
 ~engine.play;
 );
@@ -28,7 +28,7 @@ p.bpm(120);
 ~engine.resume;
 
 (
-  //s.latency=0.2;
+  s.latency=0.3333333;
   //p.clock.tempo_(120/60);
   p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
   ~tick.kr(1);

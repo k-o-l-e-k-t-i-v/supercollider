@@ -23,7 +23,7 @@
 p.moveNodeToTail(\master);
 
 p.push();
-p.bpm(240);
+p.bpm(119.7);
 
 // one synth ///////////////////////////////////////
 
@@ -34,7 +34,7 @@ p.bpm(240);
 ~one.fadeTime=4;
 ~one={
   var sig = WhiteNoise.ar(0.2!4);
-  sig = HPF.ar(sig,[5000,250,15000,1600]) * Pulse.ar(~tempo*[1,1.5,16,1/4]);
+  sig = HPF.ar(sig,[5000,250,15000,1600]) * Pulse.ar(~tempo*[1,1/1.5,16,1/4]);
   sig = Compander.ar(sig,~one2.ar,0.1,1,0.1);
   Splay.ar(sig,0.5,0.15);
 };
@@ -66,14 +66,14 @@ p.bpm(240);
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
-    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
   ].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,1);
+  var imp = PulseDivider.kr(~tick.kr,8);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5] * LFNoise2.kr(~tempo/32).range(1/4,2),[3,-3]),imp * hit)};
-  var sig = SinOsc.ar(60!2+(env**LFNoise2.kr(~tempo/32).range(10,100)*250),env**LFNoise2.kr(~tempo/32).range(10,100)*8pi);// + VarSaw.ar(60,0,env**(0.2*LFNoise2.kr(~tempo/80))*8pi,mul:0.52);
+  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,4.5] * LFNoise2.kr(~tempo/32).range(1/4,2),[3,-3]),imp * hit)};
+  var sig = SinOsc.ar(60!2+(env**LFNoise2.kr(~tempo/32).range(10,150)*250),env**LFNoise2.kr(~tempo/32).range(10,150)*8pi);// + VarSaw.ar(60,0,env**(0.2*LFNoise2.kr(~tempo/80))*8pi,mul:0.52);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.25);
+  Splay.ar(sig,0.75,0.15);
 };
 ~one2.play;
 );
@@ -126,12 +126,13 @@ p.bpm(240);
 (
     ~bck.ar(2);
     ~bck.clock = p.clock;
-    ~bck.quant=[8,3];
+    ~bck.quant=[16,3];
     ~bck.fadeTime=16;
     ~bck={
-        var sig = VarSaw.ar({[24,36,74,72,57,65,69].choose.midicps}!4 *.x [1,2,1/1.5,4]) *.x LFTri.kr(1/32/[1,5,76,8]);
+        var mod = {[2,1.5].choose}!4;
+        var sig = VarSaw.ar({[24,36,74,72,57,65,69].choose.midicps/mod}!4 *.x [1,2,1/1.5,4]) *.x LFTri.kr(1/32/[1,5,76,8]);
         sig = Compander.ar(sig,~one2.ar ,0.1,1,0.1,LFNoise2.kr(~tempo/43!12).range(1/10000,1/2.001),LFNoise2.kr(~tempo/32!12).range(1/10000,1.001));
-        Splay.ar(sig,0.85,0.15);
+        Splay.ar(sig,0.85,0.015,SinOsc.kr(~tempo/4)/4);
     };
     ~bck.play;
 );
@@ -143,10 +144,12 @@ p.bpm(240);
 
 90/60
 
+199.7/60
+
 {
     (
         p.clock.sched(p.clock.timeToNextBeat(1 * 16),{ 
-            Tdef(\mel,{loop{ ~bck.rebuild; 128.wait;}});
+            Tdef(\mel,{loop{ ~bck.rebuild; (33.3).wait;}});
             Tdef(\mel).play;
 
         });
@@ -163,7 +166,7 @@ p.bpm(240);
         var sig = LFSaw.ar(36.midicps + (env**0.01*33) * [1,1/1.66666666,1/1.33333333,8] * (1.0001**(1..8)));
         sig = sig * env * LFSaw.ar(~tempo/4/fib(8)).exprange(0.001,1);
         sig = GVerb.ar(LPF.ar(sig,1400),100)/2+sig;
-        Mix.ar(sig) * 0.155;
+        Mix.ar(sig) * 0.00155;
     };
     ~saw.play;
 );
@@ -189,7 +192,7 @@ p.bpm(240);
         var sig = WhiteNoise.ar(0.3);
         sig = RHPF.ar(sig, [1,2,3,4] * 1000 * LFNoise2.kr(~tempo/32).range(1,1/4));
         sig = sig * env;
-        Splay.ar(sig,0.75,0.15);
+        Splay.ar(sig,0.75,0.015);
     };
     ~hiss.play;
 );
@@ -213,7 +216,30 @@ p.bpm(120);
     ~tick = { Impulse.kr( ~tempo * 4 ); };
 );
 
+// noise synth ///////////////////////////////////////
 
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(60);};});
+}.fork;  
+)
+
+(
+~noise.ar(2);
+~noise.clock = p.clock;
+~noise.quant=16;
+~noise.fadeTime=16;
+~noise={
+  var sig = BrownNoise.ar(0.1) * SinOsc.ar(~tempo/[4,7,13,23]);
+  Splay.ar(sig,0.5,0.125,SinOsc.kr(~tempo/[1,3,5,7]));
+};
+~noise.play;
+);
+~noise.stop(4);
+~noise.clear;
+~noise.pause;
+~noise.resume;
 
 
 (
