@@ -3,7 +3,7 @@
 
 
 p.push()
-p.bpm(120);
+p.bpm(90);
 
 (
   p=ProxySpace.push(s.reboot);
@@ -11,20 +11,7 @@ p.bpm(120);
 )
 
 (
-  s.latency=0.2;
-  //p.clock.tempo_(120/60);
-  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
-  ~tick.kr(1);
-  ~tick.clock = p.clock;
-  ~tick.quant = 16;
-  ~counter.clock = p.clock;
-  ~counter.quant = 16;
-  ~counter = {PulseCount.kr(~tick.kr);};
-  ~tick = { Impulse.kr( ~tempo * 4 ); };
-);
-
-(
-  p.clock.tempo(90/60);
+  p.clock.tempo_(60/60);
   
   ~offset = (0..7)/8;
   
@@ -34,13 +21,6 @@ p.bpm(120);
   ~counter = {PulseCount.kr(~tick.kr)};
 );
 
-
-(
-//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
-{
-  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
-}.fork;  
-)
 
 (
   s.latency=0.2;
@@ -68,13 +48,13 @@ p.bpm(120);
         1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
         1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,
               ].rotate(1);
-      var imp = PulseDivider.kr(~tick.kr,1);
-      var hit = Select.kr(PulseCount.kr(imp)/2%pat.size,pat);
-    var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,2.5],[3,-3],curve:'exp'),imp * hit);
-      var sig = SinOsc.ar(50+(env**50*[250,50]), (env**[2.3,0.1]*5pi));
-      SendTrig.ar(K2A.ar(hit*imp),0,-0.5);
+    var imp = PulseDivider.kr(~tick.kr,1);
+    var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+    var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,3.5],[3,-3],curve:'exp'),imp * hit);
+      var sig = VarSaw.ar(50+(env**50*2500),0, (env**0.3*1pi));
+      SendTrig.ar(K2A.ar(hit*imp),0,-1/4);
     sig = sig * env;
-    Splay.ar(sig,0.005,0.72);
+    Splay.ar(sig,0.75,0.72);
   };
   ~kick.play;
 );
@@ -91,12 +71,12 @@ p.bpm(120);
 ~hiss={
   //  |       |       |       |       |  
   var pat = [
-    1,1,1,1,,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
   ].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.05],[3,-3]),imp * hit);
-  var sig = WhiteNoise.ar(0.85);
+  var sig = WhiteNoise.ar(0.5);
   sig = sig * env;
   Splay.ar(sig,0.75,0.5);
 };
@@ -111,7 +91,7 @@ p.bpm(120);
   ~master.quant=2;
   ~master.play;
   ~master.fadeTime = 0.01;
-  ~master = {|wet=0.25,lp=3500,hp=250,len=10,rev = 3|
+  ~master = {|wet=0.15,lp=3500,hp=250,len=10,rev = 3|
   var sig = In.ar([0,1]);
   var orig = sig;
   var fx;
