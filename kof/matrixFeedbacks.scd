@@ -1,6 +1,6 @@
 (
     p.push();
-    p.bpm(120);
+    p.bpm(240*4);
     s.latency = 0.15;
 )
 
@@ -27,9 +27,9 @@
 ~pass={
   var mod= Duty.kr(16,0,Dseq([1,2,1.5,1.33333],inf));
   var sig = Normalizer.ar(AudioIn.ar(1) * 0.999);
-  var f = LFSaw.ar(~tempo/4/(1..8)/4).range(22,4400)/[1,2,1.5,1.3333];
-  var q = 0.05;//LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
-  sig = DelayN.ar(sig,1/f,1/f) * (LFSaw.ar(~tempo/[1,2,3,4])**2);
+  var f = LFSaw.ar(~tempo/4/(1..8)/4).range(22,4400)/[1,2,1.5,1.3333] + SinOsc.ar((51..44)).range(-pi,pi);
+  var q =LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 4;
+  //sig = DelayN.ar(sig,1/f,1/f) * (LFSaw.ar(~tempo/[1,2,3,4])**2);
   sig = BPF.ar(sig,f,q);
 
   [Mix.ar(sig),0];
@@ -60,6 +60,13 @@
 ~hiss.pause;
 ~hiss.resume;
 
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(16);};});
+}.fork;  
+)
 
 // kick synth ///////////////////////////////////////
 
@@ -153,8 +160,8 @@
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,LFNoise2.kr(1/32!16).range(0.1,4)],[3,-30]),imp * hit)};
         var sig = ~pass.ar;//VarSaw.ar(50/[1,2,3,4],0,env**LFNoise2.kr(~tempo/32/(1..16)).exprange(0.001,20.99));
-        sig = PitchShift.ar(sig,0.01,env**40*4) * env;
-        sig = CombN.ar(sig,1/50,1/5*(env**0.52)+0.0001,1);
+        //sig = PitchShift.ar(sig,0.01,env**40*4) * env;
+        //sig = CombN.ar(sig,1/50,1/5*(env**0.52)+0.0001,1);
         sig = AllpassN.ar(sig,1/4,1/4/(1..8),4);
         [0,Splay.ar(sig,0.0001,0.95)];
     };
