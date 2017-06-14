@@ -26,9 +26,9 @@
 ~pass.fadeTime=4;
 ~pass={
   var sig = Normalizer.ar(AudioIn.ar(1) * 0.999);
-  var f = LFSaw.ar(~tempo/4/(1..8)/4).range(22,440)/[1,2,1.5,1.3333];
-  var q = LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
-  sig = DelayN.ar(sig,1/f,1/f);
+  var f = 50*[1,2,4,8];//LFSaw.ar(~tempo/4/(1..8)/4).range(22,440)/[1,2,1.5,1.3333];
+  var q = 0.5;//LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
+  sig = DelayN.ar(sig,1/f,1/f) * LFSaw.ar(4/[1,2,3,4]);
   sig = RLPF.ar(sig,f,q);
 
   [Mix.ar(sig),0];
@@ -41,6 +41,24 @@
 ~pass.resume;
 
 
+// hiss synth ///////////////////////////////////////
+
+(
+~hiss.ar(2);
+~hiss.clock = p.clock;
+~hiss.quant=[4];
+~hiss.fadeTime=4;
+~hiss={
+  var sig = HPF.ar(WhiteNoise.ar(0.1)+~pass.ar,8000) * Pulse.ar(8*~tempo/(1..8));
+  [0,Splay.ar(sig,0.5,0.25)];
+};
+~hiss.play;
+);
+~hiss.stop(4);
+~hiss.clear;
+~hiss.pause;
+~hiss.resume;
+
 // output synth ///////////////////////////////////////
 
 (
@@ -50,8 +68,8 @@
 ~output.fadeTime=4;
 ~output={
   var sig = ~pass.ar;
-  sig = LPF.ar(sig,400);
-  sig = AllpassN.ar(sig,1/50,1/50,4);
+  sig = LPF.ar(sig,4000);
+  sig = AllpassN.ar(sig,1,1/50);
   [0,Splay.ar(sig,0.5,0.95)];
 };
 ~output.play;
