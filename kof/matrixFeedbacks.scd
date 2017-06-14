@@ -1,6 +1,6 @@
 (
     p.push();
-    p.bpm(240*4);
+    p.bpm(240);
     s.latency = 0.15;
 )
 
@@ -27,8 +27,8 @@
 ~pass={
   var mod= Duty.kr(16,0,Dseq([1,2,1.5,1.33333],inf));
   var sig = Normalizer.ar(AudioIn.ar(1) * 0.999);
-  var f = LFSaw.ar(~tempo/4/(1..8)/4).range(22,4400)/[1,2,1.5,1.3333] + SinOsc.ar((51..44)).range(-pi,pi);
-  var q =LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 4;
+  var f = LFSaw.ar(~tempo/32/(1..8)/4).range(22,14400).round(12.midicps)/[1,2,1.5,1.3333] + SinOsc.ar((51..44)).range(-pi,pi);
+  var q = SinOsc.kr(~tempo/32/[1,2,3,4]).range(0.1,0.48);//LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
   //sig = DelayN.ar(sig,1/f,1/f) * (LFSaw.ar(~tempo/[1,2,3,4])**2);
   sig = BPF.ar(sig,f,q);
 
