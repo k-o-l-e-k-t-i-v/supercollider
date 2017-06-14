@@ -79,13 +79,16 @@
   //  |       |       |       |       |  
   var pat = [
     1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+    1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+    1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+    1,0,0,0, 0,0,0,0, 1,0,0,0, 1,1,1,1,
   ].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
-  var sig = SinOsc.ar(50,env**80*8pi) + VarSaw.ar(49,0,env**20);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3]),imp * hit);
+  var sig = SinOsc.ar(5,env**20*8pi) + VarSaw.ar(25,0,env**0.2);
   sig = sig * env;
-  [Splay.ar(sig,0.75,0.5),DC.ar(0)];
+  [DC.ar(0),Splay.ar(sig,0.75,0.95)];
 };
 ~kick.play;
 );
@@ -178,7 +181,7 @@
 (
     ~one.ar(2);
     ~one.clock = p.clock;
-    ~one.quant=16;
+    ~one.quant=[16,3];
     ~one.fadeTime=4;
     ~one={
         var note = Duty.ar(8/~tempo*[1,2,3],0,Dseq([60,65,60,67,65,63,67,69,55,60,58,60,61].midicps,inf));
