@@ -32,7 +32,7 @@
   //sig = DelayN.ar(sig,1/f,1/f) * (LFSaw.ar(~tempo/[1,2,3,4])**2);
   sig = BPF.ar(sig,f,q);
 
-  [Mix.ar(sig),0];
+  [Mix.ar(sig),DC.ar(0)];
 };
 ~pass.play;
 );
@@ -83,9 +83,9 @@
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
-  var sig = SinOsc.ar(50+(1..6),env**80*8pi) + VarSaw.ar(50+env**500,0,env**0.2);
+  var sig = SinOsc.ar(50,env**80*8pi) + VarSaw.ar(49,0,env**20);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.5);
+  [Splay.ar(sig,0.75,0.5),DC.ar(0)];
 };
 ~kick.play;
 );
@@ -105,7 +105,7 @@
   var sig = ~pass.ar;
   sig = LPF.ar(sig,4400);
   sig = AllpassN.ar(sig,1,1/50);
-  Splay.ar(sig,0.5,0.15,SinOsc.ar(49));
+  Splay.ar(sig,0.5,0.15,SinOsc.ar(4/[1,2,3,4]));
 };
 ~output.play;
 );
