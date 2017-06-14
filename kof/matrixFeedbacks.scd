@@ -22,7 +22,7 @@
 (
 ~pass.ar(2);
 ~pass.clock = p.clock;
-~pass.quant=4;
+~pass.quant=16;
 ~pass.fadeTime=4;
 ~pass={
   var sig = Normalizer.ar(AudioIn.ar(1) * 0.999);
@@ -160,7 +160,7 @@
         sig = CombN.ar(sig,1/f,1/f,LFNoise2.kr(~tempo/16!16).exprange(1/2,2)/(1..16));
         //        sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
         sig = LPF.ar(sig,f*2);
-        [Splay.ar(sig,0.75,0.013335,SinOsc.kr((~tempo/((1..16)*0.51)))),0];
+        [0,Splay.ar(sig,0.75,0.013335,SinOsc.kr((~tempo/((1..16)*0.51))))];
     };
     ~one.play;
 );
@@ -184,7 +184,7 @@
         var gen = Formant.ar( sig[0] * 100+50, sig[1] * 1500+5, sig[2] * 550+5 ) * LFTri.ar(~tempo/(1..9));
         gen = AllpassN.ar(gen,1/4,4/(1..16),4);
 
-        Splay.ar(gen,0.005,0.15);
+        [Splay.ar(gen,0.005,0.15),0];
     };
     ~two.play;
 );
