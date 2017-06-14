@@ -25,11 +25,12 @@
 ~pass.quant=16;
 ~pass.fadeTime=4;
 ~pass={
+  var mod= Duty.kr(16,0,Dseq([1,2,1.5,1.33333],inf));
   var sig = Normalizer.ar(AudioIn.ar(1) * 0.999);
-  var f = 50*[1,2,4,8];//LFSaw.ar(~tempo/4/(1..8)/4).range(22,440)/[1,2,1.5,1.3333];
-  var q = 0.5;//LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
-  sig = DelayN.ar(sig,1/f,1/f) * LFSaw.ar(4/[1,2,3,4]);
-  sig = RLPF.ar(sig,f,q);
+  var f = LFSaw.ar(~tempo/4/(1..8)/4).range(22,4400)/[1,2,1.5,1.3333];
+  var q = 0.05;//LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
+  sig = DelayN.ar(sig,1/f,1/f) * (LFSaw.ar(~tempo/[1,2,3,4])**2);
+  sig = BPF.ar(sig,f,q);
 
   [Mix.ar(sig),0];
 };
@@ -59,18 +60,45 @@
 ~hiss.pause;
 ~hiss.resume;
 
+
+// kick synth ///////////////////////////////////////
+
+(
+~kick.ar(2);
+~kick.clock = p.clock;
+~kick.quant=[16,0];
+~kick.fadeTime=0.02;
+~kick={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
+  var sig = SinOsc.ar(50+(1..6),env**80*8pi) + VarSaw.ar(50+env**500,0,env**0.2);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.5);
+};
+~kick.play;
+);
+~kick.stop(4);
+~kick.clear;
+~kick.pause;
+~kick.resume;
+
 // output synth ///////////////////////////////////////
 
 (
 ~output.ar(2);
 ~output.clock = p.clock;
-~output.quant=2;
+~output.quant=16;
 ~output.fadeTime=4;
 ~output={
   var sig = ~pass.ar;
-  sig = LPF.ar(sig,4000);
+  sig = LPF.ar(sig,4400);
   sig = AllpassN.ar(sig,1,1/50);
-  [0,Splay.ar(sig,0.5,0.95)];
+  Splay.ar(sig,0.5,0.15,SinOsc.ar(49));
 };
 ~output.play;
 );
