@@ -1,6 +1,6 @@
 (
     p.push();
-    p.bpm(240);
+    p.bpm(90);
     s.latency = 0.15;
 )
 
@@ -22,15 +22,18 @@
 (
 ~pass.ar(2);
 ~pass.clock = p.clock;
-~pass.quant=16;
+~pass.quant=4;
 ~pass.fadeTime=4;
 ~pass={
   var mod= Duty.kr(16,0,Dseq([1,2,1.5,1.33333],inf));
   var sig = Normalizer.ar(AudioIn.ar(1) * 0.999);
-  var f = LFSaw.ar(~tempo/32/(1..8)/4).range(22,14400).round(12.midicps)/[1,2,1.5,1.3333] + SinOsc.ar((51..44)).range(-pi,pi);
-  var q = SinOsc.kr(~tempo/32/[1,2,3,4]).range(0.1,0.48);//LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2g;
+  var f = 500/mod;//LFTri.ar(~tempo/(1..8)*50).range(220,4400)/[1,2,1.5,1.3333] + SinOsc.ar((51..44)).range(-0.2pi,0.2pi);
+  var q = 0.1;//SinOsc.ar(~tempo/[1,2,3,4]+0.01 * 4).range(0.001,0.48) ;
+  
   //sig = DelayN.ar(sig,1/f,1/f) * (LFSaw.ar(~tempo/[1,2,3,4])**2);
+  sig = sig * (LFTri.ar(~tempo/32/(1..8)).exprange(0.001,0.9) ** 2);
   sig = BPF.ar(sig,f,q);
+  sig = CompanderD.ar(sig,1/2,1/3,1/2);
 
   [Mix.ar(sig),DC.ar(0)];
 };
@@ -40,6 +43,25 @@
 ~pass.clear;
 ~pass.pause;
 ~pass.resume;
+
+(
+~output.ar(2);
+~output.clock = p.clock;
+~output.quant=16;
+~output.fadeTime=4;
+~output={
+  var sig = ~pass.ar;
+  sig = LPF.ar(sig,1400);
+  sig = AllpassN.ar(sig,1,1/50);
+  [DC.ar(0),Splay.ar(sig,0.5,0.15,SinOsc.ar(~tempo/[1,2,3,4]))];
+};
+~output.play;
+);
+~output.stop(4);
+~output.clear;
+~output.pause;
+~output.resume;
+
 
 
 // hiss synth ///////////////////////////////////////
@@ -98,25 +120,6 @@
 ~kick.resume;
 
 // output synth ///////////////////////////////////////
-
-(
-~output.ar(2);
-~output.clock = p.clock;
-~output.quant=16;
-~output.fadeTime=4;
-~output={
-  var sig = ~pass.ar;
-  sig = LPF.ar(sig,4400);
-  sig = AllpassN.ar(sig,1,1/50);
-  Splay.ar(sig,0.5,0.15,SinOsc.ar(4/[1,2,3,4]));
-};
-~output.play;
-);
-~output.stop(4);
-~output.clear;
-~output.pause;
-~output.resume;
-
 // one synth ///////////////////////////////////////
 
 (
