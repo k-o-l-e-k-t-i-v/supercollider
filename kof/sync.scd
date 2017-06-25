@@ -5,7 +5,7 @@
 (
     p.push();
     //=ProxySpace.push(s.reboot);
-    p.bpm(125/2);
+    p.bpm(90);
     //p.makeTempoClock;
    // p.clock.tempo_(60/60);
 )
@@ -39,7 +39,7 @@
     o = OSCFunc({ arg ...args; m.sendMsg("/bang",args[0][3]);},'/tr', s.addr);
 )
 
-
+// -------------------------------
 //receiver
 (
     var port = 10001;
