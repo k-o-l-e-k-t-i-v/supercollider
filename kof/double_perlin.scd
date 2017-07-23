@@ -29,8 +29,8 @@ p.moveNodeToTail(\master);
     ~doublePerlin.quant=16;
     ~doublePerlin.fadeTime=16;
     ~doublePerlin={
-        var f = LFSaw.ar(10*[1,2,1.5,1.3333]*((_*2!12).midicps));
-        var s = LFTri.ar(~tempo*(1/60/(1..12))).exprange(0.01,50);
+        var f = SinOsc.ar(10*((_*7!12).midicps));
+        var s = LFTri.ar(~tempo*(1/600/(1..12))).exprange(0.01,55);
         var a = LFTri.ar(1/16000/(1..3)) * 10.0;
         
         var x1 = SinOsc.ar(f[0]) * s[0];
@@ -63,8 +63,8 @@ p.moveNodeToTail(\master);
 
         
 
-
-        Splay.ar(sig,0.5,0.5);
+        sig = Compander.ar(sig,~kick.ar+~varkick.ar,0.1,1,0.1);
+        Splay.ar(sig,0.5,0.015,SinOsc.ar(~tempo/[7,8,2]));
     };
     ~doublePerlin.play;
 );
