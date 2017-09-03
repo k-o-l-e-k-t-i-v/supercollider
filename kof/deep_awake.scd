@@ -17,9 +17,9 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/mono/stetson.wav");
     ~hob.quant=2;
     ~hob.fadeTime=2.02;
     ~hob={
-        var mod = 1/2;//[4,2,1.5];
-        var spread = 0.0;
-        var pos = TRand.kr(Impulse.kr(~tempo/[1,2,3]),0.01,1) + LFSaw.ar(1/1600/[1,2,3]);
+        var mod = 1;//[4,2,1.5];
+        var spread = 0.01;
+        var pos = TRand.kr(Impulse.kr(~tempo/[1,2,3]),0.01,1) + LFSaw.ar(1/160/[1,2,3]);
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,[1,2,3],~counter.kr);
@@ -32,7 +32,7 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/mono/stetson.wav");
         sig = CompanderD.ar(sig,3/4,1/[1.1,1.5,2],1);
         sig = Compander.ar(sig,~puls.ar,0.1,1,0.1);
         sig = LPF.ar(sig,1500);
-        Splay.ar(sig.flat,0.5,0.15);
+        Splay.ar(sig.flat,0.5,0.25);
     };
     ~hob.play;
     ~hob[10] = \filter -> {|sig| DWGReverbC1C3.ar(NumChannels.ar(sig,2),[4000,4010],1/10)/4};
