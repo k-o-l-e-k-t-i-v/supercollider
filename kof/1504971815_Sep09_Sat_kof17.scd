@@ -1,52 +1,39 @@
 
-
-// player synth ///////////////////////////////////////
-
-(
-    ~.ar(2);
-    ~.quant=2;
-    ~.fadeTime=2.02;
-    ~={
-        var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
-        var spread = 0.0;
-        var pos = [0,0.5];
-        //         |       |       |       |       |  
-        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
-        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
-        var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
-        
-  sig = sig * env;
-        Splay.ar(sig.flat,0.5,0.5);
-    };
-    ~.play;
-);
-~.stop(7);
-~.clear;
-
-
 p.push();
 
-b = fill(1,{LFSaw.ar(40)},5120);
+p.bpm(45*2);
+
+(
+  s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant = 16;
+  ~counter.clock = p.clock;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
 
 // one synth ///////////////////////////////////////
-b = Buffer.read(s,Platform.resourceDir ++ "/sounds/stetson.wav");
+b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
 
 (
 ~one.ar(2);
 ~one.clock = p.clock;
-~one.quant=4;
-~one.fadeTime=4;
+~one.quant=16;
+~one.fadeTime=16;
 ~one={
-  var f = [1,2,4,8]*16;
-  var sig = Shaper.ar(b,LFTri.ar(1/f/[1,2,4,8,16,1/2]) + SinOsc.ar(1/[4,5,6,7,8],mul:0.000001));
+  var f = (2**{((1..12)/12).choose}!3) * 256;
+  var sig = Shaper.ar(b,LFTri.ar(~tempo/f/[1,2,4,8,16,1/2]) + SinOsc.ar(~tempo/[4,5,6,7,8],mul:0.000001));
   sig = LPF.ar(sig,2500);// + RHPF.ar(sig,3000);
   sig = LeakDC.ar(sig);
-  sig = BRF.ar(sig,4000/8*(1..8),1,mul:LFNoise2.kr(1/64!8)) * 2;
-  sig = CombN.ar(sig,4/f,512/f,1/4);
+  sig = BRF.ar(sig,4000/8*(1..8),1,mul:LFNoise2.kr(~tempo/64!8)) * 2;
+  sig = CombL.ar(sig,4/f,512/f,1);
   //sig = Normalizer.ar(sig)/2;
-  Splay.ar(sig,0.75,0.75,SinOsc.ar(1/7)/4);
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  Splay.ar(sig,0.75,0.25,SinOsc.ar(7.5)/4);
 };
 ~one.play;
 );
@@ -54,6 +41,52 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/stetson.wav");
 ~one.clear;
 ~one.pause;
 ~one.resume;
+
+// kick synth ///////////////////////////////////////
+
+(
+~kick.ar(2);
+~kick.clock = p.clock;
+~kick.quant=[16,0];
+~kick.fadeTime=0.02;
+~kick={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
+  var sig = SinOsc.ar(75!2+(env**20*75),env*50*8pi);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.5);
+};
+~kick.play;
+);
+~kick.stop(4);
+~kick.clear;
+~kick.pause;
+~kick.resume;
+
+// kkk synth ///////////////////////////////////////
+
+(
+~kkk.ar(2);
+~kkk.clock = p.clock;
+~kkk.quant=16;
+~kkk.fadeTime=4;
+~kkk={
+  var sig = SinOsc.ar(75!2,Pulse.ar(0.75*2/[1,2,3,4])*8pi) * Pulse.ar(0.75*4/[1,2,3,4]).softclip;
+  sig = CombN.ar(sig,[1,2,4,8]/750,[1,2,4,8]/750,0.75*LFNoise1.kr(3/4/4).range(1/4,2));
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  Splay.ar(sig,0.5,0.5);
+};
+~kkk.play;
+);
+~kkk.stop(4);
+~kkk.clear;
+~kkk.pause;
+~kkk.resume;
 
 (
   ~master.quant=2;
