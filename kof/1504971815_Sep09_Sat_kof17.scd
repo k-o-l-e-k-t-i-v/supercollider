@@ -77,7 +77,8 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
 ~kkk.fadeTime=4;
 ~kkk={
   var sig = SinOsc.ar(75!2,Pulse.ar(0.75*2/[1,2,3,4])*8pi) * Pulse.ar(0.75*4/[1,2,3,4]).softclip;
-  sig = CombN.ar(sig,[1,2,4,8]/750,[1,2,4,8]/750,0.75*LFNoise1.kr(3/4/4).range(1/4,2));
+  sig = CombN.ar(sig,[1,2,4,8]/750*4,[1,2,4,8]/7500,0.75*LFNoise1.kr(3/4/4!4).range(1/4,2));
+  sig = LPF.ar(sig,3800);
   sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
   Splay.ar(sig,0.5,0.5);
 };
@@ -87,6 +88,32 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
 ~kkk.clear;
 ~kkk.pause;
 ~kkk.resume;
+
+
+// rara synth ///////////////////////////////////////
+
+(
+~rara.ar(2);
+~rara.clock = p.clock;
+~rara.quant=2;
+~rara.fadeTime=4;
+~rara={
+  var sig = SinOsc.ar(7.5!2,Pulse.ar(7.5));
+  Splay.ar(sig,0.5,0.25);
+};
+~rara.play;
+);
+~rara.stop(40);
+~rara.clear;
+~rara.pause;
+~rara.resume;
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(90);};});
+}.fork;  
+)
 
 (
   ~master.quant=2;

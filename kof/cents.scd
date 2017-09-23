@@ -2,6 +2,7 @@
 
 p.push;
 
+7.5/8
 // one synth ///////////////////////////////////////
 
 (
@@ -10,12 +11,12 @@ p.push;
 ~one.quant=2;
 ~one.fadeTime=4;
 ~one={
-    var change = 1/4/[1,2,3];
+    var change = ~tempo/[1,2,3,4,5,6]/4;
     var imp = Impulse.kr(change);
-    var base = 440 * TChoose.kr(imp,[1,2,1/2,4]);
+    var base = TChoose.kr(imp,45*[10,10/4,10/2,10*2,1]) * TChoose.kr(imp,[1,2,1/2,4])/2;
     var ht = TChoose.kr( Impulse.kr(change),[102,306,600,804,1008]);
     var f = base * (2**(ht/1200));
-  var sig = SinOsc.ar(f,mul:0.4) * (LFTri.ar(change)**1.2);
+  var sig = SinOsc.ar(f,SinOsc.ar(base/.x[256,1024,2048])*0.5pi,mul:0.4) * (LFTri.ar(change)**1.2);
   //sig = Resonz.ar(sig,f,0.02) * 4;
   Splay.ar(sig,0.5,0.25);
 };

@@ -6,25 +6,26 @@
 p.push();
 p.bpm(96);
 
+60/7.5
 
 // kick synth ///////////////////////////////////////
 
 (
 ~kick.ar(2);
 ~kick.clock = p.clock;
-~kick.quant=[16,0];
+~kick.quant=[4,0];
 ~kick.fadeTime=0.02;
 ~kick={
   //  |       |       |       |       |  
   var pat = [
-    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
   ].rotate(1);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
-  var sig = SinOsc.ar(50!2,env**50*8pi);
+  var sig = LPF.ar(PitchShift.ar(~one.ar,[0.1,0.2,0.3,0.4],env**0.2+0.25),15000);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.5);
+  Splay.ar(sig,0.75,0.95);
 };
 ~kick.play;
 );
@@ -56,8 +57,8 @@ p.bpm(96);
   sig = LeakDC.ar(sig);
   sig = LPF.ar(sig,3000);
   sig = CompanderD.ar(sig,1/2,1/2,1);
-  sig = Compander.ar(sig,~kick.ar + ~kick2.ar,0.1,1,0.1);
-  Splay.ar(sig,0.5,0.5);
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
 );
