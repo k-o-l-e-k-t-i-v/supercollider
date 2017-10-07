@@ -37,14 +37,14 @@ SelectX.
 // one synth ///////////////////////////////////////
 
 (
-~two.ar(2);
-~two.clock = p.clock;
-~two.quant=4;
-~two.fadeTime=4;
-~two={
+~perl.ar(2);
+~perl.clock = p.clock;
+~perl.quant=4;
+~perl.fadeTime=4;
+~perl={
     var change = ~tempo/[1,2,3,4,5,6]/32;
     var imp = Impulse.kr(change);
-    var base = TChoose.kr(imp,[50,100,250,500,5000]) * TChoose.kr(imp,[1,2,1/2,4])/2;
+    var base = TChoose.kr(imp,[50,100,250,500,5000]*(44/50)) * TChoose.kr(imp,[1,2,1/2,4])/2;
     var ht = TChoose.kr( Impulse.kr(change),[102,306,600,804,1008]);
     var f = base * (2**(ht/1200));
   var sig = SinOsc.ar(f,SinOsc.ar(base/.x[256,1024,2048])*0.5pi,mul:0.4) * (LFTri.ar(change)**1.2);
@@ -52,14 +52,14 @@ SelectX.
   
   sig = LeakDC.ar(sig);
   sig = CompanderD.ar(sig,3/4,1/2,1) * LFPulse.ar(~tempo*4/12.fib);
-  Splay.ar(sig,0.5,0.5,SinOsc.ar(7.5));
+  Splay.ar(sig,0.5,0.15,SinOsc.ar(7.5));
 };
-~two.play;
+~perl.play;
 );
-~two.stop(16);
-~two.clear;
-~two.pause;
-~two.resume;
+~perl.stop(16);
+~perl.clear;
+~perl.pause;
+~perl.resume;
 
 TRand.help
 
