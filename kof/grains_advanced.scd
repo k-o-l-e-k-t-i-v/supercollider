@@ -1,7 +1,7 @@
 
 p.push();
 
-b = Buffer.read(s,Platform.resourceDir ++ "/sounds/speech.wav");
+b = Buffer.read(s,Platform.resourceDir ++ "/sounds/beat.wav");
 // grain synth ///////////////////////////////////////
 
 p.bpm(45);
