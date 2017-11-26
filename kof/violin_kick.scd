@@ -71,23 +71,3 @@ b = Buffer.read(s,Platform.resourceDir ++ "/sounds/violin.wav");
 ~hiss.clear;
 
 
-// ff filter ///////////////////////////////////////
-
-(
-  ~ff.quant=1;
-  ~ff.fadeTime=1;
-  ~ff={
-    var high,mid,low;
-    var sig = ~ss + ~sss + ~sss2 + ~hiss + ~kick;
-
-    sig = GVerb.ar(LPF.ar(sig,5000)+HPF.ar(sig,500),40,[3,4,5,6],spread:[40,90])/8 + sig;
-    low = CompanderD.ar(LPF.ar(sig,400),3/4,1/2,1/2);
-    mid = CompanderD.ar(BPF.ar(sig,600,2),3/4,1/2,1/2);
-    high = CompanderD.ar(HPF.ar(sig,900),3/4,1/2,1/2);
-    sig = CompanderD.ar((high+mid+low).flat,3/4,1/1.1,1/1.1);
-    Splay.ar(sig,0.75,0.25);
-  };
-  ~ff.play;
-);
-~ff.stop(7);
-~ff.clear;
