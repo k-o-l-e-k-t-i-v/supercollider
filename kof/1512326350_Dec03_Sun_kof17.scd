@@ -82,6 +82,20 @@ p.bpm(120);
 ~oneone.pause;
 ~oneone.resume;
 
+
+(
+  s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant = 16;
+  ~counter.clock = p.clock;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
+
 (
 ~tempo = {2};
 )
@@ -116,6 +130,8 @@ p.bpm(120);
 ~kick.pause;
 ~kick.resume;
 
+~tempo={1};
+
 // hiss synth ///////////////////////////////////////
 
 (
@@ -133,10 +149,11 @@ p.bpm(120);
   ].rotate(3);
   var imp = PulseDivider.kr(~tick.kr,(1..12),~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.05],[3,-3]),imp * hit);
-  var sig = HPF.ar(WhiteNoise.ar(env**4),LFNoise1.kr(~tempo/[1,2,3,4]).range(50,19000));
+  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,[0.05,4,8,16]*LFNoise1.kr(~tempo)],[3,-3]),imp * hit)};
+  var sig = RHPF.ar(WhiteNoise.ar(env**4),LFNoise1.kr(~tempo/[1,2,3,4]).range(50,19000),0.2);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.5);
+  sig = Limiter.ar(sig);
+  Splay.ar(sig,0.75,0.95,SinOsc.ar(16/[1,2,3,4]));
 };
 ~hiss.play;
 );
