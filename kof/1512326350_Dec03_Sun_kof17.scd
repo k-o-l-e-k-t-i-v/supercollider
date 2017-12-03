@@ -82,7 +82,9 @@ p.bpm(120);
 ~oneone.pause;
 ~oneone.resume;
 
-
+(
+~tempo = {2};
+)
 
 // kick synth ///////////////////////////////////////
 
@@ -94,14 +96,17 @@ p.bpm(120);
 ~kick={
   //  |       |       |       |       |  
   var pat = [
-    1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-  ].rotate(3);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+    1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+    1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+    1,0,1,0, 1,0,1,0, 1,0,1,0, 1,1,1,1,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3],~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
-  var sig = SinOsc.ar(50!2,env**MouseX.kr(20,1200)*8pi) * SinOsc.ar(~tempo/1.0001);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.75*LFNoise2.kr(~tempo/60)],[3,-3]),imp * hit);
+  var sig = SinOsc.ar(50+env,env**(20+(100*ToggleFF.ar(hit/[1,2,3,4])))*8pi);
+  sig= sig + VarSaw.ar(50+env,0,env**0.22*0.5,mul:0.8);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.25);
+  Splay.ar(sig,0.05,0.5);
 };
 ~kick.play;
 );
