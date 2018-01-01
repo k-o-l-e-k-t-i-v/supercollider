@@ -3,8 +3,9 @@
 
 p.push();
 p.bpm(90);
+~tempo={LFDNoise1.kr(1/15).range(1/8,8)};
 
-
+p.push();
 // one synth ///////////////////////////////////////
 
 (
@@ -14,12 +15,12 @@ p.bpm(90);
 ~one.fadeTime=4;
 ~one={
     var speed = 128;
-    var detune = LFNoise1.kr(~tempo/speed!3).range(0,2);
+    var detune = LFDNoise1.kr(~tempo/speed!3).range(0,2);
     var base = [110,110*1.5,110*2] * 4 + SinOsc.kr(~tempo*[5,6,7],mul:detune);
     var mod = Duty.kr(speed/[1,2,3]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
     var mod2 = Duty.kr(speed*4/[1,2,3]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
-    var f = base*mod/mod2+LFNoise2.kr(~tempo/32!3)/.x[1,1,(6/(1..6)).reciprocal+1];
-  var sig = SinOsc.ar(f,0,SinOsc.kr(~tempo/32/[1,2,3])*pi) * LFNoise2.kr(~tempo/64!3).range(0,1/4);
+    var f = base*mod/mod2+LFDNoise1.kr(~tempo/32!3)/.x[1,1,(6/(1..6)).reciprocal+1];
+  var sig = SinOsc.ar(f,0,SinOsc.kr(~tempo/32/[1,2,3])*pi) * LFDNoise1.kr(~tempo/64!3).range(0,1/4);
   sig = Perlin3.ar(sig[0],sig[1],sig[2]) * (LFTri.kr(~tempo/speed/[1,2,3]) ** 4);
   sig = LeakDC.ar(sig) * SinOsc.ar(f/1.01);
   sig = CombL.ar(sig,~tempo,512/48000,~tempo)/16+sig;
