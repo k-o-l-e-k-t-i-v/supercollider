@@ -8,19 +8,22 @@
 (
 ~reseter.ar(2);
 ~reseter.clock = p.clock;
-~reseter.quant=2;
-~reseter.fadeTime=4;
+~reseter.quant=16;
+~reseter.fadeTime=8;
 ~reseter={
-
+var mod = Duty.kr(16/~tempo/[1,2,3],0,Dseq([1,2,1.5,1.33333],inf));
   var sig = SinOsc.ar(~tempo*2/[1,1.001]/[1,2,3,4]);
   var scope = [
     WhiteNoise.ar(1),
+    SinOsc.ar(50),
     BrownNoise.ar(1),
     GrayNoise.ar(1),
-    PinkNoise.ar(1)
+    LFSaw.ar(501/mod),
+    PinkNoise.ar(1),
+    Pulse.ar(~tempo*4)
 ];
-  RandSeed.ar(Impulse.ar(~tempo*43.2),LFSaw.ar(~tempo/60/4/[1,2,3,4])*60);
-  sig = SinOsc.ar(50,SelectX.ar(sig.range(0,scope.size),scope));
+  RandSeed.ar(Impulse.ar(~tempo*50),LFSaw.ar(~tempo/60/4/[1,2,3,4])*600);
+  sig = SinOsc.ar(50,SelectX.ar(sig.range(0,scope.size+1),scope));
   Splay.ar(sig,0.5,0.15);
 };
 ~reseter.play;
@@ -29,6 +32,9 @@
 ~reseter.clear;
 ~reseter.pause;
 ~reseter.resume;
+
+
+
 
 (
   ~master.quant=2;

@@ -1,49 +1,38 @@
 
 
 MIDIClient.init;
-
-
 MIDIIn.connectAll;
 
 (
-MIDIFunc.noteOn({arg ...args; 
-    if(args[2]==0){
-      Synth.new(\noise,[\freq,args[1],\amp,args[0]]);
-    };
-    
-    if(args[2]==1){
-      Synth.new(\kick,[\freq,args[1],\amp,args[0]]);
-    
-    };
-    args.postln;
-});
+    var lasttime=Main.elapsedTime;
+    MIDIFunc.noteOn({arg ...args; 
+        if(args[2]==0){
+            var now = Main.elapsedTime; 
+            e = now-lasttime;
+            ~tempo={60.0/e/60.0};
+            (60/e).postln;
+            lasttime=now;
+        };
+
+    });
 )
 
-SynthDef.help
 
-~mod1={LFTri.kr(1/600)};
+
+// beep synth ///////////////////////////////////////
 
 (
-SynthDef(\noise,
-    {|freq =100, amp=0.5|
-        var sig;
-        var note = freq.midicps;
-        var t = SinOsc.ar(note/[1,4,8],add:1);
-        var env = EnvGen.kr(Env.perc((amp/127).log), doneAction: 2);
-        var mod = Perlin3.ar(t[0],t[1],t[2]) / 2;
-        sig = mod;
-        sig = sig * env;
-        Out.ar(0, Splay.ar(sig));
-    }).add; 
-)
-(
-SynthDef(\kick,
-    {|freq =100, amp=0.5|
-        var sig;
-        var note = freq.midicps;
-        var env = EnvGen.kr(Env.perc(2), doneAction: 2);
-        sig = SinOsc.ar(note,env**80*8pi,mul:amp/127);
-        sig = sig * env;
-        Out.ar(0, Splay.ar(sig));
-    }).add; 
-)
+~beep.ar(2);
+~beep.clock = p.clock;
+~beep.quant=2;
+~beep.fadeTime=4;
+~beep={
+  var sig = SinOsc.ar(500!2) * Pulse.ar(~tempo);
+  Splay.ar(sig,0.5,0.25);
+};
+~beep.play;
+);
+~beep.stop(4);
+~beep.clear;
+~beep.pause;
+~beep.resume;
