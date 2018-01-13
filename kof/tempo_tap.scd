@@ -17,7 +17,7 @@ MIDIIn.connectAll;
             ldiff = (now-lasttime);
             diff = ldiff-diff;
 
-            ~tempo={60.0/e/120.0};
+            ~rt={60.0/e/120.0};
             (60/e +" "+ diff).postln;
             
             lasttime=now;
@@ -28,6 +28,7 @@ MIDIIn.connectAll;
 )
 
 
+~tempo={~rt.lag(8)};
 
 // beep synth ///////////////////////////////////////
 

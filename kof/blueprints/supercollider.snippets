@@ -190,7 +190,7 @@ snippet hpf
 snippet bpf
 	BPF.ar(sig,${1:800})
 snippet duty
-	Duty.kr(${1:4},0,Dseq([${2:1,2,1.5,1.33333}],inf))
+	Duty.kr(${1:4}/~tempo,0,Dseq([${2:1,2,1.5,1.33333}],inf))
 snippet saws
 	LFSaw.ar(${1:~tempo.kr}).exprange(0.001,${2:1})
 snippet decay

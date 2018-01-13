@@ -2,23 +2,23 @@
 
 
 p.push();
-
+s.latency=0.5;
 (
     ~sel1.mold(4);
     ~sel1.quant=4;
-    ~sel1 = {LFSaw.ar(1/8/[1,2,3,4])};
+    ~sel1 = {LFSaw.ar(~tempo/8/[1,2,3,4])};
 )
 
 (
     ~sel2.mold(4);
     ~sel2.quant=4;
-    ~sel2 = {LFSaw.ar(1/4/[1,2,3,4]) };
+    ~sel2 = {LFSaw.ar(~tempo/4/[1,2,3,4]) };
 )
 
 (
     ~sel3.mold(4);
     ~sel3.quant=4;
-    ~sel3 = {LFTri.ar(1/16/[1,2,3,4]) ** 2};
+    ~sel3 = {LFTri.ar(~tempo/16/[1,2,3,4]) ** 2};
 )
 // switcher synth ///////////////////////////////////////
 
@@ -41,13 +41,13 @@ p.push();
         ];
         sig.scramble;
         sig = sig *.x [
-            DC.ar(LFNoise2.kr(1/4)),
+            DC.ar(LFNoise2.kr(~tempo/4)),
             LFSaw.ar(50),
             LFSaw.ar(4),
             SinOsc.ar(4!2,mul:1),
-            Pulse.ar(4/[1,2,3,4]),
-            LFNoise2.ar(4/[1,2,3,4]),
-            VarSaw.ar(150/mod,0,LFSaw.ar(1/[1,2,3,4]),mul:0.17),
+            Pulse.ar(4/[1,2,3,4]*~tempo),
+            LFNoise2.ar(4/[1,2,3,4]*~tempo),
+            VarSaw.ar(150/mod,0,LFSaw.ar(~tempo/[1,2,3,4]),mul:0.17),
             BrownNoise.ar(1),
         ];
         sig.scramble;
@@ -60,7 +60,7 @@ p.push();
             CombL.ar(sig,1/50*mod,1/50*mod,1/4),
             PitchShift.ar(sig,0.1,1/mod),
             CombC.ar(sig,1/50*mod,1/50*mod,1),
-            PitchShift.ar(sig,0.1,SinOsc.kr(4)*mod),
+            PitchShift.ar(sig,0.1,SinOsc.kr(4*~tempo)*mod),
             AllpassN.ar(sig,1/50,1/50,1),
             Resonz.ar(sig,500/mod,0.2)
         ];
@@ -70,11 +70,11 @@ p.push();
         sig = sig *.x [
             1,
             DC.ar(0),
-            LFSaw.ar(4/[1,2,3,4]),
-            LFTri.ar(1/8/[1,2,3,4]),
-            Pulse.ar(4/[1,2,3,4]),
-            Pulse.ar(8/[1,2,3,4]),
-            SinOsc.ar(500/[1,2,3,4])
+            LFSaw.ar(4/[1,2,3,4]*~tempo),
+            LFTri.ar(1/8/[1,2,3,4]*~tempo),
+            Pulse.ar(4/[1,2,3,4]*~tempo),
+            Pulse.ar(8/[1,2,3,4]*~tempo),
+            SinOsc.ar(500/[1,2,3,4]*~tempo)
         ];
         sig = sig.scramble;
         sig = SelectX.ar(~sel3.kr*sig.size,sig);
