@@ -1,7 +1,7 @@
 
 97.33/90
 p.push();
-p.bpm(105/8)
+p.bpm(105)
 ~tempo.quant=16;
 ~tempo={125.33/120};
 
@@ -29,13 +29,13 @@ p.bpm(105/8)
         var mod = Duty.kr((1..16).nthPrime*16/~tempo,0,Dseq([1,2,4,8],inf)) * mod2;
         var mel = Duty.kr((1..16).nthPrime*4/~tempo,0,Dseq([1,2,4,8,1/2,1/4,1/8],inf));
         //         |       |       |       |       |  
-        var f = 432 / 1.5555 * (~tempo) * mod / ((((2..16).nthPrime)%((1..16).nthPrime))) / mel;//[150,133,200,1000];
+        var f = 432 * (~tempo) * mod / ((((2..16).nthPrime)%((1..16).nthPrime))) / mel;//[150,133,200,1000];
         var env = (Decay.ar(Impulse.ar(4/(1..16).nthPrime*~tempo),0.12*((1..16).nthPrime**0.25)) );
         var sig = SinOsc.ar(f/[1,2,4],SinOsc.ar(f/2)*0.05pi*(env**LFTri.ar(~tempo/16/(1..16).nthPrime).exprange(0.1,40)),mul:1/((1..16).nthPrime**0.5)); 
         sig = sig * env;
         sig = sig + BPF.ar(Dust.ar(f/10,mul:env*10),f,0.002);
         sig = CompanderD.ar(sig,3/4,1/3,1/2);
-        Splay.ar(sig,0.75,0.15);
+        Splay.ar(sig,0.75,0.5);
     };
     ~once.play;
 );
