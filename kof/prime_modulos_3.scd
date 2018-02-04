@@ -1,9 +1,15 @@
 
 97.33/90
 p.push();
-p.bpm(105)
+p.bpm(91)
 ~tempo.quant=16;
-~tempo={125.33/120};
+(
+~tempo={
+        var tt = MouseX.kr(0.5,2).poll;
+        (tt*120).poll;
+        tt;
+};
+)
 
 (
     s.latency=0.2;
@@ -22,14 +28,14 @@ p.bpm(105)
 
 (
     ~once.ar(2);
-    ~once.quant=16;
+    ~once.quant=4;
     ~once.fadeTime=0.2;
     ~once={
         var mod2 =Duty.kr((1..16).nthPrime*2/~tempo,0,Dseq( (2**(([1200,102,600,306,1008,804])/1200) ),inf));
         var mod = Duty.kr((1..16).nthPrime*16/~tempo,0,Dseq([1,2,4,8],inf)) * mod2;
         var mel = Duty.kr((1..16).nthPrime*4/~tempo,0,Dseq([1,2,4,8,1/2,1/4,1/8],inf));
         //         |       |       |       |       |  
-        var f = 432 * (~tempo) * mod / ((((2..16).nthPrime)%((1..16).nthPrime))) / mel;//[150,133,200,1000];
+        var f = 432 * mod / ((((2..16).nthPrime)%((1..16).nthPrime))) / mel;//[150,133,200,1000];
         var env = (Decay.ar(Impulse.ar(4/(1..16).nthPrime*~tempo),0.12*((1..16).nthPrime**0.25)) );
         var sig = SinOsc.ar(f/[1,2,4],SinOsc.ar(f/2)*0.05pi*(env**LFTri.ar(~tempo/16/(1..16).nthPrime).exprange(0.1,40)),mul:1/((1..16).nthPrime**0.5)); 
         sig = sig * env;
@@ -39,7 +45,7 @@ p.bpm(105)
     };
     ~once.play;
 );
-~once.stop(1);
+~once.stop(60);
 ~once.clear;
 ~once.pause;
 ~once.resume;
