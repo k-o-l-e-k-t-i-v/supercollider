@@ -32,12 +32,12 @@ Platform.resourceDir
 
 (
     ~sampleOne.ar(2);
-    ~sampleOne.quant=4;
+    ~sampleOne.quant=16;
     ~sampleOne.fadeTime=2.02;
     ~sampleOne={
-        var mod = 2/[1,2,4/3,1.5];//[-1,0.25,-0.25,1/8,1/16];
+        var mod = 1/[1,2,4/3,1.5];//[-1,0.25,-0.25,1/8,1/16];
         var spread = 0.001;
-        var pos =  0.0;//LFTri.ar(~tempo/32);
+        var pos =  LFTri.ar(~tempo/4/[1.001,1.00001,1.000001,1.00000001]);
         //         |       |       |       |       |  
         var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,4,~counter.kr);
@@ -48,7 +48,7 @@ Platform.resourceDir
   //sig = sig 
         sig = sig * (LFTri.ar(~tempo/[1,2,3,4]/4) ** 1.6);
         sig = CompanderD.ar(sig,3/4,LFSaw.ar(~tempo/16).range(1,1/1.5),1); 
-        Splay.ar(sig.flat,0.15,0.5,SinOsc.ar(~tempo*2));
+        Splay.ar(sig.flat,0.15,0.5);
     };
     ~sampleOne.play;
 );
