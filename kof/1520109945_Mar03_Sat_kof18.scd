@@ -16,11 +16,11 @@ p.bpm(143.721/4.0);
 ~one.quant=8;
 ~one.fadeTime=4;
 ~one={
-  var tim = LFSaw.ar(~tempo/[1,2,60]).range(0,2pi);
+  var tim = LFSaw.ar(~tempo/[1,2,[600,601,603]]).range(0,2pi);
   var perl = Perlin3.ar(tim[0],tim[1],tim[2]);
-  var sig = RLPF.ar(LFSaw.ar([50,50.001],0,perl),perl.range(100,1000))*LFSaw.ar(~tempo/4);
+  var sig = RLPF.ar(LFSaw.ar([50,50.001],0,perl),perl.range(100,15000))*LFSaw.ar(~tempo/[4,7,3]);
   sig = LeakDC.ar(sig);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.25,0.75);
 };
 ~one.play;
 );
@@ -28,6 +28,25 @@ p.bpm(143.721/4.0);
 ~one.clear;
 ~one.pause;
 ~one.resume;
+
+
+// cingrlatko synth ///////////////////////////////////////
+
+(
+~cingrlatko.ar(2);
+~cingrlatko.clock = p.clock;
+~cingrlatko.quant=2;
+~cingrlatko.fadeTime=4;
+~cingrlatko={
+  var sig = SinOsc.ar(50!2);
+  Splay.ar(sig,0.5,0.25);
+};
+~cingrlatko.play;
+);
+~cingrlatko.stop(4);
+~cingrlatko.clear;
+~cingrlatko.pause;
+~cingrlatko.resume;
 
 (
   ~master.quant=2;
