@@ -12,7 +12,7 @@ p.bpm(90);
 ~tricking.fadeTime=4;
 ~tricking={
   var sig = SinOsc.ar(50/[1,1.333333,1.5,2]) * LFSaw.ar(~tempo/4/[1,2,3,4]);
-  Splay.ar(sig,0.5,0.05);
+  Splay.ar(sig,0.5,0.15);
 };
 ~tricking.play;
 );

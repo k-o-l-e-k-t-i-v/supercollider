@@ -79,7 +79,7 @@ s.latency=0.5;
         sig = sig.scramble;
         sig = SelectX.ar(~sel3.kr*sig.size,sig);
         sig = CompanderD.ar(sig,3/4,1/2,1);
-        Splay.ar(sig,0.75,0.5);
+        Splay.ar(sig,0.75,0.015);
     };
     ~switcher.play;
 );
@@ -108,3 +108,11 @@ s.latency=0.5;
     };
 );
 p.moveNodeToTail(\master);
+
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(30);};});
+}.fork;  
+)
