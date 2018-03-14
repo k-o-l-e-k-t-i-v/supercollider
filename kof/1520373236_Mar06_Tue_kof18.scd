@@ -1,7 +1,7 @@
 
 
 p.push();
-p.bpm(141.33/2);
+p.bpm(121);
 
 
 // kick_test synth ///////////////////////////////////////
@@ -23,7 +23,7 @@ p.bpm(141.33/2);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,4.5],[3,-3]),imp * hit);
   var perl = Perlin3.ar(env,env**2*40,env**LFSaw.ar(~tempo/4)*LFSaw.ar(~tempo/16000)*40);
-  var sig = SinOsc.ar(50!2+(perl*150),env**80*8pi*perl);
+  var sig = SinOsc.ar(50!2+(perl*150),(1-env)**80*8pi*perl);
   sig = sig * env;
   Splay.ar(sig,0.75,0.25);
 };
