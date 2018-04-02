@@ -1,0 +1,187 @@
+currentEnvironment.print;
+currentEnvironment.free;
+//p.arProxyNames.collect({arg n; var synth=(p[n.asSymbol]); synth.stop(30)});
+(
+p=ProxySpace.push(s);
+p.makeTempoClock;
+ProxySynthDef.sampleAccurate = true;
+p.clock.tempo = 60/60;
+)
+p.gui;
+
+
+(
+ProxySynthDef(\string, {
+	arg  sustain,  amp, pan, feedback=0.2, freq;
+	var sig, env, renv, senv, local;
+
+	env=EnvGen.kr(Env([0,1,0],[1,0.1],[\welch,\lin]),timeScale:sustain,doneAction:2);
+	renv=EnvGen.kr(Env([0.01,5,0.01],[0.8,0.3],[\welch,\lin]),timeScale:sustain,doneAction:2);
+	feedback=EnvGen.kr(Env([0.3,0.1,0.3]+feedback,[0.9,0.3],[\welch,\lin]),timeScale:sustain,doneAction:2);
+
+	sig=CombL.ar(WhiteNoise.ar(0.5!2),freq.reciprocal,freq.reciprocal,10)*env;
+	local=LocalIn.ar(2)+sig;
+	sig=DelayN.ar(local,renv, renv);
+	LocalOut.ar(sig*feedback);
+	sig=MoogFF.ar(sig, freq,2,mul:0.2)+sig;
+	sig=Pan2.ar(sig,pan)*env*amp;
+
+}).add;
+
+
+)
+
+
+~combdrone.clear;
+~combdrone.stop(freeTime:10);
+(
+~combdrone.play(vol:0.08, fadeTime:4, numChannels:2);
+~combdrone.quant=16;)
+(~combdrone[0]=Pbind(
+	\instrument, \string,
+	\amp, 0.5,
+	\legato, Prand([0.8,0.7,0.6],inf),
+	\strum, 5,
+	\pan, 0,
+	\octave, Pseq([Pn(4,4),                               ],inf),
+	\degree, Pseq([Pn([3,5],3),7,                     ],inf),
+	//\octave,  Pseq([[5,6],[4,3],[5,4],[3,6]],inf)+1,
+	//\degree,Pseq([2,[3,7,5],[6,2],[3,5,7,3],[4,6]],inf),
+	\dur,16,//Prand([8,Rest(2),16],inf),
+);
+~combdrone[53]=\filter->{arg in; HPF.ar(in,40)};
+~combdrone[54]=\filter->{arg in; LPF.ar(in,600)};
+~combdrone[56]=\filter->{arg in; Limiter.ar(GVerb.ar(Mix.new(in),[40,6],[16,8],mul:0.1)+in.softclip,0.4)};
+)
+~combdrone[56]=nil;
+
+
+
+--------------------------------------------------------------------------------------
+
+
+(
+ProxySynthDef(\aural, {
+	arg  sustain,  amp, q;
+	var sig, env, fenv;
+
+	env=EnvGen.kr(Env([0,1,0],[1,6]),timeScale:sustain,doneAction:2);
+	sig=SinOsc.ar(\freq.kr+LFNoise0.ar([100,160]).range(2,40).round(2));
+	sig=sig+BPF.ar(PinkNoise.ar([0.8,0.6]),\freq.kr,SinOsc.kr(1/40).range(0.1,1));
+	sig=sig*env*amp;
+	sig=Splay.ar(sig);
+}).add;)
+
+
+
+~aural1.clear;
+~aural1.stop(fadeTime:6);
+(
+~aural1.play(vol:0.1, fadeTime:4, numChannels:2);
+~aural1.quant=16;)
+(~aural1[0]=Pbind(
+	\instrument, \aural,
+	\amp,Prand([0.8,0.4,0.6],inf)/2,
+	\legato, Prand([0.5,0.2,1,0.4],inf),
+	\octave, Pseq([[5,6],[4,3],[5,4],[3,6]],inf)+1,
+	\degree, Pseq([[1,5],[4,6],[6,2],[2,4],[2,6],[8,2]],inf),
+	\dur, Pseq([Pseq((400..1),100)/15,Pn(0.05!10)],inf),
+	\q, Pseq([(0.1..1)],inf),
+);
+~aural1[5]=\filter->{arg in; GVerb.ar(in,[40,60],[2,1],mul:0.4)+in};
+//~aural1[6]=\filter->{arg in; LPF.ar(in,\lpf3.kr(2000,4))};
+//~aural1[7]=\set->Pbind(\args, [\lpf], \dur,1, \lpf, Pseq([1000,600,800,200],inf));)
+
+~aural1[98]=\filter->{arg in; Compander.ar(in, ~tum01.ar, 0.1, 1, 0.1) };
+
+)
+~aural[5]=nil;
+
+(100..1)/15
+1/15
+
+
+---------------------------------------------
+(
+ProxySynthDef(\ww, {
+	arg  sustain,  amp, freq,f,del, rq;
+	var sig, env, f2;
+	env=EnvGen.kr(Env([0,1,0.5,0.8,0],[0.01,2,1,0.01],\welch),timeScale:sustain,doneAction:2);
+	f2=EnvGen.kr(Env([f,f*1.2,f-2,f+2,f+1,f],[0.01,2,1,0.5,0.01],\welch),timeScale:sustain,doneAction:2);
+
+	sig=GrayNoise.ar(LFNoise1.kr(20).range(0.7,0.9)!2,1);
+	sig=Clip.ar(sig,-0.5,0.5);
+	sig=BPF.ar(sig,freq, rq,add:sig*LFTri.kr(1/16),mul:4);
+	sig=sig*LFSaw.ar(f2,LFSaw.kr(1/16));
+	sig=CombN.ar(sig,10,del,5);
+	sig=Splay.ar(sig,SinOsc.kr(0.125));
+	sig=sig*env*amp;
+
+}).add;)
+
+
+~ww.clear;
+~ww.stop(freeTime:60);
+
+(
+~ww.play(vol:0.3, fadeTime:4, numChannels:2,);   //good vol
+~ww.quant_(1);
+);
+(~ww[0]=Pbind(
+	\instrument, \ww,
+	\amp, 0.5,
+	\f, Prand([14,20,8,4],inf),
+	\rq, 0.01,
+	\del, Pseq([0.02,0.02,0.1],inf),
+	\octave,Pseq([3,[4,2],[6,7]],inf),
+	\degree, Pseq([7,5,4],inf),
+	\sustain, Prand([0.5,0.6],inf),
+	\dur,Prand([32,64],inf),
+);
+
+~ww[5]=\filter->{arg in; GVerb.ar(in,[50,60],[8,6],mul:0.2,maxroomsize:200)+(in*2)};
+~ww[8]=\filter->{arg in; CompanderD.ar(in,1,0.8,0.2)};
+~ww[9]=\filter->{arg in; HPF.ar(in,60)};
+~ww[10]=\filter->{arg in; RLPF.ar(in,SinOsc.kr(1/64).range(1800,2800),SinOsc.kr(1/64).range(0.01,1))};
+~ww[38]=\filter->{arg in; Limiter.ar(in,2)};
+
+)
+~ww[3]=nil;
+
+
+
+---------------------------------------------------
+(
+ProxySynthDef(\noise, {
+	arg sustain, amp, freq;
+	var env, sig, sig2, time;
+
+	time=SinOsc.kr(1/300).range(0.2,0.02);
+	env= EnvGen.kr(Env([0,1,0], [time,0.5,0.01],curve:\lin), timeScale: sustain, doneAction:2);
+	sig= BPF.ar(PinkNoise.ar(0.5),freq: freq*fib(8),rq:LFNoise0.kr(LFNoise1.kr(3)));
+	sig=FreeVerb.ar(sig,0.4,0.4);
+
+	sig=sig*env*amp;
+}).add;
+
+)
+~nametest.clear;
+(
+~nametest.play( vol:0.05, fadeTime:4);
+~nametest.quant=6;
+)
+(
+~nametest[0]=Pbind(
+	\instrument, \noise,
+	\dur, Pseq([10,16],inf),
+	\amp, Prand([0.4,0.5,0.8],inf),
+	\sustain, 2,
+
+	\octave, Pseq([4,5,[5,6],[2,7]],inf),
+	\note, Prand([4,[2,6],5,8],inf),
+);
+
+~nametest[4]=\filter->{arg in; Clip.ar(in,0.4)};
+~nametest[5]=\filter->{arg in; GVerb.ar(in,40)};
+~nametest[5]=nil;
+)
