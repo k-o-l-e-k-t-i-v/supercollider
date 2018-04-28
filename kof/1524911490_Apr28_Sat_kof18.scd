@@ -7,6 +7,19 @@ p.bpm(142.334);
 p.bpm(125.33);
 
 
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant = 16;
+  ~counter.clock = p.clock;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
+
 
 // kick synth ///////////////////////////////////////
 
@@ -115,6 +128,16 @@ p.moveNodeToTail(\master);
   ~counter = {PulseCount.kr(~tick.kr);};
   ~tick = { Impulse.kr( ~tempo * 4 ); };
 );
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(30);};});
+}.fork;  
+)
+
+
+
 
 (
 //////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
