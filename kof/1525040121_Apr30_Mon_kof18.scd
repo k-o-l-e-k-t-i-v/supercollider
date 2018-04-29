@@ -1,7 +1,7 @@
 
 
 p.push();
-p.bpm(105);
+p.bpm(89.5);
 
 
 // one synth ///////////////////////////////////////
@@ -9,18 +9,22 @@ p.bpm(105);
 (
     ~one.ar(2);
     ~one.clock = p.clock;
-    ~one.quant=2;
-    ~one.fadeTime=4;
+    ~one.quant=16;
+    ~one.fadeTime=1;
     ~one={
-        var f = [3,5,7].octcps *.x (2**(1/[1,2,3,4]));
+        var f = [3,5,7].octcps *.x [1,2,4,8] *.x (1/[1,1.5,4/3]);
+        var temp = ~tempo / (1..8);
         var left = SinOsc.ar(1.5 * ~tempo);
         var right = SinOsc.ar(1.33375 * ~tempo);
-        var slope = LFSaw.ar(~tempo) ** 2;
+        var slope = LFSaw.ar(~tempo/(1..8)) + 1 ** 2 + 0.001;
 
-        var puls = Pulse.ar(LFDNoise1.kr(~tempo/32!8).lag(~tempo)**slope*16);
+        var puls = Pulse.ar(LFDNoise1.kr(~tempo/32!8).lag(1/600).clip(0.0001,0.9999).round(1/128)**slope*temp);
         var sig = SinOsc.ar(f,puls) * SinOsc.ar(f+[left,right]);
         sig = sig * puls;
-        Splay.ar(sig,0.15,0.15,SinOsc.ar([left,right])*(-0.1));
+        sig = LeakDC.ar(sig);
+        sig = CompanderD.ar(sig,1/2,1/1.5,1);
+        sig = Limiter.ar(sig,0.9,0.001);
+        Splay.ar(sig,0.75,0.15,SinOsc.ar([left,right])*(-0.991));
     };
     ~one.play;
 );
