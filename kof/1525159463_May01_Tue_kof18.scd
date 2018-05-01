@@ -6,7 +6,7 @@ p.bpm(125.337/2);
 p.gui
 
 (
-  s.latency=0.45;
+  s.latency=0.449;
   //p.clock.tempo_(120/60);
   p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
   ~tick.kr(1);
@@ -91,9 +91,9 @@ p.gui
   var imp = PulseDivider.kr(~tick.kr,[1,7,3,4],~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = {EnvGen.ar(Env([0.001,1,0.0001],[4.002,4.005]*LFDNoise1.kr(~tempo/16/[7,1,4,3]),[3,-3]),imp * hit)};
-  var sig = SinOsc.ar(49.997+((env**10)*10000),(env**(83.34/[1,2,3,4])*4pi) + (env**0.066667*0.15pi));
+  var sig = SinOsc.ar(49.997+((env**10)*44000),(env**(83.34/[1,2,3,4])*4pi) + (env**0.066667*0.15pi));
   sig = sig * env;
-  Splay.ar(sig,0.75,0.3355,LeakDC.ar(VarSaw.ar(4999.337*env)) );
+  Splay.ar(sig,0.997,0.3355,LeakDC.ar(VarSaw.ar(4999.337*env)) );
 };
 ~low.play;
 );
@@ -101,3 +101,41 @@ p.gui
 ~low.clear;
 ~low.pause;
 ~low.resume;
+
+// kick synth ///////////////////////////////////////
+
+(
+~kick.ar(2);
+~kick.clock = p.clock;
+~kick.quant=[16,0];
+~kick.fadeTime=0.02;
+~kick={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+    0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+    1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+    0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,4.5],[3,-3]),imp * hit);
+  var sig = SinOsc.ar(39!2,env**80*8pi) + (VarSaw.ar(39,0,env**SinOsc.ar(~tempo*8))*0.2);
+  sig = sig * env;
+  Splay.ar(sig,0.99,0.5);
+};
+~kick.play;
+);
+~kick.stop(4);
+~kick.clear;
+~kick.pause;
+~kick.resume;
+
+
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(60);};});
+}.fork;  
+)
