@@ -20,11 +20,11 @@ p.bpm(89.5);
 
         var puls = Pulse.ar(LFDNoise1.kr(~tempo/32!8).lag(1/600).clip(0.0001,0.9999).round(1/128)**slope*temp);
         var sig = SinOsc.ar(f,puls) * SinOsc.ar(f+[left,right]);
+        sig = sig + SinOsc.ar(49.995+LFNoise2.kr(~tempo/16!8,mul:0.01));
         sig = sig * puls;
         sig = LeakDC.ar(sig);
         sig = CompanderD.ar(sig,1/2,1/1.5,1);
-        sig = Limiter.ar(sig,0.9,0.001);
-        Splay.ar(sig,0.75,0.15,SinOsc.ar([left,right])*(-0.991));
+        Splay.ar(sig,0.75,0.05,SinOsc.ar([left,right])*(-0.991));
     };
     ~one.play;
 );
