@@ -10,13 +10,14 @@ p.bpm(60)
     ~one.quant=15;
     ~one.fadeTime=0.02;
     ~one={
-        var base = 4400 *.x [1,2,1.5];
+        var base = 110 / [1,2,1.5];
+        var t = LFTri.ar(base/[10,100,1000+(1..12)]) * 0.004;
         var perl = Perlin3.ar(t[0],t[1],t[2]).range(0,1);
-        var t = LFTri.ar(base/[10,100,1000]) * 0.4;
-        var cad = ~tempo/(1..4);
+        var cad = ~tempo/(1..12);
         var puls = Mix(LFTri.ar(cad).exprange(0.0001,1));
-        var f = base / Duty.kr(cad,0,Dseq( 2**(([102,306,600,804,1008])).scramble,inf) );
-        var sig = SinOsc.ar(f / [1,1.5,2,4/3],SinOsc.kr(base/(1..4))*2pi,mul:1/((1..4)**2));
+        var f = base * Duty.kr(cad,0,Dseq( 2**(([102,306,600,804,1008])/1200).scramble,inf) );
+
+        var sig = SinOsc.ar(f / [1,1.5,2,4/3],SinOsc.kr(base/(1..12))*2pi,mul:1/((1..12)**2));
         sig = sig * (LFTri.ar(cad)**4).range(0,1);
         sig = CompanderD.ar(sig,3/4,1/1.5,1) * LFTri.ar(~tempo/16/[1,2,3]);
         Splay.ar(sig,LFTri.ar(1/7.5,SinOsc.ar(~tempo)),0.75);
