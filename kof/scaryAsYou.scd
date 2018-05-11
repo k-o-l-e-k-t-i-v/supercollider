@@ -11,7 +11,7 @@ s.latency = 0.3337;
     ~one.quant=16;
     ~one.fadeTime=1.02;
     ~one={
-        var base = [48,60,63].midicps * [1,2,4];
+        var base = [48,60,63].midicps *.x [8,2,1];
         var t = LFTri.ar(base/[10,100,1000+(1..4)]) * 0.0002;
         var perl = Perlin3.ar(t[0],t[1],t).range(0,1);
         var cad = ~tempo/64/(1..4);
@@ -46,7 +46,7 @@ s.latency = 0.3337;
         fx = LPF.ar(sig,lp);
         fx = HPF.ar(fx,hp);
         fx = DWGReverbC1C3.ar(NumChannels.ar(fx,2),size,1/len)/rev;
-        wet = SinOsc.ar(~tempo*8).range(0,1);
+        wet = SinOsc.ar(~tempo/[8,7,6,3]).range(0,1);
         sig = SelectX.ar(wet,[orig,fx]);
         sig = NumChannels.ar(sig,2);
         ReplaceOut.ar(0,sig);
