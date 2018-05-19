@@ -1,7 +1,7 @@
-p.bpm(10);
+p.bpm(60);
 
 p.push();
-s.latency = 0.0337
+s.latency = 0.2
 
 // fast synth ///////////////////////////////////////
 
@@ -11,20 +11,14 @@ s.latency = 0.0337
 ~fast.fadeTime=0.2;
 ~fast={
   //         |       |       |       |       |  
-  var pat = [1,1,1,1,1,1,1,1,1].rotate(3);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr % pat.size);
+  var pat = [1,1,1,1,1,1,1,1,1].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,[4,3,2,1],~counter.kr % pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.75]*MouseX.kr(0.0001,1.5),[3,-3],curve:'exp'),imp * hit)};
-  var mod = Duty.kr([16,8,4,2]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+  var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.75]*MouseX.kr(0.0001,3.5),[3,-3],curve:'exp'),imp * hit)};
+  var mod = Duty.kr([17,7,5,2]/~tempo,0,Dseq([1,2,1.5,1.33333,7/5,1,1,1],inf));
   var sig = [
   SinOsc.ar(50!2,env**40*2pi),
-  WhiteNoise.ar(0.1) + SinOsc.ar(5000/mod * (env**0.92),mul:0.1) / 4,
-  SinOsc.ar(50!2,Pulse.ar(1)*env),
-  WhiteNoise.ar(0.1) + VarSaw.ar(500*env,0,Pulse.ar(500.01*env/mod)) / 2,
-  SinOsc.ar(50!2,env**20*2pi),
-  WhiteNoise.ar(0.4*env),
-  SinOsc.ar(50!2,Pulse.ar(env*50)) / 1.5,
-  WhiteNoise.ar(0.5*env),
+  SinOsc.ar([60,55,58,72].midicps*4 / mod , (env**MouseY.kr(0.1,1.5)),mul:0.4) / 2,
   ];
   sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
 
