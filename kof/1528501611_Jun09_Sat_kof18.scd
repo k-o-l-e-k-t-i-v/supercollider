@@ -7,7 +7,7 @@
 
 
 p.push();
-p.bpm(125*2)
+p.bpm(89.97*2)
 
 
 // oneone synth ///////////////////////////////////////
@@ -32,6 +32,8 @@ p.bpm(125*2)
 
 // twelve synth ///////////////////////////////////////
 
+31.midicps;
+
 (
     ~twelve.ar(2);
     ~twelve.quant=4;
@@ -44,19 +46,19 @@ p.bpm(125*2)
             1,1,1,1,
             1,0,1,0,
         ].rotate(1);
-        var base = 50;
-        var cents = 1;
+        var base = Duty.kr(16/~tempo,0,Dseq([32,36,40,44],inf)).midicps;
+        var cents = 2**Duty.kr(16/[1,2]/~tempo,0,Dseq([102,600,804]/1200,inf));
         var imp = PulseDivider.kr(~tick.kr,4,~counter.kr % pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.00337,LFDNoise1.kr(~tempo/15).exprange(0.1,2.5)],[6,-6]*LFNoise2.kr(~tempo/15),curve:'exp'),imp * hit)};
+        var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.00337,LFDNoise1.kr(~tempo/15).exprange(0.1,4.5)],[6,-6]*LFNoise2.kr(~tempo/15),curve:'exp'),imp * hit)};
         var sig = [
-            SinOsc.ar(50!2,env**20*8pi),
-            HPF.ar(WhiteNoise.ar(0.2),env**4*16000+50),
+            SinOsc.ar(base,env**20*8pi),
+            HPF.ar(WhiteNoise.ar(0.2),env**4*16000+base),
             VarSaw.ar(base*cents+LFTri.ar(1/16+((100..108).reciprocal)*env),0,env**40),
-            HPF.ar(WhiteNoise.ar(0.2*env),env**2*16000+50),
-            SinOsc.ar(50!2,env**60*8pi),
-            HPF.ar(WhiteNoise.ar(0.3*env),env**8*16000+50),
-            SinOsc.ar(50!2,env**10*2pi),
+            HPF.ar(WhiteNoise.ar(0.2*env),env**2*16000+base),
+            SinOsc.ar(base,env**60*8pi),
+            HPF.ar(WhiteNoise.ar(0.3*env),env**8*16000+base),
+            SinOsc.ar(base*8,env**10*2pi,mul:0.2),
             BrownNoise.ar(0.2)
         ];
         sig = BPF.ar(sig,(1..8)/8*20000,0.2) + LPF.ar(sig,1500) + HPF.ar(sig,10000) * LFDNoise1.kr(~tempo/15!8);
