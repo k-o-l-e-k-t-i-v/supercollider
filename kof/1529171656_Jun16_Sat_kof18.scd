@@ -1,7 +1,7 @@
 
 
 p.push();
-p.bpm(121.5);
+p.bpm(120);
 // one synth ///////////////////////////////////////
 
 
@@ -10,15 +10,18 @@ p.bpm(121.5);
 (
     ~sync.ar(2);
     ~sync.clock = p.clock;
-    ~sync.quant=2;
+    ~sync.quant=4;
     ~sync.fadeTime=4;
     ~sync={
-
-        var f = MouseX.kr(55,4400);
-        var env = Env.circle([0,-0.5,1,-0.5,-1,0],1/f,[3,-3]*MouseX.kr(-0.001,10.2)) ;
+        var base = Duty.kr(16*[1,4,8,16]/~tempo,0,Dseq([60,56,60,68,64,65].midicps,inf));
+        var mod = Duty.kr(64/~tempo,0,Dseq([1,2,1,4,1,1.5],inf));
+        var x = LFTri.ar([1,2,3,4]/1024) ** 1.5 * 10;
+        var y = LFTri.ar([1,2,3,4]/2048) ** 1.5 * 10;
+        var f = base*4*mod/[1,2,1,1.5]*Duty.kr(32/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+        var env = Env.circle([0,-1,0,1]*((1..16).reciprocal),1/f,[3,-3]*LFSaw.kr(1/16/[1,2,3,4]).exprange(0.001,10.2)) ;
         var sig = EnvGen.ar(env);
-        sig = Perlin3.ar(sig,SinOsc.ar(f/4)+MouseY.kr(1,200),SinOsc.ar(f/8)+MouseX.kr(1,2));
-        sig = DFM1.ar(sig,f,0.1);
+        sig = Perlin3.ar(sig,SinOsc.ar(f/4)+1+x,SinOsc.ar(f/2)+1+y) * LFTri.ar(1/4/[1,2,3,4]);
+        sig = DFM1.ar(sig,f,LFTri.ar(1/8/[1,2,3,4])**2);
         Splay.ar(sig,0.5,0.25);
     
     };
@@ -51,6 +54,32 @@ p.bpm(121.5);
         Splay.ar(sig,0.95,0.5);
     };
     ~one.play;
+);
+~one.stop(4);
+~one.clear;
+~one.pause;
+~one.resume;
+
+
+// one synth ///////////////////////////////////////
+
+(
+~one.ar(2);
+~one.clock = p.clock;
+~one.quant=2;
+~one.fadeTime=4;
+~one={
+    var imp = LFSaw.ar(4/(1..12)).exprange(50.0001,1500);
+    var sync = SinOsc.ar(1/16/(1..12)) * 2pi;
+  var sig = SinOsc.ar(50,sync) + SinOsc.ar(50.001,sync) - SinOsc.ar(49.997,sync);
+  sig = Normalizer.ar(sig)/4;
+  //sig = CombN.ar(sig,1,1/4,inf);
+  sig = HPF.ar(sig,20);
+  sig = DFM1.ar(sig,imp,0.04);
+  sig = Normalizer.ar(sig) * Pulse.ar(2);
+  Splay.ar(sig,0.5,0.25);
+};
+~one.play;
 );
 ~one.stop(4);
 ~one.clear;
