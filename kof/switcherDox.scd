@@ -1,7 +1,7 @@
 
 s.reboot;
 p.push();
-p.bpm(120*8);
+p.bpm(120);
 
 
 // one synth ///////////////////////////////////////
@@ -36,22 +36,23 @@ p.bpm(120*8);
       1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
       1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
       1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0
-  ].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,16,~counter.kr % pat.size);
+  ].rotate(3);
+  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr % pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,4.15]*MouseX.kr(0,1),[3,-3],curve:'exp'),imp * hit)};
   var sig = [
-  SinOsc.ar(60!2,Pulse.ar(8/[1,2,3,4])),
+  SinOsc.ar(55!2,Pulse.ar(8/[1,2,3,4])),
   WhiteNoise.ar(0.1!2),
-  SinOsc.ar(60!2,env**20*4pi),
+  SinOsc.ar(55!2,env**20*4pi),
   PinkNoise.ar(0.1!2),
-  SinOsc.ar(60!2,SinOsc.ar(16/[1,2,3,4])),
+  SinOsc.ar(55!2,SinOsc.ar(16/[1,2,3,4])),
   BrownNoise.ar(0.1),
-  SinOsc.ar(60!2,Pulse.ar(4/[1,2,3,4])),
+  SinOsc.ar(55!2,Pulse.ar(4/[1,2,3,4])),
   WhiteNoise.ar(0.1),
   ];
   sig = Select.ar(PulseCount.kr(imp*hit)%sig.size,sig);
-  //sig = sig * env;
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  sig = sig * env;
   Splay.ar(sig,1,0.75);
 };
 ~sw.play;

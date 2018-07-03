@@ -8,12 +8,13 @@ p.push();
 // one synth ///////////////////////////////////////
 
 (
-~one.ar(2);
-~one.clock = p.clock;
-~one.quant=4;
-~one.fadeTime=2;
-~one={
-    var t = SinOsc.ar([1/160,1/1600,110.01*[1,1.005,1.00001]]).range(0,2pi) + SinOsc.ar(4+(40..44).reciprocal,mul:1/10).range(0,1);
+~onez.ar(2);
+~onez.clock = p.clock;
+~onez.quant=16;
+~onez.fadeTime=2;
+~onez={
+    var mod = Duty.kr(16/~tempo*[1,2,3],0,Dseq([1,2,1.5,1.33333],inf));
+    var t = SinOsc.ar([1/160,1/1600,110.01*[1,1.005,1.00001]*mod/[1,1.5,mod]]).range(0,2pi) + SinOsc.ar(4+(40..44).reciprocal,mul:1/10).range(0,1);
     var perl = Perlin3.ar(t.sin,t.cos,t);
   var sig = VarSaw.ar(110/[1,2,3,4]+(33..38).reciprocal,0,perl**LFTri.ar(1/16).exprange(0.01,2));
   sig = LPF.ar(sig,3500) * LFTri.ar(4/[1,2,3,4]) + HPF.ar(sig,14000) * SinOsc.ar(440/[4,3,2,1],perl);
@@ -22,14 +23,15 @@ p.push();
   sig = BPF.ar(sig * LFTri.ar(1/(1..12)),110*.x[1,2,4,8,16]*(2**((1..12)/12)),0.2);
   sig = CompanderD.ar(sig,3/4,1/1.5,1);
   sig = CombL.ar(sig,1/2,1/55,2);
-  Splay.ar(sig,0.25,0.5);
+  sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  Splay.ar(sig,0.25,0.25);
 };
-~one.play;
+~onez.play;
 );
-~one.stop(4);
-~one.clear;
-~one.pause;
-~one.resume;
+~onez.stop(4);
+~onez.clear;
+~onez.pause;
+~onez.resume;
 
 (
   ~master.quant=2;
@@ -63,3 +65,6 @@ p.moveNodeToTail(\master);
   ~counter = {PulseCount.kr(~tick.kr);};
   ~tick = { Impulse.kr( ~tempo * 4 ); };
 );
+
+
+p.gui

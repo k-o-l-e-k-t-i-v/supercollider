@@ -10,11 +10,11 @@ p.bpm(120);
 (
 ~one.ar(2);
 ~one.clock = p.clock;
-~one.quant=2;
+~one.quant=8;
 ~one.fadeTime=4;
 ~one={
-    var mod = Duty.kr(4/~tempo/[1,2,3],0,Dseq([72,60,65,69].midicps*2,inf));
-    var f = mod*[1,2,4];
+    var mod = Duty.kr(4/~tempo/[1,2,3],0,Dseq([1,2,1,1.5,1,3],inf));
+    var f = 1100*[1,1.5,mod]/mod;
   var sig = SinOsc.ar(f) + SinOsc.ar(f+0.01) * RLPF.ar(VarSaw.ar(f,SinOsc.ar(f/8)),LFSaw.ar(1/16/[1,2,3,4]).range(f,f*2),LFSaw.ar(1/4/[1,2,3,4]));
   sig = sig * Pulse.ar(4/[1,2,3,4]);
   sig = BPF.ar(sig,f,0.2);
