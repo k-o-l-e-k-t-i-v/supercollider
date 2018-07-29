@@ -19,7 +19,7 @@ Thu May 31 12:31:28 CEST 2018
                            I8   8I
                            I8   8I
                            I8, ,8'
-                            "Y8P'
+                            Y8P
 */
 
 p.push();
@@ -56,10 +56,11 @@ p.bpm(120/2);
         sig3 = Perlin3.ar(cc[0],cc[1],cc[2]);
 
 
-        sig = CompanderD.ar(sig1 * sig2 + sig3,3/4,1/1.5,1);
+        sig = CompanderD.ar([sig1, sig2, sig3],3/4,1/LFNoise1.kr(~tempo/[3,4,5]).range(1,1.7),1);
         sig = LeakDC.ar(sig); 
+        sig = Mix.ar(LPF.ar(sig,1000)) + HPF.ar(sig,1000);
 
-        Splay.ar(sig,0.5,0.5);
+        Splay.ar(sig,0.5,0.05);
     };
     ~triperl.play;
 );
