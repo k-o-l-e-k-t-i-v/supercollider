@@ -12,7 +12,7 @@ p.push();
 ~one={
     var mod = Duty.kr(16/~tempo,0,Dseq([1,2,1.5,1.33333]*.x[1,1.5],inf)).lag(1/2);
     var env = {EnvGen.ar(Env([0.001,1,0.001],[0.002,LFNoise1.kr(1/4).range(0.5,1.5)],[3,-3]),Impulse.ar(4))};
-    var f = Duty.kr(16/~tempo,0,Dseq([60,65,69,67],inf)).midicps.lag(1/4)/mod + SinOsc.ar(4/3);
+    var f = Duty.kr(16/~tempo,0,Dseq([60,65,69,67],inf)).midicps.lag(1/4)/mod + SinOsc.ar(4/3,mul:Amplitude.ar(~kick.ar)*50);
   var sig = [] ++ (VarSaw.ar(f)+1) ++ (LFSaw.ar([1/4+(1..8).reciprocal,1/16])*2);
   sig = Perlin3.ar(sig[0]*env,sig[1]*~kick.ar,sig[2]);
   sig = MoogVCF.ar(sig,f*[2,4,1.5],env**4+0.001) * env;
