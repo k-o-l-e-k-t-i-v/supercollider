@@ -11,7 +11,7 @@ Tdef(\mel,{loop{~ssimp.rebuild;8.wait;~ssimp2.rebuild;8.wait;}}).play;
 (
 ~ssimp.ar(2);
 ~ssimp.clock = p.clock;
-~ssimp.quant=4;
+~ssimp.quant=16;
 ~ssimp.fadeTime=3;
 ~ssimp={
     var chord = [[1,5,12],[0,5,7],[5,7,11],[0,12,0],[0,4,5]].choose.scramble;
@@ -23,6 +23,7 @@ Tdef(\mel,{loop{~ssimp.rebuild;8.wait;~ssimp2.rebuild;8.wait;}}).play;
   sig = LeakDC.ar(sig);
   sig = MoogVCF.ar(sig,base*(2**(chord/12)),LFTri.kr(~tempo/4/[1,2,3]).exprange(0.1,0.9)**2);
   sig = CompanderD.ar(sig,1/2,1/2,1);
+        sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
   Splay.ar(sig,0.5,0.15);
 };
 ~ssimp.play;
@@ -32,12 +33,20 @@ Tdef(\mel,{loop{~ssimp.rebuild;8.wait;~ssimp2.rebuild;8.wait;}}).play;
 ~ssimp.pause;
 ~ssimp.resume;
 
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(60);};});
+}.fork;  
+)
+
 // ssimp synth ///////////////////////////////////////
 
 (
 ~ssimp2.ar(2);
 ~ssimp2.clock = p.clock;
-~ssimp2.quant=4;
+~ssimp2.quant=16;
 ~ssimp2.fadeTime=3;
 ~ssimp2={
     var chord = [[1,5,12],[0,5,7],[5,7,11],[0,12,0],[0,4,5]].choose.scramble;
@@ -49,7 +58,8 @@ Tdef(\mel,{loop{~ssimp.rebuild;8.wait;~ssimp2.rebuild;8.wait;}}).play;
   sig = LeakDC.ar(sig);
   sig = MoogVCF.ar(sig,base*(2**(chord/12)),LFTri.kr(~tempo/4/[1,2,3]).exprange(0.1,0.9)**2);
   sig = CompanderD.ar(sig,1/2,1/2,1);
-  Splay.ar(sig,0.5,0.15);
+        sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
+  Splay.ar(sig,0.5,0.05);
 };
 ~ssimp2.play;
 );
