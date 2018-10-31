@@ -15,15 +15,16 @@ p.bpm(125)
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
-    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
   ].rotate(1);
   var l = 2.5;
-  var mod = LFSaw.kr(LFNoise2.kr(~tempo/32!2).range(4,90))**LFNoise2.kr(~tempo/32!6).range(0.1,1.9)*LFNoise2.kr(~tempo/32!2).exprange(0.1,0.9);
-  var imp = PulseDivider.kr(~tick.kr,[1,2,3],~counter.kr%pat.size);
+  var mod = LFSaw.kr(LFNoise2.kr(~tempo/320!2).range(4,90).round(4/~tempo))**LFNoise2.kr(~tempo/32!6).range(0.1,4.9)*LFNoise2.kr(~tempo/32!2).exprange(0.1,0.9);
+  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,l],[3,-3]),imp * hit);
-  var sig = SinOsc.ar(45+(env**80*250),Perlin3.ar(env**mod,env**(mod*1.01),env**(mod*1.001))*8pi);
+  var sig = SinOsc.ar(45+(env**80*450),Perlin3.ar(env**mod,env**(mod*1.01),env**(mod*1.001))*8pi);
   sig = sig * env;
+  sig = MoogVCF.ar(sig,450*[4],mod+0.1) + LPF.ar(sig,450);
   Splay.ar(sig,0.75,0.5);
 };
 ~klack.play;
