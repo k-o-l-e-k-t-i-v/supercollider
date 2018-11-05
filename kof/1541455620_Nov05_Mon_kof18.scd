@@ -1,7 +1,7 @@
 
 p.push();
 s.latency=0.2;
-p.bpm(121.5)
+p.bpm(88)
 // one synth ///////////////////////////////////////
 
 (
@@ -17,12 +17,15 @@ p.bpm(121.5)
   sig = BPF.ar(sig,base,1);
   sig = BPF.ar(sig,base+10,1);
   sig = BPF.ar(sig,base*2-5,1);
-  sig = LeakDC.ar(sig);
-  sig = Normalizer.ar(sig);
+  sig = LeakDC.ar(sig) * SinOsc.ar(base) ** SinOsc.ar(base/160);
+  //sig = Normalizer.ar(sig) * Pulse.ar(base/160);
+  sig = AllpassC.ar(sig,3,LFNoise1.kr(~tempo/32!8)**2/1000.0+0.01,3);
+  sig = AllpassC.ar(sig,3,LFNoise1.kr(~tempo/32!8)**2/1000.0+0.01,3);
   sig = AllpassC.ar(sig,3,LFNoise1.kr(~tempo/32!8)**2/1000.0+0.01,3);
   //sig = SelectX.ar(LFSaw.kr(1/[1,0.01])*sig.size,sig );
   sig = Resonz.ar(sig,base*2,0.001+LFTri.kr(~tempo/16/[1,2,3,4]).exprange(0.0001,0.5));
   sig = Normalizer.ar(sig);
+  sig = LPF.ar(sig,8000);
   Splay.ar(sig,0.15,0.25);
 };
 ~one.play;
