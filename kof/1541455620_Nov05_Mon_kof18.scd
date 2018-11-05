@@ -11,13 +11,13 @@ p.bpm(88)
 ~one.fadeTime=4;
 ~one={
     var mod = Duty.kr(16*[1,2,3,4]/~tempo,0,Dseq([1,2,1.5,1.33333,4,8,1/4,1/8],inf));
-    var base = [72,60,48].midicps/mod *.x [2,5,7,9].log2;
+    var base = [72,60,48].midicps/(mod * [2,5,7,9].log2);
     var ramp = LFTri.ar(base*[2,5,7,9].log2)**(LFNoise2.kr(~tempo/16/[1,2,3,4])**1.5) + SinOsc.kr(base/32 + 0.01);
   var sig = SinOsc.ar(base*ramp,ramp*2pi)/2 * LFTri.kr(~tempo/16/[1,2,3,4]);
   sig = BPF.ar(sig,base,1);
   sig = BPF.ar(sig,base+10,1);
   sig = BPF.ar(sig,base*2-5,1);
-  sig = LeakDC.ar(sig) * SinOsc.ar(base) ** SinOsc.ar(base/160);
+  sig = LeakDC.ar(sig) * SinOsc.ar(base,(base*2pi).tanh);// ** SinOsc.ar(base/16);
   //sig = Normalizer.ar(sig) * Pulse.ar(base/160);
   sig = AllpassC.ar(sig,3,LFNoise1.kr(~tempo/32!8)**2/1000.0+0.01,3);
   sig = AllpassC.ar(sig,3,LFNoise1.kr(~tempo/32!8)**2/1000.0+0.01,3);
@@ -26,6 +26,7 @@ p.bpm(88)
   sig = Resonz.ar(sig,base*2,0.001+LFTri.kr(~tempo/16/[1,2,3,4]).exprange(0.0001,0.5));
   sig = Normalizer.ar(sig);
   sig = LPF.ar(sig,8000);
+  sig = sig * LFTri.ar(~tempo/4/(1..32));
   Splay.ar(sig,0.15,0.25);
 };
 ~one.play;
