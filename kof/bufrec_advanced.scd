@@ -13,9 +13,9 @@ p.bpm(126.95)
     ~recorder.quant=16;
     ~recorder.fadeTime=4;
     ~recorder={
-        var sig = SinOsc.ar([1/50,1/100,1/500])+1 * SinOsc.kr(1);
+        var sig = SinOsc.ar([1/50,1/100,1/500])+1 * SinOsc.kr(500/(1..12).log2);
         sig = Perlin3.ar(sig[0],sig[1],sig[2]);
-        RecordBuf.ar(sig,b.bufnum,0,0.15);
+        RecordBuf.ar(Mix(sig),b.bufnum,0,0.15);
         Splay.ar(sig,0.5,0.25);
     };
     //~recorder.play;
@@ -40,7 +40,7 @@ record
         sig = Shaper.ar(b,Mix(sig,1));
         sig = Normalizer.ar(LPF.ar(HPF.ar(sig,30),LFSaw.kr(~tempo/2/[1,2,3,4]).range(5000,50))) + (Normalizer.ar(MoogVCF.ar(sig,5000,0.2))/8 * Pulse.ar(~tempo*4/[1,2,3,4]));
         // sig = Compander.ar(sig,~kick.ar,0.1,1,0.1) * (LFSaw.ar(~tempo*4/[1,2,3,4])**4);
-        sig = Resonz.ar(sig,5000/[3,7,5].log2,0.2); 
+        sig = Resonz.ar(sig,500/[3,7,5].log2,0.2); 
         Splay.ar(sig,0.75,0.15);
     };
     ~shaper.play;
