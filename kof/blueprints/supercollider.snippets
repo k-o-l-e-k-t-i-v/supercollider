@@ -12,7 +12,7 @@ snippet control
 	p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
 snippet synth
 	// $1 synth ///////////////////////////////////////
-	
+
 	(
 	~$1.ar(2);
 	~$1.clock = p.clock;
@@ -41,7 +41,7 @@ snippet synth
 	~$1.resume;
 snippet simple
 	// $1 synth ///////////////////////////////////////
-	
+
 	(
 	~$1.ar(2);
 	~$1.clock = p.clock;
@@ -59,7 +59,7 @@ snippet simple
 	~$1.resume;
 snippet bare
 	// $1 synth ///////////////////////////////////////
-	
+
 	(
 	~$1.ar(2);
 	~${1:}.quant=2;
@@ -72,7 +72,7 @@ snippet bare
 	~$1.clear;
 snippet switch
 	// $1 synth ///////////////////////////////////////
-	
+
 	(
 	~$1.ar(2);
 	~${1:}.quant=2;
@@ -98,7 +98,7 @@ snippet switch
 	~$1.resume;
 snippet synthm
 	// $1 synth ///////////////////////////////////////
-	
+
 	(
 	~${1:}.quant=1;
 	~$1.fadeTime=0.02;
@@ -118,7 +118,7 @@ snippet synthm
 	~$1.clear;
 snippet filter
 	// $1 filter ///////////////////////////////////////
-	
+
 	(
 	~${1:}.quant=1;
 	~$1.fadeTime=1;
@@ -127,7 +127,7 @@ snippet filter
 		var high,mid,low;
 		var sig = [];
 		synths.collect{|n| if(n!=\\$1){sig=sig++p.[n.asSymbol];}};
-	
+
 		//sig = Resonz.ar(sig,MouseX.kr(100,10000,(1..8)),MouseY.kr(0.1,1,(1..4)/16))/4;
 		//sig = CombN.ar(sig,4,[4,8,16],32)+sig;
 		//sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
@@ -164,14 +164,14 @@ snippet master
 	p.moveNodeToTail(\master);
 snippet filterm
 	// $1 filter ///////////////////////////////////////
-	
+
 	(
 	~${1:}.quant=1;
 	~$1.fadeTime=1;
 	~$1={
 		var high,mid,low;
 		var sig = ${2:0};
-		
+
 		sig = GVerb.ar(sig,40)/16 + sig;
 		low = CompanderD.ar(LPF.ar(sig,600),3/4,1/2,1/2);
 		mid = CompanderD.ar(BPF.ar(sig,800,2),3/4,1/2,1/2);
@@ -219,7 +219,7 @@ snippet gpl
 	* Copyright (C) ${1:Author}, `strftime("%Y")`
 	*/
 	${0}
-	 
+
 snippet startrec
 	(
 		s.prepareForRecord("/tmp/${1}");
@@ -254,18 +254,18 @@ snippet sampler
 	    ~${1:}.quant=2;
 	    ~$1.fadeTime=2.02;
 	    ~$1={
-	        var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
-	        var spread = 0.0;
-	        var pos = [0,0.5];
-	        //         |       |       |       |       |  
-	        var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
-	        var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
-	        var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+		var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
+		var spread = 0.0;
+		var pos = [0,0.5];
+		//         |       |       |       |       |  
+		var pat = [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0].rotate(1);
+		var imp = PulseDivider.kr(~tick.kr,1,~counter.kr);
+		var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
 		var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
-	        var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
-	        
+		var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
+
 		sig = sig * env;
-	        Splay.ar(sig.flat,0.5,${3:0.5});
+		Splay.ar(sig.flat,0.5,${3:0.5});
 	    };
 	    ~$1.play;
 	);
@@ -281,7 +281,7 @@ snippet grains
 	    ~${1:}.quant=2;
 	    ~$1.fadeTime=2.02;
 	    ~$1={
-	        var mod = 1;//[1,1.3333,1.5,2];
+		var mod = 1;//[1,1.3333,1.5,2];
 			var trate, dur, clk, pos, pan,sig;
 			trate = 120;
 			dur = BufDur.kr(b) / trate;
@@ -297,7 +297,7 @@ snippet grains
 	);
 	~$1.stop(7);
 	~$1.clear;
-	
+
 snippet tick
 	(
 		~tick.kr(1);
@@ -351,3 +351,25 @@ snippet scheds
 	  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(${2:0.2});};});
 	});  
 	);
+snippet vosc
+	b = Buffer.allocConsecutive(3,s,4096,1);
+	(
+		~${1:}.ar(3);
+		~$1.clock = p.clock;
+		~$1.quant=4;
+		~$1.fadeTime=4;
+		~$1={
+			var f = 50;
+			var sig = [
+				SinOsc.ar(f),
+				BrownNoise.ar(1),
+				LFSaw.ar(f),
+			];
+			3.do{|i|
+			RecordBuf.ar(Mix(sig[i]),b[i],loop:1);
+		};
+		sig;
+		};
+	);
+
+

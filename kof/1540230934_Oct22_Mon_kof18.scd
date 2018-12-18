@@ -1,6 +1,84 @@
 
 p.push();
 p.bpm(125)
+// hiss synth ///////////////////////////////////////
+
+(
+~hiss1.ar(2);
+~hiss1.clock = p.clock;
+~hiss1.quant=[16,0];
+~hiss1.fadeTime=0.02;
+~hiss1={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,1,1,1,
+  ].rotate(1);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4,5,6,7],~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3]),imp * hit);
+  var sig = WhiteNoise.ar(0.87);
+  sig = RHPF.ar(sig,15000);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.5);
+};
+~hiss2.play;
+); hiss synth ///////////////////////////////////////
+
+(
+~hiss2.ar(2);
+~hiss2.clock = p.clock;
+~hiss2.quant=[16,0];
+~hiss2.fadeTime=0.02;
+~hiss2={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,1,1,1,
+  ].rotate(3);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4,5,6,7],~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.15],[3,-3]),imp * hit);
+  var sig = WhiteNoise.ar(0.87);
+  sig = RHPF.ar(sig,15000);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.5);
+};
+~hiss2.play;
+);
+// hiss synth ///////////////////////////////////////
+
+(
+~hiss3.ar(2);
+~hiss3.clock = p.clock;
+~hiss3.quant=[16,0];
+~hiss3.fadeTime=0.02;
+~hiss3={
+  //  |       |       |       |       |  
+  var pat = [
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
+    1,0,0,0, 1,0,1,0, 1,0,0,0, 1,1,1,1,
+  ].rotate(3);
+  var imp = PulseDivider.kr(~tick.kr,[1,2,3,4,5,6,7],~counter.kr%pat.size);
+  var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+  var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.05],[3,-3]),imp * hit);
+  var sig = WhiteNoise.ar(0.7);
+  sig = RHPF.ar(sig,15000);
+  sig = sig * env;
+  Splay.ar(sig,0.75,0.5);
+};
+~hiss3.play;
+);
+~hiss.stop(4);
+~hiss.clear;
+~hiss.pause;
+~hiss.resume;
 
 // klack synth ///////////////////////////////////////
 
@@ -33,6 +111,13 @@ p.bpm(125)
 ~klack.clear;
 ~klack.pause;
 ~klack.resume;
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
 
 
 (
