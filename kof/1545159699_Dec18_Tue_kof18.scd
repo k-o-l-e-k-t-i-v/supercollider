@@ -5,7 +5,7 @@ p.push();
 b = Buffer.allocConsecutive(8,s,2**16,1);
 
 
-b = Buffer.allocConsecutive(3,s,4096,1);
+b = Buffer.allocConsecutive(8,s,4096,1);
 (
     ~rec.ar(3);
     ~rec.clock = p.clock;
@@ -15,16 +15,15 @@ b = Buffer.allocConsecutive(3,s,4096,1);
         var f = 50;
         var sig = [
             BrownNoise.ar(1) ,
-            VarSaw.ar(8) ,
-            BrownNoise.ar(1) ,
-            BrownNoise.ar(1) ,
+            WhiteNoise.ar(1) ,
+            PinkNoise.ar(1) ,
             WhiteNoise.ar(1) ,
             BrownNoise.ar(1) ,
             BrownNoise.ar(1) ,
             BrownNoise.ar(1) ,
         ];
         8.do{|i|
-            RecordBuf.ar(Mix(sig[i]),b.first.bufnum+1,loop:0);
+            RecordBuf.ar(Mix(sig[i]),b.first.bufnum+i,0,loop:0);
         };
         sig;
     };
@@ -37,16 +36,16 @@ b = Buffer.allocConsecutive(3,s,4096,1);
 (
     ~prga.ar(2);
     ~prga.clock = p.clock;
-    ~prga.quant=16;
+    ~prga.quant=4;
     ~prga.fadeTime=4;
     ~prga={
-        var mod = Duty.kr(32/[1,2,3]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
-        var sig = VOsc3.ar(LFSaw.ar(1/160/[1,2,3]).range(b.first.bufnum+0.01,b.last.bufnum-0.01),[67,65].midicps/mod,1/16,1/32);
+        var mod = Duty.kr(1/4/[1,2,3]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+        var sig = VOsc3.ar(LFTri.ar(4).exprange(b.first.bufnum+0.01,b.last.bufnum-0.01),10/mod,5,1/2);
         //sig = (Pulse.ar(8/[1,2,3,4]) * sig);
-        sig = RLPF.ar(sig,5000,0.2);
+        sig = BPF.ar(sig,1500/mod,LFSaw.ar(1/4/[1,2,4]).range(0.01,0.4));
         sig = Normalizer.ar(sig);
         sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
-        Splay.ar(sig,LFSaw.ar(1/4)**2,0.05,SinOsc.ar([1,2,3.01]));
+        Splay.ar(sig,LFSaw.ar(1/4)**2,0.15,SinOsc.ar(1/4/[1,2,3.01]));
     };
     ~prga.play;
 );
@@ -68,14 +67,14 @@ b = Buffer.allocConsecutive(3,s,4096,1);
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
-            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
+            1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
         ].rotate(3);
         var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
         var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,2.5],[3,-3]),imp * hit);
-        var sig = SinOsc.ar(40!2+(env**40*50),env**80*8pi);
+        var sig = SinOsc.ar(40!2+(env**40*500),env**80*8pi);
         sig = sig * env;
-        Splay.ar(sig,1,2);
+        Splay.ar(sig,1,0.8);
     };
     ~kick.play;
 );
