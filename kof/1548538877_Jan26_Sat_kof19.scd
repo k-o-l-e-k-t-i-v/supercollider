@@ -36,11 +36,14 @@ b.free;
 ~dusts.quant=4;
 ~dusts.fadeTime=4;
 ~dusts={
-  var f = [60,62,67].midicps  + SinOsc.kr([1,2.01,4.0201]);
-  var sig = Shaper.ar(b.bufnum,LFSaw.ar(f)/4+SinOsc.ar(f/2.01)/2+LFSaw.ar(~tempo/8));
-  sig = Resonz.ar(sig,f,LFNoise1.kr(~tempo/4/[2,3,4]).range(0.1,0.5));
+    var progression = 1;
+    var mid = Duty.kr([16,32,64]/~tempo/progression,0,Dseq([60,64,60,62,65,67,64,72].pyramid,inf));
+  var f = [mid[0],mid[1],mid[2]].midicps * 2 + SinOsc.kr([1,2.01,4.0201]);
+  var sig = Shaper.ar(b.bufnum,LFSaw.ar(f)/10+SinOsc.ar(f/2.01)/5+LFSaw.ar(~tempo/32/[1,2,4])) * LFTri.ar(~tempo/[16,32,64]*progression);
+  sig = MoogVCF.ar(sig,f,LFNoise1.kr(~tempo/4/[2,3,4]).range(0.1,0.5));
   sig = sig + Mix(LPF.ar(sig,f));
   sig = HPF.ar(sig,5);
+  sig = CompanderD.ar(sig,3/4,1/2,1);
   Splay.ar(sig,0.75,0.45);
 };
 ~dusts.play;
