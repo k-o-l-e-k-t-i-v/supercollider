@@ -10,8 +10,8 @@ p.push();
 (
 SynthDef(\kick,{|t=1.5|
     var env = EnvGen.ar(Env([0,1,0],[0.02,t/33]),doneAction:2);
-    var sig = SinOsc.ar(50!2,env**t*8pi)/4 + LFSaw.ar(49,0,env**0.2,mul:0.2) + ClipNoise.ar(env**40/4) * env;
-    sig = Resonz.ar(sig,1500,0.2);
+    var sig = SinOsc.ar(50!2,env**t*8pi)/4 + LFSaw.ar(49.9,0,env**0.92,mul:0.12) + ClipNoise.ar(env**t/8) * env;
+    sig = Resonz.ar(sig,LFSaw.ar(t/4).range(50,5000),0.12)+sig/2;
     Out.ar(0,sig);
 }).add;
 )
