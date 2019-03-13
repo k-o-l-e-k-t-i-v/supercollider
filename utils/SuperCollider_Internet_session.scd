@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////
 
 (
-s = Server.new(\remote , NetAddr("192.168.1.15",  57110 ) );
+s = Server.new(\remote , NetAddr("10.0.0.30",  57110 ) );
 s.options.protocol = \udp;
 // s.options.maxLogins = 10; // coment out this line if causing error
 s.options.initialNodeID = 1000;
@@ -27,6 +27,8 @@ s.sendBundle(0.2,[\notify,1]);
 s.makeWindow;
 )
 
+
+().play
 
 ////////////////////////////////////////////////
 // 2. open stream http://giss.tv:8000/kof.mp3 //

@@ -15,7 +15,6 @@ snippet synth
 
 	(
 	~$1.ar(2);
-	~$1.clock = p.clock;
 	~${1:}.quant=[16,0];
 	~$1.fadeTime=0.02;
 	~$1={
@@ -44,7 +43,6 @@ snippet simple
 
 	(
 	~$1.ar(2);
-	~$1.clock = p.clock;
 	~${1:}.quant=2;
 	~$1.fadeTime=4;
 	~$1={
@@ -324,9 +322,7 @@ snippet sync
 		//p.clock.tempo_(${1:120}/60);
 		p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
 		~tick.kr(1);
-		~tick.clock = p.clock;
 		~tick.quant = 16;
-		~counter.clock = p.clock;
 		~counter.quant = 16;
 		~counter = {PulseCount.kr(~tick.kr);};
 		~tick = { Impulse.kr( ~tempo * 4 ); };
@@ -355,7 +351,6 @@ snippet vosc
 	b = Buffer.allocConsecutive(3,s,4096,1);
 	(
 		~${1:}.ar(3);
-		~$1.clock = p.clock;
 		~$1.quant=4;
 		~$1.fadeTime=4;
 		~$1={
