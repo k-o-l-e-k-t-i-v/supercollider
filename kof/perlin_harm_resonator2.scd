@@ -1,6 +1,8 @@
 
 
 
+~tempo={121.5/60}
+
 // harm synth ///////////////////////////////////////
 
 (
@@ -30,10 +32,10 @@
     sig = CompanderD.ar(sig,3/4,1,1/10);
     sig = Limiter.ar(sig);
     //sig = sig * LFSaw.ar(speed);
-    Splay.ar(sig,0.75,0.85);
+    Splay.ar(sig,0.75,0.25);
   };
   ~harm.play;
-  ~harm[1] = \filter -> {|sig| DWGReverb.ar(LPF.ar(HPF.ar(sig,200),3500),[4020,4000])+sig;};
+  ~harm[1] = \filter -> {|sig| GVerb.ar(LPF.ar(HPF.ar(sig,200),3500),[90,100])+sig;};
 );
 ~harm.stop(4);
 ~harm.clear;

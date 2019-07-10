@@ -2,6 +2,8 @@
 p.push
 p.bpm(142.5/4)
 
+~tempo={125/60};
+
 (
 n = [
 "/home/kof/Downloads/sounds/63862__moppetron__stayingalive-tamburin.wav",
@@ -17,7 +19,7 @@ b = Buffer.read(s,n[0]);
 //////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
 {
   p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(120);};});
-}.fork;  
+}.fork;
 )
 
 (
@@ -43,12 +45,12 @@ b = Buffer.read(s,n[0]);
         var mod = 1;//[-1,0.25,-0.25,1/8,1/16];
         var spread = 0.0001;
         var pos = [0,0.5,0.25,0.75] * LFSaw.ar(~tempo/16*[1,2,3,4]);
-        //         |       |       |       |       |  
+        //         |       |       |       |       |
         var pat = [
-            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0, 
-            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0, 
-            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0, 
-            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1, 
+            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+            1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,
         ].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
@@ -77,9 +79,9 @@ b = Buffer.read(s,n[1]);
     ~sample_two.fadeTime=2.02;
     ~sample_two={
         var mod = (1) + (2**([1,3,5,7,11,12]/12)) / Duty.kr([1,2,3,4,5,6,7]*16/~tempo,0,Dseq([1,2,1.5,1.33333,4,8,16,32],inf));
-        var spread = 0.001;
-        var pos = 1/(1..8);
-        //         |       |       |       |       |  
+        var spread = 0.01;
+	var pos = 1/(1..8) + LFSaw.kr(1/40);
+        //         |       |       |       |       |
         var pat = [
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
             1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,
@@ -88,12 +90,12 @@ b = Buffer.read(s,n[1]);
         ].rotate(1);
         var imp = PulseDivider.kr(~tick.kr,[1,2,3,4,6,7,8]*16,~counter.kr);
         var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,4.15],[3,-3],curve:'exp'),imp * hit);
+        var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3],curve:'exp'),imp * hit);
         var sig = PlayBuf.ar(b.numChannels,b.bufnum,BufRateScale.kr(b.bufnum)*mod+(env*0.01),imp, (pos + BrownNoise.ar(1!8).range(spread * -1,spread)) * BufFrames.kr(b.bufnum),1);
 
         sig = sig * env;
         sig = CompanderD.ar(sig,3/4,1/3,1);
-        Splay.ar(sig.flat,0.5,0.005);
+        Splay.ar(sig.flat,0.5,0.5);
     };
     ~sample_two.play;
 );
@@ -113,7 +115,7 @@ b = Buffer.read(s,n[1]);
   sig = CompanderD.ar(sig,3/4,1/1.1,1/3);
   fx = LPF.ar(sig,lp);
   fx = HPF.ar(fx,hp);
-  fx = DWGReverbC1C3.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+	fx = GVerb.ar(fx,100,3);//NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
   sig = SelectX.ar(wet,[orig,fx]);
   sig = NumChannels.ar(sig,2);
   ReplaceOut.ar(0,sig);
