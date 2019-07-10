@@ -2,7 +2,9 @@
 
 
 p.push();
+p.bpm(88)
 s.latency=0.5;
+
 (
     ~sel1.mold(4);
     ~sel1.quant=4;
@@ -79,7 +81,7 @@ s.latency=0.5;
         sig = sig.scramble;
         sig = SelectX.ar(~sel3.kr*sig.size,sig);
         sig = CompanderD.ar(sig,3/4,1/2,1);
-        Splay.ar(sig,0.75,0.015);
+        Splay.ar(sig,0.75,0.15);
     };
     ~switcher.play;
 );

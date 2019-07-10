@@ -13,13 +13,13 @@
     var mod2 =Duty.kr((1..128).nthPrime*4/~tempo,0,Dseq( (2**(([0,5,7,12])/12) ),inf));
   var mod = Duty.kr((1..128).nthPrime*16/~tempo,0,Dseq([1,2,4,8],inf)) * mod2;
   var mel = Duty.kr((1..128).nthPrime*2/~tempo,0,Dseq([1,2,4,8,1.5,1.3333,1/2,1/4,1/8],inf));
-  //         |       |       |       |       |  
+  //         |       |       |       |       |
   var f = 432 * mod / ((((2..129).nthPrime)%((1..128).nthPrime))) / mel;//[150,133,200,1000];
-  var sig = SinOsc.ar(f,mul:1/((1..128).nthPrime**0.5)); 
+  var sig = SinOsc.ar(f,mul:1/((1..128).nthPrime**0.5));
   var env = (Decay.ar(Impulse.ar(4/(1..128).nthPrime*~tempo),0.12*((1..128).nthPrime**0.25)) );
   sig = sig * env;
   sig = CompanderD.ar(sig,3/4,1/3,1/2);
-  Splay.ar(sig,0.75,0.95);
+  Splay.ar(sig,0.75,0.15);
 };
 ~once.play;
 );

@@ -1,7 +1,8 @@
 
 p.push();
 p.bpm(60)
-s.latency = 0.3337;
+s.latency = 0.2;
+~tempo = {120/60*4}
 
 // one synth ///////////////////////////////////////
 
@@ -11,7 +12,7 @@ s.latency = 0.3337;
     ~one.quant=16;
     ~one.fadeTime=1.02;
     ~one={
-        var base = [48,60,63].midicps *.x [8,2,1];
+        var base = [48,60,65].midicps *.x [4,2,1];
         var t = LFTri.ar(base/[10,100,1000+(1..4)]) * 0.0002;
         var perl = Perlin3.ar(t[0],t[1],t).range(0,1);
         var cad = ~tempo/64/(1..4);
@@ -22,7 +23,7 @@ s.latency = 0.3337;
         sig = sig * (LFTri.ar(cad)**4).range(0,1);
         sig = sig + SinOsc.ar(f*[2,4,8],SinOsc.ar(f/4)*2pi,mul:[1,1/2,1/5]);
         sig = CompanderD.ar(sig,3/4,1/1.25,1) * (LFTri.ar(~tempo/[1,2,3,4]/16) ** 4);
-        Splay.ar(sig,SinOsc.ar(7.5,SinOsc.ar(~tempo/15)).range(0.1,0.9),0.5);
+        Splay.ar(sig,SinOsc.ar(7.5,SinOsc.ar(~tempo/15)).range(0.1,0.9),0.05);
     };
     ~one.play;
 );
@@ -45,7 +46,7 @@ s.latency = 0.3337;
         sig = CompanderD.ar(sig,3/4,1/1.1,1/3);
         fx = LPF.ar(sig,lp);
         fx = HPF.ar(fx,hp);
-        fx = DWGReverbC1C3.ar(NumChannels.ar(fx,2),size,1/len)/rev;
+	fx = GVerb.ar(sig,100)/rev;// DWGReverbC1C3.ar(NumChannels.ar(fx,2),size,1/len)/rev;
         wet = SinOsc.ar(~tempo/[8,7,6,3]).range(0,1);
         sig = SelectX.ar(wet,[orig,fx]);
         sig = NumChannels.ar(sig,2);
@@ -53,3 +54,9 @@ s.latency = 0.3337;
     };
 );
 p.moveNodeToTail(\master);
+
+
+DWGPlucked2
+
+
+

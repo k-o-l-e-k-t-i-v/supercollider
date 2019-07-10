@@ -24,7 +24,7 @@ p.gui;
     ~kick.quant=[16,0];
     ~kick.fadeTime=0.02;
     ~kick={
-        //  |       |       |       |       |  
+        //  |       |       |       |       |
         var pat = [
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
             1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
@@ -55,7 +55,7 @@ p.gui;
     ~hihat.quant=[16,0];
     ~hihat.fadeTime=0.02;
     ~hihat={
-        //  |       |       |       |       |  
+        //  |       |       |       |       |
         var pat = [
             1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,1,
             1,0,1,0, 1,0,1,0, 1,0,1,0, 0,1,1,1,
@@ -71,7 +71,7 @@ p.gui;
         sig = HPF.ar(sig,LFSaw.kr(~tempo/4/[1,2,3,4]).range(500,15000));
         sig = sig * env;
         sig = Compander.ar(sig,~kick.ar,LFNoise2.kr(1/4*~tempo!2).range(0.1,0.9),1,0.01);
-        Splay.ar(sig,0.65,0.75);
+        Splay.ar(sig,0.65,0.115);
     };
     ~hihat.play;
 );
