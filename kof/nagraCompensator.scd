@@ -12,7 +12,7 @@ p=ProxySpace.push(s);
     ~pilot.ar(1);
     ~pilot={
         var sig = SinOsc.ar( 13500 + ( SinOsc.ar( 50 , mul: 2700 ) ) ) ;
-        //sig = sig * SinOsc.ar(60);
+    //    sig = sig * SinOsc.ar(50);
         sig/16;
     };
    // ~pilot.play;
@@ -26,16 +26,15 @@ p=ProxySpace.push(s);
         var original = PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum),loop:1);
         var speed = 1;
         var nagraSync;
-        var sig = DC.ar(0);
+        var sig = original;
 
-        10.do{
+10.do{
           nagraSync = LPF.ar(sig,60) + HPF.ar(sig,10000);
           speed = sync - nagraSync;
-          sig = ((PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum) * (speed.lag(1/10)+1), loop:1 )));  
+          sig = ((PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum) * (speed.lag(1/2)+1), loop:1 )));  
       };
       
-
-        nagraSync = HPF.ar(original,10000);
+        //sig = sig - nagraSync;
         10.do{
           sig = LPF.ar(sig,10000);
           sig = LPF.ar(sig,10000);
@@ -46,6 +45,8 @@ p=ProxySpace.push(s);
         sig = LeakDC.ar(sig) ;
         //sig = Select.ar(LFSaw.ar(1).range(0,2),[original,sig]);
         //Splay.ar(sig);
+        //[nagraSync,sync];
+        //[sig,original];
         [sig,sig];
     };
     ~detect.play();
