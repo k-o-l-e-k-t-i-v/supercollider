@@ -9,11 +9,13 @@ b = Buffer.read(s,"/home/kof/Downloads/01-190704_1108.wav");
 p=ProxySpace.push(s);
 
 (
+    ~pilot.ar(1);
     ~pilot={
-        var sig = SinOsc.ar( SinOsc.ar( 13500 + ( SinOsc.ar( 50 , mul: 2700 ) ) )) ;
-        Normalizer.ar(sig) * 0.5;
+        var sig = SinOsc.ar( 13500 + ( SinOsc.ar( 50 , mul: 2700 ) ) ) ;
+        //sig = sig * SinOsc.ar(60);
+        sig/16;
     };
-    //~pilot.play;
+   // ~pilot.play;
 )
 
 (
@@ -27,19 +29,24 @@ p=ProxySpace.push(s);
         var sig = DC.ar(0);
 
         10.do{
-          nagraSync = (BPF.ar(sig,50) + HPF.ar(LPF.ar(sig,16000),10000));
-          speed = SinOsc.ar(5,sync-nagraSync*2pi)/20+1;
-          sig = PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum) * speed , loop:1 );
-        };
+          nagraSync = LPF.ar(sig,60) + HPF.ar(sig,10000);
+          speed = sync - nagraSync;
+          sig = ((PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum) * (speed.lag(1/10)+1), loop:1 )));  
+      };
+      
 
-        sig = sig - nagraSync;
+        nagraSync = HPF.ar(original,10000);
         10.do{
           sig = LPF.ar(sig,10000);
+          sig = LPF.ar(sig,10000);
           sig = HPF.ar(sig,60);
+          sig = sig * 1.1;
         };
+
         sig = LeakDC.ar(sig) ;
-        //sig = Select.ar(LFSaw.ar(1).range(0,3),[sig,original,~pilot.ar]);
-        Splay.ar(sig);
+        //sig = Select.ar(LFSaw.ar(1).range(0,2),[original,sig]);
+        //Splay.ar(sig);
+        [sig,sig];
     };
     ~detect.play();
 )
