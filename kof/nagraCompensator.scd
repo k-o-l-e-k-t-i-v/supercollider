@@ -2,7 +2,7 @@
 (
 s=Server.local;
 s.boot;
-b = Buffer.read(s,"/home/kof/Downloads/01-190704_1108.wav");
+b = Buffer.read(s,"/home/kof/Downloads/09K_2205_MR_zacatek.wav");
 )
 // remember to free the buffer later.
 
@@ -24,14 +24,16 @@ p=ProxySpace.push(s);
     ~detect={arg ammount=1.0, phase = 0.0;
         var sync = ~pilot.ar;
         var original = PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum),loop:1);
-        var speed = 1;
+        var speed = 0;
+        var smoothspeed = 0;
         var nagraSync;
         var sig = original;
 
 10.do{
           nagraSync = LPF.ar(sig,60) + HPF.ar(sig,10000);
           speed = sync - nagraSync;
-          sig = ((PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum) * (speed.lag(1/2)+1), loop:1 )));  
+          smoothspeed=smoothspeed+((speed-smoothspeed)/20.0);
+          sig = ((PlayBuf.ar(1, b.bufnum, BufRateScale.kr(b.bufnum) * (smoothspeed+1), loop:1 )));  
       };
       
         //sig = sig - nagraSync;
