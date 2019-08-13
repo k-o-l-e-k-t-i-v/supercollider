@@ -128,19 +128,40 @@ p.bpm(125)
 
 (
 ~one.ar(2);
-~one.quant=16;
+~one.quant=2;
+~one.fadeTime=4;
+~one={
+  var sig = Pulse.ar(4);
+  Splay.ar(sig,0.5,0.25);
+};
+~one.play;
+);
+~one.stop(4);
+~one.clear;
+~one.pause;
+~one.resume;
+
+
+
+
+// one synth ///////////////////////////////////////
+
+(
+~one.ar(2);
+~one.quant=[16,0];
 ~one.fadeTime=4;
 ~one={
     var mod2=  Duty.kr(16/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
-    var mod = [200,150,1000/1.5,1500*mod2]/mod2/Duty.kr([4,8,16,32]/~tempo,0,Dseq([1,2,1.5,1.33333],inf)) + SinOsc.ar([3,4,5]);
+    var mod = [25,150,100/1.5,150*mod2]/mod2/Duty.kr([4,8,16,32]/~tempo,0,Dseq([1,2,1.5,1.33333],inf)) + SinOsc.ar([3,4,5]);
   var sig = LFSaw.ar([[50,mod+0.01,mod],1/4,1/8]) * [LFSaw.ar(1/4/[1,2,3,4]).exprange(0.01,16),2pi,2pi];
   sig = Perlin3.ar(sig[0],sig[1].sin,sig[2].cos);
-  sig = LPF.ar(sig,500+LFSaw.ar(1/16/[1,7,9,17]).range(0,[1,2,3,4]*8000));
+  sig = LPF.ar(sig,500+LFSaw.ar(1/16/[1,2,9,4]).range(0,[1,2,3,4]*8000));
   sig = sig + HPF.ar(sig*Pulse.ar([4,3,2]),15000);
   sig = sig * LFTri.ar(~tempo/32/[1,2,3,4]);
   sig = LeakDC.ar(sig);
+  sig = sig * LFSaw.ar(~tempo/4/[1,2,3,4]);
   //sig = Compander.ar(sig,Pulse.ar(4/[1,2,3]),0.1,1,0.1);
-  Splay.ar(sig,0.95,0.05,SinOsc.ar(~tempo/[1,2,3]));
+  Splay.ar(sig,0.95,0.5,SinOsc.ar(~tempo/[1,2,3]));
 };
 ~one.play;
 );
@@ -198,6 +219,31 @@ p.moveNodeToTail(\master);
 ~kick.pause;
 ~kick.resume;
 
+
+(
+~rec={
+    var sig = WhiteNoise.ar(0.1)*Pulse.ar(4);
+    sig = 
+};
+
+)
+
+// one synth ///////////////////////////////////////
+
+(
+~one.ar(2);
+~one.quant=2;
+~one.fadeTime=4;
+~one={
+  var sig = LFSaw.ar();
+  Splay.ar(sig,0.5,0.25);
+};
+~one.play;
+);
+~one.stop(4);
+~one.clear;
+~one.pause;
+~one.resume;
 
 
 (

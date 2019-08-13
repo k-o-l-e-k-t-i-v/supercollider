@@ -68,6 +68,28 @@
 ~two.resume;
 
 
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.quant = 16;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
+
+(
+  s.latency=1;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.quant = 16;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
+
 // three synth ///////////////////////////////////////
 
 (
@@ -117,6 +139,8 @@
 ~four.pause;
 ~four.resume;
 
+p.gui;
+
 // oo synth ///////////////////////////////////////
 
 (
@@ -140,6 +164,17 @@
 ~oo.clear;
 ~oo.pause;
 ~oo.resume;
+
+(
+  s.latency=0.5;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.quant = 16;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
 
 // bbas synth ///////////////////////////////////////
 
@@ -166,6 +201,17 @@
 ~bbas.clear;
 ~bbas.pause;
 ~bbas.resume;
+
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.quant = 16;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
 
 // aa synth ///////////////////////////////////////
 
