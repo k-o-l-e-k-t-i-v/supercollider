@@ -1,0 +1,748 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE CARLA-PROJECT>
+<CARLA-PROJECT VERSION='2.0'>
+ <EngineSettings>
+  <ForceStereo>true</ForceStereo>
+  <PreferPluginBridges>false</PreferPluginBridges>
+  <PreferUiBridges>true</PreferUiBridges>
+  <UIsAlwaysOnTop>false</UIsAlwaysOnTop>
+  <MaxParameters>200</MaxParameters>
+  <UIBridgesTimeout>4000</UIBridgesTimeout>
+ </EngineSettings>
+
+ <!-- Calf Multiband Compressor -->
+ <Plugin>
+  <Info>
+   <Type>LV2</Type>
+   <Name>Calf Multiband Compressor</Name>
+   <URI>http://calf.sourceforge.net/plugins/MultibandCompressor</URI>
+  </Info>
+
+  <Data>
+   <Active>Yes</Active>
+   <ControlChannel>1</ControlChannel>
+   <Options>0x0</Options>
+
+   <Parameter>
+    <Index>0</Index>
+    <Name>Bypass</Name>
+    <Symbol>bypass</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>1</Index>
+    <Name>Input Gain</Name>
+    <Symbol>level_in</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>2</Index>
+    <Name>Output Gain</Name>
+    <Symbol>level_out</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>11</Index>
+    <Name>Split 1/2</Name>
+    <Symbol>freq0</Symbol>
+    <Value>100.881576538086</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>12</Index>
+    <Name>Split 2/3</Name>
+    <Symbol>freq1</Symbol>
+    <Value>724.981994628906</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>13</Index>
+    <Name>Split 3/4</Name>
+    <Symbol>freq2</Symbol>
+    <Value>3885.64672851562</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>14</Index>
+    <Name>Filter Mode</Name>
+    <Symbol>mode</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>15</Index>
+    <Name>Threshold 1</Name>
+    <Symbol>threshold0</Symbol>
+    <Value>0.25</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>16</Index>
+    <Name>Ratio 1</Name>
+    <Symbol>ratio0</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>17</Index>
+    <Name>Attack 1</Name>
+    <Symbol>attack0</Symbol>
+    <Value>150</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>18</Index>
+    <Name>Release 1</Name>
+    <Symbol>release0</Symbol>
+    <Value>300</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>19</Index>
+    <Name>Makeup 1</Name>
+    <Symbol>makeup0</Symbol>
+    <Value>1.75078296661377</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>20</Index>
+    <Name>Knee 1</Name>
+    <Symbol>knee0</Symbol>
+    <Value>2.82842993736267</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>21</Index>
+    <Name>Detection 1</Name>
+    <Symbol>detection0</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>24</Index>
+    <Name>Bypass 1</Name>
+    <Symbol>bypass0</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>25</Index>
+    <Name>Solo 1</Name>
+    <Symbol>solo0</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>26</Index>
+    <Name>Threshold 2</Name>
+    <Symbol>threshold1</Symbol>
+    <Value>0.25</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>27</Index>
+    <Name>Ratio 2</Name>
+    <Symbol>ratio1</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>28</Index>
+    <Name>Attack 2</Name>
+    <Symbol>attack1</Symbol>
+    <Value>150</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>29</Index>
+    <Name>Release 2</Name>
+    <Symbol>release1</Symbol>
+    <Value>300</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>30</Index>
+    <Name>Makeup 2</Name>
+    <Symbol>makeup1</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>31</Index>
+    <Name>Knee 2</Name>
+    <Symbol>knee1</Symbol>
+    <Value>4.07839107513428</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>32</Index>
+    <Name>Detection 2</Name>
+    <Symbol>detection1</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>35</Index>
+    <Name>Bypass 2</Name>
+    <Symbol>bypass1</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>36</Index>
+    <Name>Solo 2</Name>
+    <Symbol>solo1</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>37</Index>
+    <Name>Threshold 3</Name>
+    <Symbol>threshold2</Symbol>
+    <Value>0.25</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>38</Index>
+    <Name>Ratio 3</Name>
+    <Symbol>ratio2</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>39</Index>
+    <Name>Attack 3</Name>
+    <Symbol>attack2</Symbol>
+    <Value>150</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>40</Index>
+    <Name>Release 3</Name>
+    <Symbol>release2</Symbol>
+    <Value>300</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>41</Index>
+    <Name>Makeup 3</Name>
+    <Symbol>makeup2</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>42</Index>
+    <Name>Knee 3</Name>
+    <Symbol>knee2</Symbol>
+    <Value>2.82842993736267</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>43</Index>
+    <Name>Detection 3</Name>
+    <Symbol>detection2</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>46</Index>
+    <Name>Bypass 3</Name>
+    <Symbol>bypass2</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>47</Index>
+    <Name>Solo 3</Name>
+    <Symbol>solo2</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>48</Index>
+    <Name>Threshold 4</Name>
+    <Symbol>threshold3</Symbol>
+    <Value>0.25</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>49</Index>
+    <Name>Ratio 4</Name>
+    <Symbol>ratio3</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>50</Index>
+    <Name>Attack 4</Name>
+    <Symbol>attack3</Symbol>
+    <Value>150</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>51</Index>
+    <Name>Release 4</Name>
+    <Symbol>release3</Symbol>
+    <Value>300</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>52</Index>
+    <Name>Makeup 4</Name>
+    <Symbol>makeup3</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>53</Index>
+    <Name>Knee 4</Name>
+    <Symbol>knee3</Symbol>
+    <Value>2.82842993736267</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>54</Index>
+    <Name>Detection 4</Name>
+    <Symbol>detection3</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>57</Index>
+    <Name>Bypass 4</Name>
+    <Symbol>bypass3</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>58</Index>
+    <Name>Solo 4</Name>
+    <Symbol>solo3</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>59</Index>
+    <Name>Notebook</Name>
+    <Symbol>notebook</Symbol>
+    <Value>3</Value>
+   </Parameter>
+
+   <CustomData>
+    <Type>http://kxstudio.sf.net/ns/carla/property</Type>
+    <Key>CarlaSkinIsCompacted</Key>
+    <Value>false</Value>
+   </CustomData>
+  </Data>
+ </Plugin>
+
+ <!-- Calf Limiter -->
+ <Plugin>
+  <Info>
+   <Type>LV2</Type>
+   <Name>Calf Limiter</Name>
+   <URI>http://calf.sourceforge.net/plugins/Limiter</URI>
+  </Info>
+
+  <Data>
+   <Active>Yes</Active>
+   <ControlChannel>1</ControlChannel>
+   <Options>0x0</Options>
+
+   <Parameter>
+    <Index>0</Index>
+    <Name>Bypass</Name>
+    <Symbol>bypass</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>1</Index>
+    <Name>Input Gain</Name>
+    <Symbol>level_in</Symbol>
+    <Value>0.994585931301117</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>2</Index>
+    <Name>Output Gain</Name>
+    <Symbol>level_out</Symbol>
+    <Value>0.994585931301117</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>11</Index>
+    <Name>Limit</Name>
+    <Symbol>limit</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>12</Index>
+    <Name>Lookahead</Name>
+    <Symbol>attack</Symbol>
+    <Value>4.99950981140137</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>13</Index>
+    <Name>Release</Name>
+    <Symbol>release</Symbol>
+    <Value>49.951000213623</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>15</Index>
+    <Name>ASC</Name>
+    <Symbol>asc</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>17</Index>
+    <Name>ASC Level</Name>
+    <Symbol>asc_coeff</Symbol>
+    <Value>0.5</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>18</Index>
+    <Name>Oversampling</Name>
+    <Symbol>oversampling</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <CustomData>
+    <Type>http://kxstudio.sf.net/ns/carla/property</Type>
+    <Key>CarlaSkinIsCompacted</Key>
+    <Value>false</Value>
+   </CustomData>
+  </Data>
+ </Plugin>
+
+ <!-- Calf Reverb -->
+ <Plugin>
+  <Info>
+   <Type>LV2</Type>
+   <Name>Calf Reverb</Name>
+   <URI>http://calf.sourceforge.net/plugins/Reverb</URI>
+  </Info>
+
+  <Data>
+   <Active>Yes</Active>
+   <ControlChannel>1</ControlChannel>
+   <Options>0x0</Options>
+
+   <Parameter>
+    <Index>3</Index>
+    <Name>Decay time</Name>
+    <Symbol>decay_time</Symbol>
+    <Value>1.5</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>4</Index>
+    <Name>High Frq Damp</Name>
+    <Symbol>hf_damp</Symbol>
+    <Value>5000</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>5</Index>
+    <Name>Room size</Name>
+    <Symbol>room_size</Symbol>
+    <Value>2</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>6</Index>
+    <Name>Diffusion</Name>
+    <Symbol>diffusion</Symbol>
+    <Value>0.5</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>7</Index>
+    <Name>Wet Amount</Name>
+    <Symbol>amount</Symbol>
+    <Value>0.395020991563797</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>8</Index>
+    <Name>Dry Amount</Name>
+    <Symbol>dry</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>9</Index>
+    <Name>Pre Delay</Name>
+    <Symbol>predelay</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>10</Index>
+    <Name>Bass Cut</Name>
+    <Symbol>bass_cut</Symbol>
+    <Value>300</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>11</Index>
+    <Name>Treble Cut</Name>
+    <Symbol>treble_cut</Symbol>
+    <Value>5000</Value>
+   </Parameter>
+
+   <CustomData>
+    <Type>http://kxstudio.sf.net/ns/carla/property</Type>
+    <Key>CarlaSkinIsCompacted</Key>
+    <Value>false</Value>
+   </CustomData>
+  </Data>
+ </Plugin>
+
+ <!-- KlangFalter -->
+ <Plugin>
+  <Info>
+   <Type>LV2</Type>
+   <Name>KlangFalter (2)</Name>
+   <URI>https://github.com/HiFi-LoFi/KlangFalter</URI>
+  </Info>
+
+  <Data>
+   <Active>Yes</Active>
+   <ControlChannel>1</ControlChannel>
+   <Options>0x1</Options>
+
+   <Parameter>
+    <Index>2</Index>
+    <Name>Wet On</Name>
+    <Symbol>wet_on</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>3</Index>
+    <Name>Wet</Name>
+    <Symbol>wet</Symbol>
+    <Value>0.67806351184845</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>4</Index>
+    <Name>Dry On</Name>
+    <Symbol>dry_on</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>5</Index>
+    <Name>Dry</Name>
+    <Symbol>dry</Symbol>
+    <Value>0.833333015441895</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>6</Index>
+    <Name>EQ Low Type</Name>
+    <Symbol>eq_low_type</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>7</Index>
+    <Name>EQ Low Cut Freq</Name>
+    <Symbol>eq_low_cut_freq</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>8</Index>
+    <Name>EQ Low Shelf Freq</Name>
+    <Symbol>eq_low_shelf_freq</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>9</Index>
+    <Name>EQ Low Shelf Gain</Name>
+    <Symbol>eq_low_shelf_gain</Symbol>
+    <Value>0.5</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>10</Index>
+    <Name>EQ High Type</Name>
+    <Symbol>eq_high_type</Symbol>
+    <Value>0</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>11</Index>
+    <Name>EQ High Cut Freq</Name>
+    <Symbol>eq_high_cut_freq</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>12</Index>
+    <Name>EQ High Shelf Freq</Name>
+    <Symbol>eq_high_shelf_freq</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>13</Index>
+    <Name>EQ High Shelf Gain</Name>
+    <Symbol>eq_high_shelf_gain</Symbol>
+    <Value>0.5</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>14</Index>
+    <Name>Stereo Width</Name>
+    <Symbol>stereo_width</Symbol>
+    <Value>0.100000001490116</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>15</Index>
+    <Name>Autogain On</Name>
+    <Symbol>autogain_on</Symbol>
+    <Value>1</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>16</Index>
+    <Name>Autogain</Name>
+    <Symbol>autogain</Symbol>
+    <Value>0.833333015441895</Value>
+   </Parameter>
+
+   <CustomData>
+    <Type>http://kxstudio.sf.net/ns/carla/property</Type>
+    <Key>CarlaSkinIsCompacted</Key>
+    <Value>false</Value>
+   </CustomData>
+
+   <CustomData>
+    <Type>http://lv2plug.in/ns/ext/atom#Chunk</Type>
+    <Key>urn:juce:stateBinary</Key>
+    <Value>
+VkMyIUsDAAA8Q29udm9sdXRpb24gcGx1Z2luVmVyc2lvbj0iMjAxMy4wOC4zMSIgd2V0T249IjEiIHdldERlY2liZWxzPSItMTguNjMyMzc3NjI0NTExNzE4NzUiIGRyeU9uPSIxIiBkcnlEZWNpYmVscz0iLTMuODE0Njk3MjY1NjI1ZS0wNSIgYXV0b0dhaW5Pbj0iMSIgZXFMb3dUeXBlPSJDdXQiIGVxTG93Q3V0RnJlcT0iMCIgZXFMb3dTaGVsZkZyZXE9IjIwIiBlcUxvd1NoZWxmRGVjaWJlbHM9IjAiIGVxSGlnaFR5cGU9IkN1dCIgZXFIaWdoQ3V0RnJlcT0iMjAwMDAiIGVxSGlnaFNoZWxmRnJlcT0iMjAwMDAiIGVxSGlnaFNoZWxmRGVjaWJlbHM9IjAiIGlyQmVnaW49IjAiIGlyRW5kPSIxIiBzdHJldGNoPSIxIiBwcmVkZWxheU1zPSIwIiBhdHRhY2tMZW5ndGg9IjAiIGF0dGFja1NoYXBlPSIwIiBkZWNheVNoYXBlPSIwIiBzdGVyZW9XaWR0aD0iMSIgcmV2ZXJzZT0iMCI+PEltcHVsc2VSZXNwb25zZSBpbnB1dD0iMCIgb3V0cHV0PSIwIiBmaWxlPSIxIEhhbGxzIDA3IExhcmdlICZhbXA7IERhcmsgUXVhZC53YXYiIGZpbGVDaGFubmVsPSIwIi8+PEltcHVsc2VSZXNwb25zZSBpbnB1dD0iMCIgb3V0cHV0PSIxIiBmaWxlPSIxIEhhbGxzIDA3IExhcmdlICZhbXA7IERhcmsgUXVhZC53YXYiIGZpbGVDaGFubmVsPSIxIi8+PEltcHVsc2VSZXNwb25zZSBpbnB1dD0iMSIgb3V0cHV0PSIwIiBmaWxlPSIxIEhhbGxzIDA3IExhcmdlICZhbXA7IERhcmsgUXVhZC53YXYiIGZpbGVDaGFubmVsPSIyIi8+PEltcHVsc2VSZXNwb25zZSBpbnB1dD0iMSIgb3V0cHV0PSIxIiBmaWxlPSIxIEhhbGxzIDA3IExhcmdlICZhbXA7IERhcmsgUXVhZC53YXYiIGZpbGVDaGFubmVsPSIzIi8+PC9Db252b2x1dGlvbj4A
+    </Value>
+   </CustomData>
+  </Data>
+ </Plugin>
+
+ <!-- 3 Band EQ -->
+ <Plugin>
+  <Info>
+   <Type>INTERNAL</Type>
+   <Name>3 Band EQ</Name>
+   <Label>3bandeq</Label>
+  </Info>
+
+  <Data>
+   <Active>Yes</Active>
+   <ControlChannel>1</ControlChannel>
+   <Options>0x0</Options>
+
+   <Parameter>
+    <Index>0</Index>
+    <Name>Low</Name>
+    <Value>-0.757892608642578</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>1</Index>
+    <Name>Mid</Name>
+    <Value>-7.07368469238281</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>2</Index>
+    <Name>High</Name>
+    <Value>1.7684211730957</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>3</Index>
+    <Name>Master</Name>
+    <Value>1.7684211730957</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>4</Index>
+    <Name>Low-Mid Freq</Name>
+    <Value>225</Value>
+   </Parameter>
+
+   <Parameter>
+    <Index>5</Index>
+    <Name>Mid-High Freq</Name>
+    <Value>14920</Value>
+   </Parameter>
+
+   <CurrentMidiBank>1</CurrentMidiBank>
+   <CurrentMidiProgram>1</CurrentMidiProgram>
+  </Data>
+ </Plugin>
+
+ <ExternalPatchbay>
+  <Connection>
+   <Source>system:capture_1</Source>
+   <Target>PulseAudio JACK Source:front-left</Target>
+  </Connection>
+  <Connection>
+   <Source>system:capture_1</Source>
+   <Target>SuperCollider:in_1</Target>
+  </Connection>
+  <Connection>
+   <Source>system:capture_2</Source>
+   <Target>PulseAudio JACK Source:front-right</Target>
+  </Connection>
+  <Connection>
+   <Source>system:capture_2</Source>
+   <Target>SuperCollider:in_2</Target>
+  </Connection>
+  <Connection>
+   <Source>PulseAudio JACK Sink:front-left</Source>
+   <Target>system:playback_1</Target>
+  </Connection>
+  <Connection>
+   <Source>PulseAudio JACK Sink:front-right</Source>
+   <Target>system:playback_2</Target>
+  </Connection>
+  <Connection>
+   <Source>PulseAudio JACK Sink:rear-left</Source>
+   <Target>system:playback_3</Target>
+  </Connection>
+  <Connection>
+   <Source>PulseAudio JACK Sink:rear-right</Source>
+   <Target>system:playback_4</Target>
+  </Connection>
+  <Connection>
+   <Source>SuperCollider:out_1</Source>
+   <Target>Carla:audio-in1</Target>
+  </Connection>
+  <Connection>
+   <Source>SuperCollider:out_2</Source>
+   <Target>Carla:audio-in2</Target>
+  </Connection>
+  <Connection>
+   <Source>Carla:audio-out1</Source>
+   <Target>system:playback_1</Target>
+  </Connection>
+  <Connection>
+   <Source>Carla:audio-out2</Source>
+   <Target>system:playback_2</Target>
+  </Connection>
+ </ExternalPatchbay>
+</CARLA-PROJECT>
