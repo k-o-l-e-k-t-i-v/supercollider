@@ -3,7 +3,7 @@ s.reboot;
 p.push()
 
 
-p.bpm(121)
+p.bpm(121.5)
 
 // per synth ///////////////////////////////////////
 
@@ -12,10 +12,10 @@ p.bpm(121)
 ~per.quant=4;
 ~per.fadeTime=0.1;
 ~per={
-    var detune = SinOsc.ar(~tempo/32/[1,1.01,1.0001,1.00001])/16;
-    var cc = SinOsc.ar(~tempo.kr/[4,16]/16,add:~tempo.kr,mul:detune);
-    var f = [64,65].midicps + (cc/10000.0);
-    var t = SinOsc.ar([cc[1],cc[0],f/2]);
+    var detune = SinOsc.ar(~tempo/32/[1,1.01,1.0001,1.00001])/32;
+    var cc = SinOsc.ar(~tempo.kr/[8,16]/160,add:~tempo.kr/16,mul:detune);
+    var f = [60,65,53].midicps + (cc/1000.0);
+    var t = SinOsc.ar([cc[1],cc[0],f]) / 2 + 1;
     var prl = Perlin3.ar(t[0],t[1],t[2]);
     prl;
 };
@@ -34,7 +34,7 @@ p.bpm(121)
 ~one.fadeTime=4;
 ~one={
     
-  var sig = SinOsc.ar(~tempo/([1,2,4,8,16,32]),~per.ar*2pi);
+  var sig = SinOsc.ar(~tempo/160/([1,2,4,8,16,32]),~per.ar*2pi);
   sig = LeakDC.ar(sig);
   Splay.ar(sig,0.5,0.25);
 };

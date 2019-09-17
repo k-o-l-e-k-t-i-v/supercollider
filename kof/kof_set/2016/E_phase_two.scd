@@ -1,4 +1,16 @@
 
+
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.quant = 16;
+  ~counter.quant = 16;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
+
 p.clock.tempo(127/60);
 
 p.makeTempoClock;
@@ -270,7 +282,7 @@ p.arProxyNames;
     ~menavka_deep_mod.ar(2);
     ~menavka_deep_mod.clock = p.clock;
     ~menavka_deep_mod.quant=[16];
-    ~menavka_deep_mod.fadeTime=16;
+    ~menavka_deep_mod.fadeTime=1;
     ~menavka_deep_mod={
         var mal = TWChoose.kr(Impulse.kr(~tempo/8/[1,2,3,4]),[4,2,8,1],[4,0.5,0.3,0.1],1);
         var basemod = TWChoose.kr(Impulse.kr(~tempo/2/[1,1.3333,1.5,2]),[1,2,4,8],[4,0.5,0.3,0.1],1);
@@ -318,7 +330,7 @@ p.arProxyNames;
         Splay.ar(sig,0.85,0.155,LFPar.kr(~tempo/1.1,mul:0.2));
     };
     ~menavka.play;
-    ~menavka[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
+    ~menavka[1] = \filter -> {|sig| DWGReverbC1C3.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
 );
 ~menavka.stop(4);
 ~menavka.clear(20);
@@ -365,7 +377,7 @@ p.arProxyNames;
         Splay.ar(sig,0.65,0.15);
     };
     ~flute3.play;
-    ~flute3[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
+    ~flute3[1] = \filter -> {|sig| DWGReverbC1C3.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/5)};
 );
 ~flute3.stop(30);
 ~flute3.clear(5);
@@ -403,7 +415,7 @@ p.arProxyNames;
         Splay.ar(sig,0.35,0.15);
     };
     ~flute2.play;
-    ~flute2[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/2)};
+    ~flute2[1] = \filter -> {|sig| DWGReverbC1C3.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/2)};
 );
 ~flute2.stop(30);
 ~flute2.clear(20);
@@ -434,7 +446,7 @@ p.arProxyNames;
         Splay.ar(sig,0.35,0.175);
     };
     ~flute1.play;
-    ~flute1[1] = \filter -> {|sig| DWGReverb.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/2)};
+    ~flute1[1] = \filter -> {|sig| DWGReverbC1C3.ar(HPF.ar(LPF.ar(sig,3500),150),[4020,4000],1/2)};
 );
 ~flute1.stop(30);
 ~flute1.clear(20);
