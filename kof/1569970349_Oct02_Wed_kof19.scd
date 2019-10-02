@@ -20,7 +20,7 @@ p.bpm(120/0.864/1.5)
     ~one.quant=4;
     ~one.fadeTime=4;
     ~one={
-        var mod2 = Duty.kr(16/~tempo,0,Dseq([1,2,1.5,1.25],inf)).lag(1/12);
+        var mod2 = Duty.kr(Dseq([16,8,16,8],inf)/~tempo,0,Dseq([1,2,1.5,1.25],inf)).lag(1/12);
         var mod = Duty.kr([1/4,1/2,4,8,16,32]/~tempo,0,Dseq([1,2,4,1.5,1.25,8,1.5,2,16,1.333334,4,15/8],inf)).lag(1/120);
         var base = [60,48,72].midicps*2*mod2 + SinOsc.kr(~tempo/8/[1,2,3,4,5,6],mul:0.5);
         var sig = LFPulse.ar(base[0,1,2]/0.864/mod) * LFTri.ar(~tempo/[4,16,32]);
@@ -32,12 +32,12 @@ p.bpm(120/0.864/1.5)
         sig = (Perlin3.ar(sig/8+1,sig/4+1,LFTri.ar(~tempo/64/[1,2,3])*4) * LFTri.ar(~tempo/[4,5,6]));
         sig = LeakDC.ar(sig);
         sig = BPF.ar(sig,base/0.864/mod*[1,2,1/2],LFTri.ar(~tempo/[1,2,3,4,5,6]).range(0.01,0.8)**1.5);
-        //sig = CombL.ar(sig,~tempo/[4,8,16],~tempo/[4,8,16],~tempo);
+        //sig = CombL.ar(sig,~tempo*[4,8,16],~tempo*[4,8,16],~tempo);
         sig = AllpassN.ar(sig,1/~tempo,1/~tempo/2,1/~tempo);
 
         sig = Splay.ar(sig,0.75,0.05,SinOsc.kr(~tempo)/4);
         sig = CompanderD.ar(sig,1/2,1/2,1);
-        sig = DelayN.ar(sig,[0,phase]/base*mod,[0,phase]/base*mod);
+        sig = DelayN.ar(sig,[0,SinOsc.kr(~tempo/16).range(phase/2,phase*2)]/base*mod,[0,SinOsc.kr(~tempo/16).range(phase/2,phase*2)]/base*mod);
         sig;
     };
     ~one.play;
