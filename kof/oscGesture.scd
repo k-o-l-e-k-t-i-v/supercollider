@@ -50,7 +50,7 @@ p.push;
         // sig = CombN.ar(sig,1,1/4,1);
         sig = LeakDC.ar(sig);
         //sig = GVerb.ar(sig,80)/9+sig;
-        Splay.ar(sig,0.05,0.75,~rot);
+        Splay.ar(sig,0.05,0.5,~rot);
     };
     ~drone.play;
 );
@@ -60,6 +60,26 @@ p.push;
 ~drone.resume;
 
 
+
+(
+  ~master.quant=2;
+  ~master.play;
+  ~master.fadeTime = 0.01;
+  ~master = {|wet=0.05,lp=3500,hp=250,len=10,rev = 3|
+  var sig = In.ar([0,1]);
+  var orig = sig;
+  var fx;
+  //fx = Limiter.ar(sig,0.95);
+  sig = CompanderD.ar(sig,3/4,1/1.1,1/3);
+  fx = LPF.ar(sig,lp);
+  fx = HPF.ar(fx,hp);
+  fx = DWGReverbC1C3.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+  sig = SelectX.ar(wet,[orig,fx]);
+  sig = NumChannels.ar(sig,2);
+  ReplaceOut.ar(0,sig);
+  };
+);
+p.moveNodeToTail(\master);
 (
     {
         var changingSignal = LFNoise0.ar(1000);
