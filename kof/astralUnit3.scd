@@ -19,7 +19,7 @@ p.bpm(240*m);
         fx = LPF.ar(sig,lp);
         fx = HPF.ar(fx,hp);
         sig = SelectX.ar(wet,[orig,fx]);
-       // sig = sig;
+        // sig = sig;
         ReplaceOut.ar(0,sig);
     };
 );
@@ -61,17 +61,23 @@ s.scope
 // two synth ///////////////////////////////////////
 
 (
-~two.ar(6);
-~two.mold(6);
-~two.quant=2;
-~two.fadeTime=4;
-~two={
-  var sig = SoundIn.ar(0);
-  var note = [60,65,67,55,57,59].midicps/2;
-  sig = Perlin3.ar(LFSaw.ar(note,mul:2pi).cos+1/100,LFSaw.ar(note,mul:2pi).sin+1/100,sig+1) * Amplitude.ar(sig,0.02,1/15);
-  Splay.ar(sig,0.95,0.5);
-};
-~two.play;
+    ~two.ar(6);
+    ~two.mold(6);
+    ~two.quant=0;
+    ~two.fadeTime=0.4;
+    ~two={
+        var sig = SoundIn.ar([0,1,2,3,4,5]);
+        var mod = [1,2,4/3,1/2];
+        var note = [60,65,67,72,48,36].midicps*mod;
+        var env = Amplitude.kr(sig,0.05,1/15);
+        sig = Perlin3.ar(LFSaw.ar(note,mul:2pi).cos+1/100,LFSaw.ar(note,mul:2pi).sin+1/100,sig+1);
+        sig = CompanderD.ar(sig,1/2,1/2,2) * 1.5;
+        sig = CombL.ar(sig,1/12,1/12,1);
+        sig = LPF.ar(sig,500) + HPF.ar(sig * env,500);
+        //Splay.ar(sig,0.95,0.5);
+        sig;
+    };
+    ~two.play;
 );
 ~two.stop(4);
 ~two.clear;
