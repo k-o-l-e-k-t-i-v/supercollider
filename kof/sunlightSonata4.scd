@@ -4,14 +4,15 @@ s.latency = 0.2;
 // message synth ///////////////////////////////////////
 
 (
-~message.ar(2);
-~message.clock = p.clock;
-~message.quant=2;
+~message.ar(6);
+//~message.clock = p.clock;
+~message.quant=0;
 ~message.fadeTime=0.2;
 ~message={
 
 var mod = Duty.ar(16*(1..17),0,Dseq(1/[1,2,4,8],inf));
-  var carr = 4320;//1/[4,1/43.2/4,1/4.32]*mod;
+var in = SoundIn.ar(0);  
+var carr = 4320;//1/[4,1/43.2/4,1/4.32]*mod;
   var t = SinOsc.ar(carr/((1..17).reciprocal+1)) * LFTri.ar(1/24000/(7..24).nthPrime,mul:4);
   var a = Perlin3.ar(t[0],t[1],t[2]/[1,2,3]).range(0,1);
   var f = Perlin3.ar(t[3],t[4],t[5]/[1,2,3]).exprange(43.2/1.01,432*1.01)*[1]/4/mod;
@@ -19,7 +20,7 @@ var mod = Duty.ar(16*(1..17),0,Dseq(1/[1,2,4,8],inf));
   var pan = Perlin3.ar(t[9],t[10],t[11]/[1,2,3]).range(-1,1);
   var cad = Perlin3.ar(t[12],t[13],t[14]/[1,2,3]).exprange(1/16,32).round(1/4/[1,2,3,4]);
   var sig = SinOsc.ar(f,phase:p,mul:a) * Pulse.ar(cad/(1..17).nthPrime);
-  var magic = Perlin3.ar(t[0],t,SinOsc.ar(f/[8.00001,1/4.001,1.501]))/16;
+  var magic = Perlin3.ar(in,t,SinOsc.ar(f/[8.00001,1/4.001,1.501]))/16;
   //sig = sig * Pulse.ar(cad/(7..24).nthPrime);
   //sig = CombN.ar(sig,1/f,4/f,3);
   sig = LeakDC.ar(sig);
@@ -32,7 +33,7 @@ var mod = Duty.ar(16*(1..17),0,Dseq(1/[1,2,4,8],inf));
   sig = CompanderD.ar(sig + SinOsc.ar(f/8-0.001,phase:p,mul:a),3/4,1/2,1) + SinOsc.ar(f/[1/2,1/4]-0.01,phase:p,mul:0.2*a) * SinOsc.kr(f/160/(1..17),phase:p,mul:a)+ LeakDC.ar(magic*p) ;
  // sig = Compander.ar(sig ,Pulse.ar(1/2),0.1,1,LFNoise1.kr(1/32!16).range(1/100,3/4),LFNoise1.kr(1/32!16).range(1/100,3/4)) + (SinOsc.ar([50,60],Pulse.ar(1/2)*0.25pi,mul:Pulse.ar(1/2),mul:0.12) * LFTri.kr(1/120));
   sig = Limiter.ar(sig,0.25) ;
-  Splay.ar(sig,0.5,0.25,pan);
+  Splay.ar(sig,0.5,0.5,pan);
 };
 ~message.play;
 );
