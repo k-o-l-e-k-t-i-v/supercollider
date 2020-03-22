@@ -1,5 +1,4 @@
 
-p.push
 
 (
   //s.latency=0.2;
@@ -11,7 +10,8 @@ p.push
   ~counter = {PulseCount.kr(~tick.kr);};
   ~tick = { Impulse.kr( ~tempo * 4 ); };
 );
-
+p.push();
+p.bpm(127);
 p.clock.tempo(127/60);
 
 p.makeTempoClock;
@@ -54,9 +54,9 @@ p.makeTempoClock;
         //fx = Limiter.ar(sig,0.95);
 
         //sig = CombN.ar(sig,1/50,1/50,1);
-        low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/4!2*~tempo).range(100,800)),9/10,1,1/2);
-        mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/8!2*~tempo).range(500,4500),1/2),9/10,1,1/2);
-        high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/16!2*~tempo).range(3000,10000)),9/10,1,1/2);
+        low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/4!2*~tempo).range(100,800)),7/10,1/2,1);
+        mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/8!2*~tempo).range(500,4500),1/2),7/10,1/2,1);
+        high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/16!2*~tempo).range(3000,10000)),7/10,1/2,1);
         sig = CompanderD.ar((high+mid+low).flat,9/10,1,1/1.2); 
         //sig = Compander.ar(sig,3/4,1/2,1/3);
         orig = sig;
@@ -64,7 +64,7 @@ p.makeTempoClock;
         fx = LPF.ar(fx,lp);
         fx = HPF.ar(fx,hp);
         fx = HPF.ar(fx,hp);
-        fx = DWGReverb.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+        fx = DWGReverbC1C3.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
         sig = SelectX.ar(wet,[orig,fx]);
         sig = NumChannels.ar(sig,2);
         sig = Limiter.ar(sig.softclip);
@@ -108,7 +108,7 @@ p.arProxyNames;
     };);  
 );
 
-p.bpm(127)
+
 
 /// 8 KICK start
 
@@ -137,7 +137,7 @@ p.bpm(127)
 
         sig = Mix.fill(4,{|i|SinOsc.ar(36.midicps+(env**mod2*36.midicps),env**(mod2+i)*8pi)})/3.5;
         sig = sig * env;
-        Splay.ar(sig,0.05,0.65);
+        Splay.ar(sig,0,0.65);
     };
     ~kick.play;
 );
@@ -186,7 +186,7 @@ p.bpm(127)
         sig = Resonz.ar(sig,[1000,2500,12500,15000,500,12500],LFDNoise1.kr(~tempo!6).range(0.01,0.9));
         sig = sig * env * LFPulse.ar(8/(1..6)*~tempo,0,1/2);
         sig = CompanderD.ar(sig,3/4,1,1/3,0.0002);
-        Splay.ar(sig,0.5,1,SinOsc.kr(~tempo,mul:0.24));
+        Splay.ar(sig,0.5,0.5,SinOsc.kr(~tempo,mul:0.24));
     };
     ~switch.play;
 );

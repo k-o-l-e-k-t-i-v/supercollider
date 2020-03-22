@@ -8,8 +8,20 @@ snippet start
 		p.makeTempoClock;
 	);
 snippet control
-	p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);if(true){snth.stop(${1:10})}};
-	p.arProxyNames.collect{|n| var snth = (p[n.asSymbol]);snth.clear};
+	// $1 control ///////////////////////////////////////
+
+	(
+	~${1:}.quant=2;
+	~$1.fadeTime=0;
+	~$1={
+		var ctl = ${2:Duty.kr(4/~tempo,0,Dseq([1,2,1,4],inf))};
+		ctl;
+	};
+	);
+	~$1.stop(4);
+	~$1.clear;
+	~$1.pause;
+	~$1.resume;
 snippet synth
 	// $1 synth ///////////////////////////////////////
 
