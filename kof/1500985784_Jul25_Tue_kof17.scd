@@ -1,29 +1,30 @@
+p=ProxySpace.push(s)
 p.push();
 p.bpm(120)
 
 
-
+~tempo={1}
 
 // switch1 synth ///////////////////////////////////////
 
 (
 ~switch1.ar(2);
 ~switch1.clock = p.clock;
-~switch1.quant=2;
-~switch1.fadeTime=4;
+~switch1.quant=24;
+~switch1.fadeTime=2;
 ~switch1={
   var sig = [
     LFSaw.ar(50),
     VarSaw.ar(50*[1,2,4,8]),
     WhiteNoise.ar(0.5),
-    SinOsc.ar(1500,mul:0.2)
+		SinOsc.ar(1500*(1+(1/(1..12))),mul:0.2)
   ];
 
   var sel = LFSaw.kr(~tempo/4);
-  RandSeed.kr(Impulse.kr(~tempo/32),123);
-  sig = Select.ar(sel.range(0,sig.size+1),sig) * CombN.ar(LFPulse.ar(~tempo/[1,2,3,4]),1/50,1/50,4);
-  //sig = CombN.ar(1/4,1/4,4);
-  Splay.ar(sig,0.95,0.05);
+  RandSeed.kr(Impulse.kr(~tempo/24),2021);
+  sig = Select.ar(sel.range(0,sig.size+1),sig) * CombN.ar(LFPulse.ar(~tempo/[1,2,3,4]),1/50,1/50,1/4);
+  sig = CombL.ar(sig,1/4,1/4,4);
+  Splay.ar(sig,0.95,0.25);
 };
 ~switch1.play;
 );
