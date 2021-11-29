@@ -2,7 +2,7 @@
 
 p.push();
 
-  ~tempo = {121.25/120};
+  ~tempo = {120/60};
 
 // one synth ///////////////////////////////////////
 
@@ -37,7 +37,7 @@ p.push();
 
     sig = SelectX.ar(LFSaw.ar(~tempo*1/24/[1,2,3,4])**curve*(sig.size+1),sig);
     sig = LeakDC.ar(sig);
-    sig = CompanderD.ar(sig,sig,3/4,1,0.1);
+    sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
     Splay.ar(sig,0.35,0.45);
 };
 ~one.play;
@@ -82,12 +82,13 @@ p.push();
         1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0,
         1,0,0,0, 0,0,0,0, 1,0,0,0, 1,1,1,1,
     ].rotate(3);
-    var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+    var imp = PulseDivider.kr(~tick.kr,[1,2,3,4],~counter.kr%pat.size);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
-    var sig = SinOsc.ar(35!2+(env**20*200),env**20*2pi) * Pulse.ar(~tempo*8);
+    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3]),imp * hit);
+    var sig = SinOsc.ar(35!2+(env**80*1200),env**20*2pi) * LFPulse.ar(~tempo/8/[4,3,2,1]);
     sig = sig * env;
-    Splay.ar(sig,0.95,0.95);
+    sig = LeakDC.ar(sig);
+    Splay.ar(sig,0.95,1);
 };
 ~kick.play;
 );
