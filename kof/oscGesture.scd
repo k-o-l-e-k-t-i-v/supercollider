@@ -11,9 +11,35 @@ p.push;
     y = OSCFunc({|msg,time,add,port|msg.postln;},'/stepdetector');
 )
 
+(
+    ~touch1={|xy=#[0,0]| xy.lag(1/60)/10.0;};
+
+    x = OSCFunc( { | msg, time, addr, port |
+        ~touch1.set(\touch1, msg[1..].asFloat);
+    }, '/touch1' );
+)
+().play
 
 ~acc.scope;
 ~rot.scope;
+
+
+~// touch_test synth ///////////////////////////////////////
+
+(
+~touch_test.ar(2);
+~touch_test.quant=24;
+~touch_test.fadeTime=4;
+~touch_test={
+    var sig = SinOsc.ar([~touch.kr[0],~touch.kr[1]]);
+  Splay.ar(sig,0.95,0.15);
+};
+~touch_test.play;
+);
+~touch_test.stop(4);
+~touch_test.clear;
+~touch_test.pause;
+~touch_test.resume;
 
 // drone synth ///////////////////////////////////////
 
