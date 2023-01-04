@@ -10,9 +10,10 @@ p.push();
 ~one.quant=8;
 ~one.fadeTime=0;
 ~one={
-    var env = Decay.ar(Impulse.ar(~tempo*2/[1,2,3,4]),LFSaw.kr(~tempo/4/[1,2,3,4])+0.5);
-    var sig = SinOsc.ar([60,50]+(env**20*600),env**8*8pi ) * env;
-    Splay.ar(sig,0.05,0.95);
+    var slope = LFNoise2.kr(~tempo/[1,1/4,1/48]);
+    var env = Decay.ar(Impulse.ar(~tempo*2/[1,2,3,4,1/2]),LFSaw.kr(~tempo/4/[1,1/2,1/3,4]).range(0.15,0.65));
+    var sig = SinOsc.ar([60,50]/2+(env**15*300),env**slope*8pi ) * env;
+    Splay.ar(sig,0.95,0.5);
 };
 ~one.play;
 );
