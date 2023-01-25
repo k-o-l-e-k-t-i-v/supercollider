@@ -2,8 +2,9 @@
 
 
 p.push();
-p.bpm(90);
-~tempo={LFDNoise1.kr(1/15).range(1/8,8)};
+p.bpm(110);
+
+~tempo={110/120};
 
 p.push();
 // one synth ///////////////////////////////////////
@@ -11,7 +12,7 @@ p.push();
 (
 ~one.ar(2);
 ~one.clock = p.clock;
-~one.quant=2;
+~one.quant=37.5;
 ~one.fadeTime=4;
 ~one={
     var speed = 128;
@@ -23,11 +24,11 @@ p.push();
   var sig = SinOsc.ar(f,0,SinOsc.kr(~tempo/32/[1,2,3])*pi) * LFDNoise1.kr(~tempo/64!3).range(0,1/4);
   sig = Perlin3.ar(sig[0],sig[1],sig[2]) * (LFTri.kr(~tempo/speed/[1,2,3]) ** 4);
   sig = LeakDC.ar(sig) * SinOsc.ar(f/1.01);
-  sig = CombL.ar(sig,~tempo,512/48000,~tempo)/16+sig;
+  sig = CombL.ar(sig,~tempo/48000,512/48000,~tempo)/16+sig;
   sig = BPF.ar(sig,f,0.12)/64;
   sig = Compander.ar(sig,4/5,1,10);
   sig = Normalizer.ar(sig)/8;
-  Splay.ar(sig,0.5,0.5,SinOsc.ar(SinOsc.kr(~tempo/14).range(~tempo/8,110))/2);
+  Splay.ar(sig,0.5,0.25,SinOsc.ar(SinOsc.kr(~tempo/14).range(~tempo/8,110))/2);
 };
 ~one.play;
 );
@@ -36,6 +37,16 @@ p.push();
 ~one.pause;
 ~one.resume;
 
+(
+    //s.latency=0.2;
+    //p.clock.tempo_(120/60);
+    p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+    ~tick.kr(1);
+    ~tick.quant = 24;
+    ~counter.quant = 24;
+    ~counter = {PulseCount.kr(~tick.kr);};
+    ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
 
 (
   ~master.quant=2;

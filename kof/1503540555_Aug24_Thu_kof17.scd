@@ -2,20 +2,24 @@
 p.push();
 
 
-// xxx synth ///////////////////////////////////////
+~tempo = {110/120}// xxx synth ///////////////////////////////////////
 
 (
     ~xxx.ar(2);
     ~xxx.clock = p.clock;
-    ~xxx.quant=4;
-    ~xxx.fadeTime=4;
+    ~xxx.quant=[24,1/2];
+    ~xxx.fadeTime=0.2;
     ~xxx={
-        var te = [1.5,3,4,8];
-        var f = SinOsc.ar([1/100,50,1/250]).range(0,1/2);
-        var sig = SinOsc.ar((Perlin3.ar(f[0],f[1],f[2])*500*[1,2,3,4]),Pulse.ar(te)) * Pulse.ar(te);
-        sig = CombL.ar(sig,1/5,1/50,2);
-        sig = RLPF.ar(sig,800,0.2);
-        Splay.ar(sig,0.5,0.05);
+        var bbase = [60,67].midicps *.x [2,1/2] /.x [1,4/3,5/4,2];
+        var len = Duty.kr([4,8,24]/~tempo,0,Dseq([1,1/16,8,4],inf));
+        var mel = Duty.kr([24,12,8]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+        var base = bbase * [1,2,1.5,mel];
+        var te = ~tempo*2 /.x [1,2,3,4,1/4,4/3];
+        var f = SinOsc.ar([mel/3000,[50,60,300/mel],mel/300]).range(0,2pi) + LFSaw.kr(~tempo/240).range(0,10);
+        var sig = SinOsc.ar(((Perlin3.ar(f[0].cos,f[1].sin,f[2].sin)*([500,600]*[1,2,3,4])) ),Pulse.ar(te)*0.5pi) * Pulse.ar(te);
+        sig = CombL.ar(sig,1/[5,6],[2,8,1]/bbase,[0.2,0.1,1,0.2]*len) / [4,1] + sig;
+        sig = RLPF.ar(sig * [1,0.5,1,0.1],base*[2,1.5,4/3,1],LFSaw.kr(~tempo*4/[4,1,2,3]).range(0.01,0.99));
+        Splay.ar(sig,0.75,0.015);
     };
     ~xxx.play;
 );
