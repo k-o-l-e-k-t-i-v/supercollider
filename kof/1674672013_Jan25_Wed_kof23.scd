@@ -44,12 +44,12 @@ p.push();
         1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0,
         1,0,0,0, 1,0,0,0, 1,0,0,0, 1,1,1,1,
     ].rotate(1);
-    var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+    var imp = PulseDivider.kr(~tick.kr,[1,2,3],~counter.kr%pat.size);
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
-    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3]),imp * hit);
-    var sig = SinOsc.ar(40!2+(env**20*800),env**40*8pi);
+    var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,[0.25,0.5,0.75]],[3,-3]),imp * hit)};
+    var sig = SinOsc.ar(40!2+(env**20*800),env**40*8pi) + LFSaw.ar(40,env**40);
     sig = sig * env;
-    Splay.ar(sig,0.75,0.5);
+    Splay.ar(sig,0.05,0.25);
 };
 ~kick.play;
 );
