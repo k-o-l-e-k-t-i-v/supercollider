@@ -30,13 +30,13 @@ p.push();
     var long = Duty.kr([4,3,2,1]/~tempo,0,Dseq([1,2,1.5,1.33333],inf)) * mod;
     var mmod = [1,24,8,1];
     var over = Duty.kr([2,4]/~tempo,0,Dseq([1,2,1.5,1.33333,1/2,1,1/4,1/8],inf));
-    var mel = Duty.kr(mmod/[1,2,3,4]/~tempo,0,Dseq([1,1.2,1,1.5] /.x [long,over] *.x [over,long],inf));
+    var mel = Duty.kr(mmod/[1,2,3,4]/~tempo,0,Dseq([1,1.2,1,1.5] / long * over,inf));
     var sig = [] ++ SinOsc.ar(1200*[1/mel+1,mel]*mmod) ++ SinOsc.ar(1200*[mel,1/mel+1]) ++ SinOsc.ar(1200*[1/mel+1,mel]) ++ SinOsc.ar(1200*[mel,1/mel+1]);
     sig = RLPF.ar(sig,LFNoise1.kr(~tempo/[1,2,3,4]).range(2000,12000));
     sig = sig * Decay.ar(Impulse.ar(~tempo*4/[[] ++ [1,2,3,4].nthPrime++[1,2,3,4]]),0.25*[1,2,3,4]);
     sig = CombL.ar(sig,1/~tempo,1/[1,2,3,4]/~tempo,~tempo*1)/8+sig;
-    sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
-    Splay.ar(sig,0.75,0.015);
+    sig = CompanderD.ar(sig,3/4,1/2,1);
+    Splay.ar(sig,0.75,0.0125);
 };
 ~tritone.play;
 );
@@ -44,6 +44,30 @@ p.push();
 ~tritone.clear;
 ~tritone.pause;
 ~tritone.resume;
+
+
+// low synth ///////////////////////////////////////
+
+(
+~low.ar(2);
+~low.quant=24;
+~low.fadeTime=10.4;
+~low={
+    var shift = LFTri.kr(~tempo/24/[1,2,3,4]);
+    var sig = SinOsc.ar(40*[1,1.5,2,1]);
+    sig = sig * Decay.ar(Impulse.ar(~tempo*4/[[] ++ (1..12).nthPrime++(1..12)]),0.005*[10,20,30,40]);
+    sig = Perlin3.ar(sig[0]+shift[0],sig[1]+shift[1],sig[2]+shift[2]);
+    sig = RLPF.ar(sig,LFNoise1.kr(~tempo/4/[1,2,3,4]).range(200,12000));
+    //sig = CombL.ar(sig,1/~tempo,1/[1,2,3,4]/~tempo,~tempo*1)/16+sig;
+    sig = CompanderD.ar(sig,3/4,1/2,1);
+    Splay.ar(sig,0.95,0.25);
+};
+~low.play;
+);
+~low.stop(4);
+~low.clear;
+~low.pause;
+~low.resume;
 
 
 1200/[40,50,60]
@@ -99,10 +123,10 @@ p.push();
     var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
     var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,[0.15,1.5,0.025]],[3,-3]),imp * hit)};
     var sig = WhiteNoise.ar(0.75!2);
-    sig = HPF.ar(sig,5000);
+    sig = HPF.ar(sig,15000);
     sig = sig * env;
     sig = Compander.ar(sig,~kick.ar,0.1,1,0.1);
-    Splay.ar(sig,0.75,0.25);
+    Splay.ar(sig,0.75,0.15);
 };
 ~hiss.play;
 );
