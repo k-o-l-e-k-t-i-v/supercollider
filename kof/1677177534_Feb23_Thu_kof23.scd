@@ -13,7 +13,7 @@ p.push()
 ~one={
     var sig = SinOsc.ar([40,80,40*4/3,40*5/4],Pulse.ar(~tempo*4/[1,2,3,4])) * Pulse.ar(~tempo*4/1,2,3,4]);
     sig = CombC.ar(sig,2/~tempo,4/~tempo,~tempo);
-    Splay.ar(sig,0.15,0.25);
+    Splay.ar(sig,0.15,0.025);
 };
 ~one.play;
 );
