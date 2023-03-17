@@ -1,20 +1,19 @@
 
 p.push()
 
-thisProcess.openUDPPort(10000);
+thisProcess.openUDPPort(10001);
 (
     n = NetAddr("127.0.0.1", 10000);
 :
     OSCFunc.newMatching({|msg|
-	("incoming message:"+msg[1]).postln;
 	~tick.quant=0;
 	~tick={msg[1]};
+	("incoming message:"+msg[1]).postln;
 }, '/osc/timer');
 )
 
 
 (
-~simple.mold(2);
 ~simple.fadeTime=2;
 ~simple={
 	var env = Decay.kr(Changed.kr(~tick.kr),LFNoise1.kr(1).range(0.5,2));
@@ -31,7 +30,7 @@ thisProcess.openUDPPort(10000);
 };
 ~simple.play();
 )
-~simple.stop
+~simple.clear
 
 (
 ~mel={
@@ -60,7 +59,7 @@ thisProcess.openUDPPort(10000);
 	sig = CombL.ar(sig,2/40,1/40,1)/16+sig;
 	// sig = GVerb.ar(sig,LFNoise2.ar(1/24).range(40,90),6)/2+(sig/2);
 
-	Splay.ar(sig,1,0.05);
+	Splay.ar(sig,1,0.025);
 };
 ~test.play();
 )
