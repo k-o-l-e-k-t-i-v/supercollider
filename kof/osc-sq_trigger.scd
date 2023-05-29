@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s)
 p.push()
 
 thisProcess.openUDPPort(10001);
@@ -52,12 +52,13 @@ thisProcess.openUDPPort(10001);
 	var sig = Select.ar(~tick.kr,[
 		SinOsc.ar(40!2 + (env**0.2*20)),
 		BrownNoise.ar(0.1!2),
+		DC.ar(0!2),
 		Pulse.ar(4!2),
 		WhiteNoise.ar(0.5!2),
 	]);
 	sig = sig * env;
 	sig = CombL.ar(sig,2/40,1/40,1)/16+sig;
-	// sig = GVerb.ar(sig,LFNoise2.ar(1/24).range(40,90),6)/2+(sig/2);
+	 sig = GVerb.ar(sig,LFNoise2.ar(1/24).range(40,90),6)/2+(sig/2);
 
 	Splay.ar(sig,1,0.025);
 };
@@ -77,11 +78,13 @@ thisProcess.openUDPPort(10001);
 		BrownNoise.ar(0.2!2),
 		DC.ar(0),
 		Pulse.ar(4),
+		LFSaw.ar(40,mul:0.2),
+
 	]);
-	var env = Decay.kr(trig,0.2);
+	var env = Decay2.kr(trig,0.02,0.62);
 	sig = sig * env;
 	sig = CombL.ar(sig,1/50,1/50,1)/16+sig;
-	//sig = GVerb.ar(sig,90,3)/16+sig;
+	sig = GVerb.ar(sig,90,3)/16+sig;
 	Splay.ar(sig,0.1,0.02);
 };
 ~test2.play();
