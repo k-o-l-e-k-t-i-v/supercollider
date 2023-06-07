@@ -1,10 +1,12 @@
+
+s.boot
 p=ProxySpace.push(s)
 p.push()
 
-thisProcess.openUDPPort(10001);
+thisProcess.openUDPPort(10000);
 (
-    n = NetAddr("127.0.0.1", 10000);
-:
+    //n = NetAddr("127.0.0.1", 10000);
+
     OSCFunc.newMatching({|msg|
 	~tick.quant=0;
 	~tick={msg[1]};
@@ -16,9 +18,9 @@ thisProcess.openUDPPort(10001);
 (
 ~simple.fadeTime=2;
 ~simple={
-	var env = Decay.kr(Changed.kr(~tick.kr),LFNoise1.kr(1).range(0.5,2));
-	var sig = SinOsc.ar(40!2+(env**20*220),env*8pi);
-	sig = sig + LFSaw.ar(40);
+	var env = Decay.kr(Changed.kr(~tick.kr),1);
+	var sig = SinOsc.ar(40!2+(env**20*220));
+	//sig = sig + LFSaw.ar(40);
 	sig = sig * env;
 	sig = LPF.ar(sig,1800);
 	sig = HPF.ar(sig,30);
@@ -26,7 +28,7 @@ thisProcess.openUDPPort(10001);
 	// sig = CombL.ar(sig,1,1,4);
 	sig = LeakDC.ar(sig);
 
-	Splay.ar(sig,1,0.024);
+	Splay.ar(sig,1,0.4);
 };
 ~simple.play();
 )
@@ -34,11 +36,11 @@ thisProcess.openUDPPort(10001);
 
 (
 ~mel={
-	var env = Decay.kr(Changed.kr(~tick.kr),0.75);
-	var freq = Select.kr(~tick.kr,[50,60,50,300]);
-	var sig = LFSaw.ar(freq,mul:0.1) * env;
+	var env = Decay.kr(Changed.kr(~tick.kr),2.75);
+	var freq = Select.kr(~tick.kr,[50,60,50,300,40]);
+	var sig = LFSaw.ar(freq,mul:0.3) * env;
 
-	Splay.ar(sig,1,0.1);
+	Splay.ar(sig,1,0.5);
 };
 ~mel.play;
 )
@@ -56,11 +58,11 @@ thisProcess.openUDPPort(10001);
 		Pulse.ar(4!2),
 		WhiteNoise.ar(0.5!2),
 	]);
-	sig = sig * env;
+	//sig = sig * env;
 	sig = CombL.ar(sig,2/40,1/40,1)/16+sig;
 	 sig = GVerb.ar(sig,LFNoise2.ar(1/24).range(40,90),6)/2+(sig/2);
 
-	Splay.ar(sig,1,0.025);
+	Splay.ar(sig,1,0.25);
 };
 ~test.play();
 )
@@ -82,10 +84,10 @@ thisProcess.openUDPPort(10001);
 
 	]);
 	var env = Decay2.kr(trig,0.02,0.62);
-	sig = sig * env;
+	//sig = sig * env;
 	sig = CombL.ar(sig,1/50,1/50,1)/16+sig;
 	sig = GVerb.ar(sig,90,3)/16+sig;
-	Splay.ar(sig,0.1,0.02);
+	Splay.ar(sig,0.1,0.2);
 };
 ~test2.play();
 )
