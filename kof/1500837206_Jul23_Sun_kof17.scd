@@ -1,6 +1,7 @@
 
 
-
+s.boot;
+p=ProxySpace.push(s)
 p.push();
 p.bpm(110);
 
@@ -12,23 +13,24 @@ p.push();
 (
 ~one.ar(2);
 ~one.clock = p.clock;
-~one.quant=37.5;
+~one.quant=4;
 ~one.fadeTime=4;
 ~one={
     var speed = 128;
+    var last = Duty.kr(4/~tempo,0,Dseq([5,3,7,11],inf));
     var detune = LFDNoise1.kr(~tempo/speed!3).range(0,2);
     var base = [110,110*1.5,110*2] * 4 + SinOsc.kr(~tempo*[5,6,7],mul:detune);
-    var mod = Duty.kr(speed/[1,2,3]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+    var mod = Duty.kr(speed/[1,2,3]/~tempo,0,Dseq(2**([1,5,last]/12),inf));
     var mod2 = Duty.kr(speed*4/[1,2,3]/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
     var f = base*mod/mod2+LFDNoise1.kr(~tempo/32!3)/.x[1,1,(6/(1..6)).reciprocal+1];
-  var sig = SinOsc.ar(f,0,SinOsc.kr(~tempo/32/[1,2,3])*pi) * LFDNoise1.kr(~tempo/64!3).range(0,1/4);
-  sig = Perlin3.ar(sig[0],sig[1],sig[2]) * (LFTri.kr(~tempo/speed/[1,2,3]) ** 4);
-  sig = LeakDC.ar(sig) * SinOsc.ar(f/1.01);
+  var sig = SinOsc.ar(f,0,SinOsc.kr(~tempo/32/[1,2,3])) * pi * LFDNoise1.kr(~tempo/64!3).range(0,1/4);
+  sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2].sin+f) * (LFTri.kr(~tempo/speed/[1,2,3]) ** 4);
+  sig = LeakDC.ar(sig) * SinOsc.ar(f/1.001);
   sig = CombL.ar(sig,~tempo/48000,512/48000,~tempo)/16+sig;
-  sig = BPF.ar(sig,f,0.12)/64;
-  sig = Compander.ar(sig,4/5,1,10);
-  sig = Normalizer.ar(sig)/8;
-  Splay.ar(sig,0.5,0.25,SinOsc.ar(SinOsc.kr(~tempo/14).range(~tempo/8,110))/2);
+  sig = BPF.ar(sig,f,0.12);
+  sig = CompanderD.ar(sig,4/5,1,10);
+  sig = Normalizer.ar(sig)/2;
+  Splay.ar(sig,1,0.15,SinOsc.ar(SinOsc.kr(~tempo/14).range(~tempo/8,110))/2);
 };
 ~one.play;
 );
