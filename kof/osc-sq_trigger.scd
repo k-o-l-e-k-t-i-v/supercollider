@@ -2,6 +2,7 @@
 s.boot
 p=ProxySpace.push(s)
 p.push()
+s.latency=0.02;
 
 thisProcess.openUDPPort(10000);
 (
@@ -28,7 +29,7 @@ thisProcess.openUDPPort(10000);
 	// sig = CombL.ar(sig,1,1,4);
 	sig = LeakDC.ar(sig);
 
-	Splay.ar(sig,1,0.4);
+	Splay.ar(sig,1,0.2);
 };
 ~simple.play();
 )
@@ -36,15 +37,44 @@ thisProcess.openUDPPort(10000);
 
 (
 ~mel={
-	var env = Decay.kr(Changed.kr(~tick.kr),2.75);
-	var freq = Select.kr(~tick.kr,[50,60,50,300,40]);
-	var sig = LFSaw.ar(freq,mul:0.3) * env;
+	var env = Decay2.kr(Changed.kr(~tick.kr),0.045,LFNoise1.kr(1/10).range(0.1,0.9));
+	var freq = Select.kr(~tick.kr,(2**[1,5,9,8]/12)*440);
+	var sig = SinOsc.ar(freq,mul:0.3) * env * LFNoise1.kr(1/10);
 
-	Splay.ar(sig,1,0.5);
+	Splay.ar(sig,1,0.75);
 };
 ~mel.play;
 )
 ~mel.stop;
+
+
+// trig synth ///////////////////////////////////////
+
+(
+~trig.ar(2);
+~trig.quant=0;
+~trig.fadeTime=0.02;
+~trig={
+    //  |       |       |       |       |  
+    var pat = [
+        1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+        1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+        1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+        1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
+    ].rotate(1);
+    var imp = ~tick.kr;
+    var hit = Select.kr(~tick.kr%pat.size,pat);
+    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.5],[3,-3]),imp * hit);
+    var sig = SinOsc.ar(50!2,env**20*8pi);
+    sig = sig * env;
+    Splay.ar(sig,0.75,0.5);
+};
+~trig.play;
+);
+~trig.stop(4);
+~trig.clear;
+~trig.pause;
+~trig.resume;
 
 (
 ~test.fadeTime=1;
