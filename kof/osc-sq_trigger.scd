@@ -5,6 +5,7 @@ p.push()
 s.latency=0.2;
 
 thisProcess.openUDPPort(10000);
+thisProcess.openUDPPort(11000);
 (
     //n = NetAddr("127.0.0.1", 10000);
 
@@ -26,14 +27,14 @@ thisProcess.openUDPPort(10000);
 (
 ~simple.fadeTime=2;
 ~simple={
-    var harm = 2**Duty.kr(4/~tempo,0,Dseq([1,3,5,8]/12,inf));
+    var harm = 2**Duty.kr(4/~tempo,0,Dseq([1,3,5,8]/12,inf))+1;
 	var env = Decay.kr(Changed.kr(~tick.kr),0.1);
 	var sig = SinOsc.ar(40*harm+(env**40*220),env**80*8pi);
 	sig = sig + LFSaw.ar(40*harm);
 	sig = sig * env;
 	sig = LPF.ar(sig,1800);
 	sig = HPF.ar(sig,30);
-	sig = GVerb.ar(sig,LFNoise1.kr(1/4).range(40,90),6);
+	//sig = GVerb.ar(sig,LFNoise1.kr(1/4).range(40,90),6);
 	//sig = CombL.ar(sig,1,1/40,4);
 	sig = LeakDC.ar(sig);
 
@@ -45,11 +46,11 @@ thisProcess.openUDPPort(10000);
 
 (
 ~mel={
-	var env = Decay2.kr(Changed.kr(~tick.kr),0.045,LFNoise1.kr(1/10).range(0.1,0.9));
-	var freq = Select.kr(~tick.kr,(2**([1,5,8,2]/12))*220,mul:LFNoise1.kr(1/10));
-	var sig = SinOsc.ar(freq,mul:0.3) * env * LFNoise1.kr(1/10);
+	var env = Decay2.kr(Changed.kr(~tick.kr),0.045,LFNoise1.kr([1,1,1]/10).range(0.01,0.19));
+	var freq = Select.kr(~tick.kr,(2**([1,3,5]/12)+1)*440.0,mul:LFNoise1.kr([1,1,1]/10));
+	var sig = SinOsc.ar(freq,mul:0.3) * env;
 
-	Splay.ar(sig,1,0.75);
+	Splay.ar(sig,0.5,0.175);
 };
 ~mel.play;
 )
