@@ -2,7 +2,7 @@
 s.boot
 p=ProxySpace.push(s)
 p.push()
-s.latency=0.2;
+s.latency=0.5;
 
 thisProcess.openUDPPort(10000);
 thisProcess.openUDPPort(11000);
@@ -12,7 +12,8 @@ thisProcess.openUDPPort(11000);
     OSCFunc.newMatching({|msg|
 	~tick.quant=0;
 	~tick={msg[2]};
-	("incoming message:"+msg).postln;
+    ~t={msg[4]/60.0};
+	//("incoming message:"+msg[2]).postln;
 }, '/osc/timer');
 )
 
@@ -24,21 +25,29 @@ thisProcess.openUDPPort(11000);
 }.fork;  
 )
 
+~tempo={120/120};
+
 (
+~simple.quant=4;
 ~simple.fadeTime=2;
 ~simple={
-    var harm = 2**Duty.kr(4/~tempo,0,Dseq([1,3,5,8]/12,inf))+1;
-	var env = Decay.kr(Changed.kr(~tick.kr),0.1);
-	var sig = SinOsc.ar(40*harm+(env**40*220),env**80*8pi);
-	sig = sig + LFSaw.ar(40*harm);
+    var last  = Duty.kr([1,2,3,4]/4,0,Dseq([5,8,12,-12],inf));
+    var mod = Duty.kr([4,16,64,8],0,Dseq([1,2,1.5,1.33333],inf));
+    var harm = 2**(Select.kr(~tick.kr,[1,last,1,last])/12)+1;
+	var env = Decay2.kr(Changed.kr(~tick.kr),0.15,0.35);
+    var base = [110.123,440.001] + LFNoise2.kr(1/[1,2,3,4]*4);
+	var sig = SinOsc.ar(base*harm/mod,env**20*8pi,mul:LFNoise1.kr(1/4));
+	sig = sig + LFSaw.ar(base*harm/mod,mul:env**1.5/8);
 	sig = sig * env;
-	sig = LPF.ar(sig,1800);
-	sig = HPF.ar(sig,30);
-	//sig = GVerb.ar(sig,LFNoise1.kr(1/4).range(40,90),6);
-	//sig = CombL.ar(sig,1,1/40,4);
+    //sig = sig + LFCub.ar(440*harm/mod) * Pulse.ar(8);
 	sig = LeakDC.ar(sig);
+	sig = CombL.ar(sig,1/base/harm*mod,4/base/harm*mod,3)/32+sig;
+	sig = LPF.ar(sig,3800);
+	sig = HPF.ar(sig,30);
+	sig = LeakDC.ar(sig);
+	sig = GVerb.ar(sig,60,3)/16+sig;
 
-	Splay.ar(sig,1,0.1);
+	Splay.ar(sig,0.75,0.22);
 };
 ~simple.play();
 )
@@ -46,8 +55,8 @@ thisProcess.openUDPPort(11000);
 
 (
 ~mel={
-	var env = Decay2.kr(Changed.kr(~tick.kr),0.045,LFNoise1.kr([1,1,1]/10).range(0.01,0.19));
-	var freq = Select.kr(~tick.kr,(2**([1,3,5]/12)+1)*440.0,mul:LFNoise1.kr([1,1,1]/10));
+	var env = Decay2.kr(Changed.kr(~tick.kr),0.045,LFNoise1.kr([1,1,1]/10).range(0.01,0.39));
+	var freq = Select.kr(~tick.kr,2**([1,5,8,11]/12+1))*220.0;
 	var sig = SinOsc.ar(freq,mul:0.3) * env;
 
 	Splay.ar(sig,0.5,0.175);
