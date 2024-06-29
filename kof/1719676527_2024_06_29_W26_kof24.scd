@@ -21,8 +21,10 @@ p.push();
 ~switch.quant=4;
 ~switch.fadeTime=2;
 ~switch={
-    var sig = Select.ar(LFSaw.ar(~tempo/4).range(0,3),[~one.ar,~two.ar,~three.ar,~four.ar]);
-    Splay.ar(sig,0.5,0.25);
+    var harm = 2**(Duty.kr(4/[1,2,3,4]/~tempo,0,Dseq([1,5,1,8],inf))/12)+1 ;
+    var sig = SelectX.ar(Perlin3.ar(LFSaw.ar(~tempo/36/[1,2,3,4]).sin*2pi,LFSaw.ar(~tempo/4).cos*2pi,LFSaw.ar(~tempo/3600).sin*2pi).range(0,4),[~one.ar,~two.ar,~three.ar,~four.ar]);
+    sig = Resonz.ar(sig,16000/[1,2,4,8,10,200,12000].scramble*harm,0.3)+sig * Pulse.ar(~tempo*4/[1,2,3,4]);
+    Splay.ar(sig,0.95,0.25);
 };
 ~switch.play;
 );
@@ -39,8 +41,9 @@ p.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-    var sig = SinOsc.ar(50!2,Pulse.ar(~tempo*2));
-    Splay.ar(sig,0.5,0.25);
+    var sig = SinOsc.ar(80!2,Pulse.ar(~tempo*4/[1,2,3,4]));
+    //sig = GVerb.ar(sig,90,3)/16+sig;
+    Splay.ar(sig,0.75,0.25);
 };
 );
 ~one.stop(4);
@@ -56,9 +59,9 @@ p.push();
 ~two.quant=4;
 ~two.fadeTime=2;
 ~two={
-    var harm = Duty.kr(16/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
+    var harm = Duty.kr(1/4/~tempo,0,Dseq([1,2,1.5,1.33333],inf));
     var sig = LFSaw.ar(50*harm);
-    Splay.ar(sig,0.5,0.25);
+    Splay.ar(sig,0.25,0.15);
 };
 );
 ~two.stop(4);
@@ -74,8 +77,9 @@ p.push();
 ~three.quant=4;
 ~three.fadeTime=2;
 ~three={
-    var sig = SinOsc.ar(5001!2,mul:0.2) * Pulse.ar(8);
-    Splay.ar(sig,0.5,0.25);
+    var harm = 2**(Duty.kr(4/~tempo,0,Dseq([1,5,1,8],inf))/12)+1 ;
+    var sig = SinOsc.ar(1501*harm,mul:0.2);
+    Splay.ar(sig,0.45,0.25);
 };
 );
 ~three.stop(4);
@@ -91,11 +95,38 @@ p.push();
 ~four.quant=4;
 ~four.fadeTime=2;
 ~four={
-    var sig = WhiteNoise.ar(0.2!2);
-    Splay.ar(sig,0.5,0.25);
+    var sig = WhiteNoise.ar(0.4!2);
+    Splay.ar(sig,0.35,0.25);
 };
 );
 ~four.stop(4);
 ~four.clear;
 ~four.pause;
 ~four.resume;
+
+
+// all filter ///////////////////////////////////////
+
+(
+~all.quant=4;
+~all.fadeTime=1;
+~all={
+    var synths = p.playingProxies;
+    var high,mid,low;
+    var sig = [];
+    synths.collect{|n| if(n!='all'){sig=sig++p.[n.asSymbol];}};
+
+    //sig = Resonz.ar(sig,MouseX.kr(100,10000,(1..8)),MouseY.kr(0.1,1,(1..4)/16))/4;
+    //sig = CombN.ar(sig,4,[4,8,16],32)+sig;
+    //sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
+    low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/2!2).range(100,800)),3/4,1,1/2);
+    mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1,1/2);
+    high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,10000)),3/4,1,1/2);
+    sig = CompanderD.ar((high+mid+low).flat,3/4,1,1/2,0.002,0.3);
+    sig = LPF.ar(GVerb.ar(sig,90,3)/3+sig,16000);
+    Splay.ar(sig,0.25,0.5);
+};
+~all.play;
+);
+~all.stop(7);
+~all.clear;
