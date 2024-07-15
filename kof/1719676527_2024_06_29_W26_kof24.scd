@@ -1,17 +1,17 @@
 
 p.push();
 
-~tempo = {110/120};
+~tempo = {115.741/120};
 
 (
     //s.latency=0.2;
     //p.clock.tempo_(120/60);
     p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
-    ~tick.kr(1);
-    ~tick.quant = 24;
+    //~tick.kr(1);
+    //~tick.quant = 24;
     ~counter.quant = 24;
     ~counter = {PulseCount.kr(~tick.kr);};
-    ~tick = { Impulse.kr( ~tempo * 4 ); };
+    //~tick = { Impulse.kr( ~tempo * 4 ); };
 );
 
 // switch synth ///////////////////////////////////////
@@ -22,7 +22,7 @@ p.push();
 ~switch.fadeTime=2;
 ~switch={
     var harm = 2**(Duty.kr(4/[1,2,3,4]/~tempo,0,Dseq([1,5,1,8],inf))/12)+1 ;
-    var sig = SelectX.ar(Perlin3.ar(LFSaw.ar(~tempo/36/[1,2,3,4]).sin*2pi,LFSaw.ar(~tempo/4).cos*2pi,LFSaw.ar(~tempo/3600).sin*2pi).range(0,4),[~one.ar,~two.ar,~three.ar,~four.ar]);
+    var sig = SelectX.ar(~tick.kr,[~one.ar,~two.ar,~three.ar,~four.ar]);
     sig = Resonz.ar(sig,16000/[1,2,4,8,10,200,12000].scramble*harm,0.3)+sig * Pulse.ar(~tempo*4/[1,2,3,4]);
     Splay.ar(sig,0.95,0.25);
 };
@@ -130,3 +130,42 @@ p.push();
 );
 ~all.stop(7);
 ~all.clear;
+
+
+
+// kick synth ///////////////////////////////////////
+
+(
+~kick.ar(2);
+~kick.quant=4;
+~kick.fadeTime=0.02;
+~kick={
+    //  |       |       |       |       |  
+    var pat = [
+        1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+        1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+        1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+        1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0,
+    ].rotate(1);
+    var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+    var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
+    var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
+    var sig = SinOsc.ar(50!2);
+    sig = sig * env;
+    Splay.ar(sig,0.75,0.5);
+};
+~kick.play;
+);
+~kick.stop(4);
+~kick.clear;
+~kick.pause;
+~kick.resume;
+
+
+
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(20);};});
+}.fork;  
+)
