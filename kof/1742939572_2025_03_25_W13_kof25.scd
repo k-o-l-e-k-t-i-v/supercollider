@@ -18,7 +18,7 @@ p.tempo(89.45);
 };
 ~lame.play;
 );
-~lame.stop(4);
+~lame.stop(30);
 ~lame.clear;
 ~lame.pause;
 ~lame.resume;
