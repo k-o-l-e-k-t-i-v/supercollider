@@ -1,7 +1,10 @@
 
 
 p.push();
-
+(
+n = ProxyMixer(p,32);
+n.parent.alwaysOnTop_(true);
+)
 // rezonateur synth ///////////////////////////////////////
 
 (
