@@ -1,22 +1,11 @@
 p.push;
 (
-    ~acc={|xyz=#[0,0,0]| Slope.kr(xyz/10.0).lag(1/60)/10;};
-    ~rot={|xyz=#[0,0,0]| xyz.lag(1/60)/10.0;};
+
+    ~rate={|x=#[0]| x.lag(1/60);};
 
     x = OSCFunc( { | msg, time, addr, port |
-        ~acc.set(\xyz, msg[1..].asFloat);
-        ~rot.set(\xyz, msg[1..].asFloat);
-    }, '/accelerometer' );
-
-    y = OSCFunc({|msg,time,add,port|msg.postln;},'/stepdetector');
-)
-
-(
-    ~touch1={|xy=#[0,0]| xy.lag(1/60)/10.0;};
-
-    x = OSCFunc( { | msg, time, addr, port |
-        ~touch1.set(\touch1, msg[1..].asFloat);
-    }, '/touch1' );
+        ~touch1.set(\bpm_rate, msg[4..].asFloat);
+    }, '/bpm_rate' );
 )
 ().play
 
