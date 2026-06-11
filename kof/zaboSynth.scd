@@ -1,7 +1,8 @@
 
-
+s.boot;
+p=ProxySpace.push(s)
 p.push();
-~tempo={110/120};
+~tempo={(2**0.5)};
 
 
 // water synth ///////////////////////////////////////
