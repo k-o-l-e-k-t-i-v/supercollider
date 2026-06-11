@@ -1,6 +1,6 @@
 s.boot();
 p=ProxySpace.push();
-
+~tempo = {1};
 // one synth ///////////////////////////////////////
 
 (
