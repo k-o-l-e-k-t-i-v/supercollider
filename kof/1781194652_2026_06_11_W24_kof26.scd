@@ -27,7 +27,7 @@ p=ProxySpace.push();
     1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
     1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,1,0,
   ].rotate(1);
-  var mod = LFNoise1.kr(~tempo/36,add:1,mul:4);
+  var mod = LFNoise1.kr(~tempo/36!3,add:1,mul:4);
   var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = {EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.75],[24,-3]),imp * hit)};
