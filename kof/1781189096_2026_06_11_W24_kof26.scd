@@ -8,10 +8,10 @@ p=ProxySpace.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar(50!2,Pulse.ar([4,3])) * Pulse.ar(4);
+  var sig = SinOsc.ar([47.5,50],Pulse.ar([4,3])) * Pulse.ar(4);
   sig = CombN.ar(sig,1/2,1/2,1)/4 + sig;
   sig = CompanderD.ar(sig,3/4,1/2,1);
-  sig = GVerb.ar(sig,60,3)/16+sig;
+  sig = GVerb.ar(sig,60,3)/16 + sig;
   Splay.ar(sig,0.15,0.5);
 };
 ~one.play;
