@@ -27,7 +27,7 @@ p=ProxySpace.push();
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0,
     1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0,
   ].rotate(1);
-  var imp = PulseDivider.kr(~tick.kr,1,~counter.kr%pat.size);
+  var imp = PulseDivider.kr(~tick.kr,2,~counter.kr%pat.size);
   var hit = Select.kr(PulseCount.kr(imp)%pat.size,pat);
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,1.5],[3,-3]),imp * hit);
   var sig = SinOsc.ar(50!2, env ** 20 * 2pi);
