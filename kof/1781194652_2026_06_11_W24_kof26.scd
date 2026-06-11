@@ -3,7 +3,7 @@ p=ProxySpace.push();
 
 
 
-~tempo={72/60}
+~tempo={72*2/60}
 
 (
   ~tick.kr(1);
