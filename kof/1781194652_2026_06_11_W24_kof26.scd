@@ -36,7 +36,7 @@ p=ProxySpace.push();
   sig = PitchShift.ar(sig,0.02,4/(env**mod+1.01));
   sig = CombL.ar(sig,1/50,1/50,0.5);
   sig = sig * env;
-  Splay.ar(sig,1,0.25);
+  Splay.ar(sig,1,0.35);
 };
 ~one.play;
 );
