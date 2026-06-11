@@ -32,7 +32,7 @@ p=ProxySpace.push();
   var env = EnvGen.ar(Env([0.001,1,0.0001],[0.002,0.75],[24,-3]),imp * hit);
   var sig = SinOsc.ar(50!2, env * 2pi) + LFSaw.ar(47.5!2,mul:0.2) + BrownNoise.ar(env**10);
   sig = sig * env;
-  Splay.ar(sig,0.75,0.5);
+  Splay.ar(sig,0.15,0.5);
 };
 ~one.play;
 );
