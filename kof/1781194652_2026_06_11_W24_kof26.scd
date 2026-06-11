@@ -34,6 +34,7 @@ p=ProxySpace.push();
   var sig = SinOsc.ar(50!2, env * 2pi) + LFSaw.ar(47.5!2,mul:0.2) + BrownNoise.ar(env**10);
   
   sig = PitchShift.ar(sig,0.02,4/(env**mod+1.01));
+  sig = CombL.ar(sig,1/50,1/50,1);
   sig = sig * env;
   Splay.ar(sig,1,0.5);
 };
