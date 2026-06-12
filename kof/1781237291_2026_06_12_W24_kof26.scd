@@ -9,7 +9,8 @@ p=ProxySpace.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar(50*([1,5,8]/12+1**2)) * LFSaw.ar(4/[1,2,3]);
+  var base = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf)) * 50;
+  var sig = SinOsc.ar(base*([1,5,8]/12+1**2)) * LFSaw.ar(4/[1,2,3]);
   sig = CombN.ar(sig,1,1/4*[1,2,3],1);
   Splay.ar(sig,0.05,0.35);
 };
