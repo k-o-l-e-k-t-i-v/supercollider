@@ -10,7 +10,7 @@ p = ProxySpace.push();
 ~one.fadeTime=2;
 ~one={
   var sig = LFSaw.ar(50!2);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
 );
