@@ -11,6 +11,8 @@ p = ProxySpace.push();
 ~one={
   var sig = LFSaw.ar([50,47.5,1/15],mul:2pi);
   sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2].sin);
+  sig = BPF.ar(sig,LFSaw.ar(4).range(50,5000),0.1);
+  sig = CompanderD.ar(sig,3/4,1/2,1);
   Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
