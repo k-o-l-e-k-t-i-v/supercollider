@@ -2,7 +2,7 @@ s.boot();
 
 p=ProxySpace.push();
 
-~tempo={1}
+~tempo={1/(2**0.5)}
 (
   ~tick.kr(1);
   ~tick.clock = p.clock;
@@ -17,7 +17,7 @@ p=ProxySpace.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var duty = Duty.kr(4,0,Dseq([632,720,576,480,1024],inf));
+  var vals = Duty.kr(4,0,Dseq([632,720,576,480,1024],inf));
   var sig = SinOsc.ar([932,720,600,400]) * Pulse.ar(4/[1,1.1618,1.4142]) + LFSaw.ar([50,60,40]);
   sig = CombN.ar(sig * SinOsc.ar([632,1024]),1/2,1/2,1)/4+sig;
   sig = LFPulse.ar(24/[3,2,4,6]) * sig;
