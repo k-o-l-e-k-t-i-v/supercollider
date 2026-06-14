@@ -19,3 +19,6 @@ p=ProxySpace.push();
 ~one.clear;
 ~one.pause;
 ~one.resume;
+
+
+s.scope
