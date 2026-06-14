@@ -11,7 +11,7 @@ p=ProxySpace.push();
 ~one.fadeTime=2;
 ~one={
   var sig = SinOsc.ar(150!2);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.05,0.5);
 };
 ~one.play;
 );
