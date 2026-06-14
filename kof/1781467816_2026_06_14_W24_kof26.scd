@@ -13,7 +13,7 @@ p=ProxySpace.push();
   var sig = SinOsc.ar([932,720,600,400]) * Pulse.ar(4/[1,1.1618,1.4142]) + LFSaw.ar([50,60,40]);
   sig = CombN.ar(sig * SinOsc.ar([632,1024]),1/2,1/2,1)/4+sig;
   sig = LFPulse.ar(24/[3,2,4,6]) * sig;
-  sig = CombL.ar(sig,1,16/632,4);
+  sig = CombL.ar(sig,1,32/632,4);
   Splay.ar(sig,0.95,0.5);
 };
 ~one.play;
