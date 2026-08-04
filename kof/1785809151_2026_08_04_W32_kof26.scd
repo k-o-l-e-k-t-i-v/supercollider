@@ -92,7 +92,7 @@ m = ProxyMixer(p, 12);
   sig = sig * Decay.ar(Impulse.ar(beat),0.432*4);
   sig = CombL.ar(sig,1/60,1/50,0.432);
   sig = LPF.ar(sig,1900);
-  Splay.ar(sig,0.0,1.0);
+  Splay.ar(sig,0.0,0.5);
 };
 ~three.play;
 );
