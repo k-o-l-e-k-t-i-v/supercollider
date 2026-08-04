@@ -1,6 +1,5 @@
 s.boot;
 p=ProxySpace.push();
-p.push();
 
 
 // one synth ///////////////////////////////////////
@@ -10,7 +9,7 @@ p.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar(50!2);
+  var sig = SinOsc.ar([50,60]);
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
