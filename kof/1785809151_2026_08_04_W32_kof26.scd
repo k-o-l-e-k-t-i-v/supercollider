@@ -16,7 +16,7 @@ m = ProxyMixer(p, 12);
   var beat = 0.432*[4,3,2,1]);
   var sig = SinOsc.ar([50,60],Pulse.ar(beat);
   sig = sig * Decay.ar(beat);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.5,0.5);
 };
 ~one.play;
 );
