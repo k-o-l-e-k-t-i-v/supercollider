@@ -15,7 +15,7 @@ m = ProxyMixer(p, 12);
 ~one={
   var beat = 0.432*[4,3,2,1]);
   var sig = SinOsc.ar([50,60],Pulse.ar(beat);
-  sig = sig * Decay.ar(beat,LFNoise1.kr(~tempo/4).range(0.1,1));
+  sig = sig * Decay.ar(Impulse.ar(beat),LFNoise1.kr(~tempo/4).range(0.1,1));
   Splay.ar(sig,1,0.5);
 };
 ~one.play;
@@ -84,7 +84,9 @@ m = ProxyMixer(p, 12);
 ~three={
   var sig = LFSaw.ar([300,50,0.432/4/[1,2,3,4]],mul:2pi);
   sig = Perlin3.ar(sig[0].cos,sig[1].cos,sig[2].sin);
+
   sig = LeakDC.ar(sig);
+  sig = sig * Decay.ar()
   sig = LPF.ar(sig,900);
   Splay.ar(sig,0.5,0.25);
 };
