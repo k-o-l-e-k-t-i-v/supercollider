@@ -89,7 +89,7 @@ m = ProxyMixer(p, 12);
   sig = Perlin3.ar(sig[0].cos,sig[1].cos,sig[2].sin);
 
   sig = LeakDC.ar(sig);
-  sig = sig * Decay.ar(Impulse.ar(beat),0.432*4);
+  sig = sig * Decay.ar(Impulse.ar(beat),0.432*8);
   sig = CombL.ar(sig,1/60,1/50,0.432);
   sig = LPF.ar(sig,1900);
   Splay.ar(sig,0.0,0.5);
