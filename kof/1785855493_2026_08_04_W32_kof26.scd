@@ -41,7 +41,7 @@ p = ProxySpace.push(s);
   mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1);
   high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,10000)),3/4,1/2,1);
   sig = CompanderD.ar((high+mid+low).flat,3/4,1,1/2,0.002,0.3);
-  sig = LPF.ar(GVerb.ar(NumChannels.ar(sig,2),90,3),2000)/8+sig;
+  //sig = LPF.ar(GVerb.ar(NumChannels.ar(sig,2),90,3),2000)/8+sig;
   Splay.ar(sig,0.5,0.25);
 };
 ~master.play;
