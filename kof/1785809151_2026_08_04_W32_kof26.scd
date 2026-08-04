@@ -1,6 +1,9 @@
 s.boot;
 p=ProxySpace.push();
 
+m = ProxyMixer(p, 12);
+    m.parent.alwaysOnTop_(true);
+
 ~tempo = {1/0.432};
 
 // one synth ///////////////////////////////////////
@@ -10,7 +13,7 @@ p=ProxySpace.push();
 ~one.quant=24;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar([50,60],Pulse.ar(0.432*4));
+  var sig = SinOsc.ar([50,60],Pulse.ar(0.432*[4,3,2,1]));
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
@@ -68,3 +71,5 @@ p=ProxySpace.push();
 ~two.clear;
 ~two.pause;
 ~two.resume;
+
+p.
