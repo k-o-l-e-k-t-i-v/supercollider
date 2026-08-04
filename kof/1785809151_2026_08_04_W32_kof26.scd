@@ -82,7 +82,7 @@ m = ProxyMixer(p, 12);
 ~three.quant=24;
 ~three.fadeTime=2;
 ~three={
-  var sig = LFSaw.ar([50,60,0.432],mul:2pi);
+  var sig = LFSaw.ar([3000,4000,0.432],mul:2pi);
   sig = Perlin3.ar(sig[0].cos,sig[1].cos,sig[2].sin);
   Splay.ar(sig,0.5,0.25);
 };
