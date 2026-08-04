@@ -9,7 +9,7 @@ p=ProxySpace.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar([50,60],Pulse.ar(0.432));
+  var sig = SinOsc.ar([50,60],Pulse.ar(0.432*4));
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
