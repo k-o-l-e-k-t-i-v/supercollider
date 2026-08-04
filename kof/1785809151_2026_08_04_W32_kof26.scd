@@ -25,7 +25,7 @@ m = ProxyMixer(p, 12);
 // all filter ///////////////////////////////////////
 
 (
-~all.quant=24;
+~all.quant=8;
 ~all.fadeTime=1;
 ~all={
   var synths = p.playingProxies;
