@@ -18,3 +18,20 @@ p=ProxySpace.push();
 ~one.clear;
 ~one.pause;
 ~one.resume;
+
+// two synth ///////////////////////////////////////
+
+(
+~two.ar(2);
+~two.quant=4;
+~two.fadeTime=2;
+~two={
+  var sig = VarSaw.ar([300]) * LFSaw.ar(1);
+  Splay.ar(sig,0.5,0.25);
+};
+~two.play;
+);
+~two.stop(4);
+~two.clear;
+~two.pause;
+~two.resume;
