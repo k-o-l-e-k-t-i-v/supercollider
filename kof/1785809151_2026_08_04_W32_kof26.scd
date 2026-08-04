@@ -23,7 +23,7 @@ p=ProxySpace.push();
 
 (
 ~two.ar(2);
-~two.quant=4;
+~two.quant=20;
 ~two.fadeTime=2;
 ~two={
   var sig = VarSaw.ar(300/(2**([1,5,8]/12+1))) * LFSaw.ar(0.432/[4,2,1]);
