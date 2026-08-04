@@ -64,7 +64,7 @@ m = ProxyMixer(p, 12);
   var sig = VarSaw.ar(300+detune*mel/(2**(chords/12+1))) * LFSaw.ar(0.432/[4,2,1]);
   sig = LPF.ar(sig,900)/4+sig;
   sig = Compander.ar(sig,~one.ar,1,0.1,1);
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.5,0.5);
 };
 ~two.play;
 );
