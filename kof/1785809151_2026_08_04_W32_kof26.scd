@@ -101,3 +101,14 @@ m = ProxyMixer(p, 12);
 ~three.clear;
 ~three.pause;
 ~three.resume;
+
+(
+  //s.latency=0.2;
+  //p.clock.tempo_(120/60);
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=master){p[synth.asSymbol].rebuild;};});
+  ~tick.kr(1);
+  ~tick.quant = 24;
+  ~counter.quant = 24;
+  ~counter = {PulseCount.kr(~tick.kr);};
+  ~tick = { Impulse.kr( ~tempo * 4 ); };
+);
