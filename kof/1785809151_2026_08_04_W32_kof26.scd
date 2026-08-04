@@ -83,8 +83,9 @@ m = ProxyMixer(p, 12);
 ~three.fadeTime=2;
 ~three={
   var beat = 0.432*4/[1,2,3,4];
-  var mod = Duty.kr(4/~tempo,0,Dseq((2**([1,5,8]/12+1)),inf)) ;
-  var sig = LFSaw.ar([50.01*mod,59.95*mod,beat],mul:2pi);
+  var mod = Duty.kr(4/~tempo,0,Dseq((2**([1,5,8]/12+1)),inf));
+  var detune = SinOsc.ar(~tempo/[3,4],mul:0.5);
+  var sig = LFSaw.ar([50.01*mod+detune[0],59.95*mod+detune[1],beat],mul:2pi);
   sig = Perlin3.ar(sig[0].cos,sig[1].cos,sig[2].sin);
 
   sig = LeakDC.ar(sig);
