@@ -27,7 +27,7 @@ p=ProxySpace.push();
   synths.collect{|n| if(n!=\all){sig=sig++p.[n.asSymbol];}};
 
   //sig = Resonz.ar(sig,MouseX.kr(100,10000,(1..8)),MouseY.kr(0.1,1,(1..4)/16))/4;
-  //sig = CombN.ar(sig,4,[4,8,16],32)+sig;
+  sig = CombN.ar(sig,4,[4,8,16],32)+sig;
   //sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
   low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/2!2).range(100,800)),3/4,1/2,1);
   mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1);
