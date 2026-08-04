@@ -82,11 +82,12 @@ m = ProxyMixer(p, 12);
 ~three.quant=24;
 ~three.fadeTime=2;
 ~three={
-  var sig = LFSaw.ar([300,50,0.432/4/[1,2,3,4]],mul:2pi);
+  var beat = 0.432/4/[1,2,3,4]];
+  var sig = LFSaw.ar([300,1200,beat,mul:2pi);
   sig = Perlin3.ar(sig[0].cos,sig[1].cos,sig[2].sin);
 
   sig = LeakDC.ar(sig);
-  sig = sig * Decay.ar()
+  sig = sig * Decay.ar(Impulse.ar())
   sig = LPF.ar(sig,900);
   Splay.ar(sig,0.5,0.25);
 };
