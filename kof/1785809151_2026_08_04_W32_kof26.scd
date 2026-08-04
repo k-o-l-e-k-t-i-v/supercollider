@@ -84,7 +84,7 @@ m = ProxyMixer(p, 12);
 ~three={
   var beat = 0.432/4/[1,2,3,4];
   var mod = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf)) ;
-  var sig = LFSaw.ar([300*mod,1200*mod,beat],mul:2pi);
+  var sig = LFSaw.ar([300.1*mod,1200.23*mod,beat],mul:2pi);
   sig = Perlin3.ar(sig[0].cos,sig[1].cos,sig[2].sin);
 
   sig = LeakDC.ar(sig);
