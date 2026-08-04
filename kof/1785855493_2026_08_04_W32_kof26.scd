@@ -2,7 +2,6 @@
 
 s.boot;
 p = ProxySpace.push(s);
-p.tempo=~tempo;
 ~tempo={0.432*4};
 
 // one synth ///////////////////////////////////////
@@ -13,6 +12,7 @@ p.tempo=~tempo;
 ~one.fadeTime=2;
 ~one={
   var sig = SinOsc.ar(50!2,Pulse.ar(~tempo/[1,2,3,4]));
+  sig = sig * (LFSaw.ar(~tempo/16)**2);
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
