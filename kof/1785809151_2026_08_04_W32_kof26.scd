@@ -79,7 +79,7 @@ m = ProxyMixer(p, 12);
 
 (
 ~three.ar(2);
-~three.quant=24;
+~three.quant=8;
 ~three.fadeTime=2;
 ~three={
   var beat = 0.432/4/[1,2,3,4];
