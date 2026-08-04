@@ -57,7 +57,7 @@ m = ProxyMixer(p, 12);
 
 (
 ~two.ar(2);
-~two.quant=24;
+~two.quant=8;
 ~two.fadeTime=2;
 ~two={
   var detune = SinOsc.kr(~tempo/[7,5,3,1],mul:2.0);
