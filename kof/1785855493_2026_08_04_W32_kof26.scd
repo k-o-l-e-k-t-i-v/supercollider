@@ -13,6 +13,7 @@ p = ProxySpace.push(s);
 ~one={
   var sig = SinOsc.ar(50!2,Pulse.ar(~tempo/[1,2,3,4]));
   sig = sig * (LFSaw.ar(~tempo/16)**2);
+  sig = CombL.ar(sig,~tempo/4,~tempo/4,~tempo*3);
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
