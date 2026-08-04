@@ -20,7 +20,7 @@ p=ProxySpace.push();
 // all filter ///////////////////////////////////////
 
 (
-~all.quant=4;
+~all.quant=24;
 ~all.fadeTime=1;
 ~all={
   var synths = p.playingProxies;
@@ -52,7 +52,7 @@ p=ProxySpace.push();
 
 (
 ~two.ar(2);
-~two.quant=20;
+~two.quant=24;
 ~two.fadeTime=2;
 ~two={
   var detune = SinOsc.kr(~tempo/[7,5,3,1],mul:2.0);
