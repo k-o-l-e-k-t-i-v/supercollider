@@ -1,4 +1,4 @@
 
 
 s.boot;
-p.push();
+p = ProxySpace.push(s);
