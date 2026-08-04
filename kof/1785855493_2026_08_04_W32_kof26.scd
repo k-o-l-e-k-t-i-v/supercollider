@@ -36,12 +36,12 @@ p = ProxySpace.push(s);
   synths.collect{|n| if(n!=\master){sig=sig++p.[n.asSymbol];}};
 
   //sig = Resonz.ar(sig,MouseX.kr(100,10000,1),MouseY.kr(0.1,1,(1..4)/16))/4;
-  sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
+  //sig = GVerb.ar(LPF.ar(sig,7000)+HPF.ar(sig,300),100,[3,4],spread:[95,96])/4 + sig;
   low = CompanderD.ar(LPF.ar(sig,LFNoise2.kr(1/2!2).range(100,800)),3/4,1/2,1);
   mid = CompanderD.ar(BPF.ar(sig,LFNoise2.kr(1/2!2).range(700,1500),2),3/4,1/2,1);
   high = CompanderD.ar(HPF.ar(sig,LFNoise2.kr(1/2!2).range(1000,10000)),3/4,1/2,1);
   sig = CompanderD.ar((high+mid+low).flat,3/4,1,1/2,0.002,0.3);
-  //sig = LPF.ar(GVerb.ar(NumChannels.ar(sig,2),90,3),2000)/8+sig;
+  sig = LPF.ar(GVerb.ar(NumChannels.ar(sig,2),90,3),2000)/8+sig;
   Splay.ar(sig,0.5,0.25);
 };
 ~master.play;
