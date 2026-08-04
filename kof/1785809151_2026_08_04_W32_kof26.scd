@@ -90,7 +90,7 @@ m = ProxyMixer(p, 12);
 
   sig = LeakDC.ar(sig);
   sig = sig * Decay.ar(Impulse.ar(beat),0.432*8);
-  sig = CombL.ar(sig,1/60,1/50,0.432);
+  sig = CombL.ar(sig,1/60,1/50,3.432)/8+sig;
   sig = LPF.ar(sig,2900);
   Splay.ar(sig,0.0,0.5);
 };
