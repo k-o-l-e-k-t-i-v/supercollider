@@ -7,7 +7,7 @@ p=ProxySpace.push();
 
 (
 ~one.ar(2);
-~one.quant=20;
+~one.quant=24;
 ~one.fadeTime=2;
 ~one={
   var sig = SinOsc.ar([50,60],Pulse.ar(0.432*4));
