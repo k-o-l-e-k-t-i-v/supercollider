@@ -1,27 +1,16 @@
-(
-s.waitForBoot({
-    // 1. Initialize ProxySpace
-    p = ProxySpace.push(s);
+f = SoundFile.new;
+f.headerFormat = "raw";     // Tell it there is no header
+f.sampleFormat = "float";   // Sets 32-bit floating-point (f32le)
+f.numChannels = 1;          // Match your channel count (e.g., 2 for stereo)
+f.sampleRate = 44100;       // Match your sample rate
+
+// Now it will successfully parse the stream
+if (f.openRead("/tmp/01.raw")) {
+    ("Opened successfully. Total frames: " + f.numFrames).postln;
     
-    // 2. Load your f32le data into a server Buffer 
-    // (Use Buffer.read for headers, or Buffer.sendCollection if you parsed a raw FloatArray)
-    ~audioBuf = Buffer.read(s, "/tmp/01.raw", action: {
-        "Buffer loaded successfully. Frame count: ".post; ~audioBuf.numFrames.postln;
-    });
+    // Allocate a buffer or read chunks here...
     
-    // 3. Define an Ndef proxy to play the buffer
-    Ndef(\player, {
-        var sig = PlayBuf.ar(
-            numChannels: 1, 
-            bufnum: ~audioBuf, 
-            rate: BufRateScale.kr(~audioBuf) * MouseX.kr(0.5, 2.0), // Optional live pitch shift
-            loop: 1
-        );
-        // Duplicate mono to stereo outputs
-        sig ! 2; 
-    });
-    
-    // 4. Route the Ndef to hardware outputs
-    Ndef(\player).play;
-});
-)
+    f.close;
+} {
+    "Failed to open file descriptor.".warn;
+};
