@@ -4,3 +4,7 @@ s.waitForBoot({
 });
 )
 s.reboot;
+
+
+
+p = ProxySpace.push(s);
