@@ -8,3 +8,4 @@ s.reboot;
 
 
 p = ProxySpace.push(s);
+~audioBuffer.play();
