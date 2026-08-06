@@ -1,3 +1,5 @@
+s.boot;
+
 (
 // Spawn the external raw sound generator/processor piping f32le to stdout
 var cmd = "cat /tmp/01.raw"; // Or your custom binary name
