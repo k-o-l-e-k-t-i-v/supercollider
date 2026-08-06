@@ -1,3 +1,4 @@
+(
 f = SoundFile.new;
 f.headerFormat = "raw";     // Tell it there is no header
 f.sampleFormat = "float";   // Sets 32-bit floating-point (f32le)
@@ -14,3 +15,4 @@ if (f.openRead("/tmp/01.raw")) {
 } {
     "Failed to open file descriptor.".warn;
 };
+)
