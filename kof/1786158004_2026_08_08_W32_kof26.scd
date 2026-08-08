@@ -1,10 +1,9 @@
 p=NetProxy.push(s);
 p.makeTempoClock;
-p.bpm(43.2*2)
+p.bpm(43.2)
 
 ~tempo={86.4/120}
 
-2026-08-08
 
 (
   ~tick.kr(1);
