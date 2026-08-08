@@ -30,7 +30,7 @@
         sig = SinOsc.ar(sig.range(freq/2,freq*2),mul:0.1) + Formant.ar(freq*mod,freq*mod*3,freq*mod*2,0.5);
         sig = CombC.ar(sig,1,1/4,2);
         sig = LPF.ar(sig,3500);
-        Splay.ar(sig,0.0,0.4);
+        Splay.ar(sig,0.0,0.7);
     };
 )
 
