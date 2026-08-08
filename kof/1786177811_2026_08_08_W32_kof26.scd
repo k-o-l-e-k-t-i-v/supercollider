@@ -20,4 +20,5 @@ p.push();
 ~one.resume;
 
 
-~one[1] = {LFPulse.ar(4!2)/2};
+
+~one[1] = {LFPulse.ar(4!2)/4};
