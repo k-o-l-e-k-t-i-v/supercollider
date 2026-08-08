@@ -2,6 +2,14 @@ p=NetProxy.push(s);
 
 p.bpm(43.2*2)
 
+(
+  ~tick.kr(1);
+  ~tick.clock = p.clock;
+  ~tick.quant=4;
+  ~tick = { Impulse.kr(~tempo * 4); };
+  ~counter = {PulseCount.kr(~tick.kr);};
+);    
+
 // one synth ///////////////////////////////////////
 
 (
