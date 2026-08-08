@@ -9,7 +9,7 @@ p.push();
 ~one.fadeTime=2;
 ~one[0]={|vol=1|
   var harm = 2**([1,5,1,8]/12+1);
-  var sig = SinOsc.ar(60*harm) * LFSaw.ar(1/(1..4));
+  var sig = SinOsc.ar(60*harm) * LFTri.ar(1/(1..4));
   Splay.ar(sig,0,vol);
 };
 ~one.play;
