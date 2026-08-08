@@ -52,4 +52,4 @@ p.bpm(43.2)
   ReplaceOut.ar(0,sig);
   };
 );
-p.moveNodeToTail(master);
+p.moveNodeToTail(\master);
