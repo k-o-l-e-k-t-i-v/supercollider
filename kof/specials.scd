@@ -27,7 +27,7 @@
         sig = LFSaw.ar(freq,mul:2pi);
         sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2].cos);
         sig = sig + Formant.ar(freq,freq*3,freq*2,0.5);
-        Splay.ar(sig,0.0,0.2);
+        Splay.ar(sig,0.0,0.4);
     };
 )
 
