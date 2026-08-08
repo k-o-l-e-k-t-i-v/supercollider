@@ -18,3 +18,6 @@ p.push();
 ~one.clear;
 ~one.pause;
 ~one.resume;
+
+
+~one[1] = {LFPulse.ar(4!2)};
