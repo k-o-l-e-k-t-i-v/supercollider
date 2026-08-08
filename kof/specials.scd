@@ -18,7 +18,7 @@
        //////////////////|/////////|/////////|/////////|/////////|////////| 
         
         
-        code=code.ascii;
+        //code=code.ascii;
         
         notes = (code).linexp(0,127,12.midicps,60.midicps);
         speed = 1/8;
