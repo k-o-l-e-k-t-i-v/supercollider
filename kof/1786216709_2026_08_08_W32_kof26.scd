@@ -45,7 +45,7 @@ p=ProxySpace.push(s);
 
 (
 Pbindef(\feedback,
-    \freq, Pseq([36, 48, 55, 48, 60, 55, 48, 41].midicps, inf),
+    \freq, Pseq([36, 48, 36, 48, 60, 55, 48, 41].midicps, inf),
     \cutoff, Pseq([800, 2400, 4500, 1200, 3800, 2200], inf),
     \res, Pwrand([3.0, 3.5, 3.8], [0.6, 0.3, 0.1], inf),
     \dur, Pseq([0.25, 0.25, 0.5, 0.25, 0.75, 0.25], inf)
