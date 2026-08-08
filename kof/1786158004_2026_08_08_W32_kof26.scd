@@ -41,7 +41,7 @@ p.bpm(43.2*2)
   sig = CompanderD.ar(sig,3/4,1/1.1,1/3);
   fx = LPF.ar(sig,lp);
   fx = HPF.ar(fx,hp);
-  //fx = G.ar(NumChannels.ar(fx,2),[5000,5010],1/len)/rev;
+  fx = GVerb.ar(NumChannels.ar(fx,2),90/len,3)/rev;
   sig = SelectX.ar(wet,[orig,fx]);
   sig = NumChannels.ar(sig,2);
   ReplaceOut.ar(0,sig);
