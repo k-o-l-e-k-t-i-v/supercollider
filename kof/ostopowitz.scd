@@ -251,7 +251,7 @@ roatate.stop(4);
         var f = LFSaw.ar([1/100,1/250,50]).range(0,2pi);
         var sig = SinOsc.ar((Perlin3.ar(f[0].cos,f[1].sin,f[2].sin)*500*[1,2,3,4]),Pulse.ar(te),mul:0.2) * Pulse.ar(te);
         sig = CombL.ar(sig,1/5,1/60,2);
-        sig = RLPF.ar(sig,500,0.2);
+        sig = RLPF.ar(sig,300,0.2);
         Splay.ar(sig*vol);
     };
     ~xxx.play;
