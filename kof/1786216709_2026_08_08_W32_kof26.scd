@@ -1,4 +1,4 @@
-
+p=ProxySpace.push(s);
 
 
 // feedback synth ///////////////////////////////////////
