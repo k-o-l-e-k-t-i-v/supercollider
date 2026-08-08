@@ -9,7 +9,7 @@ p.bpm(90)
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar(150!2);
+  var sig = SinOsc.ar(50!2);
   sig = sig * LFSaw.ar(8);
   Splay.ar(sig,0.5,0.15);
 };
