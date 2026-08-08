@@ -46,7 +46,6 @@ p.bpm(43.2)
   fx = LPF.ar(sig,lp);
   fx = HPF.ar(fx,hp);
   wet = LFSaw.kr(~tempo);
-  len = LFNoise1.kr(~tempo/4).range(90,900);
   fx = GVerb.ar(Splay.ar(fx,2),900/len,3)/rev;
   sig = SelectX.ar(wet,[orig,fx]);
   sig = Splay.ar(sig,0.25,1);
