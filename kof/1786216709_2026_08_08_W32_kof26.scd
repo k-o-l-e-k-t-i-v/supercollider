@@ -1,7 +1,10 @@
 p=ProxySpace.push(s);
 
-
-// feedback synth ///////////////////////////////////////
+//////////////////////////////////////////////////////
+// feedback synth                                   //
+// moog like synth                                  //
+// OnePole ladder on feedback                       //
+//////////////////////////////////////////////////////
 
 (
 ~feedback.ar(2);
@@ -18,7 +21,7 @@ p=ProxySpace.push(s);
     
     var filterIn = tanh(sig - (res * fdbk));
     
-    var a = LFSaw.kr([1,1,1/3600]).range(0,2pi);
+    var a = LFSaw.kr([1,1,1/360]).range(0,2pi);
     var perl = Perlin3.kr(a[0].cos,a[1].sin,a[2].sin) / 10.0;
     var coef = exp(-2 * pi * (cutoff / SampleRate.ir())) + perl;
     
@@ -49,18 +52,10 @@ Pbindef(\feedback,
 ).play;
 )
 
-// Mutate the pattern live on the fly
 Pbindef(\feedback, \freq, Pseq([36, 63, 55, 48, 72].midicps, inf));
 
 
-// Push the resonance high into self-oscillation
 ~feedback.set(\res, 1.0, \cutoff, 1200);
-
-// Shift the base frequency
 ~feedback.set(\freq, 110);
-
-// Sweep the cutoff down for a deep analog growl
 ~feedback.set(\cutoff, 1500, \res, 3.5);
-
-// Silence the proxy
 ~feedback.stop();
