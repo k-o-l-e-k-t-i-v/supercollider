@@ -252,7 +252,7 @@ roatate.stop(4);
         var sig = SinOsc.ar((Perlin3.ar(f[0].cos,f[1].sin,f[2].sin)*500*[1,2,3,4],mul:0.2),Pulse.ar(te)) * Pulse.ar(te);
         sig = CombL.ar(sig,1/5,1/50,2);
         sig = RLPF.ar(sig,500,0.2);
-        Splay.ar(sig,0.5,0.05);
+        Splay.ar(sig,0.5,0.5);
     };
     ~xxx.play;
 );
