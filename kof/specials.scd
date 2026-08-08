@@ -13,21 +13,7 @@
 
 
        //////////////////|/////////|/////////|/////////|/////////|////////| 
-        code="
-        ^^^^^^^^^^^^^^^^^^^~)))))))!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        xxxxx4^^^#####^^^^~^^^^^^^!aaz^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^zz^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^####...................z.^^^rrrrr a message rrrr^
-        ^xxxxx4^^^####z....................^^^rrrrr in sound  rrrr^
-        ^xxxxx4^^^####.....................^^^rrrrr SETI ???? rrrr^
-        ^xxxxx4^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^####..........AAAAAAAAAAAAAAAAAAAAArrrrrrrrrrrrr^
-        ^xxxxx4^^^####.zzzzzzzzzzzzzzzzzzz.^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxAAAAAAAAAAAAAAAAAAA............^^^rrrrrrrrrrrrrrrrrrrr";
+        code="this is just message";
 
        //////////////////|/////////|/////////|/////////|/////////|////////| 
         
