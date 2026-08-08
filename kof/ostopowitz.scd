@@ -246,7 +246,7 @@ roatate.stop(4);
     ~xxx.clock = p.clock;
     ~xxx.quant=8;
     ~xxx.fadeTime=4;
-    ~xxx={|vol|
+    ~xxx={|vol=1|
         var te = ~tempo/[1.5,3,4,8];
         var f = LFSaw.ar([1/100,1/250,50]).range(0,2pi);
         var sig = SinOsc.ar((Perlin3.ar(f[0].cos,f[1].sin,f[2].sin)*500*[1,2,3,4],mul:0.2),Pulse.ar(te)) * Pulse.ar(te);
