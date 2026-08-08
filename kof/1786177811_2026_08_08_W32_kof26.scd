@@ -7,7 +7,7 @@ p.push();
 ~one.ar(2);
 ~one.quant=4;
 ~one.fadeTime=2;
-~one[0]={|vol=1|
+~one[0]={|vol=0.2|
   var harm = 2**([1,5,1,8]/12+1);
   var sig = SinOsc.ar(110*harm) * LFTri.ar(1/(1..4));
   Splay.ar(sig,0,vol);
