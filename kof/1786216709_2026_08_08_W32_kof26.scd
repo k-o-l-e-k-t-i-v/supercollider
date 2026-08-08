@@ -40,6 +40,19 @@ p=ProxySpace.push(s);
 ~feedback.pause;
 ~feedback.resume;
 
+(
+Pbindef(\feedback,
+    \freq, Pseq([36, 48, 55, 48, 60, 55, 48, 41].midicps, inf),
+    \cutoff, Pseq([800, 2400, 4500, 1200, 3800, 2200], inf),
+    \res, Pwrand([3.0, 3.5, 3.8], [0.6, 0.3, 0.1], inf),
+    \dur, Pseq([0.25, 0.25, 0.5, 0.25, 0.75, 0.25], inf)
+).play;
+)
+
+// Mutate the pattern live on the fly
+Pbindef(\moogManual, \freq, Pseq([36, 63, 55, 48, 72].midicps, inf));
+
+
 // Push the resonance high into self-oscillation
 ~feedback.set(\res, 1.0, \cutoff, 1200);
 
