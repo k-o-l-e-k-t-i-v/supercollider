@@ -12,7 +12,7 @@ p=ProxySpace.push(s);
     var cutoff = \cutoff.kr(1200).lag(0.01);
     var res = \res.kr(3.0).lag(0.01); // Resonance amount (0 to 4)
     
-    var sig = LFSaw.ar(freq) * 0.4;
+    var sig = LFSaw.ar(freq) * 0.1;
     
     var fdbk = LocalIn.ar(1);
     
