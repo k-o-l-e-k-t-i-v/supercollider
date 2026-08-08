@@ -256,7 +256,7 @@ roatate.stop(4);
     };
     ~xxx.play;
 );
-~xxx.vol(0.2)
+~xxx.vol(0.1)
 ~xxx.stop(4);
 ~xxx.clear;
 ~xxx.pause;
