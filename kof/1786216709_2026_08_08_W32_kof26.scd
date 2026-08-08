@@ -47,7 +47,7 @@ p=ProxySpace.push(s);
 ~feedback.set(\freq, 110);
 
 // Sweep the cutoff down for a deep analog growl
-~feedback.set(\cutoff, 250, \res, 3.5);
+~feedback.set(\cutoff, 50, \res, 3.5);
 
 // Silence the proxy
 Ndef(\moogManual).stop();
