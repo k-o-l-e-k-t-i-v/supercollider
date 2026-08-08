@@ -7,7 +7,7 @@
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar(50!2) * LFSaw.ar(4);
+  var sig = SinOsc.ar(60!2) * LFSaw.ar(4);
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
