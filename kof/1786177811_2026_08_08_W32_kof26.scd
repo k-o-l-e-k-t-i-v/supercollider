@@ -21,4 +21,4 @@ p.push();
 
 
 
-~one[1] = {LFPulse.ar(4!2)/4};
+~one[1] = {Splay.ar(LFPulse.ar((1..8)),0,1/4)};
