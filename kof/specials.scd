@@ -22,7 +22,7 @@
         
         notes = (code).linexp(20,127,55,1500);
         speed = 1/[1,1,50];
-        mod = 1;
+        mod = 2**([1,5,8]/12+1);
         freq = Duty.ar(speed,0,Dseq(notes,inf)).lag(speed/2*mod);
         sig = LFSaw.ar(freq,mul:2pi);
         sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2].cos);
