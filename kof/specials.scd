@@ -27,7 +27,7 @@
         sig = LFSaw.ar(freq*mod,mul:2pi);
         sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2].cos);
         sig = LeakDC.ar(sig);
-        sig = SinOsc.ar(sig.range(freq/2,freq*2) ) + Formant.ar(freq*mod,freq*mod*3,freq*mod*2,0.5);
+        sig = SinOsc.ar(sig.range(freq/2,freq*2),mul:0.1) + Formant.ar(freq*mod,freq*mod*3,freq*mod*2,0.5);
         sig = CombC.ar(sig,1,1/4,2);
         sig = LPF.ar(sig,2500);
         Splay.ar(sig,0.0,0.4);
