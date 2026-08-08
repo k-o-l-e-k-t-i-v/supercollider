@@ -19,7 +19,7 @@ p=ProxySpace.push(s);
     var filterIn = tanh(sig - (res * fdbk));
     
     var a = LFSaw.kr([1,2,3]).range(0,2pi);
-    var perl = Perlin3.kr(a[0].cos,a[1].sin,a[2].tanh) + 1;
+    var perl = Perlin3.kr(a[0].cos,a[1].sin,a[2].tanh) + 1/100;
     var coef = exp(-2 * pi * (cutoff / SampleRate.ir())) * perl;
     
     var s1 = OnePole.ar(filterIn, coef);
