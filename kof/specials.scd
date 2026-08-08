@@ -56,14 +56,14 @@
         ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        AAAAAAAAAAAAAAAAAAA~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ";
+        AAAAAAAAAAAAAAAAAAA~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^";
+
        //////////////////|/////////|/////////|/////////|/////////|////////| 
         
         
         code=code.ascii;
         
-        notes = (code).linexp(20,127,50,16000);
+        notes = (code).linexp(20,127,50,1600);
         speed = 1/8/(1..8);
         mod = 1.25/(1..8);
         freq = Duty.ar(speed,0,Dseq(notes,inf)).lag(speed/2*mod);
