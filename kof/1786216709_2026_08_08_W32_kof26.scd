@@ -50,7 +50,7 @@ Pbindef(\feedback,
 )
 
 // Mutate the pattern live on the fly
-Pbindef(\moogManual, \freq, Pseq([36, 63, 55, 48, 72].midicps, inf));
+Pbindef(\feedback, \freq, Pseq([36, 63, 55, 48, 72].midicps, inf));
 
 
 // Push the resonance high into self-oscillation
