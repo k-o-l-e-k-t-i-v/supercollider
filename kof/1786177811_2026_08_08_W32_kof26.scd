@@ -8,7 +8,7 @@ p.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={|vol=1|
-  var harm = 2**([1,5,8]/12+1);
+  var harm = 2**([1,5,1,8]/12+1);
   var sig = SinOsc.ar(60*harm) * LFSaw.ar((1..4));
   Splay.ar(sig,0,vol);
 };
