@@ -16,29 +16,8 @@
         code="
         ^^^^^^^^^^^^^^^^^^^~)))))))!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^ddddddddddrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrddddddddrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttrrttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#dddddddddddttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####ttttttttttttttttttttt^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^ssssssssssssssrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!aaz^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^aaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
+        xxxxx4^^^#####^^^^~^^^^^^^!aaz^^^^^^^rrrrrrrrrrrrrrrrrrrr^
+        xxxxx4^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx4^^^#####^^^^~^^^^^^^!^^^zz^^^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx4^^^####...................z.^^^rrrrr a message rrrr^
         ^xxxxx4^^^####z....................^^^rrrrr in sound  rrrr^
@@ -48,15 +27,7 @@
         ^xxxxx4^^^####.zzzzzzzzzzzzzzzzzzz.^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx4^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
         ^xxxxx^^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxAAAAAAAAAAAAAAAAAAA............^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^####.......AAAAAAAAAAAAAAAAAAAAAAAAAAArrrrrrrrrr^
-        ^xxxxx^^^^####.....................^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        ^xxxxx^^^^#####^^^^~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^
-        AAAAAAAAAAAAAAAAAAA~^^^^^^^!^^^^^^^^^^rrrrrrrrrrrrrrrrrrrr^";
+        ^xxxAAAAAAAAAAAAAAAAAAA............^^^rrrrrrrrrrrrrrrrrrrr";
 
        //////////////////|/////////|/////////|/////////|/////////|////////| 
         
