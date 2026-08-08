@@ -25,7 +25,7 @@
         mod = 1;
         freq = Duty.ar(speed,0,Dseq(notes,inf)).lag(speed/2*mod);
         sig = LFSaw.ar(freq,mul:2pi);
-        sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2]);
+        sig = Perlin3.ar(sig[0].cos,sig[1].sin,sig[2].cos);
         sig = sig + Formant.ar(freq!2,freq.lag(0.2*speed*mod),freq.lag(0.1*speed*mod)*2,0.09);
         Splay.ar(sig,0.0,0.2);
     };
