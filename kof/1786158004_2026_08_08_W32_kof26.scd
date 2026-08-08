@@ -34,6 +34,12 @@ p.bpm(43.2)
 ~one.resume;
 
 (
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(15);};});
+}.fork;  
+)
+(
   ~master.quant=4;
   ~master.play;
   ~master.fadeTime = 0.01;
