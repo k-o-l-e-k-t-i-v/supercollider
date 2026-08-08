@@ -1,11 +1,5 @@
 p=NetProxy.push(s);
-
-  p.makeTempoClock;
-);
-(
-  p=ProxySpace.push(s.boot);
-  p.makeTempoClock;
-);
+p.makeTempoClock;
 p.bpm(43.2*2)
 
 (
