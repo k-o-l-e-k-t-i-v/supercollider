@@ -41,7 +41,7 @@ p=ProxySpace.push(s);
 ~feedback.resume;
 
 // Push the resonance high into self-oscillation
-~feedback.set(\res, 1.0, \cutoff, 2400);
+~feedback.set(\res, 1.0, \cutoff, 1400);
 
 // Shift the base frequency
 ~feedback.set(\freq, 110);
