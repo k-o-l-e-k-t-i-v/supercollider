@@ -37,7 +37,7 @@ p.bpm(43.2)
   ~master.quant=4;
   ~master.play;
   ~master.fadeTime = 0.01;
-  ~master = {|wet=0.05, lp = 13500, hp = 250, len = 90, rev = 3|
+  ~master = {|wet=0.05, lp = 3500, hp = 250, len = 90, rev = 3|
   var sig = In.ar([0,1]);
   var orig = sig;
   var fx;
