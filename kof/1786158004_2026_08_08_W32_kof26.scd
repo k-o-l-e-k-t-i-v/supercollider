@@ -48,7 +48,7 @@ p.bpm(43.2)
   fx = GVerb.ar(NumChannels.ar(fx,2),90/len,3)/rev;
   wet = LFSaw.kr(~tempo/[1,2,3,4])**2;
   sig = SelectX.ar(wet,[orig,fx]);
-  sig = Splay.ar(sig,0,1);
+  sig = Splay.ar(sig,1,1);
   ReplaceOut.ar(0,sig);
   };
 );
