@@ -20,7 +20,7 @@
         
         code=code.ascii;
         
-        notes = (code).linexp(20,127,12.midicps,60.midicps);
+        notes = (code).linexp(0,127,12.midicps,60.midicps);
         speed = 1/[1,1,110];
         mod = 2**(Duty.kr(4,0,Dseq([1,5,1,8,1,11,1,8],inf))/12+1);
         freq = Duty.ar(speed,0,Dseq(notes,inf)).lag(speed/2*mod);
