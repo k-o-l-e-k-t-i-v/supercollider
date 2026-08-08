@@ -2,7 +2,7 @@ p=NetProxy.push(s);
 p.makeTempoClock;
 p.bpm(43.2*2)
 
-~tempo={86.4/60}
+~tempo={86.4/120}
 
 2026-08-08
 
