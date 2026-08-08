@@ -29,6 +29,7 @@ p=ProxySpace.push(s);
     var s2 = OnePole.ar(s1, coef);
     var s3 = OnePole.ar(s2, coef);
     var s4 = OnePole.ar(s3, coef);
+    s4 = CombC.ar(sig,1/\freq.kr,1/\freq.kr,0.1);
     
     LocalOut.ar(s4);
     
