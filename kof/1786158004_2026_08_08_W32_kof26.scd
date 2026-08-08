@@ -21,7 +21,7 @@ p.bpm(43.2)
 ~one.fadeTime=2;
 ~one={
   var mod = 1**(Duty.kr(4/~tempo,0,Dseq([1,2,1,1.5,1,1.33333]/4,inf))+1);
-  var sig = SinOsc.ar(440 * mod);
+  var sig = SinOsc.ar(4400 * mod);
   sig = sig * LeakDC.ar((LFSaw.ar(~tempo*8/(1..4))**LFNoise1.kr(~tempo/8!4).exprange(0.6,2.0)));
   sig = HPF.ar(sig,40);
   Splay.ar(sig,1,0.5);
