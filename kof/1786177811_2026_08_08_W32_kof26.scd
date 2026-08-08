@@ -23,4 +23,4 @@ p.push();
 
 
 ~one[1] = {};
-~one[1].stop;
+~one[1].clear;
