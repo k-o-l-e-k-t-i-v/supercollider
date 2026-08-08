@@ -12,7 +12,7 @@ p=ProxySpace.push(s);
     var cutoff = \cutoff.kr(1200).lag(0.01);
     var res = \res.kr(3.0).lag(0.01); // Resonance amount (0 to 4)
     
-    var sig = LFSaw.ar(freq) * 0.1;
+    var sig = LFSaw.ar(freq) * 0.4;
     
     var fdbk = LocalIn.ar(1);
     
@@ -41,7 +41,7 @@ p=ProxySpace.push(s);
 ~feedback.resume;
 
 // Push the resonance high into self-oscillation
-~feedback.set(\res, 2.8, \cutoff, 2400);
+~feedback.set(\res, 1.0, \cutoff, 2400);
 
 // Shift the base frequency
 ~feedback.set(\freq, 110);
@@ -50,4 +50,4 @@ p=ProxySpace.push(s);
 ~feedback.set(\cutoff, 1500, \res, 3.5);
 
 // Silence the proxy
-Ndef(\moogManual).stop();
+~feedback.stop();
