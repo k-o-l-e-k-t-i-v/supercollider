@@ -45,6 +45,7 @@ p.bpm(43.2)
   wet = LFSaw.kr(~tempo/16).exprange(0.01,0.4);
   fx = LPF.ar(sig,lp);
   fx = HPF.ar(fx,hp);
+  fx = CombL.ar(sig,1/~tempo,1/~tempo,~tempo);
   fx = GVerb.ar(Splay.ar(fx,0,1),len,rev);
   fx = CompanderD.ar(fx,3/4,1/2,1);
   sig = SelectX.ar(wet,[orig,fx]);
