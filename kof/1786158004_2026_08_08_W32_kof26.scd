@@ -10,7 +10,7 @@ p.bpm(90)
 ~one.fadeTime=2;
 ~one={
   var sig = SinOsc.ar(150!2);
-  ~one=~one * Phasor.ar(3);
+  ~one=~one * Phasor.ar(0,4);
   Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
