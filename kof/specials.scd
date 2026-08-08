@@ -21,7 +21,7 @@
         code=code.ascii;
         
         notes = (code).linexp(20,127,55,5500);
-        speed = 1/8/[1,2,50];
+        speed = 1/8/[1,1,50];
         mod = 1;
         freq = Duty.ar(speed,0,Dseq(notes,inf)).lag(speed/2*mod);
         sig = LFSaw.ar(freq,mul:2pi);
