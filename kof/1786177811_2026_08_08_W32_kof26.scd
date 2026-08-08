@@ -12,6 +12,7 @@ p.push();
   Splay.ar(sig,0,1);
 };
 ~one.play;
+~one.vol(0.2);
 );
 ~one.stop(4);
 ~one.clear;
