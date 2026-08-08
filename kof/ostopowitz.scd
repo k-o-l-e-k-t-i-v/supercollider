@@ -261,6 +261,10 @@ roatate.stop(4);
 ~xxx.pause;
 ~xxx.resume;
 
+(
+n = ProxyMixer(p,32);
+n.parent.alwaysOnTop_(true);
+)
 // lombardia synth ///////////////////////////////////////
 
 (
