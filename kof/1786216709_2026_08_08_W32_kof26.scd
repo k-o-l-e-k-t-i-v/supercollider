@@ -39,13 +39,13 @@ p=ProxySpace.push(s);
 ~feedback.resume;
 
 // Push the resonance high into self-oscillation
-Ndef(\moogManual).set(\res, 3.8, \cutoff, 2400);
+~feedback.set(\res, 3.8, \cutoff, 2400);
 
 // Shift the base frequency
-Ndef(\moogManual).set(\freq, 110);
+~feedback.set(\freq, 110);
 
 // Sweep the cutoff down for a deep analog growl
-Ndef(\moogManual).set(\cutoff, 250, \res, 3.5);
+~feedback.set(\cutoff, 250, \res, 3.5);
 
 // Silence the proxy
 Ndef(\moogManual).stop();
