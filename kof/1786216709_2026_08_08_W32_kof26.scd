@@ -29,7 +29,7 @@ p=ProxySpace.push(s);
     
     //(s4 * 0.6).dup;
 
-    Splay.ar(s4,0,0.5);
+    Splay.ar(s4,0,0.25);
 };
 ~feedback.play;
 );
