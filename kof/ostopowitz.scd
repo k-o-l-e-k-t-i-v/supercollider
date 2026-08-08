@@ -160,6 +160,8 @@ p.moveNodeToTail(\master);
 }.fork;  
 )
 
+
+p.bpm(90)
 // simple synth ///////////////////////////////////////
 
 (
