@@ -42,7 +42,7 @@ p.bpm(43.2)
   var orig = sig;
   var fx;
   //fx = Limiter.ar(sig,0.95);
-  sig = CompanderD.ar(sig,3/4,1/1.1,1/3);
+  fx = CompanderD.ar(fx,3/4,1/2,1);
   fx = LPF.ar(sig,lp);
   fx = HPF.ar(fx,hp);
   wet = LFSaw.kr(~tempo);
