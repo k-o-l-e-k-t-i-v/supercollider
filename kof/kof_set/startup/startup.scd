@@ -1,20 +1,20 @@
-// CONNECT TO CARLA IF IT IS RUNNING ///////////////////////////////////////////////////////////////////
-// ELSE CONNECT TO DEFAULT SYSTEM OUT DIRECTLY /////////////////////////////////////////////////////////
+// CONNECT TO CARLA IF RUNNING, OTHERWISE FALLBACK TO SYSTEM //////////////////////////////////////////////////////////////
 
 (
-    if("ps -aux | grep carla".unixCmdGetStdOutLines.size>2){
-        "Connecting to carla system".warn;
+    // Check if carla is running (using pgrep for a cleaner process check)
+    if("pgrep carla".unixCmdGetStdOutLines.size > 0){
+        "Connecting to Carla via PipeWire-JACK".warn;
         "SC_JACK_DEFAULT_INPUTS".setenv("system");
         "SC_JACK_DEFAULT_OUTPUTS".setenv("Carla");
-
     }{
-        "Connecting to a system directly".warn;
+        "Connecting directly to system via PipeWire-JACK".warn;
         "SC_JACK_DEFAULT_INPUTS".setenv("system");
         "SC_JACK_DEFAULT_OUTPUTS".setenv("system");
     }
 );
 
-// SERVER DEFAULTS /////////////////////////////////////////////////////////////////////////////////////
+
+// SERVER DEFAULTS //////////////////////////////////////////////////////////////////////////////////
 
 Server.local.options.numOutputBusChannels = 2;    // change number of input and output channels
 Server.local.options.numInputBusChannels = 2;
@@ -57,12 +57,12 @@ s.options.numWireBufs = 256;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-/////// ROJ SETUP STARTS HERE /////////////////////////////////////////////////////////////////////////
+/////// KOLEKTIV SETUP STARTS HERE /////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 (
     SystemClock.sched(0.0,{|t| ("TIME NOW:"+t).postln;});
-    " RUNNING ROJ STARTUP SEQUENCE ".padLeft(72,"-").postln;
+    " RUNNING KOLEKTIV STARTUP SEQUENCE ".padLeft(72,"-").postln;
 
 
     s = Server.default;
@@ -88,90 +88,18 @@ s.options.numWireBufs = 256;
         ~tick = { var imp = Impulse.kr(~tempo.kr * 4); SendTrig.kr(PulseDivider.kr(imp,16), 0, ~tempo.kr ); imp;  };
         ~counter = {PulseCount.kr(~tick.kr);};
     }.fork;
-/*
-    // 3 /////////////////////////////////////////////////
-    {
-        5.wait;
-        " 3) define resender".padLeft(72,"-").postf;
-        o = OSCFunc({ arg ...args;
-            var deviation = (p.clock.beats.round(1) - p.clock.beats.round(0.01));
-            var beatNo =  p.clock.beats.round(1);
-
-            beatNo.postln;
-
-            if(beatNo%16==0){
-                "echo \"\\033[1m % beat \\033[0m\"".format(beatNo).unixCmd;
-                "CPU: %\\% NUMS: % BPM: %".format(Server.local.peakCPU.round(0.01),  p.arProxyNames.size, (p.clock.tempo*60) ).postln;
-
-            }{
-                "CPU: %\\% NUMS: % BPM: %".format(Server.local.peakCPU.round(0.01),  p.arProxyNames.size, (p.clock.tempo*60) ).postln;
-            };
-        },'/tr',s.addr);
-        " OK".postln;
-    }.fork;
-*/
-
-);
 
 
-
-
-
-/*
-
-(
-    3.wait;
-    " 3) define resender".padLeft(72,"-").postf;
-    SystemClock.sched(0.0,{|t| ("TIME NOW:"+t).postln;});
-
-    o = OSCFunc({ arg ...args;
-        var deviation = (p.clock.beats.round(1) - p.clock.beats.round(0.01));
-        var beatNo =  p.clock.beats.round(1);
-
-        // beatNo.postln;
-
-        if(beatNo%16==0){
-            "echo \"\\033[1m % beat \\033[0m\"".format(beatNo).unixCmd;
-            "CPU: %\\% NUMS: % BPM: %".format(Server.local.peakCPU.round(0.01),  p.arProxyNames.size, (p.clock.tempo*60) ).postln;
-
-        }{
-            "CPU: %\\% NUMS: % BPM: %".format(Server.local.peakCPU.round(0.01),  p.arProxyNames.size, (p.clock.tempo*60) ).postln;
-        };
-    },'/tr',s.addr);
-    " OK".postln;
-);
-
-
-SystemClock.schedAbs(16,{|t|
-    ("ok TIME NOW:"+t).postln;
-    ~tick.kr(1);
-    ~counter.kr(1);
-
-    // ~tick.clock = p.clock;
-    // ~counter.clock = p.clock;
-
-    ~tick.quant=0;
-    ~counter.quant=0;
-
-    ~tick = { var imp = Impulse.kr(~tempo.kr * 4); SendTrig.kr(PulseDivider.kr(imp,16), 0, ~tempo.kr ); imp;  };
-    ~counter = {PulseCount.kr(~tick.kr);};
-
-});
-
-// 3 /////////////////////////////////////////////////
-
-});
-);
 Server.default.waitForBoot({
-    " ROJ boot sequence initiated".padLeft(72,"-").postln;
+    " KOLEKTIV boot sequence initiated".padLeft(72,"-").postln;
 
 
     // 0 //////////////////////////////////////////////////////
     (
 
         " 0) startin NetProxy".padLeft(72,"-").postf;
-        //p = NetProxy.push();
-        p = ProxySpace.push(s);
+        p = NetProxy.push();
+        //p = ProxySpace.push(s);
         s.latency = 0.5;
 
         2.wait;
@@ -190,56 +118,13 @@ Server.default.waitForBoot({
     );
 
 
+});
+)
 
 
 
-    // 2 /////////////////////////////////////////////////
-    (
-        " 2) add custom restart function".padLeft(72,"-").postf;
-        p.restartClock();
-        ~tick.kr(1);
-        ~counter.kr(1);
-
-        ~tick.clock = p.clock;
-        ~counter.clock = p.clock;
-
-        ~tick.quant = 16;
-        ~counter.quant = 16;
-
-        ~tick = { var imp = Impulse.kr(~tempo.kr * 4); SendTrig.kr(PulseDivider.kr(imp,16), 0, ~tempo.kr ); imp;  };
-        ~counter = {PulseCount.kr(~tick.kr);};
-        //p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
-        " OK".postln;
 
 
-    );
-
-
-
-    // 3 /////////////////////////////////////////////////
-    (
-        5.wait;
-        " 3) define resender".padLeft(72,"-").postf;
-        o = OSCFunc({ arg ...args;
-            var deviation = (p.clock.beats.round(1) - p.clock.beats.round(0.01));
-            var beatNo =  p.clock.beats.round(1);
-
-            beatNo.postln;
-
-            if(beatNo%16==0){
-                "echo \"\\033[1m % beat \\033[0m\"".format(beatNo).unixCmd;
-                "CPU: %\\% NUMS: % BPM: %".format(Server.local.peakCPU.round(0.01),  p.arProxyNames.size, (p.clock.tempo*60) ).postln;
-
-            }{
-                "CPU: %\\% NUMS: % BPM: %".format(Server.local.peakCPU.round(0.01),  p.arProxyNames.size, (p.clock.tempo*60) ).postln;
-            };
-        },'/tr',s.addr);
-        " OK".postln;
-    );
-};
-);//end after server boots
-
-*/
 
 
 

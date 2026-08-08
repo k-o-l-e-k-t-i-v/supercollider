@@ -326,14 +326,14 @@ snippet stop
 	(
 	//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
 	{
-	  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(${1:20});};});
+	  p.arProxyNames.do({|synth| if(synth.asSymbol!=\\master){p[synth.asSymbol].clear(${1:20});};});
 	}.fork;  
 	)
 snippet sync
 	(
 		//s.latency=0.2;
 		//p.clock.tempo_(${1:120}/60);
-		p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].rebuild;};});
+		p.arProxyNames.do({|synth| if(synth.asSymbol!=\\master){p[synth.asSymbol].rebuild;};});
 		~tick.kr(1);
 		~tick.quant = 24;
 		~counter.quant = 24;
