@@ -10,7 +10,7 @@ p.bpm(90)
 ~one.fadeTime=2;
 ~one={
   var sig = SinOsc.ar(50!2);
-  sig = sig * (1-LFSaw.ar(8)**LFNoise1.kr(1/4).exprange(1.1,8.0));
+  sig = sig * (1-(LFSaw.ar(8)**LFNoise1.kr(1/4).exprange(1.1,8.0)) );
   Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
