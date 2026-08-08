@@ -36,7 +36,7 @@ p=ProxySpace.push(s);
 
     //Splay.ar(s4,0,0.25);
 };
-~feedback.play;
+//~feedback.play;
 );
 ~feedback.stop(4);
 ~feedback.clear;
