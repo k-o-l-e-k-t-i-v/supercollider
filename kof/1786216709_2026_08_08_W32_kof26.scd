@@ -18,7 +18,7 @@ p=ProxySpace.push(s);
     
     var filterIn = tanh(sig - (res * fdbk));
     
-    var a = LFSaw.kr([1,2,3]).range(0,2pi);
+    var a = LFSaw.kr([1/16,1/24,50]).range(0,2pi);
     var perl = Perlin3.kr(a[0].cos,a[1].sin,a[2].tanh);
     var coef = exp(-2 * pi * (cutoff / SampleRate.ir())) * perl;
     
