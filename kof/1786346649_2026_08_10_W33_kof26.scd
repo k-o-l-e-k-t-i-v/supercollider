@@ -24,7 +24,7 @@ p=ProxySpace.push(s);
   sig = GVerb.ar(sig,90,3)/16+sig;
   sig = LeakDC.ar(sig);
   sig = CompanderD.ar(sig,3/4,1/2,1)/2+sig;
-  Splay.ar(sig,0.2,0.35);
+  Splay.ar(sig,0.2,0.5);
 };
 ~formant.play;
 );
