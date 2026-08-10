@@ -24,3 +24,6 @@ p=ProxySpace.push(s);
 ~formant.clear;
 ~formant.pause;
 ~formant.resume;
+
+
+s.scope;
