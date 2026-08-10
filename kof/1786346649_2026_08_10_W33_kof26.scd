@@ -35,5 +35,11 @@ p=ProxySpace.push(s);
 ~formant.pause;
 ~formant.resume;
 
+(
+//////////////////////////  FADE -> OUT ///////////////////////////////////////////////////////
+{
+  p.arProxyNames.do({|synth| if(synth.asSymbol!=\master){p[synth.asSymbol].clear(45);};});
+}.fork;  
+)
 
 s.scope;
