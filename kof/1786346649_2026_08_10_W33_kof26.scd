@@ -21,6 +21,7 @@ p=ProxySpace.push(s);
   sig = PitchShift.ar(sig,0.2,LFNoise1.kr(1).range(0.95,1.05)*transpose)/4+sig;
   sig = Vibrato.ar(sig);
   sig = CombN.ar(sig,1/~tempo,2/base.lag(0.2),~tempo/2)/16+sig;
+  sig = Resonz.ar(sig,base);
   sig = LeakDC.ar(sig);
   sig = CompanderD.ar(sig,3/4,1/2,1)/2+sig;
   sig = LPF.ar(sig,base*4);
