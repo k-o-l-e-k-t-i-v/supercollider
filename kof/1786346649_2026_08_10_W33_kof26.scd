@@ -17,6 +17,7 @@ p=ProxySpace.push(s);
   var env = {EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5*[1,2,3]],[3,-3]),Impulse.ar(~tempo*2/[1,2,3]))};
   sig = sig * env;
   sig = CombC.ar(sig,1/~tempo,1/~tempo,~tempo);
+  sig = LeakDC.ar(sig);
   sig = CompanderD.ar(sig,3/4,1/2,1);
   Splay.ar(sig,0.2,0.45);
 };
