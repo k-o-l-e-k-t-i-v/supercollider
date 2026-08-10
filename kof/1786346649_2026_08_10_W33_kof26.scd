@@ -10,7 +10,7 @@ p=ProxySpace.push(s);
 ~formant.quant=4;
 ~formant.fadeTime=2;
 ~formant={
-  var notes = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf))
+  var notes = 2**(Duty.kr(4/~tempo,0,Dseq([1,5,1,8],inf))/12+1);
   var base = [36,55,60].midicps * notes;
   var sig = Formant.ar(base,base/2,base*2) * 0.4;
   Splay.ar(sig,0.5,0.25);
