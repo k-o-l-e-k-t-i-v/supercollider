@@ -26,7 +26,7 @@ p=ProxySpace.push(s);
   sig = LPF.ar(sig,base*4);
   sig = GVerb.ar(HPF.ar(sig,120),90,3)/8+sig;
   sig = CompanderD.ar(sig,3/4,1/2,1)/4+sig;
-  Splay.ar(sig,0.2,0.5);
+  Splay.ar(sig,0.7,0.5);
 };
 ~formant.play;
 );
