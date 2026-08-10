@@ -29,13 +29,10 @@ p=ProxySpace.push(s);
     var s2 = OnePole.ar(s1, coef);
     var s3 = OnePole.ar(s2, coef);
     var s4 = OnePole.ar(s3, coef);
-    s4 = DelayN.ar(s4,5);
     
     LocalOut.ar(s4);
     
     (s4 * 0.6).dup;
-
-    //Splay.ar(s4,0,0.25);
 };
 //~feedback.play;
 );
