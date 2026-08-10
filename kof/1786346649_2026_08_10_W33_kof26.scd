@@ -1,5 +1,5 @@
 
-
+s.reboot;
 p=ProxySpace.push(s);
 ~tempo={1/0.432};
 
