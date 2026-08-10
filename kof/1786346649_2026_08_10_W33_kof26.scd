@@ -1,7 +1,7 @@
 
 s.reboot;
 p=ProxySpace.push(s);
-~tempo={1/0.432/1.5};
+~tempo={1/0.432/1.25};
 
 // formant synth ///////////////////////////////////////
 
