@@ -1,7 +1,7 @@
 
 
 p=ProxySpace.push(s);
-
+~tempo={1/0.432};
 
 // formant synth ///////////////////////////////////////
 
@@ -10,7 +10,8 @@ p=ProxySpace.push(s);
 ~formant.quant=4;
 ~formant.fadeTime=2;
 ~formant={
-  var base = [36,55,60].midicps;
+  var notes = Duty.kr(4/~tempo,0,Dseq([1,2,1.5,1.33333],inf))
+  var base = [36,55,60].midicps * notes;
   var sig = Formant.ar(base,base/2,base*2) * 0.4;
   Splay.ar(sig,0.5,0.25);
 };
