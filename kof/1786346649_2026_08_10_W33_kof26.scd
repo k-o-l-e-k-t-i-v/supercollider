@@ -18,6 +18,7 @@ p=ProxySpace.push(s);
   var sig = SinOsc.ar(base,mul:0.2) + Formant.ar(base+detune,base/2*filter,base*2*filter) * [0.4,0.2,0.1];
   var env = {EnvGen.ar(Env([0.001,1,0.001],[0.2,0.5*[1,2,3]],[3,-3]),Impulse.ar(~tempo/[1,2,3]))};
   sig = sig * env;
+  sig = LPF.ar(sig,base*2);
   sig = Vibrato.ar(sig);
   sig = CombC.ar(sig,1/~tempo,1/base,~tempo/4)/16+sig;
   sig = GVerb.ar(sig,90,3)/16+sig;
