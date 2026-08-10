@@ -1,0 +1,4 @@
+
+
+p=ProxySpace.push(s);
+
