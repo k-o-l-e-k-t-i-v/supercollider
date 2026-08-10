@@ -19,7 +19,7 @@ p=ProxySpace.push(s);
   sig = CombC.ar(sig,1/~tempo,1/~tempo,~tempo);
   sig = LeakDC.ar(sig);
   sig = CompanderD.ar(sig,3/4,1/2,1);
-  Splay.ar(sig,0.2,0.45);
+  Splay.ar(sig,0.2,0.35);
 };
 ~formant.play;
 );
