@@ -22,7 +22,7 @@ p=ProxySpace.push(s);
   sig = CombC.ar(sig,1/~tempo,2/base.lag(0.2),~tempo/4)/8+sig;
   sig = CompanderD.ar(sig,3/4,1/2,1)/2+sig;
   sig = LPF.ar(sig,base*3);
-  sig = GVerb.ar(sig,90,3)/16+sig;
+  sig = GVerb.ar(HPF.ar(sig,120),90,3)/16+sig;
   sig = LeakDC.ar(sig);
   Splay.ar(sig,0.2,0.5);
 };
