@@ -10,7 +10,7 @@ p=ProxySpace.push(s);
 ~formant.quant=4;
 ~formant.fadeTime=2;
 ~formant={
-  var base = 60.midicps;
+  var base = [36,55,60].midicps;
   var sig = Formant.ar(base,base/2,base*2) * 0.4;
   Splay.ar(sig,0.5,0.25);
 };
