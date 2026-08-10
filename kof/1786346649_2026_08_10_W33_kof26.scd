@@ -13,7 +13,7 @@ p=ProxySpace.push(s);
   var notes = 2**(Duty.kr([4,16,64]/~tempo,0,Dseq([1,5,1,8],inf))/12+1);
   var base = [36,55,60].midicps * notes;
   var sig = Formant.ar(base,base/2,base*2) * 0.4;
-  var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),Impulse.ar(~tempo*2));
+  var env = EnvGen.ar(Env([0.001,1,0.001],[0.002,0.5],[3,-3]),Impulse.ar(~tempo*2/[1,2,3]));
   sig = sig * env;
   Splay.ar(sig,0.5,0.25);
 };
