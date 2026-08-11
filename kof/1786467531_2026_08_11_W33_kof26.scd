@@ -1,7 +1,5 @@
 
-(freqs.postln;
-)
-
+p.push();
 // overtones synth ///////////////////////////////////////
 
 (
