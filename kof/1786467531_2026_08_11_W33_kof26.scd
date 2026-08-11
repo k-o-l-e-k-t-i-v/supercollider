@@ -10,7 +10,7 @@ p.push();
  
 var flow = 100;     // Lowest frequency (Hz)
 var fhigh = 1200;   // Highest frequency (Hz)
-var n = 5;          // Number of voices
+var n = 7;          // Number of voices
 
 var semitoneSpan = 12 * (log(fhigh / flow) / log(2));
 var delta = semitoneSpan / (n - 1);
