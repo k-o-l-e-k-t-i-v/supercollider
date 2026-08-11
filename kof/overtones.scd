@@ -19,7 +19,7 @@ var freqs = flow * (2 ** ((Array.series(n, 0, 1) * delta) / 12));
 var mel = Duty.kr([4,8,16]/~tempo,0,Dseq([1,5/4,4/3,7/4,2],inf));
 
 
- var sig = SinOsc.ar(freqs * mel,mul:0.2);
+ var sig = SinOsc.ar(freqs *.x mel,mul:0.2);
   Splay.ar(sig,0.5,0.25);
 };
 ~overtones.play;
