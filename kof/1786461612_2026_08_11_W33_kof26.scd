@@ -9,8 +9,8 @@ p.push();
 ~one.fadeTime=2;
 ~one={
   var base = 440;
-  var freq = 2**([0,386.31,701.9]/1200) * base;
-  var sig = SinOsc.ar(freq,mul:0.2);
+  var freq = 2**([0,315.64,701.96]/1200) * base;
+  var sig = SinOsc.ar(freq,mul:0.2) * Decay.ar();
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
