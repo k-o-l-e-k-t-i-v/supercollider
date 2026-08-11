@@ -16,7 +16,7 @@ var semitoneSpan = 12 * (log(fhigh / flow) / log(2));
 var delta = semitoneSpan / (n - 1);
 var freqs = flow * (2 ** ((Array.series(n, 0, 1) * delta) / 12));
 
- var sig = SinOsc.ar(freqs,mul:0.2);
+ var sig = SinOsc.ar(freqs,mul:0.2) * LFSaw.ar(~tempo/(1..(n-1)));
   Splay.ar(sig,0.5,0.25);
 };
 ~overtones.play;
