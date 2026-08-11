@@ -10,7 +10,7 @@ p.push();
 ~one={
   var base = 440;
   var freq = 2**([0,386.31,701.96]/1200) * base;
-  var sig = SinOsc.ar(freq,mul:0.2) * Decay.ar(Impulse.ar(2/[3,4]),1.5);
+  var sig = SinOsc.ar(freq,mul:0.2) * Decay.ar(Impulse.ar(2/[3,4]),0.75);
   Splay.ar(sig,0.0,0.5);
 };
 ~one.play;
