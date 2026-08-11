@@ -9,7 +9,7 @@ p.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var base = 440 /.x [1,2,4,8] ;
+  var base = 440 /.x [1,2,4] ;
   var mod = Duty.kr(4/~tempo,0,Dseq([1,5/4,4/3,7/4,2].scramble,inf));
   var freq1 = Duty.kr([1,4,16]/~tempo,0,Dseq(2**([1,5,8].scramble/12),inf));
   var freq2 = Duty.kr([1,4,16]/~tempo,0,Dseq(2**([1,5,12].scramble/12),inf));
