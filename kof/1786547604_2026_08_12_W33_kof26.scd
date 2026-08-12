@@ -5,7 +5,7 @@ p=ProxySpace.push(s);
 p.bpm(138.9);
 ~tick.kr(1);
 ~counter.kr(1);
-~tick.quant=16;
+~tick.quant=[8,0];
 ~counter.quant=16;
 ~tick = { Impulse.kr(~tempo*4); };
 ~counter = {PulseCount.kr(~tick.kr);};
