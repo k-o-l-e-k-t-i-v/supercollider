@@ -1,7 +1,7 @@
 // Big_Pickle gen vv
 
 p=ProxySpace.push(s);
-~tempo={4/0.432};
+~tempo={2/0.432};
 p.bpm(138.9);
 ~tick.kr(1);
 ~counter.kr(1);
