@@ -1,6 +1,7 @@
 // Big_Pickle gen vv
-s.boot;
+s.reboot;
 p=ProxySpace.push(s);
+(
 ~tempo={1/0.432};
 ~tick.kr(1);
 ~counter.kr(1);
@@ -8,7 +9,7 @@ p=ProxySpace.push(s);
 ~counter.quant=[8,0];
 ~tick = { Impulse.kr(~tempo*4); };
 ~counter = {PulseCount.kr(~tick.kr);};
-
+)
 // wash synth ///////////////////////////////////////
 
 (
