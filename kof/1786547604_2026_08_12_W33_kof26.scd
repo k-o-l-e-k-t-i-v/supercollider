@@ -3,13 +3,14 @@
 p=ProxySpace.push(s);
 ~tempo={2/0.432};
 p.bpm(138.9);
+(
 ~tick.kr(1);
 ~counter.kr(1);
 ~tick.quant=[8,0];
-~counter.quant=16;
+~counter.quant=[8,0];
 ~tick = { Impulse.kr(~tempo*4); };
 ~counter = {PulseCount.kr(~tick.kr);};
-
+)
 // wash synth ///////////////////////////////////////
 
 (
