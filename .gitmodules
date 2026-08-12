@@ -1,0 +1,3 @@
+[submodule "utils/DWGReverb"]
+	path = utils/DWGReverb
+	url = git@github.com:K0F/DWGReverb.git
