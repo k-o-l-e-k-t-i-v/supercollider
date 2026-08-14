@@ -14,7 +14,7 @@ p=ProxySpace.push(s)
   sig = CombN.ar(sig,1,1,4)/8 + sig;
   sig = GVerb.ar(sig,[9,10],3)/8 + sig;
   sig = CompanderD.ar(sig,3/4,1/2,1)+sig;
-  Splay.ar(sig,0.05,0.25);
+  Splay.ar(sig,0.05,0.005);
 };
 ~one.play;
 );
