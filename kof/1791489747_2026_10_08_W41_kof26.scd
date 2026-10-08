@@ -8,7 +8,7 @@ p.push();
 ~one.quant=4;
 ~one.fadeTime=2;
 ~one={
-  var sig = SinOsc.ar(150!2)*LFSaw.ar(2);
+  var sig = LFSaw.ar(150!2)*LFSaw.ar(2);
   Splay.ar(sig,0.5,0.15);
 };
 ~one.play;
