@@ -1,6 +1,8 @@
 p.push();
 
 
+p=ProxySpace.push(s);
+
 // one synth ///////////////////////////////////////
 
 (
