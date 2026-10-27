@@ -8,7 +8,7 @@ p.push();
 ~one.fadeTime=2;
 ~one={
   var sig = SinOsc.ar(50!2) * Pulse.ar(2);
-  sig = Perlin3.ar(sig,sig,sig);
+  sig = Perlin3.ar(sig.cos,sig.sin,sig);
   Splay.ar(sig,0.5,0.25);
 };
 ~one.play;
