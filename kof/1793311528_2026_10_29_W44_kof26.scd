@@ -11,7 +11,7 @@ p.push();
 ~onr.quant=4;
 ~onr.fadeTime=2;
 ~onr={
-  var sig = SinOsc.ar(50!2,SinOsc.ar([47,35]));
+  var sig = SinOsc.ar(50 * ([1,3,5,8]/12+1),SinOsc.ar([47,35]));
   Splay.ar(sig,0.05,0.35);
 };
 ~onr.play;
