@@ -12,7 +12,7 @@ s.boo
 ~onr.fadeTime=2;
 ~onr={
   var sig = SinOsc.ar(50!2,SinOsc.ar(47));
-  Splay.ar(sig,0.5,0.25);
+  Splay.ar(sig,0.05,0.5);
 };
 ~onr.play;
 );
