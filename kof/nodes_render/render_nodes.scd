@@ -17,7 +17,7 @@ var ndefLib, probeArgs, p, recBuf, defName, b, ok, dur, buildFunc, testR, entryB
 var monoBuf, consecBuf, numFrames, oscDone, oscDoneFlag;
 
 outdir = thisProcess.nowExecutingPath.dirname;
-dur = 26;
+dur = 43.2;
 onlyNames = nil;
 probeArgs = thisProcess.argv;
 ("argv: " ++ probeArgs).postln;
